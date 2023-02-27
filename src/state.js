@@ -1,16 +1,47 @@
-/**
- * @typedef {import('./types').StateConfig} StateConfig
- * @typedef {import('./types').ResolvedStateConfig} ResolvedStateConfig
- *
- * @typedef {import('./types').AlwaysHandlerConfig} AlwaysHandlerConfig
- * @typedef {import('./types').DispatchHandlerConfig} DispatchHandlerConfig
- * @typedef {import('./types').EntryHandlerConfig} EntryHandlerConfig
- * @typedef {import('./types').ExitHandlerConfig} ExitHandlerConfig
- */
-
 import { STATE_SIBLINGS } from './constants.js';
 
 /**
+ * @typedef {{
+ *     actions?: {
+ *         [x: string]: (this: HState, ...args: any[]) => any,
+ *     }
+ *     always?: AlwaysHandlerConfig[],
+ *     conditions?: {
+ *         [x: string]: (this: HState, ...args: any[]) => boolean,
+ *     }
+ *     entry?: EntryHandlerConfig[],
+ *     exit?: ExitHandlerConfig[],
+ *     on?: {
+ *         [x: string]: DispatchHandlerConfig[];
+ *     };
+ *     states?: {
+ *         [x: string]: StateConfig;
+ *     },
+ *     [STATE_SIBLINGS]?: Map<string, HState>
+ * }} StateConfig
+ *
+ * @typedef {{
+ * 	  actions?: string[];
+ * 	  condition?: string;
+ * 	  transitionTo?: string;
+ * }} AlwaysHandlerConfig
+ *
+ * @typedef {{
+ * 	  actions?: string[];
+ * 	  condition?: string;
+ * 	  transitionTo?: string;
+ * }} DispatchHandlerConfig
+ *
+ * @typedef {{
+ * 	  actions?: string[];
+ * 	  condition?: string;
+ * }} EntryHandlerConfig
+ *
+ * @typedef {{
+ * 	  actions?: string[];
+ * 	  condition?: string;
+ * }} ExitHandlerConfig
+ *
  * @typedef {AlwaysHandlerConfig | DispatchHandlerConfig | EntryHandlerConfig | ExitHandlerConfig} HandlerConfig
  *
  * @typedef {{
@@ -49,6 +80,18 @@ import { STATE_SIBLINGS } from './constants.js';
  * }} InitHandler
  *
  * @typedef {AlwaysHandler | DispatchHandler | EntryHandler | ExitHandler | InitHandler} Handler
+ *
+ * @typedef {{
+ *     name: string,
+ *     states: {
+ *         [x: string]: ESStateJson,
+ *     },
+ *     transition: {
+ *         active: boolean;
+ *         from: ESStateJson | undefined,
+ *         to: ESStateJson | undefined,
+ *     }
+ * }} ESStateJson
  */
 
 export class HState {
@@ -246,9 +289,9 @@ export class HState {
 			this.#subscribers.delete(fn);
 		};
 	}
-	/** @returns {import('./types').ESStateJson} */
+	/** @returns {ESStateJson} */
 	toJSON() {
-		/** @type {import('./types').ESStateJson['states']} */
+		/** @type {ESStateJson['states']} */
 		const states = {};
 
 		for (const [name, state] of this.#states) {

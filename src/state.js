@@ -11,6 +11,7 @@ import { STATE_SIBLINGS } from './constants.js';
  *     }
  *     entry?: EntryHandlerConfig[],
  *     exit?: ExitHandlerConfig[],
+ *     name?: string;
  *     on?: {
  *         [x: string]: DispatchHandlerConfig[];
  *     };
@@ -102,6 +103,8 @@ export class HState {
 	#entry = [];
 	/** @type {ExitHandler[]} */
 	#exit = [];
+	/** @type {string} */
+	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
 	/** @type {HState | null} */
@@ -115,11 +118,6 @@ export class HState {
 	#transitionFrom = null;
 	/** @type {HState | null} */
 	#transitionTo = null;
-
-	/** @param {string} name */
-	constructor(name) {
-		this.name = name;
-	}
 
 	#callSubscribers() {
 		for (const subscriber of this.#subscribers) {
@@ -177,18 +175,23 @@ export class HState {
 		if (this.#configured) throw Error('State already configured');
 		this.#configured = true;
 
+		if (stateConfig.name) {
+			this.#name = stateConfig.name;
+		}
+
 		const actions = stateConfig.actions || {};
 		const conditions = stateConfig.conditions || {};
 		if (stateConfig.states) {
 			for (const name in stateConfig.states) {
 				if (Object.hasOwn(stateConfig.states, name)) {
-					const state = new HState(name);
+					const state = new HState();
 					this.#states.set(name, state);
 				}
 			}
 			for (const [name, state] of this.#states) {
 				const config = stateConfig.states[name];
 				state.configure({
+					name,
 					...config,
 					actions: {
 						...actions,
@@ -275,6 +278,9 @@ export class HState {
 	get exit() {
 		return this.#exit;
 	}
+	get name() {
+		return this.#name;
+	}
 	get on() {
 		return this.#on;
 	}
@@ -317,11 +323,8 @@ export class HState {
 	}
 }
 
-/**
- * @param {string} name
- */
-export function create(name) {
-	return new HState(name);
+export function create() {
+	return new HState();
 }
 
 /**

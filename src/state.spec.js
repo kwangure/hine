@@ -6,7 +6,7 @@ describe('htstate', () => {
 		/** @type {HState} */
 		let machine;
 		beforeEach(() => {
-			machine = new HState('machine');
+			machine = new HState();
 			machine.configure({
 				states: {
 					state1: {
@@ -50,7 +50,7 @@ describe('htstate', () => {
 		/** @type {HState} */
 		let machine;
 		beforeEach(() => {
-			machine = new HState('machine');
+			machine = new HState();
 		});
 		it('throws on missing entry actions', () => {
 			expect(() => machine.configure({
@@ -96,7 +96,7 @@ describe('htstate', () => {
 		let actions;
 		beforeEach(() => {
 			actions = [];
-			machine = new HState('machine');
+			machine = new HState();
 			machine.configure({
 				actions: {
 					always1() {
@@ -185,7 +185,7 @@ describe('htstate', () => {
 		let transitions;
 		beforeEach(() => {
 			transitions = [];
-			machine = new HState('machine');
+			machine = new HState();
 			machine.configure({
 				actions: {
 					always1() {
@@ -538,7 +538,7 @@ describe('htstate', () => {
 		let actions;
 		beforeEach(() => {
 			actions = [];
-			machine = new HState('machine');
+			machine = new HState();
 			machine.configure({
 				actions: {
 					ignore() {
@@ -645,7 +645,7 @@ describe('htstate', () => {
 	});
 
 	it('always runs transient actions', () => {
-		const machine = new HState('machine');
+		const machine = new HState();
 		/** @type {number} */
 		let alwaysCount = 0;
 		machine.configure({

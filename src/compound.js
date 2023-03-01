@@ -202,15 +202,27 @@ export class CompoundState {
 			}
 		}
 
-		const states = stateConfig[STATE_SIBLINGS] || new Map();
-		const always = stateConfig.always || [];
-		for (const handler of always) {
-			this.#always.push({
-				actions: resolveActions(actions, handler),
-				condition: resolveCondition(conditions, handler),
-				transitionTo: resolveTransition(states, handler),
-				type: 'always',
-			});
+		if (stateConfig[STATE_SIBLINGS]) {
+			const states = stateConfig[STATE_SIBLINGS];
+			const always = stateConfig.always || [];
+			for (const handler of always) {
+				this.#always.push({
+					actions: resolveActions(actions, handler),
+					condition: resolveCondition(conditions, handler),
+					transitionTo: resolveTransition(states, handler),
+					type: 'always',
+				});
+			}
+
+			const eventHandlers = Object.entries(stateConfig.on || {});
+			for (const [event, handlers] of eventHandlers) {
+				this.#on[event] = handlers.map((handler) => ({
+					actions: resolveActions(actions, handler),
+					condition: resolveCondition(conditions, handler),
+					transitionTo: resolveTransition(states, handler),
+					type: 'dispatch',
+				}));
+			}
 		}
 
 		const entry = stateConfig.entry || [];
@@ -231,16 +243,6 @@ export class CompoundState {
 				transitionTo: null,
 				type: 'exit',
 			});
-		}
-
-		const eventHandlers = Object.entries(stateConfig.on || {});
-		for (const [event, handlers] of eventHandlers) {
-			this.#on[event] = handlers.map((handler) => ({
-				actions: resolveActions(actions, handler),
-				condition: resolveCondition(conditions, handler),
-				transitionTo: resolveTransition(states, handler),
-				type: 'dispatch',
-			}));
 		}
 
 		const iteratorResult = this.#states.values().next();

@@ -3,11 +3,11 @@ import { STATE_CONFIG } from './constants.js';
 /**
  * @typedef {{
  *     actions: {
- *         [x: string]: (this: CompoundState, ...args: any[]) => any,
+ *         [x: string]: (this: AtomicState, ...args: any[]) => any,
  *     }
  *     always: AlwaysHandlerConfig[],
  *     conditions: {
- *         [x: string]: (this: CompoundState, ...args: any[]) => boolean,
+ *         [x: string]: (this: AtomicState, ...args: any[]) => boolean,
  *     }
  *     entry: EntryHandlerConfig[],
  *     exit: ExitHandlerConfig[],
@@ -15,10 +15,7 @@ import { STATE_CONFIG } from './constants.js';
  *     on: {
  *         [x: string]: DispatchHandlerConfig[];
  *     };
- *     states: {
- *         [x: string]: CompoundState;
- *     },
- * }} CompoundStateConfig
+ * }} AtomicStateConfig
  *
  * @typedef {{
  * 	  actions?: string[];
@@ -48,14 +45,14 @@ import { STATE_CONFIG } from './constants.js';
  *     type: 'always';
  *     actions: ((...args: any[]) => any)[];
  *     condition: (...args: any[]) => boolean;
- *     transitionTo: CompoundState | null;
+ *     transitionTo: AtomicState | null;
  * }} AlwaysHandler
  *
  * @typedef {{
  *     type: 'dispatch';
  *     actions: ((...args: any[]) => any)[];
  *     condition: (...args: any[]) => boolean;
- *     transitionTo: CompoundState | null;
+ *     transitionTo: AtomicState | null;
  * }} DispatchHandler
  *
  * @typedef {{
@@ -76,25 +73,22 @@ import { STATE_CONFIG } from './constants.js';
  *     type: 'init';
  *     actions: [];
  *     condition: (...args: any[]) => boolean;
- *     transitionTo: CompoundState;
+ *     transitionTo: AtomicState;
  * }} InitHandler
  *
  * @typedef {AlwaysHandler | DispatchHandler | EntryHandler | ExitHandler | InitHandler} Handler
  *
  * @typedef {{
  *     name: string,
- *     states: {
- *         [x: string]: ESStateJson,
- *     },
  *     transition: {
  *         active: boolean;
- *         from: ESStateJson | undefined,
- *         to: ESStateJson | undefined,
+ *         from: AtomicStateJson | undefined,
+ *         to: AtomicStateJson | undefined,
  *     }
- * }} ESStateJson
+ * }} AtomicStateJson
  */
 
-export class CompoundState {
+export class AtomicState {
 	/** @type {AlwaysHandler[]} */
 	#always = [];
 	/** @type {EntryHandler[]} */
@@ -105,21 +99,17 @@ export class CompoundState {
 	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
-	/** @type {CompoundState | null} */
-	#state = null;
-	/** @type {Map<string, CompoundState>} */
-	#states = new Map();
 	/** @type {Set<(arg: this) => any>} */
 	#subscribers = new Set();
 	#transitionActive = false;
-	/** @type {CompoundState | null} */
+	/** @type {AtomicState | null} */
 	#transitionFrom = null;
-	/** @type {CompoundState | null} */
+	/** @type {AtomicState | null} */
 	#transitionTo = null;
 
 	/**
-	 * @type {CompoundStateConfig & {
-	 *     siblings: Map<string, CompoundState>
+	 * @type {AtomicStateConfig & {
+	 *     siblings: Map<string, AtomicState>
 	 * }}
 	 */
 	[STATE_CONFIG] = {
@@ -130,12 +120,11 @@ export class CompoundState {
 		entry: [],
 		exit: [],
 		on: {},
-		states: {},
 		siblings: new Map(),
 	};
 
 	/**
-	 * @param {Partial<CompoundStateConfig>} [config]
+	 * @param {Partial<AtomicStateConfig>} [config]
 	 */
 	constructor(config) {
 		if (config) {
@@ -146,40 +135,6 @@ export class CompoundState {
 	#callSubscribers() {
 		for (const subscriber of this.#subscribers) {
 			subscriber(this);
-		}
-	}
-	/**
-	 * @param {Handler[]} handlers
-	 * @param {...any} args
-	 */
-	#executeHandlers(handlers, ...args) {
-		for (const { actions, condition, transitionTo } of handlers) {
-			if (!condition.call(this, ...args)) {
-				continue;
-			}
-			if (transitionTo) {
-				this.#transitionFrom = this.#state;
-				this.#transitionTo = transitionTo;
-				this.#transitionActive = true;
-
-				// exit actions for the current state
-				if (this.#state?.exit) {
-					this.#executeHandlers(this.#state.exit, ...args);
-				}
-				// transition actions for the current handler
-				this.#runActions(actions, args);
-				// change the active nested state for this state
-				this.#state = transitionTo;
-				// entry actions for the next state
-				this.#executeHandlers(transitionTo.entry, ...args);
-				// transient actions for the next state
-				this.#executeHandlers(transitionTo.always, ...args);
-				// mark transition as completed
-				this.#transitionActive = false;
-				break;
-			}
-
-			this.#runActions(actions, args);
 		}
 	}
 	/**
@@ -194,7 +149,7 @@ export class CompoundState {
 	get always() {
 		return this.#always;
 	}
-	/** @param {Partial<CompoundStateConfig>} stateConfig */
+	/** @param {Partial<AtomicStateConfig>} stateConfig */
 	configure(stateConfig) {
 		const config = this[STATE_CONFIG];
 		config.name = stateConfig.name || config.name;
@@ -202,7 +157,6 @@ export class CompoundState {
 		Object.assign(config.actions, stateConfig.actions);
 		Object.assign(config.conditions, stateConfig.conditions);
 		Object.assign(config.on, stateConfig.on);
-		Object.assign(config.states, stateConfig.states);
 
 		if (stateConfig.always) config.always = stateConfig.always;
 		if (stateConfig.entry) config.entry = stateConfig.entry;
@@ -211,18 +165,11 @@ export class CompoundState {
 		return this;
 	}
 	/**
-	 * @param {string} event
-	 * @param {...any} value
+	 * @param {string} _event
+	 * @param {...any} _value
 	 */
-	dispatch(event, ...value) {
-		if (!this.#state) return;
-		const handlers = [];
-		if (Object.hasOwn(this.#state.on, event)) {
-			handlers.push(...this.#state.on[event]);
-		}
-		handlers.push(...this.#state.always);
-		this.#executeHandlers(handlers, ...value);
-		this.#callSubscribers();
+	dispatch(_event, ..._value) {
+
 	}
 	get entry() {
 		return this.#entry;
@@ -237,23 +184,9 @@ export class CompoundState {
 		return this.#on;
 	}
 	resolve() {
-		const {
-			always,
-			actions,
-			conditions,
-			entry,
-			exit, name, on, siblings, states,
-		} = this[STATE_CONFIG];
+		const { always, actions, conditions, entry, exit } = this[STATE_CONFIG];
+		const { name, on, siblings } = this[STATE_CONFIG];
 		this.#name = name;
-
-		for (const name in states) {
-			if (Object.hasOwn(states, name)) {
-				const state = states[name];
-				state.configure({ name });
-				this.#states.set(name, state);
-				state[STATE_CONFIG].siblings = this.#states;
-			}
-		}
 
 		for (const handler of always) {
 			this.#always.push({
@@ -290,24 +223,6 @@ export class CompoundState {
 				type: 'exit',
 			});
 		}
-
-		for (const state of this.#states.values()) {
-			state.resolve();
-		}
-
-		const iteratorResult = this.#states.values().next();
-		// Has at least one nested state
-		if (!iteratorResult.done) {
-			this.#executeHandlers([{
-				actions: [],
-				condition: () => true,
-				transitionTo: iteratorResult.value,
-				type: 'init',
-			}]);
-		}
-	}
-	get state() {
-		return this.#state;
 	}
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
@@ -317,18 +232,10 @@ export class CompoundState {
 			this.#subscribers.delete(fn);
 		};
 	}
-	/** @returns {ESStateJson} */
+	/** @returns {AtomicStateJson} */
 	toJSON() {
-		/** @type {ESStateJson['states']} */
-		const states = {};
-
-		for (const [name, state] of this.#states) {
-			states[name] = state.toJSON();
-		}
-
 		return {
 			name: this.name,
-			states,
 			transition: {
 				active: this.#transitionActive,
 				from: this.#transitionFrom?.toJSON(),
@@ -346,7 +253,7 @@ export class CompoundState {
 }
 
 /**
- * @param {NonNullable<CompoundStateConfig['actions']>} config
+ * @param {NonNullable<AtomicStateConfig['actions']>} config
  * @param {Partial<HandlerConfig>} handler
  */
 function resolveActions(config, handler) {
@@ -362,7 +269,7 @@ function resolveActions(config, handler) {
 }
 
 /**
- * @param {NonNullable<CompoundStateConfig['conditions']>} config
+ * @param {NonNullable<AtomicStateConfig['conditions']>} config
  * @param {Partial<HandlerConfig>} handler
  */
 function resolveCondition(config, handler) {
@@ -377,7 +284,7 @@ function resolveCondition(config, handler) {
 }
 
 /**
- * @param {Map<string, CompoundState>} config
+ * @param {Map<string, AtomicState>} config
  * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
  */
 function resolveTransition(config, handler) {

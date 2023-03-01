@@ -118,6 +118,15 @@ export class CompoundState {
 	/** @type {CompoundState | null} */
 	#transitionTo = null;
 
+	/**
+	 * @param {StateConfig} [config]
+	 */
+	constructor(config) {
+		if (config) {
+			this.configure(config);
+		}
+	}
+
 	#callSubscribers() {
 		for (const subscriber of this.#subscribers) {
 			subscriber(this);

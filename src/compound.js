@@ -1,24 +1,23 @@
-import { STATE_SIBLINGS } from './constants.js';
+import { STATE_CONFIG } from './constants.js';
 
 /**
  * @typedef {{
- *     actions?: {
+ *     actions: {
  *         [x: string]: (this: CompoundState, ...args: any[]) => any,
  *     }
- *     always?: AlwaysHandlerConfig[],
- *     conditions?: {
+ *     always: AlwaysHandlerConfig[],
+ *     conditions: {
  *         [x: string]: (this: CompoundState, ...args: any[]) => boolean,
  *     }
- *     entry?: EntryHandlerConfig[],
- *     exit?: ExitHandlerConfig[],
- *     name?: string;
- *     on?: {
+ *     entry: EntryHandlerConfig[],
+ *     exit: ExitHandlerConfig[],
+ *     name: string;
+ *     on: {
  *         [x: string]: DispatchHandlerConfig[];
  *     };
- *     states?: {
- *         [x: string]: StateConfig;
+ *     states: {
+ *         [x: string]: Partial<StateConfig>;
  *     },
- *     [STATE_SIBLINGS]?: Map<string, CompoundState>
  * }} StateConfig
  *
  * @typedef {{
@@ -119,7 +118,24 @@ export class CompoundState {
 	#transitionTo = null;
 
 	/**
-	 * @param {StateConfig} [config]
+	 * @type {StateConfig & {
+	 *     siblings: Map<string, CompoundState>
+	 * }}
+	 */
+	[STATE_CONFIG] = {
+		name: 'state',
+		actions: {},
+		always: [],
+		conditions: {},
+		entry: [],
+		exit: [],
+		on: {},
+		states: {},
+		siblings: new Map(),
+	};
+
+	/**
+	 * @param {Partial<StateConfig>} [config]
 	 */
 	constructor(config) {
 		if (config) {
@@ -178,92 +194,21 @@ export class CompoundState {
 	get always() {
 		return this.#always;
 	}
-	/** @param {StateConfig} stateConfig */
+	/** @param {Partial<StateConfig>} stateConfig */
 	configure(stateConfig) {
-		if (stateConfig.name) {
-			this.#name = stateConfig.name;
-		}
+		const config = this[STATE_CONFIG];
+		config.name = stateConfig.name || config.name;
 
-		const actions = stateConfig.actions || {};
-		const conditions = stateConfig.conditions || {};
-		if (stateConfig.states) {
-			for (const name in stateConfig.states) {
-				if (Object.hasOwn(stateConfig.states, name)) {
-					const state = new CompoundState();
-					this.#states.set(name, state);
-				}
-			}
-			for (const [name, state] of this.#states) {
-				const config = stateConfig.states[name];
-				state.configure({
-					name,
-					...config,
-					actions: {
-						...actions,
-						...config.actions,
-					},
-					conditions: {
-						...conditions,
-						...config.conditions,
-					},
-					[STATE_SIBLINGS]: this.#states,
-				});
-			}
-		}
+		Object.assign(config.actions, stateConfig.actions);
+		Object.assign(config.conditions, stateConfig.conditions);
+		Object.assign(config.on, stateConfig.on);
+		Object.assign(config.states, stateConfig.states);
 
-		if (stateConfig[STATE_SIBLINGS]) {
-			const states = stateConfig[STATE_SIBLINGS];
-			const always = stateConfig.always || [];
-			for (const handler of always) {
-				this.#always.push({
-					actions: resolveActions(actions, handler),
-					condition: resolveCondition(conditions, handler),
-					transitionTo: resolveTransition(states, handler),
-					type: 'always',
-				});
-			}
+		if (stateConfig.always) config.always = stateConfig.always;
+		if (stateConfig.entry) config.entry = stateConfig.entry;
+		if (stateConfig.exit) config.exit = stateConfig.exit;
 
-			const eventHandlers = Object.entries(stateConfig.on || {});
-			for (const [event, handlers] of eventHandlers) {
-				this.#on[event] = handlers.map((handler) => ({
-					actions: resolveActions(actions, handler),
-					condition: resolveCondition(conditions, handler),
-					transitionTo: resolveTransition(states, handler),
-					type: 'dispatch',
-				}));
-			}
-		}
-
-		const entry = stateConfig.entry || [];
-		for (const handler of entry) {
-			this.#entry.push({
-				actions: resolveActions(actions, handler),
-				condition: resolveCondition(conditions, handler),
-				transitionTo: null,
-				type: 'entry',
-			});
-		}
-
-		const exit = stateConfig.exit || [];
-		for (const handler of exit) {
-			this.#exit.push({
-				actions: resolveActions(actions, handler),
-				condition: resolveCondition(conditions, handler),
-				transitionTo: null,
-				type: 'exit',
-			});
-		}
-
-		const iteratorResult = this.#states.values().next();
-		// Has at least one nested state
-		if (!iteratorResult.done) {
-			this.#executeHandlers([{
-				actions: [],
-				condition: () => true,
-				transitionTo: iteratorResult.value,
-				type: 'init',
-			}]);
-		}
+		return this;
 	}
 	/**
 	 * @param {string} event
@@ -290,6 +235,88 @@ export class CompoundState {
 	}
 	get on() {
 		return this.#on;
+	}
+	resolve() {
+		const {
+			always,
+			actions,
+			conditions,
+			entry,
+			exit, name, on, siblings, states,
+		} = this[STATE_CONFIG];
+		this.#name = name;
+
+		for (const name in states) {
+			if (Object.hasOwn(states, name)) {
+				const state = new CompoundState();
+				const config = states[name];
+				state.configure({
+					name,
+					...config,
+					actions: {
+						...actions,
+						...config.actions,
+					},
+					conditions: {
+						...conditions,
+						...config.conditions,
+					},
+				});
+				this.#states.set(name, state);
+				state[STATE_CONFIG].siblings = this.#states;
+			}
+		}
+
+		for (const handler of always) {
+			this.#always.push({
+				actions: resolveActions(actions, handler),
+				condition: resolveCondition(conditions, handler),
+				transitionTo: resolveTransition(siblings, handler),
+				type: 'always',
+			});
+		}
+
+		for (const [event, handlers] of Object.entries(on)) {
+			this.#on[event] = handlers.map((handler) => ({
+				actions: resolveActions(actions, handler),
+				condition: resolveCondition(conditions, handler),
+				transitionTo: resolveTransition(siblings, handler),
+				type: 'dispatch',
+			}));
+		}
+
+		for (const handler of entry) {
+			this.#entry.push({
+				actions: resolveActions(actions, handler),
+				condition: resolveCondition(conditions, handler),
+				transitionTo: null,
+				type: 'entry',
+			});
+		}
+
+		for (const handler of exit) {
+			this.#exit.push({
+				actions: resolveActions(actions, handler),
+				condition: resolveCondition(conditions, handler),
+				transitionTo: null,
+				type: 'exit',
+			});
+		}
+
+		for (const state of this.#states.values()) {
+			state.resolve();
+		}
+
+		const iteratorResult = this.#states.values().next();
+		// Has at least one nested state
+		if (!iteratorResult.done) {
+			this.#executeHandlers([{
+				actions: [],
+				condition: () => true,
+				transitionTo: iteratorResult.value,
+				type: 'init',
+			}]);
+		}
 	}
 	get state() {
 		return this.#state;

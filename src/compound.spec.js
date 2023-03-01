@@ -25,6 +25,7 @@ describe('htstate', () => {
 					},
 				},
 			});
+			machine.resolve();
 		});
 
 		it('sets initial state', () => {
@@ -61,7 +62,7 @@ describe('htstate', () => {
 						}],
 					},
 				},
-			})).toThrow('\'missing\'');
+			}).resolve()).toThrow('\'missing\'');
 		});
 
 		it('throws on missing exit actions', () => {
@@ -73,7 +74,7 @@ describe('htstate', () => {
 						}],
 					},
 				},
-			})).toThrow('\'missing\'');
+			}).resolve()).toThrow('\'missing\'');
 		});
 
 		it('throws on missing transient actions', () => {
@@ -85,7 +86,7 @@ describe('htstate', () => {
 						}],
 					},
 				},
-			})).toThrow('\'missing\'');
+			}).resolve()).toThrow('\'missing\'');
 		});
 	});
 
@@ -160,7 +161,7 @@ describe('htstate', () => {
 						},
 					},
 				},
-			});
+			}).resolve();
 		});
 
 		it('runs initial entry then transient actions', () => {
@@ -273,7 +274,7 @@ describe('htstate', () => {
 						},
 					},
 				},
-			});
+			}).resolve();
 		});
 
 		it('runs initial entry then transient actions', () => {
@@ -624,7 +625,7 @@ describe('htstate', () => {
 					},
 					other: {},
 				},
-			});
+			}).resolve();
 		});
 
 		it('ignores initial entry then transient actions', () => {
@@ -661,7 +662,7 @@ describe('htstate', () => {
 					}],
 				},
 			},
-		});
+		}).resolve();
 		expect(alwaysCount).toBe(1);
 
 		machine.dispatch('non-existent');

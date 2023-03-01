@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { AtomicState } from './atomic.js';
 import { CompoundState } from './compound.js';
 
 const toPojo = (/** @type {any} */ obj) => JSON.parse(JSON.stringify(obj));
@@ -11,14 +12,14 @@ describe('htstate', () => {
 			machine = new CompoundState();
 			machine.configure({
 				states: {
-					state1: new CompoundState({
+					state1: new AtomicState({
 						on: {
 							to2: [{
 								transitionTo: 'state2',
 							}],
 						},
 					}),
-					state2: new CompoundState({
+					state2: new AtomicState({
 						on: {
 							to1: [{
 								transitionTo: 'state1',
@@ -102,7 +103,7 @@ describe('htstate', () => {
 			machine = new CompoundState();
 			machine.configure({
 				states: {
-					first: new CompoundState({
+					first: new AtomicState({
 						always: [{
 							actions: ['always1'],
 						}],
@@ -133,7 +134,7 @@ describe('htstate', () => {
 							},
 						},
 					}),
-					second: new CompoundState({
+					second: new AtomicState({
 						always: [{
 							actions: ['always2'],
 						}],
@@ -243,7 +244,7 @@ describe('htstate', () => {
 					},
 				},
 				states: {
-					first: new CompoundState({
+					first: new AtomicState({
 						always: [{
 							actions: ['always1'],
 						}],
@@ -286,7 +287,7 @@ describe('htstate', () => {
 							},
 						},
 					}),
-					second: new CompoundState({
+					second: new AtomicState({
 						always: [{
 							actions: ['always2'],
 						}],
@@ -341,7 +342,6 @@ describe('htstate', () => {
 					from: null,
 					to: {
 						name: 'first',
-						states: {},
 						transition: {
 							active: false,
 						},
@@ -353,7 +353,6 @@ describe('htstate', () => {
 					from: null,
 					to: {
 						name: 'first',
-						states: {},
 						transition: {
 							active: false,
 						},
@@ -365,7 +364,6 @@ describe('htstate', () => {
 				from: undefined,
 				to: {
 					name: 'first',
-					states: {},
 					transition: {
 						active: false,
 						from: undefined,
@@ -381,7 +379,6 @@ describe('htstate', () => {
 				from: undefined,
 				to: {
 					name: 'first',
-					states: {},
 					transition: {
 						active: false,
 						from: undefined,
@@ -398,14 +395,12 @@ describe('htstate', () => {
 					active: true,
 					from: {
 						name: 'first',
-						states: {},
 						transition: {
 							active: false,
 						},
 					},
 					to: {
 						name: 'second',
-						states: {},
 						transition: {
 							active: false,
 						},
@@ -416,14 +411,12 @@ describe('htstate', () => {
 					active: true,
 					from: {
 						name: 'first',
-						states: {},
 						transition: {
 							active: false,
 						},
 					},
 					to: {
 						name: 'second',
-						states: {},
 						transition: {
 							active: false,
 						},
@@ -434,14 +427,12 @@ describe('htstate', () => {
 					active: true,
 					from: {
 						name: 'first',
-						states: {},
 						transition: {
 							active: false,
 						},
 					},
 					to: {
 						name: 'second',
-						states: {},
 						transition: {
 							active: false,
 						},
@@ -452,14 +443,12 @@ describe('htstate', () => {
 					active: true,
 					from: {
 						name: 'first',
-						states: {},
 						transition: {
 							active: false,
 						},
 					},
 					to: {
 						name: 'second',
-						states: {},
 						transition: {
 							active: false,
 						},
@@ -470,7 +459,6 @@ describe('htstate', () => {
 				active: false,
 				from: {
 					name: 'first',
-					states: {},
 					transition: {
 						active: false,
 						from: undefined,
@@ -479,7 +467,6 @@ describe('htstate', () => {
 				},
 				to: {
 					name: 'second',
-					states: {},
 					transition: {
 						active: false,
 						from: undefined,
@@ -496,14 +483,12 @@ describe('htstate', () => {
 					active: true,
 					from: {
 						name: 'second',
-						states: {},
 						transition: {
 							active: false,
 						},
 					},
 					to: {
 						name: 'first',
-						states: {},
 						transition: {
 							active: false,
 						},
@@ -514,14 +499,12 @@ describe('htstate', () => {
 					active: true,
 					from: {
 						name: 'second',
-						states: {},
 						transition: {
 							active: false,
 						},
 					},
 					to: {
 						name: 'first',
-						states: {},
 						transition: {
 							active: false,
 						},
@@ -532,14 +515,12 @@ describe('htstate', () => {
 					active: true,
 					from: {
 						name: 'second',
-						states: {},
 						transition: {
 							active: false,
 						},
 					},
 					to: {
 						name: 'first',
-						states: {},
 						transition: {
 							active: false,
 						},
@@ -550,14 +531,12 @@ describe('htstate', () => {
 					active: true,
 					from: {
 						name: 'second',
-						states: {},
 						transition: {
 							active: false,
 						},
 					},
 					to: {
 						name: 'first',
-						states: {},
 						transition: {
 							active: false,
 						},
@@ -568,7 +547,6 @@ describe('htstate', () => {
 				active: false,
 				from: {
 					name: 'second',
-					states: {},
 					transition: {
 						active: false,
 						from: undefined,
@@ -577,7 +555,6 @@ describe('htstate', () => {
 				},
 				to: {
 					name: 'first',
-					states: {},
 					transition: {
 						active: false,
 						from: undefined,
@@ -598,7 +575,7 @@ describe('htstate', () => {
 			machine = new CompoundState();
 			machine.configure({
 				states: {
-					current: new CompoundState({
+					current: new AtomicState({
 						always: [
 							{
 								actions: ['always'],
@@ -679,7 +656,7 @@ describe('htstate', () => {
 							},
 						},
 					}),
-					other: new CompoundState(),
+					other: new AtomicState(),
 				},
 			}).resolve();
 		});
@@ -707,7 +684,7 @@ describe('htstate', () => {
 		let alwaysCount = 0;
 		machine.configure({
 			states: {
-				current: new CompoundState({
+				current: new AtomicState({
 					always: [{
 						actions: ['always'],
 					}],

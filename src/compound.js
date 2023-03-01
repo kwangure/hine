@@ -1,6 +1,12 @@
 import { STATE_CONFIG } from './constants.js';
 
 /**
+ * @typedef {import('./atomic.js').AtomicState} AtomicState
+ * @typedef {import('./atomic.js').AtomicStateJson} AtomicStateJson
+ *
+ * @typedef {AtomicState | CompoundState} StateNode
+ * @typedef {AtomicStateJson | CompoundStateJson} StateJson
+ *
  * @typedef {{
  *     actions: {
  *         [x: string]: (this: CompoundState, ...args: any[]) => any,
@@ -16,7 +22,7 @@ import { STATE_CONFIG } from './constants.js';
  *         [x: string]: DispatchHandlerConfig[];
  *     };
  *     states: {
- *         [x: string]: CompoundState;
+ *         [x: string]: StateNode;
  *     },
  * }} CompoundStateConfig
  *
@@ -48,14 +54,14 @@ import { STATE_CONFIG } from './constants.js';
  *     type: 'always';
  *     actions: ((...args: any[]) => any)[];
  *     condition: (...args: any[]) => boolean;
- *     transitionTo: CompoundState | null;
+ *     transitionTo: StateNode | null;
  * }} AlwaysHandler
  *
  * @typedef {{
  *     type: 'dispatch';
  *     actions: ((...args: any[]) => any)[];
  *     condition: (...args: any[]) => boolean;
- *     transitionTo: CompoundState | null;
+ *     transitionTo: StateNode | null;
  * }} DispatchHandler
  *
  * @typedef {{
@@ -76,7 +82,7 @@ import { STATE_CONFIG } from './constants.js';
  *     type: 'init';
  *     actions: [];
  *     condition: (...args: any[]) => boolean;
- *     transitionTo: CompoundState;
+ *     transitionTo: StateNode;
  * }} InitHandler
  *
  * @typedef {AlwaysHandler | DispatchHandler | EntryHandler | ExitHandler | InitHandler} Handler
@@ -84,14 +90,14 @@ import { STATE_CONFIG } from './constants.js';
  * @typedef {{
  *     name: string,
  *     states: {
- *         [x: string]: ESStateJson,
+ *         [x: string]: StateJson,
  *     },
  *     transition: {
  *         active: boolean;
- *         from: ESStateJson | undefined,
- *         to: ESStateJson | undefined,
+ *         from: StateJson | undefined,
+ *         to: StateJson | undefined,
  *     }
- * }} ESStateJson
+ * }} CompoundStateJson
  */
 
 export class CompoundState {
@@ -105,21 +111,21 @@ export class CompoundState {
 	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
-	/** @type {CompoundState | null} */
+	/** @type {StateNode | null} */
 	#state = null;
-	/** @type {Map<string, CompoundState>} */
+	/** @type {Map<string, StateNode>} */
 	#states = new Map();
 	/** @type {Set<(arg: this) => any>} */
 	#subscribers = new Set();
 	#transitionActive = false;
-	/** @type {CompoundState | null} */
+	/** @type {StateNode | null} */
 	#transitionFrom = null;
-	/** @type {CompoundState | null} */
+	/** @type {StateNode | null} */
 	#transitionTo = null;
 
 	/**
 	 * @type {CompoundStateConfig & {
-	 *     siblings: Map<string, CompoundState>
+	 *     siblings: Map<string, StateNode>
 	 * }}
 	 */
 	[STATE_CONFIG] = {
@@ -297,14 +303,16 @@ export class CompoundState {
 
 		const iteratorResult = this.#states.values().next();
 		// Has at least one nested state
-		if (!iteratorResult.done) {
-			this.#executeHandlers([{
-				actions: [],
-				condition: () => true,
-				transitionTo: iteratorResult.value,
-				type: 'init',
-			}]);
+		if (iteratorResult.done) {
+			throw Error('Compound states require at least one child');
 		}
+		this.#executeHandlers([{
+			actions: [],
+			condition: () => true,
+			transitionTo: iteratorResult.value,
+			type: 'init',
+		}]);
+
 	}
 	get state() {
 		return this.#state;
@@ -317,9 +325,9 @@ export class CompoundState {
 			this.#subscribers.delete(fn);
 		};
 	}
-	/** @returns {ESStateJson} */
+	/** @returns {CompoundStateJson} */
 	toJSON() {
-		/** @type {ESStateJson['states']} */
+		/** @type {CompoundStateJson['states']} */
 		const states = {};
 
 		for (const [name, state] of this.#states) {
@@ -377,7 +385,7 @@ function resolveCondition(config, handler) {
 }
 
 /**
- * @param {Map<string, CompoundState>} config
+ * @param {Map<string, StateNode>} config
  * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
  */
 function resolveTransition(config, handler) {

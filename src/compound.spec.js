@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { HState } from './state.js';
+import { CompoundState } from './compound.js';
 
 describe('htstate', () => {
 	describe('basics', () => {
-		/** @type {HState} */
+		/** @type {CompoundState} */
 		let machine;
 		beforeEach(() => {
-			machine = new HState();
+			machine = new CompoundState();
 			machine.configure({
 				states: {
 					state1: {
@@ -47,10 +47,10 @@ describe('htstate', () => {
 	});
 
 	describe('missing actions', () => {
-		/** @type {HState} */
+		/** @type {CompoundState} */
 		let machine;
 		beforeEach(() => {
-			machine = new HState();
+			machine = new CompoundState();
 		});
 		it('throws on missing entry actions', () => {
 			expect(() => machine.configure({
@@ -90,13 +90,13 @@ describe('htstate', () => {
 	});
 
 	describe('actions', () => {
-		/** @type {HState} */
+		/** @type {CompoundState} */
 		let machine;
 		/** @type {string[]} */
 		let actions;
 		beforeEach(() => {
 			actions = [];
-			machine = new HState();
+			machine = new CompoundState();
 			machine.configure({
 				actions: {
 					always1() {
@@ -179,13 +179,13 @@ describe('htstate', () => {
 	});
 
 	describe('transitions', () => {
-		/** @type {HState} */
+		/** @type {CompoundState} */
 		let machine;
 		/** @type {string[]} */
 		let transitions;
 		beforeEach(() => {
 			transitions = [];
-			machine = new HState();
+			machine = new CompoundState();
 			machine.configure({
 				actions: {
 					always1() {
@@ -532,13 +532,13 @@ describe('htstate', () => {
 	});
 
 	describe('conditions', () => {
-		/** @type {HState} */
+		/** @type {CompoundState} */
 		let machine;
 		/** @type {string[]} */
 		let actions;
 		beforeEach(() => {
 			actions = [];
-			machine = new HState();
+			machine = new CompoundState();
 			machine.configure({
 				actions: {
 					ignore() {
@@ -645,7 +645,7 @@ describe('htstate', () => {
 	});
 
 	it('always runs transient actions', () => {
-		const machine = new HState();
+		const machine = new CompoundState();
 		/** @type {number} */
 		let alwaysCount = 0;
 		machine.configure({

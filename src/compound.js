@@ -3,11 +3,11 @@ import { STATE_SIBLINGS } from './constants.js';
 /**
  * @typedef {{
  *     actions?: {
- *         [x: string]: (this: HState, ...args: any[]) => any,
+ *         [x: string]: (this: CompoundState, ...args: any[]) => any,
  *     }
  *     always?: AlwaysHandlerConfig[],
  *     conditions?: {
- *         [x: string]: (this: HState, ...args: any[]) => boolean,
+ *         [x: string]: (this: CompoundState, ...args: any[]) => boolean,
  *     }
  *     entry?: EntryHandlerConfig[],
  *     exit?: ExitHandlerConfig[],
@@ -18,7 +18,7 @@ import { STATE_SIBLINGS } from './constants.js';
  *     states?: {
  *         [x: string]: StateConfig;
  *     },
- *     [STATE_SIBLINGS]?: Map<string, HState>
+ *     [STATE_SIBLINGS]?: Map<string, CompoundState>
  * }} StateConfig
  *
  * @typedef {{
@@ -49,14 +49,14 @@ import { STATE_SIBLINGS } from './constants.js';
  *     type: 'always';
  *     actions: ((...args: any[]) => any)[];
  *     condition: (...args: any[]) => boolean;
- *     transitionTo: HState | null;
+ *     transitionTo: CompoundState | null;
  * }} AlwaysHandler
  *
  * @typedef {{
  *     type: 'dispatch';
  *     actions: ((...args: any[]) => any)[];
  *     condition: (...args: any[]) => boolean;
- *     transitionTo: HState | null;
+ *     transitionTo: CompoundState | null;
  * }} DispatchHandler
  *
  * @typedef {{
@@ -77,7 +77,7 @@ import { STATE_SIBLINGS } from './constants.js';
  *     type: 'init';
  *     actions: [];
  *     condition: (...args: any[]) => boolean;
- *     transitionTo: HState;
+ *     transitionTo: CompoundState;
  * }} InitHandler
  *
  * @typedef {AlwaysHandler | DispatchHandler | EntryHandler | ExitHandler | InitHandler} Handler
@@ -95,7 +95,7 @@ import { STATE_SIBLINGS } from './constants.js';
  * }} ESStateJson
  */
 
-export class HState {
+export class CompoundState {
 	/** @type {AlwaysHandler[]} */
 	#always = [];
 	#configured = false;
@@ -107,16 +107,16 @@ export class HState {
 	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
-	/** @type {HState | null} */
+	/** @type {CompoundState | null} */
 	#state = null;
-	/** @type {Map<string, HState>} */
+	/** @type {Map<string, CompoundState>} */
 	#states = new Map();
 	/** @type {Set<(arg: this) => any>} */
 	#subscribers = new Set();
 	#transitionActive = false;
-	/** @type {HState | null} */
+	/** @type {CompoundState | null} */
 	#transitionFrom = null;
-	/** @type {HState | null} */
+	/** @type {CompoundState | null} */
 	#transitionTo = null;
 
 	#callSubscribers() {
@@ -184,7 +184,7 @@ export class HState {
 		if (stateConfig.states) {
 			for (const name in stateConfig.states) {
 				if (Object.hasOwn(stateConfig.states, name)) {
-					const state = new HState();
+					const state = new CompoundState();
 					this.#states.set(name, state);
 				}
 			}
@@ -323,10 +323,6 @@ export class HState {
 	}
 }
 
-export function create() {
-	return new HState();
-}
-
 /**
  * @param {NonNullable<StateConfig['actions']>} config
  * @param {Partial<HandlerConfig>} handler
@@ -359,7 +355,7 @@ function resolveCondition(config, handler) {
 }
 
 /**
- * @param {Map<string, HState>} config
+ * @param {Map<string, CompoundState>} config
  * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
  */
 function resolveTransition(config, handler) {

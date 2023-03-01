@@ -98,7 +98,6 @@ import { STATE_SIBLINGS } from './constants.js';
 export class CompoundState {
 	/** @type {AlwaysHandler[]} */
 	#always = [];
-	#configured = false;
 	/** @type {EntryHandler[]} */
 	#entry = [];
 	/** @type {ExitHandler[]} */
@@ -172,9 +171,6 @@ export class CompoundState {
 	}
 	/** @param {StateConfig} stateConfig */
 	configure(stateConfig) {
-		if (this.#configured) throw Error('State already configured');
-		this.#configured = true;
-
 		if (stateConfig.name) {
 			this.#name = stateConfig.name;
 		}

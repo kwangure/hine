@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CompoundState } from './compound.js';
 
+const toPojo = (/** @type {any} */ obj) => JSON.parse(JSON.stringify(obj));
+
 describe('htstate', () => {
 	describe('basics', () => {
 		/** @type {CompoundState} */
@@ -9,20 +11,20 @@ describe('htstate', () => {
 			machine = new CompoundState();
 			machine.configure({
 				states: {
-					state1: {
+					state1: new CompoundState({
 						on: {
 							to2: [{
 								transitionTo: 'state2',
 							}],
 						},
-					},
-					state2: {
+					}),
+					state2: new CompoundState({
 						on: {
 							to1: [{
 								transitionTo: 'state1',
 							}],
 						},
-					},
+					}),
 				},
 			});
 			machine.resolve();
@@ -56,11 +58,11 @@ describe('htstate', () => {
 		it('throws on missing entry actions', () => {
 			expect(() => machine.configure({
 				states: {
-					first: {
+					first: new CompoundState({
 						entry: [{
 							actions: ['missing'],
 						}],
-					},
+					}),
 				},
 			}).resolve()).toThrow('\'missing\'');
 		});
@@ -68,11 +70,11 @@ describe('htstate', () => {
 		it('throws on missing exit actions', () => {
 			expect(() => machine.configure({
 				states: {
-					first: {
+					first: new CompoundState({
 						exit: [{
 							actions: ['missing'],
 						}],
-					},
+					}),
 				},
 			}).resolve()).toThrow('\'missing\'');
 		});
@@ -80,11 +82,11 @@ describe('htstate', () => {
 		it('throws on missing transient actions', () => {
 			expect(() => machine.configure({
 				states: {
-					first: {
+					first: new CompoundState({
 						always: [{
 							actions: ['missing'],
 						}],
-					},
+					}),
 				},
 			}).resolve()).toThrow('\'missing\'');
 		});
@@ -99,34 +101,8 @@ describe('htstate', () => {
 			actions = [];
 			machine = new CompoundState();
 			machine.configure({
-				actions: {
-					always1() {
-						actions.push('always1');
-					},
-					entry1() {
-						actions.push('entry1');
-					},
-					exit1() {
-						actions.push('exit1');
-					},
-					transition1() {
-						actions.push('transition1');
-					},
-					always2() {
-						actions.push('always2');
-					},
-					entry2() {
-						actions.push('entry2');
-					},
-					exit2() {
-						actions.push('exit2');
-					},
-					transition2() {
-						actions.push('transition2');
-					},
-				},
 				states: {
-					first: {
+					first: new CompoundState({
 						always: [{
 							actions: ['always1'],
 						}],
@@ -142,8 +118,22 @@ describe('htstate', () => {
 								actions: ['transition1'],
 							}],
 						},
-					},
-					second: {
+						actions: {
+							always1() {
+								actions.push('always1');
+							},
+							entry1() {
+								actions.push('entry1');
+							},
+							exit1() {
+								actions.push('exit1');
+							},
+							transition1() {
+								actions.push('transition1');
+							},
+						},
+					}),
+					second: new CompoundState({
 						always: [{
 							actions: ['always2'],
 						}],
@@ -159,7 +149,21 @@ describe('htstate', () => {
 								actions: ['transition2'],
 							}],
 						},
-					},
+						actions: {
+							always2() {
+								actions.push('always2');
+							},
+							entry2() {
+								actions.push('entry2');
+							},
+							exit2() {
+								actions.push('exit2');
+							},
+							transition2() {
+								actions.push('transition2');
+							},
+						},
+					}),
 				},
 			}).resolve();
 		});
@@ -191,55 +195,55 @@ describe('htstate', () => {
 				actions: {
 					always1() {
 						transitions.push({
-							...JSON.parse(JSON.stringify(this.transition)),
+							...toPojo(this.transition),
 							action: 'always1',
 						});
 					},
 					entry1() {
 						transitions.push({
-							...JSON.parse(JSON.stringify(this.transition)),
+							...toPojo(this.transition),
 							action: 'entry1',
 						});
 					},
 					exit1() {
 						transitions.push({
-							...JSON.parse(JSON.stringify(this.transition)),
+							...toPojo(this.transition),
 							action: 'exit1',
 						});
 					},
 					transition1() {
 						transitions.push({
-							...JSON.parse(JSON.stringify(this.transition)),
+							...toPojo(this.transition),
 							action: 'transition1',
 						});
 					},
 					always2() {
 						transitions.push({
-							...JSON.parse(JSON.stringify(this.transition)),
+							...toPojo(this.transition),
 							action: 'always2',
 						});
 					},
 					entry2() {
 						transitions.push({
-							...JSON.parse(JSON.stringify(this.transition)),
+							...toPojo(this.transition),
 							action: 'entry2',
 						});
 					},
 					exit2() {
 						transitions.push({
-							...JSON.parse(JSON.stringify(this.transition)),
+							...toPojo(this.transition),
 							action: 'exit2',
 						});
 					},
 					transition2() {
 						transitions.push({
-							...JSON.parse(JSON.stringify(this.transition)),
+							...toPojo(this.transition),
 							action: 'transition2',
 						});
 					},
 				},
 				states: {
-					first: {
+					first: new CompoundState({
 						always: [{
 							actions: ['always1'],
 						}],
@@ -255,8 +259,34 @@ describe('htstate', () => {
 								actions: ['transition1'],
 							}],
 						},
-					},
-					second: {
+						actions: {
+							always1() {
+								transitions.push({
+									...toPojo(this.transition),
+									action: 'always1',
+								});
+							},
+							entry1() {
+								transitions.push({
+									...toPojo(this.transition),
+									action: 'entry1',
+								});
+							},
+							exit1() {
+								transitions.push({
+									...toPojo(this.transition),
+									action: 'exit1',
+								});
+							},
+							transition1() {
+								transitions.push({
+									...toPojo(this.transition),
+									action: 'transition1',
+								});
+							},
+						},
+					}),
+					second: new CompoundState({
 						always: [{
 							actions: ['always2'],
 						}],
@@ -272,7 +302,33 @@ describe('htstate', () => {
 								actions: ['transition2'],
 							}],
 						},
-					},
+						actions: {
+							always2() {
+								transitions.push({
+									...toPojo(this.transition),
+									action: 'always2',
+								});
+							},
+							entry2() {
+								transitions.push({
+									...toPojo(this.transition),
+									action: 'entry2',
+								});
+							},
+							exit2() {
+								transitions.push({
+									...toPojo(this.transition),
+									action: 'exit2',
+								});
+							},
+							transition2() {
+								transitions.push({
+									...toPojo(this.transition),
+									action: 'transition2',
+								});
+							},
+						},
+					}),
 				},
 			}).resolve();
 		});
@@ -541,33 +597,8 @@ describe('htstate', () => {
 			actions = [];
 			machine = new CompoundState();
 			machine.configure({
-				actions: {
-					ignore() {
-						actions.push('ignore');
-					},
-					always() {
-						actions.push('always');
-					},
-					entry() {
-						actions.push('entry');
-					},
-					exit() {
-						actions.push('exit');
-					},
-					transition() {
-						actions.push('transition');
-					},
-				},
-				conditions: {
-					run() {
-						return true;
-					},
-					ignore() {
-						return false;
-					},
-				},
 				states: {
-					current: {
+					current: new CompoundState({
 						always: [
 							{
 								actions: ['always'],
@@ -622,8 +653,33 @@ describe('htstate', () => {
 								},
 							],
 						},
-					},
-					other: {},
+						actions: {
+							ignore() {
+								actions.push('ignore');
+							},
+							always() {
+								actions.push('always');
+							},
+							entry() {
+								actions.push('entry');
+							},
+							exit() {
+								actions.push('exit');
+							},
+							transition() {
+								actions.push('transition');
+							},
+						},
+						conditions: {
+							run() {
+								return true;
+							},
+							ignore() {
+								return false;
+							},
+						},
+					}),
+					other: new CompoundState(),
 				},
 			}).resolve();
 		});
@@ -650,17 +706,17 @@ describe('htstate', () => {
 		/** @type {number} */
 		let alwaysCount = 0;
 		machine.configure({
-			actions: {
-				always() {
-					alwaysCount++;
-				},
-			},
 			states: {
-				current: {
+				current: new CompoundState({
 					always: [{
 						actions: ['always'],
 					}],
-				},
+					actions: {
+						always() {
+							alwaysCount++;
+						},
+					},
+				}),
 			},
 		}).resolve();
 		expect(alwaysCount).toBe(1);

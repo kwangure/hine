@@ -16,7 +16,7 @@ import { STATE_CONFIG } from './constants.js';
  *         [x: string]: DispatchHandlerConfig[];
  *     };
  *     states: {
- *         [x: string]: Partial<StateConfig>;
+ *         [x: string]: CompoundState;
  *     },
  * }} StateConfig
  *
@@ -248,20 +248,8 @@ export class CompoundState {
 
 		for (const name in states) {
 			if (Object.hasOwn(states, name)) {
-				const state = new CompoundState();
-				const config = states[name];
-				state.configure({
-					name,
-					...config,
-					actions: {
-						...actions,
-						...config.actions,
-					},
-					conditions: {
-						...conditions,
-						...config.conditions,
-					},
-				});
+				const state = states[name];
+				state.configure({ name });
 				this.#states.set(name, state);
 				state[STATE_CONFIG].siblings = this.#states;
 			}

@@ -136,12 +136,12 @@ export class AtomicState {
 		return this.#on;
 	}
 	resolve() {
-		const { always, actions, entry, exit, name, on } = this[STATE_CONFIG];
+		const { always, entry, exit, name, on } = this[STATE_CONFIG];
 		this.#name = name;
 
 		for (const handler of always) {
 			this.#always.push({
-				actions: resolveActions(actions, handler),
+				actions: this.resolveActions(handler),
 				condition: this.resolveCondition(handler),
 				transitionTo: this.resolveTransition(handler),
 				type: 'always',
@@ -150,7 +150,7 @@ export class AtomicState {
 
 		for (const [event, handlers] of Object.entries(on)) {
 			this.#on[event] = handlers.map((handler) => ({
-				actions: resolveActions(actions, handler),
+				actions: this.resolveActions(handler),
 				condition: this.resolveCondition(handler),
 				transitionTo: this.resolveTransition(handler),
 				type: 'dispatch',
@@ -159,7 +159,7 @@ export class AtomicState {
 
 		for (const handler of entry) {
 			this.#entry.push({
-				actions: resolveActions(actions, handler),
+				actions: this.resolveActions(handler),
 				condition: this.resolveCondition(handler),
 				transitionTo: null,
 				type: 'entry',
@@ -168,12 +168,26 @@ export class AtomicState {
 
 		for (const handler of exit) {
 			this.#exit.push({
-				actions: resolveActions(actions, handler),
+				actions: this.resolveActions(handler),
 				condition: this.resolveCondition(handler),
 				transitionTo: null,
 				type: 'exit',
 			});
 		}
+	}
+	/**
+	 * @param {Partial<HandlerConfig>} handler
+	 */
+	resolveActions(handler) {
+		const actions = [];
+		for (const name of handler.actions || []) {
+			const action = this[STATE_CONFIG].actions[name];
+			if (!action) {
+				throw Error(`State references unknown action '${name}'.`);
+			}
+			actions.push(action);
+		}
+		return actions;
 	}
 	/**
 	 * @param {Partial<HandlerConfig>} handler
@@ -228,20 +242,4 @@ export class AtomicState {
 			to: this.#transitionTo,
 		};
 	}
-}
-
-/**
- * @param {NonNullable<AtomicStateConfig['actions']>} config
- * @param {Partial<HandlerConfig>} handler
- */
-function resolveActions(config, handler) {
-	const actions = [];
-	for (const name of handler.actions || []) {
-		const action = config[name];
-		if (!action) {
-			throw Error(`State references unknown action '${name}'.`);
-		}
-		actions.push(action);
-	}
-	return actions;
 }

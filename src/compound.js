@@ -251,6 +251,7 @@ export class CompoundState extends BaseState {
 			type: 'init',
 		}]);
 
+		return this;
 	}
 	/**
 	 * @param {Partial<HandlerConfig>} handler

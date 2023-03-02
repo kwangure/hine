@@ -63,4 +63,77 @@ describe('actions', () => {
 			.start();
 		expect(log).toEqual(['entry0', 'always0', 'entry1', 'always1', 'entry2', 'always2']);
 	});
+
+	it('runs entry then transient actions on transition', () => {
+		/** @type {string[]} */
+		const log = [];
+		const machine = new CompoundState({
+			states: {
+				a: new AtomicState({
+					on: {
+						event: [{
+							transitionTo: 'b',
+						}],
+					},
+				}),
+				b: new CompoundState({
+					name: 's0',
+					actions: {
+						always0() {
+							log.push('always0');
+						},
+						entry0() {
+							log.push('entry0');
+						},
+					},
+					always: [{
+						actions: ['always0'],
+					}],
+					entry: [{
+						actions: ['entry0'],
+					}],
+					states: {
+						s1: new CompoundState({
+							actions: {
+								always1() {
+									log.push('always1');
+								},
+								entry1() {
+									log.push('entry1');
+								},
+							},
+							always: [{
+								actions: ['always1'],
+							}],
+							entry: [{
+								actions: ['entry1'],
+							}],
+							states: {
+								s2: new AtomicState({
+									actions: {
+										always2() {
+											log.push('always2');
+										},
+										entry2() {
+											log.push('entry2');
+										},
+									},
+									always: [{
+										actions: ['always2'],
+									}],
+									entry: [{
+										actions: ['entry2'],
+									}],
+								}),
+							},
+						}),
+					},
+				}),
+			},
+		})
+			.resolve()
+			.start();
+		machine.dispatch('event');
+		expect(log).toEqual(['entry0', 'always0', 'entry1', 'always1', 'entry2', 'always2']);
+	});
 });

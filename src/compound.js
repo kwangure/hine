@@ -343,7 +343,8 @@ export class CompoundState extends BaseState {
 			this.#state = transitionTo;
 			// entry actions for the next state
 			// TODO: Handle always transitions
-			transitionTo[RUN_ENTRY_HANDLERS](value);
+			transitionTo[SET_INITIAL_STATE]();
+			transitionTo[RUN_ENTRY_HANDLERS_DEEP]([]);
 		}
 		const handlers = [];
 		if (Object.hasOwn(this.#on, event)) {

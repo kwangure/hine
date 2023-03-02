@@ -136,14 +136,13 @@ export class AtomicState {
 		return this.#on;
 	}
 	resolve() {
-		const { always, actions, conditions, entry, exit } = this[STATE_CONFIG];
-		const { name, on } = this[STATE_CONFIG];
+		const { always, actions, entry, exit, name, on } = this[STATE_CONFIG];
 		this.#name = name;
 
 		for (const handler of always) {
 			this.#always.push({
 				actions: resolveActions(actions, handler),
-				condition: resolveCondition(conditions, handler),
+				condition: this.resolveCondition(handler),
 				transitionTo: this.resolveTransition(handler),
 				type: 'always',
 			});
@@ -152,7 +151,7 @@ export class AtomicState {
 		for (const [event, handlers] of Object.entries(on)) {
 			this.#on[event] = handlers.map((handler) => ({
 				actions: resolveActions(actions, handler),
-				condition: resolveCondition(conditions, handler),
+				condition: this.resolveCondition(handler),
 				transitionTo: this.resolveTransition(handler),
 				type: 'dispatch',
 			}));
@@ -161,7 +160,7 @@ export class AtomicState {
 		for (const handler of entry) {
 			this.#entry.push({
 				actions: resolveActions(actions, handler),
-				condition: resolveCondition(conditions, handler),
+				condition: this.resolveCondition(handler),
 				transitionTo: null,
 				type: 'entry',
 			});
@@ -170,11 +169,24 @@ export class AtomicState {
 		for (const handler of exit) {
 			this.#exit.push({
 				actions: resolveActions(actions, handler),
-				condition: resolveCondition(conditions, handler),
+				condition: this.resolveCondition(handler),
 				transitionTo: null,
 				type: 'exit',
 			});
 		}
+	}
+	/**
+	 * @param {Partial<HandlerConfig>} handler
+	 */
+	resolveCondition(handler) {
+		if (handler.condition === undefined) {
+			return () => true;
+		}
+		const condition = this[STATE_CONFIG].conditions[handler.condition];
+		if (!condition) {
+			throw Error(`State references unknown condition '${handler.condition}'.`);
+		}
+		return condition;
 	}
 	/**
 	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
@@ -232,19 +244,4 @@ function resolveActions(config, handler) {
 		actions.push(action);
 	}
 	return actions;
-}
-
-/**
- * @param {NonNullable<AtomicStateConfig['conditions']>} config
- * @param {Partial<HandlerConfig>} handler
- */
-function resolveCondition(config, handler) {
-	if (handler.condition === undefined) {
-		return () => true;
-	}
-	const condition = config[handler.condition];
-	if (!condition) {
-		throw Error(`State references unknown condition '${handler.condition}'.`);
-	}
-	return condition;
 }

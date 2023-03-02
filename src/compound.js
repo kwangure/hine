@@ -195,7 +195,6 @@ export class CompoundState {
 		const {
 			always,
 			actions,
-			conditions,
 			entry,
 			exit, name, on, states,
 		} = this[STATE_CONFIG];
@@ -213,7 +212,7 @@ export class CompoundState {
 		for (const handler of always) {
 			this.#always.push({
 				actions: resolveActions(actions, handler),
-				condition: resolveCondition(conditions, handler),
+				condition: this.resolveCondition(handler),
 				transitionTo: this.resolveTransition(handler),
 				type: 'always',
 			});
@@ -222,7 +221,7 @@ export class CompoundState {
 		for (const [event, handlers] of Object.entries(on)) {
 			this.#on[event] = handlers.map((handler) => ({
 				actions: resolveActions(actions, handler),
-				condition: resolveCondition(conditions, handler),
+				condition: this.resolveCondition(handler),
 				transitionTo: this.resolveTransition(handler),
 				type: 'dispatch',
 			}));
@@ -231,7 +230,7 @@ export class CompoundState {
 		for (const handler of entry) {
 			this.#entry.push({
 				actions: resolveActions(actions, handler),
-				condition: resolveCondition(conditions, handler),
+				condition: this.resolveCondition(handler),
 				transitionTo: null,
 				type: 'entry',
 			});
@@ -240,7 +239,7 @@ export class CompoundState {
 		for (const handler of exit) {
 			this.#exit.push({
 				actions: resolveActions(actions, handler),
-				condition: resolveCondition(conditions, handler),
+				condition: this.resolveCondition(handler),
 				transitionTo: null,
 				type: 'exit',
 			});
@@ -262,6 +261,19 @@ export class CompoundState {
 			type: 'init',
 		}]);
 
+	}
+	/**
+	 * @param {Partial<HandlerConfig>} handler
+	 */
+	resolveCondition(handler) {
+		if (handler.condition === undefined) {
+			return () => true;
+		}
+		const condition = this[STATE_CONFIG].conditions[handler.condition];
+		if (!condition) {
+			throw Error(`State references unknown condition '${handler.condition}'.`);
+		}
+		return condition;
 	}
 	/**
 	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
@@ -330,19 +342,4 @@ function resolveActions(config, handler) {
 		actions.push(action);
 	}
 	return actions;
-}
-
-/**
- * @param {NonNullable<CompoundStateConfig['conditions']>} config
- * @param {Partial<HandlerConfig>} handler
- */
-function resolveCondition(config, handler) {
-	if (handler.condition === undefined) {
-		return () => true;
-	}
-	const condition = config[handler.condition];
-	if (!condition) {
-		throw Error(`State references unknown condition '${handler.condition}'.`);
-	}
-	return condition;
 }

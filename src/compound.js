@@ -1,11 +1,21 @@
 import { STATE_CONFIG } from './constants.js';
 
 /**
- * @typedef {import('./atomic.js').AtomicState} AtomicState
- * @typedef {import('./atomic.js').AtomicStateJson} AtomicStateJson
+ * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
+ * @typedef {import('./types.js').DispatchHandlerConfig} DispatchHandlerConfig
+ * @typedef {import('./types.js').EntryHandlerConfig} EntryHandlerConfig
+ * @typedef {import('./types.js').ExitHandlerConfig} ExitHandlerConfig
+ * @typedef {import('./types.js').HandlerConfig} HandlerConfig
  *
- * @typedef {AtomicState | CompoundState} StateNode
- * @typedef {AtomicStateJson | CompoundStateJson} StateJson
+ * @typedef {import('./types.js').AlwaysHandler} AlwaysHandler
+ * @typedef {import('./types.js').DispatchHandler} DispatchHandler
+ * @typedef {import('./types.js').EntryHandler} EntryHandler
+ * @typedef {import('./types.js').ExitHandler} ExitHandler
+ * @typedef {import('./types.js').InitHandler} InitHandler
+ * @typedef {import('./types.js').Handler} Handler
+ *
+ * @typedef {import('./types.js').StateNode} StateNode
+ * @typedef {import('./types.js').StateJson} StateJson
  *
  * @typedef {{
  *     actions: {
@@ -25,67 +35,6 @@ import { STATE_CONFIG } from './constants.js';
  *         [x: string]: StateNode;
  *     },
  * }} CompoundStateConfig
- *
- * @typedef {{
- * 	  actions?: string[];
- * 	  condition?: string;
- * 	  transitionTo?: string;
- * }} AlwaysHandlerConfig
- *
- * @typedef {{
- * 	  actions?: string[];
- * 	  condition?: string;
- * 	  transitionTo?: string;
- * }} DispatchHandlerConfig
- *
- * @typedef {{
- * 	  actions?: string[];
- * 	  condition?: string;
- * }} EntryHandlerConfig
- *
- * @typedef {{
- * 	  actions?: string[];
- * 	  condition?: string;
- * }} ExitHandlerConfig
- *
- * @typedef {AlwaysHandlerConfig | DispatchHandlerConfig | EntryHandlerConfig | ExitHandlerConfig} HandlerConfig
- *
- * @typedef {{
- *     type: 'always';
- *     actions: ((...args: any[]) => any)[];
- *     condition: (...args: any[]) => boolean;
- *     transitionTo: StateNode | null;
- * }} AlwaysHandler
- *
- * @typedef {{
- *     type: 'dispatch';
- *     actions: ((...args: any[]) => any)[];
- *     condition: (...args: any[]) => boolean;
- *     transitionTo: StateNode | null;
- * }} DispatchHandler
- *
- * @typedef {{
- *     type: 'entry';
- *     actions: ((...args: any[]) => any)[];
- *     condition: (...args: any[]) => boolean;
- *     transitionTo: null;
- * }} EntryHandler
- *
- * @typedef {{
- *     type: 'exit';
- *     actions: ((...args: any[]) => any)[];
- *     condition: (...args: any[]) => boolean;
- *     transitionTo: null;
- * }} ExitHandler
- *
- * @typedef {{
- *     type: 'init';
- *     actions: [];
- *     condition: (...args: any[]) => boolean;
- *     transitionTo: StateNode;
- * }} InitHandler
- *
- * @typedef {AlwaysHandler | DispatchHandler | EntryHandler | ExitHandler | InitHandler} Handler
  *
  * @typedef {{
  *     name: string,

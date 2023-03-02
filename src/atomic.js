@@ -17,66 +17,18 @@ import { STATE_CONFIG } from './constants.js';
  *     };
  * }} AtomicStateConfig
  *
- * @typedef {{
- * 	  actions?: string[];
- * 	  condition?: string;
- * 	  transitionTo?: string;
- * }} AlwaysHandlerConfig
+ * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
+ * @typedef {import('./types.js').DispatchHandlerConfig} DispatchHandlerConfig
+ * @typedef {import('./types.js').EntryHandlerConfig} EntryHandlerConfig
+ * @typedef {import('./types.js').ExitHandlerConfig} ExitHandlerConfig
+ * @typedef {import('./types.js').HandlerConfig} HandlerConfig
  *
- * @typedef {{
- * 	  actions?: string[];
- * 	  condition?: string;
- * 	  transitionTo?: string;
- * }} DispatchHandlerConfig
- *
- * @typedef {{
- * 	  actions?: string[];
- * 	  condition?: string;
- * }} EntryHandlerConfig
- *
- * @typedef {{
- * 	  actions?: string[];
- * 	  condition?: string;
- * }} ExitHandlerConfig
- *
- * @typedef {AlwaysHandlerConfig | DispatchHandlerConfig | EntryHandlerConfig | ExitHandlerConfig} HandlerConfig
- *
- * @typedef {{
- *     type: 'always';
- *     actions: ((...args: any[]) => any)[];
- *     condition: (...args: any[]) => boolean;
- *     transitionTo: AtomicState | null;
- * }} AlwaysHandler
- *
- * @typedef {{
- *     type: 'dispatch';
- *     actions: ((...args: any[]) => any)[];
- *     condition: (...args: any[]) => boolean;
- *     transitionTo: AtomicState | null;
- * }} DispatchHandler
- *
- * @typedef {{
- *     type: 'entry';
- *     actions: ((...args: any[]) => any)[];
- *     condition: (...args: any[]) => boolean;
- *     transitionTo: null;
- * }} EntryHandler
- *
- * @typedef {{
- *     type: 'exit';
- *     actions: ((...args: any[]) => any)[];
- *     condition: (...args: any[]) => boolean;
- *     transitionTo: null;
- * }} ExitHandler
- *
- * @typedef {{
- *     type: 'init';
- *     actions: [];
- *     condition: (...args: any[]) => boolean;
- *     transitionTo: AtomicState;
- * }} InitHandler
- *
- * @typedef {AlwaysHandler | DispatchHandler | EntryHandler | ExitHandler | InitHandler} Handler
+ * @typedef {import('./types.js').AlwaysHandler} AlwaysHandler
+ * @typedef {import('./types.js').DispatchHandler} DispatchHandler
+ * @typedef {import('./types.js').EntryHandler} EntryHandler
+ * @typedef {import('./types.js').ExitHandler} ExitHandler
+ * @typedef {import('./types.js').InitHandler} InitHandler
+ * @typedef {import('./types.js').Handler} Handler
  *
  * @typedef {{
  *     name: string,

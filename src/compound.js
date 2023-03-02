@@ -1,4 +1,5 @@
-import { STATE_CONFIG } from './constants.js';
+import { STATE_CALL_SUBSCRIBERS, STATE_CONFIG } from './constants.js';
+import { BaseState } from './base.js';
 
 /**
  * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
@@ -49,7 +50,7 @@ import { STATE_CONFIG } from './constants.js';
  * }} CompoundStateJson
  */
 
-export class CompoundState {
+export class CompoundState extends BaseState {
 	/** @type {AlwaysHandler[]} */
 	#always = [];
 	/** @type {EntryHandler[]} */
@@ -64,8 +65,6 @@ export class CompoundState {
 	#state = null;
 	/** @type {Map<string, StateNode>} */
 	#states = new Map();
-	/** @type {Set<(arg: this) => any>} */
-	#subscribers = new Set();
 	#transitionActive = false;
 	/** @type {StateNode | null} */
 	#transitionFrom = null;
@@ -93,16 +92,12 @@ export class CompoundState {
 	 * @param {Partial<CompoundStateConfig>} [config]
 	 */
 	constructor(config) {
+		super();
 		if (config) {
 			this.configure(config);
 		}
 	}
 
-	#callSubscribers() {
-		for (const subscriber of this.#subscribers) {
-			subscriber(this);
-		}
-	}
 	/**
 	 * @param {Handler[]} handlers
 	 * @param {...any} args
@@ -177,7 +172,7 @@ export class CompoundState {
 		}
 		handlers.push(...this.#state.always);
 		this.#executeHandlers(handlers, ...value);
-		this.#callSubscribers();
+		this[STATE_CALL_SUBSCRIBERS]();
 	}
 	get entry() {
 		return this.#entry;
@@ -301,14 +296,6 @@ export class CompoundState {
 	}
 	get state() {
 		return this.#state;
-	}
-	/** @param {(arg: this) => any} fn */
-	subscribe(fn) {
-		fn(this);
-		this.#subscribers.add(fn);
-		return () => {
-			this.#subscribers.delete(fn);
-		};
 	}
 	/** @returns {CompoundStateJson} */
 	toJSON() {

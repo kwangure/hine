@@ -1,3 +1,4 @@
+import { BaseState } from './base.js';
 import { STATE_CONFIG } from './constants.js';
 
 /**
@@ -40,7 +41,7 @@ import { STATE_CONFIG } from './constants.js';
  * }} AtomicStateJson
  */
 
-export class AtomicState {
+export class AtomicState extends BaseState {
 	/** @type {AlwaysHandler[]} */
 	#always = [];
 	/** @type {EntryHandler[]} */
@@ -51,8 +52,6 @@ export class AtomicState {
 	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
-	/** @type {Set<(arg: this) => any>} */
-	#subscribers = new Set();
 	#transitionActive = false;
 	/** @type {AtomicState | null} */
 	#transitionFrom = null;
@@ -79,16 +78,12 @@ export class AtomicState {
 	 * @param {Partial<AtomicStateConfig>} [config]
 	 */
 	constructor(config) {
+		super();
 		if (config) {
 			this.configure(config);
 		}
 	}
 
-	#callSubscribers() {
-		for (const subscriber of this.#subscribers) {
-			subscriber(this);
-		}
-	}
 	/**
 	 * @param {((...args: any) => any)[]} actions
 	 * @param {any[]} args
@@ -215,14 +210,6 @@ export class AtomicState {
 			return state;
 		}
 		return null;
-	}
-	/** @param {(arg: this) => any} fn */
-	subscribe(fn) {
-		fn(this);
-		this.#subscribers.add(fn);
-		return () => {
-			this.#subscribers.delete(fn);
-		};
 	}
 	/** @returns {AtomicStateJson} */
 	toJSON() {

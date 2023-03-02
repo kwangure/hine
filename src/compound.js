@@ -165,7 +165,9 @@ export class CompoundState extends BaseState {
 	 * @param {...any} value
 	 */
 	dispatch(event, ...value) {
-		if (!this.#state) return;
+		if (!this.#state) {
+			throw Error('Attempted dispatch before resolving state');
+		}
 		const handlers = [];
 		if (Object.hasOwn(this.#state.on, event)) {
 			handlers.push(...this.#state.on[event]);

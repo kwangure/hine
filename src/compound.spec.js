@@ -28,14 +28,20 @@ describe('htstate', () => {
 					}),
 				},
 			});
-			machine.resolve();
+		});
+
+		it('throws on unresolved dispatch', () => {
+			expect(() => machine.dispatch('to2'))
+				.toThrow('Attempted dispatch before resolving state');
 		});
 
 		it('sets initial state', () => {
+			machine.resolve();
 			expect(machine.state?.name).toBe('state1');
 		});
 
 		it('transitions on dispatch', () => {
+			machine.resolve();
 			machine.dispatch('to2');
 			expect(machine.state?.name).toBe('state2');
 			machine.dispatch('to1');
@@ -45,6 +51,7 @@ describe('htstate', () => {
 		});
 
 		it('ignores invalid events', () => {
+			machine.resolve();
 			machine.dispatch('random');
 			expect(machine.state?.name).toBe('state1');
 		});

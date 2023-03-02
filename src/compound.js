@@ -197,7 +197,7 @@ export class CompoundState {
 			actions,
 			conditions,
 			entry,
-			exit, name, on, siblings, states,
+			exit, name, on, states,
 		} = this[STATE_CONFIG];
 		this.#name = name;
 
@@ -214,7 +214,7 @@ export class CompoundState {
 			this.#always.push({
 				actions: resolveActions(actions, handler),
 				condition: resolveCondition(conditions, handler),
-				transitionTo: resolveTransition(siblings, handler),
+				transitionTo: this.resolveTransition(handler),
 				type: 'always',
 			});
 		}
@@ -223,7 +223,7 @@ export class CompoundState {
 			this.#on[event] = handlers.map((handler) => ({
 				actions: resolveActions(actions, handler),
 				condition: resolveCondition(conditions, handler),
-				transitionTo: resolveTransition(siblings, handler),
+				transitionTo: this.resolveTransition(handler),
 				type: 'dispatch',
 			}));
 		}
@@ -262,6 +262,20 @@ export class CompoundState {
 			type: 'init',
 		}]);
 
+	}
+	/**
+	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
+	 */
+	resolveTransition(handler) {
+		const { transitionTo } = handler;
+		if (transitionTo) {
+			const state = this[STATE_CONFIG].siblings.get(transitionTo);
+			if (!state) {
+				throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
+			}
+			return state;
+		}
+		return null;
 	}
 	get state() {
 		return this.#state;
@@ -332,20 +346,3 @@ function resolveCondition(config, handler) {
 	}
 	return condition;
 }
-
-/**
- * @param {Map<string, StateNode>} config
- * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
- */
-function resolveTransition(config, handler) {
-	const { transitionTo } = handler;
-	if (transitionTo) {
-		const state = config.get(transitionTo);
-		if (!state) {
-			throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
-		}
-		return state;
-	}
-	return null;
-}
-

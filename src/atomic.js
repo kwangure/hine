@@ -137,14 +137,14 @@ export class AtomicState {
 	}
 	resolve() {
 		const { always, actions, conditions, entry, exit } = this[STATE_CONFIG];
-		const { name, on, siblings } = this[STATE_CONFIG];
+		const { name, on } = this[STATE_CONFIG];
 		this.#name = name;
 
 		for (const handler of always) {
 			this.#always.push({
 				actions: resolveActions(actions, handler),
 				condition: resolveCondition(conditions, handler),
-				transitionTo: resolveTransition(siblings, handler),
+				transitionTo: this.resolveTransition(handler),
 				type: 'always',
 			});
 		}
@@ -153,7 +153,7 @@ export class AtomicState {
 			this.#on[event] = handlers.map((handler) => ({
 				actions: resolveActions(actions, handler),
 				condition: resolveCondition(conditions, handler),
-				transitionTo: resolveTransition(siblings, handler),
+				transitionTo: this.resolveTransition(handler),
 				type: 'dispatch',
 			}));
 		}
@@ -175,6 +175,20 @@ export class AtomicState {
 				type: 'exit',
 			});
 		}
+	}
+	/**
+	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
+	 */
+	resolveTransition(handler) {
+		const { transitionTo } = handler;
+		if (transitionTo) {
+			const state = this[STATE_CONFIG].siblings.get(transitionTo);
+			if (!state) {
+				throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
+			}
+			return state;
+		}
+		return null;
 	}
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
@@ -234,20 +248,3 @@ function resolveCondition(config, handler) {
 	}
 	return condition;
 }
-
-/**
- * @param {Map<string, AtomicState>} config
- * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
- */
-function resolveTransition(config, handler) {
-	const { transitionTo } = handler;
-	if (transitionTo) {
-		const state = config.get(transitionTo);
-		if (!state) {
-			throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
-		}
-		return state;
-	}
-	return null;
-}
-

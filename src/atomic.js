@@ -1,8 +1,10 @@
 import {
 	RUN_ALWAYS_HANDLERS,
 	RUN_ENTRY_HANDLERS,
+	RUN_ENTRY_HANDLERS_DEEP,
 	RUN_EXIT_HANDLERS,
 	RUN_ON_HANDLERS,
+	SET_INITIAL_STATE,
 	STATE_CONFIG,
 } from './constants.js';
 import { BaseState } from './base.js';
@@ -192,6 +194,8 @@ export class AtomicState extends BaseState {
 				type: 'exit',
 			});
 		}
+
+		return this;
 	}
 	/**
 	 * @param {Partial<HandlerConfig>} handler
@@ -234,6 +238,9 @@ export class AtomicState extends BaseState {
 		}
 		return null;
 	}
+	start() {
+		this[RUN_ENTRY_HANDLERS]([]);
+	}
 	/** @returns {AtomicStateJson} */
 	toJSON() {
 		return {
@@ -255,6 +262,17 @@ export class AtomicState extends BaseState {
 	/** @param {any[]} value */
 	[RUN_ALWAYS_HANDLERS](value) {
 		return this.#executeHandlers(this.#always, ...value);
+	}
+	/**
+	 * Batch entry and always actions but bail if any transition happens.
+	 *
+	 * @param {any[]} value
+	 */
+	[RUN_ENTRY_HANDLERS_DEEP](value) {
+		return this.#executeHandlers([
+			...this.#entry,
+			...this.#always,
+		], ...value);
 	}
 	/**
 	 * Batch entry and always actions but bail if any transition happens.
@@ -285,5 +303,5 @@ export class AtomicState extends BaseState {
 		handlers.push(...this.#always);
 		return this.#executeHandlers(handlers, ...value);
 	}
-
+	[SET_INITIAL_STATE]() {}
 }

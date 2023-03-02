@@ -1,8 +1,10 @@
 import {
 	RUN_ALWAYS_HANDLERS,
 	RUN_ENTRY_HANDLERS,
+	RUN_ENTRY_HANDLERS_DEEP,
 	RUN_EXIT_HANDLERS,
 	RUN_ON_HANDLERS,
+	SET_INITIAL_STATE,
 	STATE_CALL_SUBSCRIBERS,
 	STATE_CONFIG,
 } from './constants.js';
@@ -59,6 +61,8 @@ export class CompoundState extends BaseState {
 	#entry = [];
 	/** @type {ExitHandler[]} */
 	#exit = [];
+	/** @type {StateNode | null} */
+	#initial = null;
 	/** @type {string} */
 	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
@@ -212,19 +216,16 @@ export class CompoundState extends BaseState {
 			});
 		}
 
-		for (const state of this.#states.values()) {
-			state.resolve();
-		}
-
-		const iteratorResult = this.#states.values().next();
-		// Has at least one nested state
-		if (iteratorResult.done) {
+		const iterator = this.#states.values();
+		const first = iterator.next();
+		// If has no elements
+		if (first.done) {
 			throw Error('Compound states require at least one child');
 		}
 
-		this.#state = iteratorResult.value;
-		// entry actions for the next state
-		iteratorResult.value[RUN_ENTRY_HANDLERS]([]);
+		this.#initial = first.value.resolve();
+		// continue consuming iterator
+		for (const state of iterator) state.resolve();
 
 		return this;
 	}
@@ -269,6 +270,11 @@ export class CompoundState extends BaseState {
 		}
 		return null;
 	}
+	start() {
+		this[SET_INITIAL_STATE]();
+		this[RUN_ENTRY_HANDLERS_DEEP]([]);
+		return this;
+	}
 	get state() {
 		return this.#state;
 	}
@@ -289,6 +295,18 @@ export class CompoundState extends BaseState {
 	/** @param {any[]} value */
 	[RUN_ALWAYS_HANDLERS](value) {
 		return this.#executeHandlers(this.#always, ...value);
+	}
+	/**
+	 * Batch entry and always actions but bail if any transition happens.
+	 *
+	 * @param {any[]} value
+	 */
+	[RUN_ENTRY_HANDLERS_DEEP](value) {
+		this.#executeHandlers([
+			...this.#entry,
+			...this.#always,
+		], ...value);
+		this.#state?.[RUN_ENTRY_HANDLERS_DEEP](value);
 	}
 	/**
 	 * Batch entry and always actions but bail if any transition happens.
@@ -333,5 +351,9 @@ export class CompoundState extends BaseState {
 		}
 		handlers.push(...this.#always);
 		return this.#executeHandlers(handlers, ...value);
+	}
+	[SET_INITIAL_STATE]() {
+		this.#state = this.#initial;
+		this.#state?.[SET_INITIAL_STATE]();
 	}
 }

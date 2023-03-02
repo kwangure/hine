@@ -1,5 +1,11 @@
+import {
+	RUN_ALWAYS_HANDLERS,
+	RUN_ENTRY_HANDLERS,
+	RUN_EXIT_HANDLERS,
+	RUN_ON_HANDLERS,
+	STATE_CONFIG,
+} from './constants.js';
 import { BaseState } from './base.js';
-import { STATE_CONFIG } from './constants.js';
 
 /**
  * @typedef {{
@@ -84,6 +90,23 @@ export class AtomicState extends BaseState {
 		}
 	}
 
+	/**
+	 * @param {Handler[]} handlers
+	 * @param {any[]} args
+	 */
+	#executeHandlers(handlers, ...args) {
+		for (const { actions, condition, transitionTo } of handlers) {
+			if (!condition.call(this, ...args)) continue;
+			if (transitionTo) {
+				return {
+					transitionTo,
+					runActions: this.#runActions.bind(this, actions, args),
+				};
+			}
+			this.#runActions(actions, args);
+		}
+		return null;
+	}
 	/**
 	 * @param {((...args: any) => any)[]} actions
 	 * @param {any[]} args
@@ -229,4 +252,38 @@ export class AtomicState extends BaseState {
 			to: this.#transitionTo,
 		};
 	}
+	/** @param {any[]} value */
+	[RUN_ALWAYS_HANDLERS](value) {
+		return this.#executeHandlers(this.#always, ...value);
+	}
+	/**
+	 * Batch entry and always actions but bail if any transition happens.
+	 *
+	 * @param {any[]} value
+	 */
+	[RUN_ENTRY_HANDLERS](value) {
+		return this.#executeHandlers([
+			...this.#entry,
+			...this.#always,
+		], ...value);
+	}
+	/** @param {any[]} value */
+	[RUN_EXIT_HANDLERS](value) {
+		return this.#executeHandlers(this.#exit, ...value);
+	}
+	/**
+	 * Batch on:event and always actions but bail if any transition happens.
+	 *
+	 * @param {string} event
+	 * @param {any[]} value
+	 */
+	[RUN_ON_HANDLERS](event, value) {
+		const handlers = [];
+		if (Object.hasOwn(this.#on, event)) {
+			handlers.push(...this.#on[event]);
+		}
+		handlers.push(...this.#always);
+		return this.#executeHandlers(handlers, ...value);
+	}
+
 }

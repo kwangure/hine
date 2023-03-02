@@ -2,8 +2,6 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { AtomicState } from './atomic.js';
 import { CompoundState } from './compound.js';
 
-const toPojo = (/** @type {any} */ obj) => JSON.parse(JSON.stringify(obj));
-
 describe('htstate', () => {
 	describe('basics', () => {
 		/** @type {CompoundState} */
@@ -200,56 +198,6 @@ describe('htstate', () => {
 			transitions = [];
 			machine = new CompoundState();
 			machine.configure({
-				actions: {
-					always1() {
-						transitions.push({
-							...toPojo(this.transition),
-							action: 'always1',
-						});
-					},
-					entry1() {
-						transitions.push({
-							...toPojo(this.transition),
-							action: 'entry1',
-						});
-					},
-					exit1() {
-						transitions.push({
-							...toPojo(this.transition),
-							action: 'exit1',
-						});
-					},
-					transition1() {
-						transitions.push({
-							...toPojo(this.transition),
-							action: 'transition1',
-						});
-					},
-					always2() {
-						transitions.push({
-							...toPojo(this.transition),
-							action: 'always2',
-						});
-					},
-					entry2() {
-						transitions.push({
-							...toPojo(this.transition),
-							action: 'entry2',
-						});
-					},
-					exit2() {
-						transitions.push({
-							...toPojo(this.transition),
-							action: 'exit2',
-						});
-					},
-					transition2() {
-						transitions.push({
-							...toPojo(this.transition),
-							action: 'transition2',
-						});
-					},
-				},
 				states: {
 					first: new AtomicState({
 						always: [{
@@ -269,28 +217,16 @@ describe('htstate', () => {
 						},
 						actions: {
 							always1() {
-								transitions.push({
-									...toPojo(this.transition),
-									action: 'always1',
-								});
+								transitions.push('always1');
 							},
 							entry1() {
-								transitions.push({
-									...toPojo(this.transition),
-									action: 'entry1',
-								});
+								transitions.push('entry1');
 							},
 							exit1() {
-								transitions.push({
-									...toPojo(this.transition),
-									action: 'exit1',
-								});
+								transitions.push('exit1');
 							},
 							transition1() {
-								transitions.push({
-									...toPojo(this.transition),
-									action: 'transition1',
-								});
+								transitions.push('transition1');
 							},
 						},
 					}),
@@ -312,28 +248,16 @@ describe('htstate', () => {
 						},
 						actions: {
 							always2() {
-								transitions.push({
-									...toPojo(this.transition),
-									action: 'always2',
-								});
+								transitions.push('always2');
 							},
 							entry2() {
-								transitions.push({
-									...toPojo(this.transition),
-									action: 'entry2',
-								});
+								transitions.push('entry2');
 							},
 							exit2() {
-								transitions.push({
-									...toPojo(this.transition),
-									action: 'exit2',
-								});
+								transitions.push('exit2');
 							},
 							transition2() {
-								transitions.push({
-									...toPojo(this.transition),
-									action: 'transition2',
-								});
+								transitions.push('transition2');
 							},
 						},
 					}),
@@ -342,233 +266,17 @@ describe('htstate', () => {
 		});
 
 		it('runs initial entry then transient actions', () => {
-			expect(transitions).toEqual([
-				{
-					action: 'entry1',
-					active: true,
-					from: null,
-					to: {
-						name: 'first',
-						transition: {
-							active: false,
-						},
-					},
-				},
-				{
-					action: 'always1',
-					active: true,
-					from: null,
-					to: {
-						name: 'first',
-						transition: {
-							active: false,
-						},
-					},
-				},
-			]);
-			expect(machine.toJSON().transition).toEqual({
-				active: false,
-				from: undefined,
-				to: {
-					name: 'first',
-					transition: {
-						active: false,
-						from: undefined,
-						to: undefined,
-					},
-				},
-			});
+			expect(transitions).toEqual(['entry1', 'always1']);
 		});
 
 		it('runs exit, transition, entry then transient actions', () => {
-			expect(machine.toJSON().transition).toEqual({
-				active: false,
-				from: undefined,
-				to: {
-					name: 'first',
-					transition: {
-						active: false,
-						from: undefined,
-						to: undefined,
-					},
-				},
-			});
+			transitions = [];
+			machine.dispatch('event');
+			expect(transitions).toEqual(['exit1', 'transition1', 'entry2', 'always2']);
 
 			transitions = [];
 			machine.dispatch('event');
-			expect(transitions).toEqual([
-				{
-					action: 'exit1',
-					active: true,
-					from: {
-						name: 'first',
-						transition: {
-							active: false,
-						},
-					},
-					to: {
-						name: 'second',
-						transition: {
-							active: false,
-						},
-					},
-				},
-				{
-					action: 'transition1',
-					active: true,
-					from: {
-						name: 'first',
-						transition: {
-							active: false,
-						},
-					},
-					to: {
-						name: 'second',
-						transition: {
-							active: false,
-						},
-					},
-				},
-				{
-					action: 'entry2',
-					active: true,
-					from: {
-						name: 'first',
-						transition: {
-							active: false,
-						},
-					},
-					to: {
-						name: 'second',
-						transition: {
-							active: false,
-						},
-					},
-				},
-				{
-					action: 'always2',
-					active: true,
-					from: {
-						name: 'first',
-						transition: {
-							active: false,
-						},
-					},
-					to: {
-						name: 'second',
-						transition: {
-							active: false,
-						},
-					},
-				},
-			]);
-			expect(machine.toJSON().transition).toEqual({
-				active: false,
-				from: {
-					name: 'first',
-					transition: {
-						active: false,
-						from: undefined,
-						to: undefined,
-					},
-				},
-				to: {
-					name: 'second',
-					transition: {
-						active: false,
-						from: undefined,
-						to: undefined,
-					},
-				},
-			});
-
-			transitions = [];
-			machine.dispatch('event');
-			expect(transitions).toEqual([
-				{
-					action: 'exit2',
-					active: true,
-					from: {
-						name: 'second',
-						transition: {
-							active: false,
-						},
-					},
-					to: {
-						name: 'first',
-						transition: {
-							active: false,
-						},
-					},
-				},
-				{
-					action: 'transition2',
-					active: true,
-					from: {
-						name: 'second',
-						transition: {
-							active: false,
-						},
-					},
-					to: {
-						name: 'first',
-						transition: {
-							active: false,
-						},
-					},
-				},
-				{
-					action: 'entry1',
-					active: true,
-					from: {
-						name: 'second',
-						transition: {
-							active: false,
-						},
-					},
-					to: {
-						name: 'first',
-						transition: {
-							active: false,
-						},
-					},
-				},
-				{
-					action: 'always1',
-					active: true,
-					from: {
-						name: 'second',
-						transition: {
-							active: false,
-						},
-					},
-					to: {
-						name: 'first',
-						transition: {
-							active: false,
-						},
-					},
-				},
-			]);
-			expect(machine.toJSON().transition).toEqual({
-				active: false,
-				from: {
-					name: 'second',
-					transition: {
-						active: false,
-						from: undefined,
-						to: undefined,
-					},
-				},
-				to: {
-					name: 'first',
-					transition: {
-						active: false,
-						from: undefined,
-						to: undefined,
-					},
-				},
-			});
+			expect(transitions).toEqual(['exit2', 'transition2', 'entry1', 'always1']);
 		});
 	});
 
@@ -707,5 +415,66 @@ describe('htstate', () => {
 
 		machine.dispatch('non-existent');
 		expect(alwaysCount).toBe(2);
+	});
+
+	it('executes deeply nested handlers', () => {
+		/** @type {string[]} */
+		const events = [];
+		const machine = new CompoundState({
+			actions: {
+				s0() {
+					events.push('s0');
+				},
+			},
+			on: {
+				event: [{
+					actions: ['s0'],
+				}],
+			},
+			states: {
+				s1: new CompoundState({
+					states: {
+						s2: new CompoundState({
+							states: {
+								s3: new AtomicState({
+									actions: {
+										s3() {
+											events.push('s3');
+										},
+									},
+									on: {
+										event: [{
+											actions: ['s3'],
+										}],
+									},
+								}),
+							},
+							actions: {
+								s2() {
+									events.push('s2');
+								},
+							},
+							on: {
+								event: [{
+									actions: ['s2'],
+								}],
+							},
+						}),
+					},
+					actions: {
+						s1() {
+							events.push('s1');
+						},
+					},
+					on: {
+						event: [{
+							actions: ['s1'],
+						}],
+					},
+				}),
+			},
+		}).resolve();
+		machine.dispatch('event');
+		expect(events).toEqual(['s3', 's2', 's1', 's0']);
 	});
 });

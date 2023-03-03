@@ -64,7 +64,7 @@ describe('actions', () => {
 		expect(log).toEqual(['entry0', 'entry1', 'entry2', 'always0', 'always1', 'always2']);
 	});
 
-	it('runs entry then transient actions on transition', () => {
+	it('runs entry then always actions on transition', () => {
 		/** @type {string[]} */
 		const log = [];
 		const machine = new CompoundState({
@@ -203,4 +203,175 @@ describe('actions', () => {
 			'exit1',
 		]);
 	});
+
+	it('runs on actions with leaves first and root last', () => {
+		/** @type {string[]} */
+		const log = [];
+		const machine = new CompoundState({
+			actions: {
+				on0() {
+					log.push('on0');
+				},
+			},
+			on: {
+				event: [{
+					actions: ['on0'],
+				}],
+			},
+			states: {
+				s1: new CompoundState({
+					actions: {
+						on1() {
+							log.push('on1');
+						},
+					},
+					on: {
+						event: [{
+							actions: ['on1'],
+						}],
+					},
+					states: {
+						s11: new CompoundState({
+							actions: {
+								on11() {
+									log.push('on11');
+								},
+							},
+							on: {
+								event: [{
+									actions: ['on11'],
+								}],
+							},
+							states: {
+								s111: new AtomicState({
+									actions: {
+										on111() {
+											log.push('on111');
+										},
+									},
+									on: {
+										event: [{
+											actions: ['on111'],
+										}],
+									},
+								}),
+							},
+						}),
+					},
+				}),
+				s2: new AtomicState(),
+			},
+		})
+			.resolve()
+			.start();
+		log.length = 0;
+
+		machine.dispatch('event');
+		expect(log).toEqual([
+			'on111',
+			'on11',
+			'on1',
+			'on0',
+		]);
+	});
+
+	it('interleaves on actions with always actions', () => {
+		/** @type {string[]} */
+		const log = [];
+		const machine = new CompoundState({
+			actions: {
+				always0() {
+					log.push('always0');
+				},
+				on0() {
+					log.push('on0');
+				},
+			},
+			always: [{
+				actions: ['always0'],
+			}],
+			on: {
+				event: [{
+					actions: ['on0'],
+				}],
+			},
+			states: {
+				s1: new CompoundState({
+					actions: {
+						always1() {
+							log.push('always1');
+						},
+						on1() {
+							log.push('on1');
+						},
+					},
+					always: [{
+						actions: ['always1'],
+					}],
+					on: {
+						event: [{
+							actions: ['on1'],
+						}],
+					},
+					states: {
+						s11: new CompoundState({
+							actions: {
+								always11() {
+									log.push('always11');
+								},
+								on11() {
+									log.push('on11');
+								},
+							},
+							always: [{
+								actions: ['always11'],
+							}],
+							on: {
+								event: [{
+									actions: ['on11'],
+								}],
+							},
+							states: {
+								s111: new AtomicState({
+									actions: {
+										always111() {
+											log.push('always111');
+										},
+										on111() {
+											log.push('on111');
+										},
+									},
+									always: [{
+										actions: ['always111'],
+									}],
+									on: {
+										event: [{
+											actions: ['on111'],
+										}],
+									},
+								}),
+							},
+						}),
+					},
+				}),
+				s2: new AtomicState(),
+			},
+		})
+			.resolve()
+			.start();
+		log.length = 0;
+
+		machine.dispatch('event');
+		expect(log).toEqual([
+			'on111',
+			'always111',
+			'on11',
+			'always11',
+			'on1',
+			'always1',
+			'on0',
+			'always0',
+		]);
+	});
+
 });

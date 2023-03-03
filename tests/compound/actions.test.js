@@ -374,4 +374,131 @@ describe('actions', () => {
 		]);
 	});
 
+	it('runs exit, transition, entry then always actions', () => {
+		/** @type {string[]} */
+		const log = [];
+		const machine = new CompoundState({
+			actions: {
+				always0() {
+					log.push('always0');
+				},
+				entry0() {
+					log.push('entry0');
+				},
+				exit0() {
+					log.push('exit0');
+				},
+				on0() {
+					log.push('on0');
+				},
+			},
+			always: [{
+				actions: ['always0'],
+			}],
+			entry: [{
+				actions: ['entry0'],
+			}],
+			exit: [{
+				actions: ['exit0'],
+			}],
+			states: {
+				s1: new CompoundState({
+					actions: {
+						exit1() {
+							log.push('exit1');
+						},
+						on1() {
+							log.push('on1');
+						},
+					},
+					exit: [{
+						actions: ['exit1'],
+					}],
+					on: {
+						event: [{
+							transitionTo: 's2',
+							actions: ['on1'],
+						}],
+					},
+					states: {
+						s11: new CompoundState({
+							actions: {
+								exit11() {
+									log.push('exit11');
+								},
+								on11() {
+									log.push('on11');
+								},
+							},
+							exit: [{
+								actions: ['exit11'],
+							}],
+							states: {
+								s111: new AtomicState(),
+							},
+						}),
+					},
+				}),
+				s2: new CompoundState({
+					actions: {
+						always2() {
+							log.push('always2');
+						},
+						entry2() {
+							log.push('entry2');
+						},
+						on2() {
+							log.push('on2');
+						},
+					},
+					always: [{
+						actions: ['always2'],
+					}],
+					entry: [{
+						actions: ['entry2'],
+					}],
+					states: {
+						s21: new CompoundState({
+							actions: {
+								always21() {
+									log.push('always21');
+								},
+								entry21() {
+									log.push('entry21');
+								},
+								on21() {
+									log.push('on21');
+								},
+							},
+							always: [{
+								actions: ['always21'],
+							}],
+							entry: [{
+								actions: ['entry21'],
+							}],
+							states: {
+								s211: new AtomicState(),
+							},
+						}),
+					},
+				}),
+			},
+		})
+			.resolve()
+			.start();
+		log.length = 0;
+
+		machine.dispatch('event');
+		expect(log).toEqual([
+			'exit11',
+			'exit1',
+			'on1',
+			'entry2',
+			'entry21',
+			'always2',
+			'always21',
+			'always0',
+		]);
+	});
+
 });

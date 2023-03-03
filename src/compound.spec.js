@@ -212,30 +212,4 @@ describe('htstate', () => {
 			expect(actions).toEqual(['exit', 'exit', 'transition']);
 		});
 	});
-
-	it('always runs transient actions', () => {
-		const machine = new CompoundState();
-		/** @type {number} */
-		let alwaysCount = 0;
-		machine.configure({
-			states: {
-				current: new AtomicState({
-					always: [{
-						actions: ['always'],
-					}],
-					actions: {
-						always() {
-							alwaysCount++;
-						},
-					},
-				}),
-			},
-		})
-			.resolve()
-			.start();
-		expect(alwaysCount).toBe(1);
-
-		machine.dispatch('non-existent');
-		expect(alwaysCount).toBe(2);
-	});
 });

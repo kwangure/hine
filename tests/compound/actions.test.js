@@ -501,4 +501,30 @@ describe('actions', () => {
 		]);
 	});
 
+	it('runs always actions on unhandled events', () => {
+		let alwaysCount = 0;
+		const machine = new CompoundState({
+			states: {
+				current: new CompoundState({
+					always: [{
+						actions: ['always'],
+					}],
+					actions: {
+						always() {
+							alwaysCount++;
+						},
+					},
+					states: {
+						s: new AtomicState(),
+					},
+				}),
+			},
+		})
+			.resolve()
+			.start();
+		expect(alwaysCount).toBe(1);
+
+		machine.dispatch('non-existent');
+		expect(alwaysCount).toBe(2);
+	});
 });

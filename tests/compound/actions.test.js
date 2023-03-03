@@ -136,4 +136,71 @@ describe('actions', () => {
 		machine.dispatch('event');
 		expect(log).toEqual(['entry0', 'always0', 'entry1', 'always1', 'entry2', 'always2']);
 	});
+
+	it.only('runs exit actions with leaves first and root last', () => {
+		/** @type {string[]} */
+		const log = [];
+		const machine = new CompoundState({
+			actions: {
+				exit0() {
+					log.push('exit0');
+				},
+			},
+			exit: [{
+				actions: ['exit0'],
+			}],
+			states: {
+				s1: new CompoundState({
+					actions: {
+						exit1() {
+							log.push('exit1');
+						},
+					},
+					exit: [{
+						actions: ['exit1'],
+					}],
+					on: {
+						event: [{
+							transitionTo: 's2',
+						}],
+					},
+					states: {
+						s11: new CompoundState({
+							actions: {
+								exit11() {
+									log.push('exit11');
+								},
+							},
+							exit: [{
+								actions: ['exit11'],
+							}],
+							states: {
+								s111: new AtomicState({
+									actions: {
+										exit111() {
+											log.push('exit111');
+										},
+									},
+									exit: [{
+										actions: ['exit111'],
+									}],
+								}),
+							},
+						}),
+					},
+				}),
+				s2: new AtomicState(),
+			},
+		})
+			.resolve()
+			.start();
+		log.length = 0;
+
+		machine.dispatch('event');
+		expect(log).toEqual([
+			'exit111',
+			'exit11',
+			'exit1',
+		]);
+	});
 });

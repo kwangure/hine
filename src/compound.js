@@ -325,6 +325,7 @@ export class CompoundState extends BaseState {
 	 * @param {any[]} value
 	 */
 	[RUN_EXIT_HANDLERS](value) {
+		this.#state?.[RUN_EXIT_HANDLERS](value);
 		return this.#executeHandlers(this.#exit, ...value);
 	}
 	/**

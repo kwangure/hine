@@ -1,7 +1,6 @@
 import {
 	RUN_ALWAYS_HANDLERS,
 	RUN_ENTRY_HANDLERS,
-	RUN_ENTRY_HANDLERS_DEEP,
 	RUN_EXIT_HANDLERS,
 	RUN_ON_HANDLERS,
 	SET_INITIAL_STATE,
@@ -268,22 +267,8 @@ export class AtomicState extends BaseState {
 	 *
 	 * @param {any[]} value
 	 */
-	[RUN_ENTRY_HANDLERS_DEEP](value) {
-		return this.#executeHandlers([
-			...this.#entry,
-			...this.#always,
-		], ...value);
-	}
-	/**
-	 * Batch entry and always actions but bail if any transition happens.
-	 *
-	 * @param {any[]} value
-	 */
 	[RUN_ENTRY_HANDLERS](value) {
-		return this.#executeHandlers([
-			...this.#entry,
-			...this.#always,
-		], ...value);
+		this.#executeHandlers(this.#entry, ...value);
 	}
 	/** @param {any[]} value */
 	[RUN_EXIT_HANDLERS](value) {

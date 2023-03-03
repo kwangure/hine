@@ -61,7 +61,7 @@ describe('actions', () => {
 		})
 			.resolve()
 			.start();
-		expect(log).toEqual(['entry0', 'always0', 'entry1', 'always1', 'entry2', 'always2']);
+		expect(log).toEqual(['entry0', 'entry1', 'entry2', 'always0', 'always1', 'always2']);
 	});
 
 	it('runs entry then transient actions on transition', () => {
@@ -134,10 +134,10 @@ describe('actions', () => {
 			.resolve()
 			.start();
 		machine.dispatch('event');
-		expect(log).toEqual(['entry0', 'always0', 'entry1', 'always1', 'entry2', 'always2']);
+		expect(log).toEqual(['entry0', 'entry1', 'entry2', 'always0', 'always1', 'always2']);
 	});
 
-	it.only('runs exit actions with leaves first and root last', () => {
+	it('runs exit actions with leaves first and root last', () => {
 		/** @type {string[]} */
 		const log = [];
 		const machine = new CompoundState({

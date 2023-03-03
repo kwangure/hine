@@ -6,6 +6,5 @@ export const SET_INITIAL_STATE = Symbol('set-initial-state');
 
 export const RUN_ALWAYS_HANDLERS = Symbol('run-always');
 export const RUN_ENTRY_HANDLERS = Symbol('run-entry');
-export const RUN_ENTRY_HANDLERS_DEEP = Symbol('run-entry-deep');
 export const RUN_EXIT_HANDLERS = Symbol('run-exit');
 export const RUN_ON_HANDLERS = Symbol('run-on');

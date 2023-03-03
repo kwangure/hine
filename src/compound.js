@@ -1,7 +1,6 @@
 import {
 	RUN_ALWAYS_HANDLERS,
 	RUN_ENTRY_HANDLERS,
-	RUN_ENTRY_HANDLERS_DEEP,
 	RUN_EXIT_HANDLERS,
 	RUN_ON_HANDLERS,
 	SET_INITIAL_STATE,
@@ -272,7 +271,8 @@ export class CompoundState extends BaseState {
 	}
 	start() {
 		this[SET_INITIAL_STATE]();
-		this[RUN_ENTRY_HANDLERS_DEEP]([]);
+		this[RUN_ENTRY_HANDLERS]([]);
+		this[RUN_ALWAYS_HANDLERS]([]);
 		return this;
 	}
 	get state() {
@@ -294,19 +294,8 @@ export class CompoundState extends BaseState {
 	}
 	/** @param {any[]} value */
 	[RUN_ALWAYS_HANDLERS](value) {
-		return this.#executeHandlers(this.#always, ...value);
-	}
-	/**
-	 * Batch entry and always actions but bail if any transition happens.
-	 *
-	 * @param {any[]} value
-	 */
-	[RUN_ENTRY_HANDLERS_DEEP](value) {
-		this.#executeHandlers([
-			...this.#entry,
-			...this.#always,
-		], ...value);
-		this.#state?.[RUN_ENTRY_HANDLERS_DEEP](value);
+		this.#executeHandlers(this.#always, ...value);
+		this.#state?.[RUN_ALWAYS_HANDLERS](value);
 	}
 	/**
 	 * Batch entry and always actions but bail if any transition happens.
@@ -314,10 +303,8 @@ export class CompoundState extends BaseState {
 	 * @param {any[]} value
 	 */
 	[RUN_ENTRY_HANDLERS](value) {
-		return this.#executeHandlers([
-			...this.#entry,
-			...this.#always,
-		], ...value);
+		this.#executeHandlers(this.#entry, ...value);
+		this.#state?.[RUN_ENTRY_HANDLERS](value);
 	}
 	/**
 	 * Execute exit actions but bail if any transition happens.
@@ -342,10 +329,13 @@ export class CompoundState extends BaseState {
 			runActions();
 			// change the active nested state for this state
 			this.#state = transitionTo;
-			// entry actions for the next state
-			// TODO: Handle always transitions
+			// set initial state from transitionTo to leaves
 			transitionTo[SET_INITIAL_STATE]();
-			transitionTo[RUN_ENTRY_HANDLERS_DEEP]([]);
+			// entry actions for transitionTo and leaves
+			transitionTo[RUN_ENTRY_HANDLERS]([]);
+			// always actions for transitionTo and leaves
+			// TODO: Handle transitions
+			transitionTo[RUN_ALWAYS_HANDLERS]([]);
 		}
 		const handlers = [];
 		if (Object.hasOwn(this.#on, event)) {

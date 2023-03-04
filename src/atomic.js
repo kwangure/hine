@@ -40,11 +40,6 @@ import { BaseState } from './base.js';
  *
  * @typedef {{
  *     name: string,
- *     transition: {
- *         active: boolean;
- *         from: AtomicStateJson | undefined,
- *         to: AtomicStateJson | undefined,
- *     }
  * }} AtomicStateJson
  */
 
@@ -59,11 +54,6 @@ export class AtomicState extends BaseState {
 	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
-	#transitionActive = false;
-	/** @type {AtomicState | null} */
-	#transitionFrom = null;
-	/** @type {AtomicState | null} */
-	#transitionTo = null;
 
 	/**
 	 * @type {AtomicStateConfig & {
@@ -95,7 +85,7 @@ export class AtomicState extends BaseState {
 	 * @param {Handler[]} handlers
 	 * @param {any[]} args
 	 */
-	#executeHandlers(handlers, ...args) {
+	#executeHandlers(handlers, args) {
 		for (const { actions, condition, transitionTo } of handlers) {
 			if (!condition.call(this, ...args)) continue;
 			if (transitionTo) {
@@ -109,6 +99,47 @@ export class AtomicState extends BaseState {
 		return null;
 	}
 	/**
+	 * @param {Partial<HandlerConfig>} handler
+	 */
+	#resolveActions(handler) {
+		const actions = [];
+		for (const name of handler.actions || []) {
+			const action = this[STATE_CONFIG].actions[name];
+			if (!action) {
+				throw Error(`State references unknown action '${name}'.`);
+			}
+			actions.push(action);
+		}
+		return actions;
+	}
+	/**
+	 * @param {Partial<HandlerConfig>} handler
+	 */
+	#resolveCondition(handler) {
+		if (handler.condition === undefined) {
+			return () => true;
+		}
+		const condition = this[STATE_CONFIG].conditions[handler.condition];
+		if (!condition) {
+			throw Error(`State references unknown condition '${handler.condition}'.`);
+		}
+		return condition;
+	}
+	/**
+	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
+	 */
+	#resolveTransition(handler) {
+		const { transitionTo } = handler;
+		if (transitionTo) {
+			const state = this[STATE_CONFIG].siblings.get(transitionTo);
+			if (!state) {
+				throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
+			}
+			return state;
+		}
+		return null;
+	}
+	/**
 	 * @param {((...args: any) => any)[]} actions
 	 * @param {any[]} args
 	 */
@@ -116,9 +147,6 @@ export class AtomicState extends BaseState {
 		for (const action of actions) {
 			action.call(this, ...args);
 		}
-	}
-	get always() {
-		return this.#always;
 	}
 	/** @param {Partial<AtomicStateConfig>} stateConfig */
 	configure(stateConfig) {
@@ -142,17 +170,8 @@ export class AtomicState extends BaseState {
 	dispatch(_event, ..._value) {
 
 	}
-	get entry() {
-		return this.#entry;
-	}
-	get exit() {
-		return this.#exit;
-	}
 	get name() {
 		return this.#name;
-	}
-	get on() {
-		return this.#on;
 	}
 	resolve() {
 		const { always, entry, exit, name, on } = this[STATE_CONFIG];
@@ -160,26 +179,26 @@ export class AtomicState extends BaseState {
 
 		for (const handler of always) {
 			this.#always.push({
-				actions: this.resolveActions(handler),
-				condition: this.resolveCondition(handler),
-				transitionTo: this.resolveTransition(handler),
+				actions: this.#resolveActions(handler),
+				condition: this.#resolveCondition(handler),
+				transitionTo: this.#resolveTransition(handler),
 				type: 'always',
 			});
 		}
 
 		for (const [event, handlers] of Object.entries(on)) {
 			this.#on[event] = handlers.map((handler) => ({
-				actions: this.resolveActions(handler),
-				condition: this.resolveCondition(handler),
-				transitionTo: this.resolveTransition(handler),
+				actions: this.#resolveActions(handler),
+				condition: this.#resolveCondition(handler),
+				transitionTo: this.#resolveTransition(handler),
 				type: 'dispatch',
 			}));
 		}
 
 		for (const handler of entry) {
 			this.#entry.push({
-				actions: this.resolveActions(handler),
-				condition: this.resolveCondition(handler),
+				actions: this.#resolveActions(handler),
+				condition: this.#resolveCondition(handler),
 				transitionTo: null,
 				type: 'entry',
 			});
@@ -187,55 +206,14 @@ export class AtomicState extends BaseState {
 
 		for (const handler of exit) {
 			this.#exit.push({
-				actions: this.resolveActions(handler),
-				condition: this.resolveCondition(handler),
+				actions: this.#resolveActions(handler),
+				condition: this.#resolveCondition(handler),
 				transitionTo: null,
 				type: 'exit',
 			});
 		}
 
 		return this;
-	}
-	/**
-	 * @param {Partial<HandlerConfig>} handler
-	 */
-	resolveActions(handler) {
-		const actions = [];
-		for (const name of handler.actions || []) {
-			const action = this[STATE_CONFIG].actions[name];
-			if (!action) {
-				throw Error(`State references unknown action '${name}'.`);
-			}
-			actions.push(action);
-		}
-		return actions;
-	}
-	/**
-	 * @param {Partial<HandlerConfig>} handler
-	 */
-	resolveCondition(handler) {
-		if (handler.condition === undefined) {
-			return () => true;
-		}
-		const condition = this[STATE_CONFIG].conditions[handler.condition];
-		if (!condition) {
-			throw Error(`State references unknown condition '${handler.condition}'.`);
-		}
-		return condition;
-	}
-	/**
-	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
-	 */
-	resolveTransition(handler) {
-		const { transitionTo } = handler;
-		if (transitionTo) {
-			const state = this[STATE_CONFIG].siblings.get(transitionTo);
-			if (!state) {
-				throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
-			}
-			return state;
-		}
-		return null;
 	}
 	start() {
 		this[RUN_ENTRY_HANDLERS]([]);
@@ -244,39 +222,21 @@ export class AtomicState extends BaseState {
 	toJSON() {
 		return {
 			name: this.name,
-			transition: {
-				active: this.#transitionActive,
-				from: this.#transitionFrom?.toJSON(),
-				to: this.#transitionTo?.toJSON(),
-			},
-		};
-	}
-	get transition() {
-		return {
-			active: this.#transitionActive,
-			from: this.#transitionFrom,
-			to: this.#transitionTo,
 		};
 	}
 	/** @param {any[]} value */
 	[RUN_ALWAYS_HANDLERS](value) {
-		return this.#executeHandlers(this.#always, ...value);
+		return this.#executeHandlers(this.#always, value);
 	}
-	/**
-	 * Batch entry and always actions but bail if any transition happens.
-	 *
-	 * @param {any[]} value
-	 */
+	/** @param {any[]} value */
 	[RUN_ENTRY_HANDLERS](value) {
-		this.#executeHandlers(this.#entry, ...value);
+		return this.#executeHandlers(this.#entry, value);
 	}
 	/** @param {any[]} value */
 	[RUN_EXIT_HANDLERS](value) {
-		return this.#executeHandlers(this.#exit, ...value);
+		return this.#executeHandlers(this.#exit, value);
 	}
 	/**
-	 * Batch on:event and always actions but bail if any transition happens.
-	 *
 	 * @param {string} event
 	 * @param {any[]} value
 	 */
@@ -286,7 +246,7 @@ export class AtomicState extends BaseState {
 			handlers.push(...this.#on[event]);
 		}
 		handlers.push(...this.#always);
-		return this.#executeHandlers(handlers, ...value);
+		return this.#executeHandlers(handlers, value);
 	}
 	[SET_INITIAL_STATE]() {}
 }

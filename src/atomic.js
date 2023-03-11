@@ -217,6 +217,8 @@ export class AtomicState extends BaseState {
 	}
 	start() {
 		this[RUN_ENTRY_HANDLERS]([]);
+
+		return this;
 	}
 	/** @returns {AtomicStateJson} */
 	toJSON() {

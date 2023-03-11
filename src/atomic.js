@@ -4,6 +4,7 @@ import {
 	RUN_EXIT_HANDLERS,
 	RUN_ON_HANDLERS,
 	SET_INITIAL_STATE,
+	STATE_CALL_SUBSCRIBERS,
 	STATE_CONFIG,
 } from './constants.js';
 import { BaseState } from './base.js';
@@ -164,11 +165,12 @@ export class AtomicState extends BaseState {
 		return this;
 	}
 	/**
-	 * @param {string} _event
-	 * @param {...any} _value
+	 * @param {string} event
+	 * @param {any[]} value
 	 */
-	dispatch(_event, ..._value) {
-
+	dispatch(event, ...value) {
+		this[RUN_ON_HANDLERS](event, value);
+		this[STATE_CALL_SUBSCRIBERS]();
 	}
 	get name() {
 		return this.#name;
@@ -217,6 +219,7 @@ export class AtomicState extends BaseState {
 	}
 	start() {
 		this[RUN_ENTRY_HANDLERS]([]);
+		this[RUN_ALWAYS_HANDLERS]([]);
 
 		return this;
 	}

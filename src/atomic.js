@@ -51,6 +51,7 @@ export class AtomicState extends BaseState {
 	#entry = [];
 	/** @type {ExitHandler[]} */
 	#exit = [];
+	#initialized = false;
 	/** @type {string} */
 	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
@@ -172,6 +173,12 @@ export class AtomicState extends BaseState {
 		this[RUN_ON_HANDLERS](event, value);
 		this[STATE_CALL_SUBSCRIBERS]();
 	}
+	/**
+	 * @param {string} path
+	 */
+	matches(path) {
+		return this.#initialized && this.#name === path;
+	}
 	get name() {
 		return this.#name;
 	}
@@ -218,6 +225,7 @@ export class AtomicState extends BaseState {
 		return this;
 	}
 	start() {
+		this[SET_INITIAL_STATE]();
 		this[RUN_ENTRY_HANDLERS]([]);
 		this[RUN_ALWAYS_HANDLERS]([]);
 
@@ -253,5 +261,7 @@ export class AtomicState extends BaseState {
 		handlers.push(...this.#always);
 		return this.#executeHandlers(handlers, value);
 	}
-	[SET_INITIAL_STATE]() {}
+	[SET_INITIAL_STATE]() {
+		this.#initialized = true;
+	}
 }

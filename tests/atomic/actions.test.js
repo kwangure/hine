@@ -240,4 +240,113 @@ describe('actions', () => {
 		machine.dispatch('non-existent');
 		expect(alwaysCount).toBe(2);
 	});
+
+	it('runs actions on parents', () => {
+		/** @type {string[]} */
+		const log = [];
+		const machine = new CompoundState({
+			name: 's0',
+			actions: {
+				always() {
+					log.push('always');
+				},
+				entry() {
+					log.push('entry');
+				},
+				exit() {
+					log.push('exit');
+				},
+				on() {
+					log.push('on');
+				},
+			},
+			states: {
+				s1: new AtomicState({
+					always: [{
+						actions: ['always'],
+					}],
+					entry: [{
+						actions: ['entry'],
+					}],
+					exit: [{
+						actions: ['exit'],
+					}],
+					on: {
+						event: [{
+							transitionTo: 's2',
+							actions: ['on'],
+						}],
+					},
+
+				}),
+				s2: new AtomicState(),
+			},
+		})
+			.resolve()
+			.start();
+
+		machine.dispatch('event');
+		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
+	});
+
+	it('does not run parent actions if own action matches', () => {
+		/** @type {string[]} */
+		const log = [];
+		const machine = new CompoundState({
+			name: 's0',
+			actions: {
+				always() {
+					log.push('not always');
+				},
+				entry() {
+					log.push('not entry');
+				},
+				exit() {
+					log.push('not exit');
+				},
+				on() {
+					log.push('not on');
+				},
+			},
+			states: {
+				s1: new AtomicState({
+					actions: {
+						always() {
+							log.push('always');
+						},
+						entry() {
+							log.push('entry');
+						},
+						exit() {
+							log.push('exit');
+						},
+						on() {
+							log.push('on');
+						},
+					},
+					always: [{
+						actions: ['always'],
+					}],
+					entry: [{
+						actions: ['entry'],
+					}],
+					exit: [{
+						actions: ['exit'],
+					}],
+					on: {
+						event: [{
+							transitionTo: 's2',
+							actions: ['on'],
+						}],
+					},
+				}),
+				s2: new AtomicState(),
+			},
+		})
+			.resolve()
+			.start();
+
+		machine.dispatch('event');
+		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
+	});
 });

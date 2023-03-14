@@ -26,7 +26,15 @@ import { BaseState } from './base.js';
  *     };
  * }} AtomicStateConfig
  *
- *  @typedef {Pick<AtomicStateConfig, 'actions' | 'conditions' | 'name'>} ResolveAtomicStateConfig
+ * @typedef {{
+ *     actions: {
+ *         [x: string]: (this: StateNode, ...args: any[]) => any,
+ *     };
+ *     conditions: {
+ *         [x: string]: (this: StateNode, ...args: any[]) => boolean,
+ *     };
+ *     name: string;
+ * }} ResolveAtomicStateConfig
  *
  * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
  * @typedef {import('./types.js').DispatchHandlerConfig} DispatchHandlerConfig
@@ -40,6 +48,8 @@ import { BaseState } from './base.js';
  * @typedef {import('./types.js').ExitHandler} ExitHandler
  * @typedef {import('./types.js').InitHandler} InitHandler
  * @typedef {import('./types.js').Handler} Handler
+ *
+ * @typedef {import('./types.js').StateNode} StateNode
  *
  * @typedef {{
  *     name: string,

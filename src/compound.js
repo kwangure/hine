@@ -45,7 +45,15 @@ import { BaseState } from './base.js';
  *     },
  * }} CompoundStateConfig
  *
- * @typedef {Pick<CompoundStateConfig, 'actions' | 'conditions' | 'name'>} ResolveCompoundStateConfig
+ * @typedef {{
+ *    actions: {
+ *         [x: string]: (this: StateNode, ...args: any[]) => any,
+ *     };
+ *    conditions: {
+ *         [x: string]: (this: StateNode, ...args: any[]) => boolean,
+ *     };
+ *     name: string;
+ * }} ResolveCompoundStateConfig
  *
  * @typedef {{
  *     name: string,
@@ -245,9 +253,22 @@ export class CompoundState extends BaseState {
 
 		this.#initial = first.value;
 		for (const [name, state] of this.#states) {
-			state.resolve({
-				name,
-			});
+			/** @type {ResolveCompoundStateConfig['actions']} */
+			const actions = {};
+			for (const name in this[STATE_CONFIG].actions) {
+				if (Object.hasOwn(this[STATE_CONFIG].actions, name)) {
+					actions[name] = this[STATE_CONFIG].actions[name].bind(this);
+				}
+			}
+			/** @type {ResolveCompoundStateConfig['conditions']} */
+			const conditions = {};
+			for (const name in this[STATE_CONFIG].conditions) {
+				if (Object.hasOwn(this[STATE_CONFIG].conditions, name)) {
+					conditions[name] = this[STATE_CONFIG]
+						.conditions[name].bind(this);
+				}
+			}
+			state.resolve({ actions, conditions, name });
 		}
 
 		return this;

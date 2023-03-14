@@ -45,6 +45,8 @@ import { BaseState } from './base.js';
  *     },
  * }} CompoundStateConfig
  *
+ * @typedef {Pick<CompoundStateConfig, 'actions' | 'conditions' | 'name'>} ResolveCompoundStateConfig
+ *
  * @typedef {{
  *     name: string,
  *     states: {
@@ -176,9 +178,19 @@ export class CompoundState extends BaseState {
 	get on() {
 		return this.#on;
 	}
-	resolve() {
+	/** @param {Partial<ResolveCompoundStateConfig>} [fallbackConfig] */
+	resolve(fallbackConfig) {
 		const { always, entry, exit, name, on, states } = this[STATE_CONFIG];
-		this.#name = name;
+
+		this[STATE_CONFIG].actions = {
+			...fallbackConfig?.actions,
+			...this[STATE_CONFIG].actions,
+		};
+		this[STATE_CONFIG].conditions = {
+			...fallbackConfig?.conditions,
+			...this[STATE_CONFIG].conditions,
+		};
+		this.#name = name || fallbackConfig?.name || '';
 
 		for (const name in states) {
 			if (Object.hasOwn(states, name)) {

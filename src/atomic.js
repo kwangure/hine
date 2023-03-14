@@ -26,6 +26,8 @@ import { BaseState } from './base.js';
  *     };
  * }} AtomicStateConfig
  *
+ *  @typedef {Pick<AtomicStateConfig, 'actions' | 'conditions' | 'name'>} ResolveAtomicStateConfig
+ *
  * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
  * @typedef {import('./types.js').DispatchHandlerConfig} DispatchHandlerConfig
  * @typedef {import('./types.js').EntryHandlerConfig} EntryHandlerConfig
@@ -182,9 +184,19 @@ export class AtomicState extends BaseState {
 	get name() {
 		return this.#name;
 	}
-	resolve() {
+	/** @param {Partial<ResolveAtomicStateConfig>} [fallbackConfig] */
+	resolve(fallbackConfig) {
 		const { always, entry, exit, name, on } = this[STATE_CONFIG];
-		this.#name = name;
+
+		this[STATE_CONFIG].actions = {
+			...fallbackConfig?.actions,
+			...this[STATE_CONFIG].actions,
+		};
+		this[STATE_CONFIG].conditions = {
+			...fallbackConfig?.conditions,
+			...this[STATE_CONFIG].conditions,
+		};
+		this.#name = name || fallbackConfig?.name || '';
 
 		for (const handler of always) {
 			this.#always.push({

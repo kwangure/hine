@@ -106,11 +106,10 @@ describe('resolve', () => {
 		let value = '';
 		const machine = new CompoundState({
 			actions: {
-				run() {
-					value = 'run';
-				},
+				run() {},
 			},
 			entry: [{
+				condition: 'shouldRun',
 				actions: ['run'],
 			}],
 			states: {
@@ -121,22 +120,28 @@ describe('resolve', () => {
 		machine.resolve({
 			conditions: {
 				shouldRun() {
-					return false;
+					value = 'condition';
+					return true;
 				},
 			},
 		}).start();
 
-		expect(value).toBe('run');
+		expect(value).toBe('condition');
 	});
 	it('does not override existing machine conditions', () => {
 		let value = '';
 		const machine = new CompoundState({
-			actions: {
-				run() {
-					value = 'run';
+			conditions: {
+				shouldRun() {
+					value = 'condition';
+					return true;
 				},
 			},
+			actions: {
+				run() {},
+			},
 			entry: [{
+				condition: 'shouldRun',
 				actions: ['run'],
 			}],
 			states: {
@@ -145,13 +150,14 @@ describe('resolve', () => {
 		});
 
 		machine.resolve({
-			actions: {
-				run() {
-					value = 'notrun';
+			conditions: {
+				shouldRun() {
+					value = 'notcondition';
+					return true;
 				},
 			},
 		}).start();
 
-		expect(value).toBe('run');
+		expect(value).toBe('condition');
 	});
 });

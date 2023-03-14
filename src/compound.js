@@ -160,6 +160,16 @@ export class CompoundState extends BaseState {
 	get exit() {
 		return this.#exit;
 	}
+	/**
+	 * @param {string} path
+	 * @return {boolean}
+	 */
+	matches(path) {
+		if (!this.#state) return false;
+		return path === this.#name
+			|| (path.startsWith(`${this.#name}.`)
+				&& this.#state.matches(path.slice(this.#name.length + 1)));
+	}
 	get name() {
 		return this.#name;
 	}

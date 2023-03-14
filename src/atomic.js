@@ -228,6 +228,7 @@ export class AtomicState extends BaseState {
 		this[SET_INITIAL_STATE]();
 		this[RUN_ENTRY_HANDLERS]([]);
 		this[RUN_ALWAYS_HANDLERS]([]);
+		this[STATE_CALL_SUBSCRIBERS]();
 
 		return this;
 	}

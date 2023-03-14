@@ -195,7 +195,6 @@ export class CompoundState extends BaseState {
 		for (const name in states) {
 			if (Object.hasOwn(states, name)) {
 				const state = states[name];
-				state.configure({ name });
 				this.#states.set(name, state);
 				state[STATE_CONFIG].siblings = this.#states;
 			}
@@ -244,9 +243,12 @@ export class CompoundState extends BaseState {
 			throw Error('Compound states require at least one child');
 		}
 
-		this.#initial = first.value.resolve();
-		// continue consuming iterator
-		for (const state of iterator) state.resolve();
+		this.#initial = first.value;
+		for (const [name, state] of this.#states) {
+			state.resolve({
+				name,
+			});
+		}
 
 		return this;
 	}

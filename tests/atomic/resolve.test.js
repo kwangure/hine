@@ -1,5 +1,5 @@
-import { AtomicState, CompoundState } from 'src';
 import { describe, expect, it } from 'vitest';
+import { AtomicState } from 'src';
 
 describe('resolve', () => {
 	it('returns a reference to the machine', () => {
@@ -25,19 +25,6 @@ describe('resolve', () => {
 		});
 		machine.resolve({ name: 'john' });
 		expect(machine.name).toBe('machine');
-	});
-	it.todo('does not override configured name', () => {
-		const machine = new CompoundState({
-			states: {
-				s1: new AtomicState({
-					name: 'nots1',
-				}),
-			},
-		})
-			.resolve()
-			.start();
-		machine.resolve({ name: 'john' });
-		expect(machine.state?.name).toBe('nots1');
 	});
 	it('sets machine actions', () => {
 		let value = '';

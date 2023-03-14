@@ -40,7 +40,7 @@ describe('resolve', () => {
 		machine.resolve({ name: 'john' });
 		expect(machine.name).toBe('machine');
 	});
-	it.todo('does not override configured name', () => {
+	it('does not override configured name', () => {
 		const machine = new CompoundState({
 			states: {
 				s1: new CompoundState({

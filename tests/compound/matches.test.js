@@ -54,4 +54,19 @@ describe('matches', () => {
 		expect(machine.matches('machine.s2')).toBe(false);
 		expect(machine.matches('machine.s2.s21')).toBe(false);
 	});
+	it('matches anonymous states', () => {
+		const machine = new CompoundState({
+			states: {
+				s1: new CompoundState({
+					states: {
+						s11: new AtomicState(),
+					},
+				}),
+			},
+		})
+			.resolve()
+			.start();
+		expect(machine.matches('.s1')).toBe(true);
+		expect(machine.matches('.s1.s11')).toBe(true);
+	});
 });

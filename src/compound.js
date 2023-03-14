@@ -77,7 +77,7 @@ export class CompoundState extends BaseState {
 	 * }}
 	 */
 	[STATE_CONFIG] = {
-		name: 'state',
+		name: '',
 		actions: {},
 		always: [],
 		conditions: {},

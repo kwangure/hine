@@ -63,7 +63,7 @@ export class AtomicState extends BaseState {
 	 * }}
 	 */
 	[STATE_CONFIG] = {
-		name: 'state',
+		name: '',
 		actions: {},
 		always: [],
 		conditions: {},

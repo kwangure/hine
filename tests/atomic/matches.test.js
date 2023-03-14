@@ -22,4 +22,10 @@ describe('matches', () => {
 			.start();
 		expect(machine.matches('machine')).toBe(true);
 	});
+	it('matches anonymous states', () => {
+		const machine = new AtomicState()
+			.resolve()
+			.start();
+		expect(machine.matches('')).toBe(true);
+	});
 });

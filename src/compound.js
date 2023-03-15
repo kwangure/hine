@@ -52,7 +52,6 @@ import { BaseState } from './base.js';
  *    conditions: {
  *         [x: string]: (this: StateNode, ...args: any[]) => boolean,
  *     };
- *     name: string;
  * }} ResolveCompoundStateConfig
  *
  * @typedef {{
@@ -198,12 +197,17 @@ export class CompoundState extends BaseState {
 			...fallbackConfig?.conditions,
 			...this[STATE_CONFIG].conditions,
 		};
-		this.#name = name || fallbackConfig?.name || '';
+		this.#name = name || '';
 
 		for (const name in states) {
 			if (Object.hasOwn(states, name)) {
 				const state = states[name];
-				this.#states.set(name, state);
+				if (state[STATE_CONFIG].name) {
+					this.#states.set(state[STATE_CONFIG].name, state);
+				} else {
+					state.configure({ name });
+					this.#states.set(name, state);
+				}
 				state[STATE_CONFIG].siblings = this.#states;
 			}
 		}

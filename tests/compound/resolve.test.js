@@ -10,41 +10,10 @@ describe('resolve', () => {
 		});
 		expect(machine.resolve()).toBe(machine);
 	});
-	it('sets the name', () => {
-		const machine = new CompoundState({
-			states: {
-				s1: new AtomicState(),
-			},
-		});
-		machine.resolve({ name: 'john' });
-		expect(machine.name).toBe('john');
-	});
-	it('does not override configured name', () => {
-		const machine = new CompoundState({
-			name: 'machine',
-			states: {
-				s1: new AtomicState(),
-			},
-		});
-		machine.resolve({ name: 'john' });
-		expect(machine.name).toBe('machine');
-	});
-	it('does not override configured name', () => {
-		const machine = new CompoundState();
-		machine.configure({
-			name: 'machine',
-			states: {
-				s1: new AtomicState(),
-			},
-		});
-		machine.resolve({ name: 'john' });
-		expect(machine.name).toBe('machine');
-	});
-	it('does not override configured name', () => {
+	it('sets nested name name', () => {
 		const machine = new CompoundState({
 			states: {
 				s1: new CompoundState({
-					name: 'nots1',
 					states: {
 						s11: new AtomicState(),
 					},
@@ -53,7 +22,8 @@ describe('resolve', () => {
 		})
 			.resolve()
 			.start();
-		expect(machine.state?.name).toBe('nots1');
+		expect(machine.state?.name).toBe('s1');
+		expect(/** @type {CompoundState | null} */(machine.state)?.state?.name).toBe('s11');
 	});
 	it('sets machine actions', () => {
 		let value = '';

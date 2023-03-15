@@ -41,7 +41,6 @@ describe('actions', () => {
 					},
 				}),
 				b: new AtomicState({
-					name: 's0',
 					actions: {
 						always0() {
 							log.push('always0');

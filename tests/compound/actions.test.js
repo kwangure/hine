@@ -77,7 +77,6 @@ describe('actions', () => {
 					},
 				}),
 				b: new CompoundState({
-					name: 's0',
 					actions: {
 						always0() {
 							log.push('always0');

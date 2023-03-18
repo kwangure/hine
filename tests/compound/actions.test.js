@@ -648,4 +648,55 @@ describe('actions', () => {
 		machine.dispatch('event');
 		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
 	});
+
+	it('runs transitions in always handlers', () => {
+		/** @type {string[]} */
+		const log = [];
+		const machine = new CompoundState({
+			states: {
+				s1: new CompoundState({
+					actions: {
+						entry1() {
+							log.push('entry1');
+						},
+						transition1() {
+							log.push('transition1');
+						},
+					},
+					entry: [{
+						actions: ['entry1'],
+					}],
+					on: {
+						event: [{
+							transitionTo: 's2',
+							actions: ['transition1'],
+						}],
+					},
+					states: {
+						s11: new AtomicState(),
+					},
+				}),
+				s2: new CompoundState({
+					actions: {
+						always2() {
+							log.push('always2');
+						},
+					},
+					always: [{
+						transitionTo: 's1',
+						actions: ['always2'],
+					}],
+					states: {
+						s21: new AtomicState(),
+					},
+				}),
+			},
+		})
+			.resolve()
+			.start();
+
+		machine.dispatch('event');
+		expect(machine.state.name).toEqual('s1');
+		expect(log).toEqual(['entry1', 'transition1', 'always2', 'entry1']);
+	});
 });

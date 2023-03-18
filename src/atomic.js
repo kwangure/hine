@@ -4,6 +4,7 @@ import {
 	RUN_EXIT_HANDLERS,
 	RUN_ON_HANDLERS,
 	SET_INITIAL_STATE,
+	STATE_ACTIVE,
 	STATE_CALL_SUBSCRIBERS,
 	STATE_CONFIG,
 } from './constants.js';
@@ -71,6 +72,7 @@ export class AtomicState extends BaseState {
 
 	/**
 	 * @type {AtomicStateConfig & {
+	 *     parent: import('./compound.js').CompoundState | null;
 	 *     siblings: Map<string, AtomicState>
 	 * }}
 	 */
@@ -82,6 +84,7 @@ export class AtomicState extends BaseState {
 		entry: [],
 		exit: [],
 		on: {},
+		parent: null,
 		siblings: new Map(),
 	};
 
@@ -100,17 +103,11 @@ export class AtomicState extends BaseState {
 	 * @param {any[]} args
 	 */
 	#executeHandlers(handlers, args) {
-		for (const { actions, condition, transitionTo } of handlers) {
+		for (const { condition, handler } of handlers) {
 			if (!condition.call(this, ...args)) continue;
-			if (transitionTo) {
-				return {
-					transitionTo,
-					runActions: this.#runActions.bind(this, actions, args),
-				};
-			}
-			this.#runActions(actions, args);
+			const transitioned = handler(args);
+			if (transitioned) return;
 		}
-		return null;
 	}
 	/**
 	 * @param {Partial<HandlerConfig>} handler
@@ -142,25 +139,46 @@ export class AtomicState extends BaseState {
 	/**
 	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
 	 */
-	#resolveTransition(handler) {
+	#resolveHandler(handler) {
 		const { transitionTo } = handler;
+		const actions = this.#resolveActions(handler);
 		if (transitionTo) {
-			const state = this[STATE_CONFIG].siblings.get(transitionTo);
-			if (!state) {
-				throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
+			const { parent, siblings } = this[STATE_CONFIG];
+			if (!parent) {
+				throw Error('States without a parent cannot transition');
 			}
-			return state;
+			const to = siblings.get(transitionTo);
+			if (!to) {
+				throw Error(`Unknown sibling state '${transitionTo}'.`);
+			}
+			const from = this;
+
+			/** @param {any[]} args */
+			return (args) => {
+				// exit actions for the current state
+				from[RUN_EXIT_HANDLERS](args);
+				// transition actions for the handler
+				for (const action of actions) {
+					action.call(from, ...args);
+				}
+				// change the active nested state for parent state
+				parent[STATE_ACTIVE] = to;
+				// set initial state from transitionTo to leaves
+				to[SET_INITIAL_STATE]();
+				// entry actions for transitionTo and leaves
+				to[RUN_ENTRY_HANDLERS]([]);
+				// always actions for transitionTo and leaves
+				to[RUN_ALWAYS_HANDLERS]([]);
+				return true;
+			};
 		}
-		return null;
-	}
-	/**
-	 * @param {((...args: any) => any)[]} actions
-	 * @param {any[]} args
-	 */
-	#runActions(actions, args) {
-		for (const action of actions) {
-			action.call(this, ...args);
-		}
+		/** @param {any[]} args */
+		return (args) => {
+			for (const action of actions) {
+				action.call(this, ...args);
+			}
+			return false;
+		};
 	}
 	/** @param {Partial<AtomicStateConfig>} stateConfig */
 	configure(stateConfig) {
@@ -210,36 +228,32 @@ export class AtomicState extends BaseState {
 
 		for (const handler of always) {
 			this.#always.push({
-				actions: this.#resolveActions(handler),
 				condition: this.#resolveCondition(handler),
-				transitionTo: this.#resolveTransition(handler),
+				handler: this.#resolveHandler(handler),
 				type: 'always',
 			});
 		}
 
 		for (const [event, handlers] of Object.entries(on)) {
 			this.#on[event] = handlers.map((handler) => ({
-				actions: this.#resolveActions(handler),
 				condition: this.#resolveCondition(handler),
-				transitionTo: this.#resolveTransition(handler),
+				handler: this.#resolveHandler(handler),
 				type: 'dispatch',
 			}));
 		}
 
 		for (const handler of entry) {
 			this.#entry.push({
-				actions: this.#resolveActions(handler),
 				condition: this.#resolveCondition(handler),
-				transitionTo: null,
+				handler: this.#resolveHandler(handler),
 				type: 'entry',
 			});
 		}
 
 		for (const handler of exit) {
 			this.#exit.push({
-				actions: this.#resolveActions(handler),
 				condition: this.#resolveCondition(handler),
-				transitionTo: null,
+				handler: this.#resolveHandler(handler),
 				type: 'exit',
 			});
 		}

@@ -4,6 +4,7 @@ import {
 	RUN_EXIT_HANDLERS,
 	RUN_ON_HANDLERS,
 	SET_INITIAL_STATE,
+	STATE_ACTIVE,
 	STATE_CALL_SUBSCRIBERS,
 	STATE_CONFIG,
 } from './constants.js';
@@ -75,14 +76,15 @@ export class CompoundState extends BaseState {
 	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
-	/** @type {StateNode | null} */
-	#state = null;
 	/** @type {Map<string, StateNode>} */
 	#states = new Map();
 
+	/** @type {StateNode | null} */
+	[STATE_ACTIVE] = null;
 	/**
 	 * @type {CompoundStateConfig & {
-	 *     siblings: Map<string, StateNode>
+	 *     parent: CompoundState | null;
+	 *     siblings: Map<string, StateNode>;
 	 * }}
 	 */
 	[STATE_CONFIG] = {
@@ -93,6 +95,7 @@ export class CompoundState extends BaseState {
 		entry: [],
 		exit: [],
 		on: {},
+		parent: null,
 		states: {},
 		siblings: new Map(),
 	};
@@ -112,25 +115,10 @@ export class CompoundState extends BaseState {
 	 * @param {...any} args
 	 */
 	#executeHandlers(handlers, ...args) {
-		for (const { actions, condition, transitionTo } of handlers) {
+		for (const { condition, handler } of handlers) {
 			if (!condition.call(this, ...args)) continue;
-			if (transitionTo) {
-				return {
-					transitionTo,
-					runActions: this.#runActions.bind(this, actions, args),
-				};
-			}
-			this.#runActions(actions, args);
-		}
-		return null;
-	}
-	/**
-	 * @param {((...args: any) => any)[]} actions
-	 * @param {any[]} args
-	 */
-	#runActions(actions, args) {
-		for (const action of actions) {
-			action.call(this, ...args);
+			const transitioned = handler(args);
+			if (transitioned) return;
 		}
 	}
 	get always() {
@@ -157,7 +145,7 @@ export class CompoundState extends BaseState {
 	 * @param {any[]} value
 	 */
 	dispatch(event, ...value) {
-		if (!this.#state) {
+		if (!this[STATE_ACTIVE]) {
 			throw Error('Attempted dispatch before resolving state');
 		}
 		this[RUN_ON_HANDLERS](event, value);
@@ -174,10 +162,11 @@ export class CompoundState extends BaseState {
 	 * @return {boolean}
 	 */
 	matches(path) {
-		if (!this.#state) return false;
+		if (!this[STATE_ACTIVE]) return false;
 		return path === this.#name
 			|| (path.startsWith(`${this.#name}.`)
-				&& this.#state.matches(path.slice(this.#name.length + 1)));
+				&& this[STATE_ACTIVE]
+					.matches(path.slice(this.#name.length + 1)));
 	}
 	get name() {
 		return this.#name;
@@ -208,23 +197,23 @@ export class CompoundState extends BaseState {
 					state.configure({ name });
 					this.#states.set(name, state);
 				}
+				state[STATE_CONFIG].parent = this;
 				state[STATE_CONFIG].siblings = this.#states;
 			}
 		}
 
 		for (const handler of always) {
 			this.#always.push({
-				actions: this.resolveActions(handler),
 				condition: this.resolveCondition(handler),
-				transitionTo: this.resolveTransition(handler),
+				handler: this.resolveHandler(handler),
 				type: 'always',
 			});
 		}
 
 		for (const [event, handlers] of Object.entries(on)) {
 			this.#on[event] = handlers.map((handler) => ({
-				actions: this.resolveActions(handler),
 				condition: this.resolveCondition(handler),
+				handler: this.resolveHandler(handler),
 				transitionTo: this.resolveTransition(handler),
 				type: 'dispatch',
 			}));
@@ -232,18 +221,22 @@ export class CompoundState extends BaseState {
 
 		for (const handler of entry) {
 			this.#entry.push({
-				actions: this.resolveActions(handler),
 				condition: this.resolveCondition(handler),
-				transitionTo: null,
+				handler: this.resolveHandler({
+					...handler,
+					transitionTo: undefined,
+				}),
 				type: 'entry',
 			});
 		}
 
 		for (const handler of exit) {
 			this.#exit.push({
-				actions: this.resolveActions(handler),
 				condition: this.resolveCondition(handler),
-				transitionTo: null,
+				handler: this.resolveHandler({
+					...handler,
+					transitionTo: undefined,
+				}),
 				type: 'exit',
 			});
 		}
@@ -307,6 +300,52 @@ export class CompoundState extends BaseState {
 	/**
 	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
 	 */
+	resolveHandler(handler) {
+		const { transitionTo } = handler;
+		const actions = this.resolveActions(handler);
+		if (transitionTo) {
+			const { parent, siblings } = this[STATE_CONFIG];
+			if (!parent) {
+				throw Error('States without a parent cannot transition');
+			}
+			const to = siblings.get(transitionTo);
+			if (!to) {
+				throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
+			}
+
+			const from = this;
+			/** @param {any[]} args */
+			return (args) => {
+				// exit actions for the current state
+				from[RUN_EXIT_HANDLERS](args);
+				// transition actions for the handler
+				for (const action of actions) {
+					action.call(from, ...args);
+				}
+				// change the active nested state for parent state
+				parent[STATE_ACTIVE] = to;
+				// set initial state from transitionTo to leaves
+				to[SET_INITIAL_STATE]();
+				// entry actions for transitionTo and leaves
+				to[RUN_ENTRY_HANDLERS]([]);
+				// always actions for transitionTo and leaves
+				to[RUN_ALWAYS_HANDLERS]([]);
+
+				return true;
+			};
+		}
+
+		/** @param {any[]} args */
+		return (args) => {
+			for (const action of actions) {
+				action.call(this, ...args);
+			}
+			return false;
+		};
+	}
+	/**
+	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
+	 */
 	resolveTransition(handler) {
 		const { transitionTo } = handler;
 		if (transitionTo) {
@@ -327,7 +366,7 @@ export class CompoundState extends BaseState {
 		return this;
 	}
 	get state() {
-		return this.#state;
+		return this[STATE_ACTIVE];
 	}
 	/** @returns {CompoundStateJson} */
 	toJSON() {
@@ -346,7 +385,7 @@ export class CompoundState extends BaseState {
 	/** @param {any[]} value */
 	[RUN_ALWAYS_HANDLERS](value) {
 		this.#executeHandlers(this.#always, ...value);
-		this.#state?.[RUN_ALWAYS_HANDLERS](value);
+		this[STATE_ACTIVE]?.[RUN_ALWAYS_HANDLERS](value);
 	}
 	/**
 	 * Batch entry and always actions but bail if any transition happens.
@@ -355,7 +394,7 @@ export class CompoundState extends BaseState {
 	 */
 	[RUN_ENTRY_HANDLERS](value) {
 		this.#executeHandlers(this.#entry, ...value);
-		this.#state?.[RUN_ENTRY_HANDLERS](value);
+		this[STATE_ACTIVE]?.[RUN_ENTRY_HANDLERS](value);
 	}
 	/**
 	 * Execute exit actions but bail if any transition happens.
@@ -363,7 +402,7 @@ export class CompoundState extends BaseState {
 	 * @param {any[]} value
 	 */
 	[RUN_EXIT_HANDLERS](value) {
-		this.#state?.[RUN_EXIT_HANDLERS](value);
+		this[STATE_ACTIVE]?.[RUN_EXIT_HANDLERS](value);
 		return this.#executeHandlers(this.#exit, ...value);
 	}
 	/**
@@ -371,23 +410,7 @@ export class CompoundState extends BaseState {
 	 * @param {any[]} value
 	 */
 	[RUN_ON_HANDLERS](event, value) {
-		const transitionHandler = this.#state?.[RUN_ON_HANDLERS](event, value);
-		if (transitionHandler) {
-			const { transitionTo, runActions } = transitionHandler;
-			// exit actions for the current state
-			this.#state?.[RUN_EXIT_HANDLERS](value);
-			// transition actions for the handler
-			runActions();
-			// change the active nested state for this state
-			this.#state = transitionTo;
-			// set initial state from transitionTo to leaves
-			transitionTo[SET_INITIAL_STATE]();
-			// entry actions for transitionTo and leaves
-			transitionTo[RUN_ENTRY_HANDLERS]([]);
-			// always actions for transitionTo and leaves
-			// TODO: Handle transitions
-			transitionTo[RUN_ALWAYS_HANDLERS]([]);
-		}
+		this[STATE_ACTIVE]?.[RUN_ON_HANDLERS](event, value);
 		const handlers = [];
 		if (Object.hasOwn(this.#on, event)) {
 			handlers.push(...this.#on[event]);
@@ -396,7 +419,7 @@ export class CompoundState extends BaseState {
 		return this.#executeHandlers(handlers, ...value);
 	}
 	[SET_INITIAL_STATE]() {
-		this.#state = this.#initial;
-		this.#state?.[SET_INITIAL_STATE]();
+		this[STATE_ACTIVE] = this.#initial;
+		this[STATE_ACTIVE]?.[SET_INITIAL_STATE]();
 	}
 }

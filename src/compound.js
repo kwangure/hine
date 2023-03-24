@@ -129,6 +129,79 @@ export class CompoundState extends BaseState {
 			if (transitioned) return;
 		}
 	}
+	/**
+	 * @param {Partial<HandlerConfig>} handler
+	 */
+	#resolveActions(handler) {
+		const actions = [];
+		for (const name of handler.actions || []) {
+			const action = this[STATE_CONFIG].actions[name];
+			if (!action) {
+				throw Error(`State references unknown action '${name}'.`);
+			}
+			actions.push(action);
+		}
+		return actions;
+	}
+	/**
+	 * @param {Partial<HandlerConfig>} handler
+	 */
+	#resolveCondition(handler) {
+		if (handler.condition === undefined) {
+			return () => true;
+		}
+		const condition = this[STATE_CONFIG].conditions[handler.condition];
+		if (!condition) {
+			throw Error(`State references unknown condition '${handler.condition}'.`);
+		}
+		return condition;
+	}
+	/**
+	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
+	 */
+	#resolveHandler(handler) {
+		const { transitionTo } = handler;
+		const actions = this.#resolveActions(handler);
+		if (transitionTo) {
+			const { parent } = this[STATE_CONFIG];
+			if (!parent) {
+				throw Error('States without a parent cannot transition');
+			}
+			const to = parent[STATE_CONFIG].states[transitionTo];
+			if (!to) {
+				throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
+			}
+
+			const from = this;
+			/** @param {any[]} args */
+			return (args) => {
+				// exit actions for the current state
+				from[RUN_EXIT_HANDLERS](args);
+				// transition actions for the handler
+				for (const action of actions) {
+					action.call(from, ...args);
+				}
+				// change the active nested state for parent state
+				parent[STATE_ACTIVE] = to;
+				// set initial state from transitionTo to leaves
+				to[SET_INITIAL_STATE]();
+				// entry actions for transitionTo and leaves
+				to[RUN_ENTRY_HANDLERS]([]);
+				// always actions for transitionTo and leaves
+				to[RUN_ALWAYS_HANDLERS]([]);
+
+				return true;
+			};
+		}
+
+		/** @param {any[]} args */
+		return (args) => {
+			for (const action of actions) {
+				action.call(this, ...args);
+			}
+			return false;
+		};
+	}
 	get always() {
 		return this.#always;
 	}
@@ -193,24 +266,24 @@ export class CompoundState extends BaseState {
 
 		for (const handler of always) {
 			this.#always.push({
-				condition: this.resolveCondition(handler),
-				handler: this.resolveHandler(handler),
+				condition: this.#resolveCondition(handler),
+				handler: this.#resolveHandler(handler),
 				type: 'always',
 			});
 		}
 
 		for (const [event, handlers] of Object.entries(on)) {
 			this.#on[event] = handlers.map((handler) => ({
-				condition: this.resolveCondition(handler),
-				handler: this.resolveHandler(handler),
+				condition: this.#resolveCondition(handler),
+				handler: this.#resolveHandler(handler),
 				type: 'dispatch',
 			}));
 		}
 
 		for (const handler of entry) {
 			this.#entry.push({
-				condition: this.resolveCondition(handler),
-				handler: this.resolveHandler({
+				condition: this.#resolveCondition(handler),
+				handler: this.#resolveHandler({
 					...handler,
 					transitionTo: undefined,
 				}),
@@ -220,8 +293,8 @@ export class CompoundState extends BaseState {
 
 		for (const handler of exit) {
 			this.#exit.push({
-				condition: this.resolveCondition(handler),
-				handler: this.resolveHandler({
+				condition: this.#resolveCondition(handler),
+				handler: this.#resolveHandler({
 					...handler,
 					transitionTo: undefined,
 				}),
@@ -257,79 +330,6 @@ export class CompoundState extends BaseState {
 		}
 
 		return this;
-	}
-	/**
-	 * @param {Partial<HandlerConfig>} handler
-	 */
-	resolveActions(handler) {
-		const actions = [];
-		for (const name of handler.actions || []) {
-			const action = this[STATE_CONFIG].actions[name];
-			if (!action) {
-				throw Error(`State references unknown action '${name}'.`);
-			}
-			actions.push(action);
-		}
-		return actions;
-	}
-	/**
-	 * @param {Partial<HandlerConfig>} handler
-	 */
-	resolveCondition(handler) {
-		if (handler.condition === undefined) {
-			return () => true;
-		}
-		const condition = this[STATE_CONFIG].conditions[handler.condition];
-		if (!condition) {
-			throw Error(`State references unknown condition '${handler.condition}'.`);
-		}
-		return condition;
-	}
-	/**
-	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
-	 */
-	resolveHandler(handler) {
-		const { transitionTo } = handler;
-		const actions = this.resolveActions(handler);
-		if (transitionTo) {
-			const { parent } = this[STATE_CONFIG];
-			if (!parent) {
-				throw Error('States without a parent cannot transition');
-			}
-			const to = parent[STATE_CONFIG].states[transitionTo];
-			if (!to) {
-				throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
-			}
-
-			const from = this;
-			/** @param {any[]} args */
-			return (args) => {
-				// exit actions for the current state
-				from[RUN_EXIT_HANDLERS](args);
-				// transition actions for the handler
-				for (const action of actions) {
-					action.call(from, ...args);
-				}
-				// change the active nested state for parent state
-				parent[STATE_ACTIVE] = to;
-				// set initial state from transitionTo to leaves
-				to[SET_INITIAL_STATE]();
-				// entry actions for transitionTo and leaves
-				to[RUN_ENTRY_HANDLERS]([]);
-				// always actions for transitionTo and leaves
-				to[RUN_ALWAYS_HANDLERS]([]);
-
-				return true;
-			};
-		}
-
-		/** @param {any[]} args */
-		return (args) => {
-			for (const action of actions) {
-				action.call(this, ...args);
-			}
-			return false;
-		};
 	}
 	start() {
 		this[SET_INITIAL_STATE]();

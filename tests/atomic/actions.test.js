@@ -240,7 +240,7 @@ describe('actions', () => {
 		expect(alwaysCount).toBe(2);
 	});
 
-	it('runs actions on parents', () => {
+	it('runs actions on ancestors', () => {
 		/** @type {string[]} */
 		const log = [];
 		const machine = new CompoundState({
@@ -260,25 +260,28 @@ describe('actions', () => {
 				},
 			},
 			states: {
-				s1: new AtomicState({
-					always: [{
-						actions: ['always'],
-					}],
-					entry: [{
-						actions: ['entry'],
-					}],
-					exit: [{
-						actions: ['exit'],
-					}],
-					on: {
-						event: [{
-							transitionTo: 's2',
-							actions: ['on'],
-						}],
+				s1: new CompoundState({
+					states: {
+						s11: new AtomicState({
+							always: [{
+								actions: ['always'],
+							}],
+							entry: [{
+								actions: ['entry'],
+							}],
+							exit: [{
+								actions: ['exit'],
+							}],
+							on: {
+								event: [{
+									transitionTo: 's12',
+									actions: ['on'],
+								}],
+							},
+						}),
+						s12: new AtomicState(),
 					},
-
 				}),
-				s2: new AtomicState(),
 			},
 		})
 			.resolve()

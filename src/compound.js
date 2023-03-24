@@ -84,7 +84,6 @@ export class CompoundState extends BaseState {
 	/**
 	 * @type {CompoundStateConfig & {
 	 *     parent: CompoundState | null;
-	 *     siblings: Map<string, StateNode>;
 	 * }}
 	 */
 	[STATE_CONFIG] = {
@@ -97,7 +96,6 @@ export class CompoundState extends BaseState {
 		on: {},
 		parent: null,
 		states: {},
-		siblings: new Map(),
 	};
 
 	/**
@@ -198,7 +196,6 @@ export class CompoundState extends BaseState {
 					this.#states.set(name, state);
 				}
 				state[STATE_CONFIG].parent = this;
-				state[STATE_CONFIG].siblings = this.#states;
 			}
 		}
 
@@ -304,11 +301,11 @@ export class CompoundState extends BaseState {
 		const { transitionTo } = handler;
 		const actions = this.resolveActions(handler);
 		if (transitionTo) {
-			const { parent, siblings } = this[STATE_CONFIG];
+			const { parent } = this[STATE_CONFIG];
 			if (!parent) {
 				throw Error('States without a parent cannot transition');
 			}
-			const to = siblings.get(transitionTo);
+			const to = parent[STATE_CONFIG].states[transitionTo];
 			if (!to) {
 				throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
 			}
@@ -349,7 +346,8 @@ export class CompoundState extends BaseState {
 	resolveTransition(handler) {
 		const { transitionTo } = handler;
 		if (transitionTo) {
-			const state = this[STATE_CONFIG].siblings.get(transitionTo);
+			const parent = this[STATE_CONFIG].parent;
+			const state = parent?.[STATE_CONFIG].states[transitionTo];
 			if (!state) {
 				throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
 			}

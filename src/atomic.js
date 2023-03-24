@@ -73,7 +73,6 @@ export class AtomicState extends BaseState {
 	/**
 	 * @type {AtomicStateConfig & {
 	 *     parent: import('./compound.js').CompoundState | null;
-	 *     siblings: Map<string, AtomicState>
 	 * }}
 	 */
 	[STATE_CONFIG] = {
@@ -85,7 +84,6 @@ export class AtomicState extends BaseState {
 		exit: [],
 		on: {},
 		parent: null,
-		siblings: new Map(),
 	};
 
 	/**
@@ -143,11 +141,11 @@ export class AtomicState extends BaseState {
 		const { transitionTo } = handler;
 		const actions = this.#resolveActions(handler);
 		if (transitionTo) {
-			const { parent, siblings } = this[STATE_CONFIG];
+			const { parent } = this[STATE_CONFIG];
 			if (!parent) {
 				throw Error('States without a parent cannot transition');
 			}
-			const to = siblings.get(transitionTo);
+			const to = parent[STATE_CONFIG].states[transitionTo];
 			if (!to) {
 				throw Error(`Unknown sibling state '${transitionTo}'.`);
 			}

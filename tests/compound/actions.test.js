@@ -696,7 +696,7 @@ describe('actions', () => {
 			.start();
 
 		machine.dispatch('event');
-		expect(machine.state.name).toEqual('s1');
+		expect(machine.state?.name).toEqual('s1');
 		expect(log).toEqual(['entry1', 'transition1', 'always2', 'entry1']);
 	});
 });

@@ -68,11 +68,11 @@ export class CompoundState extends BaseState {
 	#initial = null;
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
+	/** @type {StateNode | null} */
+	#state = null;
 	/** @type {Map<string, StateNode>} */
 	#states = new Map();
 
-	/** @type {StateNode | null} */
-	[STATE_ACTIVE] = null;
 	/**
 	 * @type {Omit<CompoundStateConfig, 'name' | 'states'> & {
 	 *     parent: CompoundState | null;
@@ -213,7 +213,7 @@ export class CompoundState extends BaseState {
 	 * @param {any[]} value
 	 */
 	dispatch(event, ...value) {
-		if (!this[STATE_ACTIVE]) {
+		if (!this.#state) {
 			throw Error('Attempted dispatch before resolving state');
 		}
 		this[RUN_ON_HANDLERS](event, value);
@@ -224,10 +224,10 @@ export class CompoundState extends BaseState {
 	 * @return {boolean}
 	 */
 	matches(path) {
-		if (!this[STATE_ACTIVE]) return false;
+		if (!this.#state) return false;
 		return path === this.__name
 			|| (path.startsWith(`${this.__name}.`)
-				&& this[STATE_ACTIVE]
+				&& this.#state
 					.matches(path.slice(this.__name.length + 1)));
 	}
 	get name() {
@@ -297,7 +297,7 @@ export class CompoundState extends BaseState {
 		return this;
 	}
 	get state() {
-		return this[STATE_ACTIVE];
+		return this.#state;
 	}
 	/** @returns {CompoundStateJson} */
 	toJSON() {
@@ -316,7 +316,7 @@ export class CompoundState extends BaseState {
 	/** @param {any[]} value */
 	[RUN_ALWAYS_HANDLERS](value) {
 		this.#executeHandlers(this.#always, value);
-		this[STATE_ACTIVE]?.[RUN_ALWAYS_HANDLERS](value);
+		this.#state?.[RUN_ALWAYS_HANDLERS](value);
 	}
 	/**
 	 * Batch entry and always actions but bail if any transition happens.
@@ -325,7 +325,7 @@ export class CompoundState extends BaseState {
 	 */
 	[RUN_ENTRY_HANDLERS](value) {
 		this.#executeHandlers(this.#entry, value);
-		this[STATE_ACTIVE]?.[RUN_ENTRY_HANDLERS](value);
+		this.#state?.[RUN_ENTRY_HANDLERS](value);
 	}
 	/**
 	 * Execute exit actions but bail if any transition happens.
@@ -333,7 +333,7 @@ export class CompoundState extends BaseState {
 	 * @param {any[]} value
 	 */
 	[RUN_EXIT_HANDLERS](value) {
-		this[STATE_ACTIVE]?.[RUN_EXIT_HANDLERS](value);
+		this.#state?.[RUN_EXIT_HANDLERS](value);
 		return this.#executeHandlers(this.#exit, value);
 	}
 	/**
@@ -341,7 +341,7 @@ export class CompoundState extends BaseState {
 	 * @param {any[]} value
 	 */
 	[RUN_ON_HANDLERS](event, value) {
-		this[STATE_ACTIVE]?.[RUN_ON_HANDLERS](event, value);
+		this.#state?.[RUN_ON_HANDLERS](event, value);
 		const handlers = [];
 		if (Object.hasOwn(this.#on, event)) {
 			handlers.push(...this.#on[event]);
@@ -350,8 +350,8 @@ export class CompoundState extends BaseState {
 		return this.#executeHandlers(handlers, value);
 	}
 	[SET_INITIAL_STATE]() {
-		this[STATE_ACTIVE] = this.#initial;
-		this[STATE_ACTIVE]?.[SET_INITIAL_STATE]();
+		this.#state = this.#initial;
+		this.#state?.[SET_INITIAL_STATE]();
 	}
 	/**
 	 * @returns {Record<string, (...args: any[]) => any>} value
@@ -365,6 +365,12 @@ export class CompoundState extends BaseState {
 		}
 
 		return actions;
+	}
+	/**
+	 * @param {StateNode} value
+	 */
+	set [STATE_ACTIVE](value) {
+		this.#state = value;
 	}
 	/**
 	 * @returns {Record<string, (...args: any[]) => boolean>}

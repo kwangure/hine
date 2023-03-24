@@ -128,7 +128,7 @@ export class AtomicState extends BaseState {
 		if (handler.condition === undefined) {
 			return () => true;
 		}
-		const condition = this[STATE_CONFIG].conditions[handler.condition];
+		const condition = this[STATE_CONDITIONS][handler.condition];
 		if (!condition) {
 			throw Error(`State references unknown condition '${handler.condition}'.`);
 		}
@@ -264,11 +264,11 @@ export class AtomicState extends BaseState {
 	}
 	/** @param {any[]} value */
 	[RUN_ENTRY_HANDLERS](value) {
-		return this.#executeHandlers(this.#entry, value);
+		this.#executeHandlers(this.#entry, value);
 	}
 	/** @param {any[]} value */
 	[RUN_EXIT_HANDLERS](value) {
-		return this.#executeHandlers(this.#exit, value);
+		this.#executeHandlers(this.#exit, value);
 	}
 	/**
 	 * @param {string} event

@@ -9,6 +9,7 @@ import {
 	STATE_CALL_SUBSCRIBERS,
 	STATE_CONDITIONS,
 	STATE_CONFIG,
+	STATE_STATES,
 } from './constants.js';
 import { BaseState } from './base.js';
 
@@ -144,7 +145,7 @@ export class AtomicState extends BaseState {
 			if (!parent) {
 				throw Error('States without a parent cannot transition');
 			}
-			const to = parent[STATE_CONFIG].states[transitionTo];
+			const to = parent[STATE_STATES].get(transitionTo);
 			if (!to) {
 				throw Error(`Unknown sibling state '${transitionTo}'.`);
 			}

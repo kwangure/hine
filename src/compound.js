@@ -9,6 +9,7 @@ import {
 	STATE_CALL_SUBSCRIBERS,
 	STATE_CONDITIONS,
 	STATE_CONFIG,
+	STATE_STATES,
 } from './constants.js';
 import { BaseState } from './base.js';
 
@@ -73,7 +74,7 @@ export class CompoundState extends BaseState {
 	/** @type {StateNode | null} */
 	[STATE_ACTIVE] = null;
 	/**
-	 * @type {Omit<CompoundStateConfig, 'name'> & {
+	 * @type {Omit<CompoundStateConfig, 'name' | 'states'> & {
 	 *     parent: CompoundState | null;
 	 * }}
 	 */
@@ -85,7 +86,6 @@ export class CompoundState extends BaseState {
 		exit: [],
 		on: {},
 		parent: null,
-		states: {},
 	};
 	__name = '';
 
@@ -104,11 +104,24 @@ export class CompoundState extends BaseState {
 		Object.assign(config.actions, stateConfig.actions);
 		Object.assign(config.conditions, stateConfig.conditions);
 		Object.assign(config.on, stateConfig.on);
-		Object.assign(config.states, stateConfig.states);
 
 		if (stateConfig.always) config.always = stateConfig.always;
 		if (stateConfig.entry) config.entry = stateConfig.entry;
 		if (stateConfig.exit) config.exit = stateConfig.exit;
+
+		const missingError = Error('Compound states require at least one child');
+		if (!stateConfig.states) throw missingError;
+
+		const states = Object.entries(stateConfig.states);
+		if (!states.length) throw missingError;
+
+		for (const [name, state] of states) {
+			if (!state.__name) {
+				state.__name = name;
+			}
+			this.#states.set(state.__name, state);
+			state[STATE_CONFIG].parent = this;
+		}
 	}
 
 	/**
@@ -160,7 +173,7 @@ export class CompoundState extends BaseState {
 			if (!parent) {
 				throw Error('States without a parent cannot transition');
 			}
-			const to = parent[STATE_CONFIG].states[transitionTo];
+			const to = parent[STATE_STATES].get(transitionTo);
 			if (!to) {
 				throw Error(`Unknown sibling state '${transitionTo}'.`);
 			}
@@ -221,18 +234,7 @@ export class CompoundState extends BaseState {
 		return this.__name;
 	}
 	resolve() {
-		const { always, entry, exit, on, states } = this[STATE_CONFIG];
-
-		for (const name in states) {
-			if (Object.hasOwn(states, name)) {
-				const state = states[name];
-				if (!state.__name) {
-					state.__name = name;
-				}
-				this.#states.set(state.__name, state);
-				state[STATE_CONFIG].parent = this;
-			}
-		}
+		const { always, entry, exit, on } = this[STATE_CONFIG];
 
 		for (const handler of always) {
 			this.#always.push({
@@ -377,5 +379,8 @@ export class CompoundState extends BaseState {
 		}
 
 		return conditions;
+	}
+	get [STATE_STATES]() {
+		return this.#states;
 	}
 }

@@ -9,7 +9,9 @@ export function atomic(config) {
 }
 
 /**
- * @param {Partial<import('./compound.js').CompoundStateConfig>} [config]
+ * @param {Partial<import('./compound.js').CompoundStateConfig> & {
+ *     states: Record<string, import('./types.js').StateNode>
+ * }} [config]
  */
 export function compound(config) {
 	return new CompoundState(config);

@@ -318,23 +318,15 @@ export class CompoundState extends BaseState {
 		this.#executeHandlers(this.#always, value);
 		this.#state?.[RUN_ALWAYS_HANDLERS](value);
 	}
-	/**
-	 * Batch entry and always actions but bail if any transition happens.
-	 *
-	 * @param {any[]} value
-	 */
+	/** @param {any[]} value */
 	[RUN_ENTRY_HANDLERS](value) {
 		this.#executeHandlers(this.#entry, value);
 		this.#state?.[RUN_ENTRY_HANDLERS](value);
 	}
-	/**
-	 * Execute exit actions but bail if any transition happens.
-	 *
-	 * @param {any[]} value
-	 */
+	/** @param {any[]} value */
 	[RUN_EXIT_HANDLERS](value) {
 		this.#state?.[RUN_EXIT_HANDLERS](value);
-		return this.#executeHandlers(this.#exit, value);
+		this.#executeHandlers(this.#exit, value);
 	}
 	/**
 	 * @param {string} event
@@ -354,7 +346,7 @@ export class CompoundState extends BaseState {
 		this.#state?.[SET_INITIAL_STATE]();
 	}
 	/**
-	 * @returns {Record<string, (...args: any[]) => any>} value
+	 * @returns {Record<string, (...args: any[]) => any>}
 	 */
 	get [STATE_ACTIONS]() {
 		const actions = this[STATE_CONFIG].parent?.[STATE_ACTIONS] || {};
@@ -366,9 +358,7 @@ export class CompoundState extends BaseState {
 
 		return actions;
 	}
-	/**
-	 * @param {StateNode} value
-	 */
+	/** @param {StateNode} value */
 	set [STATE_ACTIVE](value) {
 		this.#state = value;
 	}

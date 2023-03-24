@@ -1,4 +1,5 @@
 import {
+	RESOLVE_CONFIG,
 	RUN_ALWAYS_HANDLERS,
 	RUN_ENTRY_HANDLERS,
 	RUN_EXIT_HANDLERS,
@@ -233,7 +234,33 @@ export class CompoundState extends BaseState {
 	get name() {
 		return this.__name;
 	}
-	resolve() {
+	start() {
+		this[RESOLVE_CONFIG]();
+		this[SET_INITIAL_STATE]();
+		this[RUN_ENTRY_HANDLERS]([]);
+		this[RUN_ALWAYS_HANDLERS]([]);
+		this[STATE_CALL_SUBSCRIBERS]();
+
+		return this;
+	}
+	get state() {
+		return this.#state;
+	}
+	/** @returns {CompoundStateJson} */
+	toJSON() {
+		/** @type {CompoundStateJson['states']} */
+		const states = {};
+
+		for (const [name, state] of this.#states) {
+			states[name] = state.toJSON();
+		}
+
+		return {
+			name: this.name,
+			states,
+		};
+	}
+	[RESOLVE_CONFIG]() {
 		const { always, entry, exit, on } = this[STATE_CONFIG];
 
 		for (const handler of always) {
@@ -283,35 +310,8 @@ export class CompoundState extends BaseState {
 
 		this.#initial = first.value;
 		for (const state of this.#states.values()) {
-			state.resolve();
+			state[RESOLVE_CONFIG]();
 		}
-
-		return this;
-	}
-	start() {
-		this[SET_INITIAL_STATE]();
-		this[RUN_ENTRY_HANDLERS]([]);
-		this[RUN_ALWAYS_HANDLERS]([]);
-		this[STATE_CALL_SUBSCRIBERS]();
-
-		return this;
-	}
-	get state() {
-		return this.#state;
-	}
-	/** @returns {CompoundStateJson} */
-	toJSON() {
-		/** @type {CompoundStateJson['states']} */
-		const states = {};
-
-		for (const [name, state] of this.#states) {
-			states[name] = state.toJSON();
-		}
-
-		return {
-			name: this.name,
-			states,
-		};
 	}
 	/** @param {any[]} value */
 	[RUN_ALWAYS_HANDLERS](value) {

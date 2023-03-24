@@ -11,21 +11,17 @@ describe('matches', () => {
 	it('does not match when not started', () => {
 		const machine = new AtomicState({
 			name: 'machine',
-		}).resolve();
+		});
 		expect(machine.matches('machine')).toBe(false);
 	});
 	it('matches state name when started', () => {
 		const machine = new AtomicState({
 			name: 'machine',
-		})
-			.resolve()
-			.start();
+		}).start();
 		expect(machine.matches('machine')).toBe(true);
 	});
 	it('matches anonymous states', () => {
-		const machine = new AtomicState()
-			.resolve()
-			.start();
+		const machine = new AtomicState().start();
 		expect(machine.matches('')).toBe(true);
 	});
 });

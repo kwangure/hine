@@ -58,9 +58,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 		expect(log).toEqual(['entry0', 'entry1', 'entry2', 'always0', 'always1', 'always2']);
 	});
 
@@ -129,9 +127,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 		machine.dispatch('event');
 		expect(log).toEqual(['entry0', 'entry1', 'entry2', 'always0', 'always1', 'always2']);
 	});
@@ -190,9 +186,7 @@ describe('actions', () => {
 				}),
 				s2: new AtomicState(),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 		log.length = 0;
 
 		machine.dispatch('event');
@@ -260,9 +254,7 @@ describe('actions', () => {
 				}),
 				s2: new AtomicState(),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 		log.length = 0;
 
 		machine.dispatch('event');
@@ -355,9 +347,7 @@ describe('actions', () => {
 				}),
 				s2: new AtomicState(),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 		log.length = 0;
 
 		machine.dispatch('event');
@@ -482,9 +472,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 		log.length = 0;
 
 		machine.dispatch('event');
@@ -518,9 +506,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 		expect(alwaysCount).toBe(1);
 
 		machine.dispatch('non-existent');
@@ -573,9 +559,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 
 		machine.dispatch('event');
 		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
@@ -641,9 +625,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 
 		machine.dispatch('event');
 		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
@@ -691,9 +673,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 
 		machine.dispatch('event');
 		expect(machine.state?.name).toEqual('s1');

@@ -17,7 +17,7 @@ describe('matches', () => {
 			states: {
 				s1: new AtomicState(),
 			},
-		}).resolve();
+		});
 		expect(machine.matches('machine')).toBe(false);
 	});
 	it('matches state name when started', () => {
@@ -26,9 +26,7 @@ describe('matches', () => {
 			states: {
 				s1: new AtomicState(),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 		expect(machine.matches('machine')).toBe(true);
 	});
 	it('matches nested states', () => {
@@ -46,9 +44,7 @@ describe('matches', () => {
 					},
 				}),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 		expect(machine.matches('machine.s1')).toBe(true);
 		expect(machine.matches('machine.s1.s11')).toBe(true);
 		expect(machine.matches('machine.s2')).toBe(false);
@@ -63,9 +59,7 @@ describe('matches', () => {
 					},
 				}),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 		expect(machine.matches('.s1')).toBe(true);
 		expect(machine.matches('.s1.s11')).toBe(true);
 	});

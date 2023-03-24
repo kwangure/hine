@@ -33,12 +33,12 @@ describe('htstate', () => {
 		});
 
 		it('sets initial state', () => {
-			machine.resolve().start();
+			machine.start();
 			expect(machine.state?.name).toBe('state1');
 		});
 
 		it('transitions on dispatch', () => {
-			machine.resolve().start();
+			machine.start();
 			machine.dispatch('to2');
 			expect(machine.state?.name).toBe('state2');
 			machine.dispatch('to1');
@@ -48,7 +48,7 @@ describe('htstate', () => {
 		});
 
 		it('ignores invalid events', () => {
-			machine.resolve().start();
+			machine.start();
 			machine.dispatch('random');
 			expect(machine.state?.name).toBe('state1');
 		});
@@ -67,7 +67,7 @@ describe('htstate', () => {
 						},
 					}),
 				},
-			}).resolve()).toThrow('\'missing\'');
+			}).start()).toThrow('\'missing\'');
 		});
 
 		it('throws on missing exit actions', () => {
@@ -82,7 +82,7 @@ describe('htstate', () => {
 						},
 					}),
 				},
-			}).resolve()).toThrow('\'missing\'');
+			}).start()).toThrow('\'missing\'');
 		});
 
 		it('throws on missing transient actions', () => {
@@ -97,7 +97,7 @@ describe('htstate', () => {
 						},
 					}),
 				},
-			}).resolve()).toThrow('\'missing\'');
+			}).start()).toThrow('\'missing\'');
 		});
 	});
 
@@ -193,9 +193,7 @@ describe('htstate', () => {
 					}),
 					other: new AtomicState(),
 				},
-			})
-				.resolve()
-				.start();
+			}).start();
 		});
 
 		it('ignores initial entry then transient actions', () => {

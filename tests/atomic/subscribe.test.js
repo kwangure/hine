@@ -2,25 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { AtomicState } from 'src';
 
 describe('subscribe', () => {
-	it('doesn\'t call subscribers on resolve', () => {
-		const machine = new AtomicState({
-			actions: {},
-			always: [],
-			entry: [],
-		});
-		let count = 0;
-		machine.subscribe(() => count++);
-		expect(count).toBe(1);
-
-		machine.resolve();
-		expect(count).toBe(1);
-	});
 	it('calls subscribers on start', () => {
 		const machine = new AtomicState({
 			actions: {},
 			always: [],
 			entry: [],
-		}).resolve();
+		});
 		let count = 0;
 		machine.subscribe(() => count++);
 		expect(count).toBe(1);
@@ -38,9 +25,7 @@ describe('subscribe', () => {
 					actions: ['noop'],
 				}],
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 		let count = 0;
 		machine.subscribe(() => count++);
 		expect(count).toBe(1);

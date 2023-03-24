@@ -2,23 +2,6 @@ import { AtomicState, CompoundState } from 'src';
 import { describe, expect, it } from 'vitest';
 
 describe('subscribe', () => {
-	it('doesn\'t call subscribers on resolve', () => {
-		const machine = new CompoundState({
-			states: {
-				s1: new CompoundState({
-					states: {
-						s11: new AtomicState(),
-					},
-				}),
-			},
-		});
-		let count = 0;
-		machine.subscribe(() => count++);
-		expect(count).toBe(1);
-
-		machine.resolve();
-		expect(count).toBe(1);
-	});
 	it('calls subscribers on start', () => {
 		const machine = new CompoundState({
 			states: {
@@ -28,7 +11,7 @@ describe('subscribe', () => {
 					},
 				}),
 			},
-		}).resolve();
+		});
 		let count = 0;
 		machine.subscribe(() => count++);
 		expect(count).toBe(1);
@@ -53,9 +36,7 @@ describe('subscribe', () => {
 					},
 				}),
 			},
-		})
-			.resolve()
-			.start();
+		}).start();
 		let count = 0;
 		machine.subscribe(() => count++);
 		expect(count).toBe(1);

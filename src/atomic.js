@@ -1,4 +1,5 @@
 import {
+	RESOLVE_CONFIG,
 	RUN_ALWAYS_HANDLERS,
 	RUN_ENTRY_HANDLERS,
 	RUN_EXIT_HANDLERS,
@@ -201,7 +202,22 @@ export class AtomicState extends BaseState {
 	get name() {
 		return this.__name;
 	}
-	resolve() {
+	start() {
+		this[RESOLVE_CONFIG]();
+		this[SET_INITIAL_STATE]();
+		this[RUN_ENTRY_HANDLERS]([]);
+		this[RUN_ALWAYS_HANDLERS]([]);
+		this[STATE_CALL_SUBSCRIBERS]();
+
+		return this;
+	}
+	/** @returns {AtomicStateJson} */
+	toJSON() {
+		return {
+			name: this.__name,
+		};
+	}
+	[RESOLVE_CONFIG]() {
 		const { always, entry, exit, on } = this[STATE_CONFIG];
 
 		for (const handler of always) {
@@ -241,22 +257,6 @@ export class AtomicState extends BaseState {
 				type: 'exit',
 			});
 		}
-
-		return this;
-	}
-	start() {
-		this[SET_INITIAL_STATE]();
-		this[RUN_ENTRY_HANDLERS]([]);
-		this[RUN_ALWAYS_HANDLERS]([]);
-		this[STATE_CALL_SUBSCRIBERS]();
-
-		return this;
-	}
-	/** @returns {AtomicStateJson} */
-	toJSON() {
-		return {
-			name: this.__name,
-		};
 	}
 	/** @param {any[]} value */
 	[RUN_ALWAYS_HANDLERS](value) {

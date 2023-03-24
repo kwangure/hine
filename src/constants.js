@@ -6,6 +6,7 @@ export const STATE_CONFIG = Symbol('state-config');
 export const STATE_STATES = Symbol('state-states');
 
 export const SET_INITIAL_STATE = Symbol('set-initial-state');
+export const RESOLVE_CONFIG = Symbol('resolve-config');
 
 export const RUN_ALWAYS_HANDLERS = Symbol('run-always');
 export const RUN_ENTRY_HANDLERS = Symbol('run-entry');

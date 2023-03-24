@@ -34,7 +34,6 @@ import { BaseState } from './base.js';
  *     conditions: {
  *         [x: string]: (this: StateNode, ...args: any[]) => boolean,
  *     };
- *     name: string;
  * }} ResolveAtomicStateConfig
  *
  * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
@@ -222,7 +221,7 @@ export class AtomicState extends BaseState {
 			...fallbackConfig?.conditions,
 			...this[STATE_CONFIG].conditions,
 		};
-		this.#name = name || fallbackConfig?.name || '';
+		this.#name = name || '';
 
 		for (const handler of always) {
 			this.#always.push({

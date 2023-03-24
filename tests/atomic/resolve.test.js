@@ -6,26 +6,6 @@ describe('resolve', () => {
 		const machine = new AtomicState();
 		expect(machine.resolve()).toBe(machine);
 	});
-	it('sets the name', () => {
-		const machine = new AtomicState();
-		machine.resolve({ name: 'john' });
-		expect(machine.name).toBe('john');
-	});
-	it('does not override configured name', () => {
-		const machine = new AtomicState({
-			name: 'machine',
-		});
-		machine.resolve({ name: 'john' });
-		expect(machine.name).toBe('machine');
-	});
-	it('does not override configured name', () => {
-		const machine = new AtomicState();
-		machine.configure({
-			name: 'machine',
-		});
-		machine.resolve({ name: 'john' });
-		expect(machine.name).toBe('machine');
-	});
 	it('sets machine actions', () => {
 		let value = '';
 		const machine = new AtomicState({

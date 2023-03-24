@@ -261,7 +261,7 @@ export class CompoundState extends BaseState {
 						.conditions[name].bind(this);
 				}
 			}
-			state.resolve({ actions, conditions, name });
+			state.resolve({ actions, conditions });
 		}
 
 		return this;

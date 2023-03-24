@@ -120,9 +120,9 @@ export class CompoundState extends BaseState {
 
 	/**
 	 * @param {Handler[]} handlers
-	 * @param {...any} args
+	 * @param {any[]} args
 	 */
-	#executeHandlers(handlers, ...args) {
+	#executeHandlers(handlers, args) {
 		for (const { condition, handler } of handlers) {
 			if (!condition.call(this, ...args)) continue;
 			const transitioned = handler(args);
@@ -346,7 +346,7 @@ export class CompoundState extends BaseState {
 	}
 	/** @param {any[]} value */
 	[RUN_ALWAYS_HANDLERS](value) {
-		this.#executeHandlers(this.#always, ...value);
+		this.#executeHandlers(this.#always, value);
 		this[STATE_ACTIVE]?.[RUN_ALWAYS_HANDLERS](value);
 	}
 	/**
@@ -355,7 +355,7 @@ export class CompoundState extends BaseState {
 	 * @param {any[]} value
 	 */
 	[RUN_ENTRY_HANDLERS](value) {
-		this.#executeHandlers(this.#entry, ...value);
+		this.#executeHandlers(this.#entry, value);
 		this[STATE_ACTIVE]?.[RUN_ENTRY_HANDLERS](value);
 	}
 	/**
@@ -365,7 +365,7 @@ export class CompoundState extends BaseState {
 	 */
 	[RUN_EXIT_HANDLERS](value) {
 		this[STATE_ACTIVE]?.[RUN_EXIT_HANDLERS](value);
-		return this.#executeHandlers(this.#exit, ...value);
+		return this.#executeHandlers(this.#exit, value);
 	}
 	/**
 	 * @param {string} event
@@ -378,7 +378,7 @@ export class CompoundState extends BaseState {
 			handlers.push(...this.#on[event]);
 		}
 		handlers.push(...this.#always);
-		return this.#executeHandlers(handlers, ...value);
+		return this.#executeHandlers(handlers, value);
 	}
 	[SET_INITIAL_STATE]() {
 		this[STATE_ACTIVE] = this.#initial;

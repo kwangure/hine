@@ -4,6 +4,7 @@ import {
 	RUN_EXIT_HANDLERS,
 	RUN_ON_HANDLERS,
 	SET_INITIAL_STATE,
+	STATE_ACTIONS,
 	STATE_ACTIVE,
 	STATE_CALL_SUBSCRIBERS,
 	STATE_CONFIG,
@@ -28,9 +29,6 @@ import { BaseState } from './base.js';
  * }} AtomicStateConfig
  *
  * @typedef {{
- *     actions: {
- *         [x: string]: (this: StateNode, ...args: any[]) => any,
- *     };
  *     conditions: {
  *         [x: string]: (this: StateNode, ...args: any[]) => boolean,
  *     };
@@ -119,7 +117,7 @@ export class AtomicState extends BaseState {
 	#resolveActions(handler) {
 		const actions = [];
 		for (const name of handler.actions || []) {
-			const action = this[STATE_CONFIG].actions[name];
+			const action = this[STATE_ACTIONS][name];
 			if (!action) {
 				throw Error(`State references unknown action '${name}'.`);
 			}
@@ -211,10 +209,6 @@ export class AtomicState extends BaseState {
 	resolve(fallbackConfig) {
 		const { always, entry, exit, on } = this[STATE_CONFIG];
 
-		this[STATE_CONFIG].actions = {
-			...fallbackConfig?.actions,
-			...this[STATE_CONFIG].actions,
-		};
 		this[STATE_CONFIG].conditions = {
 			...fallbackConfig?.conditions,
 			...this[STATE_CONFIG].conditions,
@@ -300,5 +294,18 @@ export class AtomicState extends BaseState {
 	}
 	[SET_INITIAL_STATE]() {
 		this.#initialized = true;
+	}
+	/**
+	 * @returns {Record<string, (...args: any[]) => any>}
+	 */
+	get [STATE_ACTIONS]() {
+		const actions = this[STATE_CONFIG].parent?.[STATE_ACTIONS] || {};
+		for (const name in this[STATE_CONFIG].actions) {
+			if (Object.hasOwn(this[STATE_CONFIG].actions, name)) {
+				actions[name] = this[STATE_CONFIG].actions[name].bind(this);
+			}
+		}
+
+		return actions;
 	}
 }

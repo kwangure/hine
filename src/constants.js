@@ -1,3 +1,4 @@
+export const STATE_ACTIONS = Symbol('state-actions');
 export const STATE_ACTIVE = Symbol('state-active');
 export const STATE_CALL_SUBSCRIBERS = Symbol('state-call-subscribers');
 export const STATE_CONFIG = Symbol('state-config');

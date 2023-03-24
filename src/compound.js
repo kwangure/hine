@@ -4,6 +4,7 @@ import {
 	RUN_EXIT_HANDLERS,
 	RUN_ON_HANDLERS,
 	SET_INITIAL_STATE,
+	STATE_ACTIONS,
 	STATE_ACTIVE,
 	STATE_CALL_SUBSCRIBERS,
 	STATE_CONFIG,
@@ -133,7 +134,7 @@ export class CompoundState extends BaseState {
 	#resolveActions(handler) {
 		const actions = [];
 		for (const name of handler.actions || []) {
-			const action = this[STATE_CONFIG].actions[name];
+			const action = this[STATE_ACTIONS][name];
 			if (!action) {
 				throw Error(`State references unknown action '${name}'.`);
 			}
@@ -229,10 +230,6 @@ export class CompoundState extends BaseState {
 	resolve(fallbackConfig) {
 		const { always, entry, exit, on, states } = this[STATE_CONFIG];
 
-		this[STATE_CONFIG].actions = {
-			...fallbackConfig?.actions,
-			...this[STATE_CONFIG].actions,
-		};
 		this[STATE_CONFIG].conditions = {
 			...fallbackConfig?.conditions,
 			...this[STATE_CONFIG].conditions,
@@ -380,5 +377,18 @@ export class CompoundState extends BaseState {
 	[SET_INITIAL_STATE]() {
 		this[STATE_ACTIVE] = this.#initial;
 		this[STATE_ACTIVE]?.[SET_INITIAL_STATE]();
+	}
+	/**
+	 * @returns {ResolveCompoundStateConfig['actions']} value
+	 */
+	get [STATE_ACTIONS]() {
+		const actions = this[STATE_CONFIG].parent?.[STATE_ACTIONS] || {};
+		for (const name in this[STATE_CONFIG].actions) {
+			if (Object.hasOwn(this[STATE_CONFIG].actions, name)) {
+				actions[name] = this[STATE_CONFIG].actions[name].bind(this);
+			}
+		}
+
+		return actions;
 	}
 }

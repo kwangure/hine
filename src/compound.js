@@ -10,6 +10,7 @@ import {
 	STATE_CALL_SUBSCRIBERS,
 	STATE_CONDITIONS,
 	STATE_CONFIG,
+	STATE_NAME,
 	STATE_STATES,
 } from './constants.js';
 import { BaseState } from './base.js';
@@ -31,7 +32,7 @@ import { BaseState } from './base.js';
  * @typedef {import('./types.js').StateNode} StateNode
  * @typedef {import('./types.js').StateJson} StateJson
  *
- * @typedef {{
+ * @typedef {import('./base.js').BaseStateConfig & {
  *     actions: {
  *         [x: string]: (this: CompoundState, ...args: any[]) => any,
  *     }
@@ -41,7 +42,6 @@ import { BaseState } from './base.js';
  *     }
  *     entry: EntryHandlerConfig[],
  *     exit: ExitHandlerConfig[],
- *     name: string;
  *     on: {
  *         [x: string]: DispatchHandlerConfig[];
  *     };
@@ -88,7 +88,6 @@ export class CompoundState extends BaseState {
 		on: {},
 		parent: null,
 	};
-	__name = '';
 
 	/**
 	 * @param {Partial<CompoundStateConfig> & {
@@ -96,10 +95,9 @@ export class CompoundState extends BaseState {
 	 * }} [stateConfig]
 	 */
 	constructor(stateConfig) {
-		super();
+		super(stateConfig);
 		if (!stateConfig) return;
 
-		this.__name = stateConfig.name || '';
 		const config = this[STATE_CONFIG];
 
 		Object.assign(config.actions, stateConfig.actions);
@@ -117,10 +115,10 @@ export class CompoundState extends BaseState {
 		if (!states.length) throw missingError;
 
 		for (const [name, state] of states) {
-			if (!state.__name) {
-				state.__name = name;
+			if (!state.name) {
+				state[STATE_NAME] = name;
 			}
-			this.#states.set(state.__name, state);
+			this.#states.set(state.name, state);
 			state[STATE_CONFIG].parent = this;
 		}
 	}
@@ -226,13 +224,10 @@ export class CompoundState extends BaseState {
 	 */
 	matches(path) {
 		if (!this.#state) return false;
-		return path === this.__name
-			|| (path.startsWith(`${this.__name}.`)
+		return path === this.name
+			|| (path.startsWith(`${this.name}.`)
 				&& this.#state
-					.matches(path.slice(this.__name.length + 1)));
-	}
-	get name() {
-		return this.__name;
+					.matches(path.slice(this.name.length + 1)));
 	}
 	start() {
 		this[RESOLVE_CONFIG]();

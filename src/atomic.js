@@ -15,7 +15,7 @@ import {
 import { BaseState } from './base.js';
 
 /**
- * @typedef {{
+ * @typedef {import('./base.js').BaseStateConfig & {
  *     actions: {
  *         [x: string]: (this: AtomicState, ...args: any[]) => any,
  *     }
@@ -25,7 +25,6 @@ import { BaseState } from './base.js';
  *     }
  *     entry: EntryHandlerConfig[],
  *     exit: ExitHandlerConfig[],
- *     name: string;
  *     on: {
  *         [x: string]: DispatchHandlerConfig[];
  *     };
@@ -76,16 +75,14 @@ export class AtomicState extends BaseState {
 		on: {},
 		parent: null,
 	};
-	__name = '';
 
 	/**
 	 * @param {Partial<AtomicStateConfig>} [stateConfig]
 	 */
 	constructor(stateConfig) {
-		super();
+		super(stateConfig);
 		if (!stateConfig) return;
 
-		this.__name = stateConfig.name || '';
 		const config = this[STATE_CONFIG];
 
 		Object.assign(config.actions, stateConfig.actions);
@@ -197,10 +194,7 @@ export class AtomicState extends BaseState {
 	 * @return {boolean}
 	 */
 	matches(path) {
-		return this.#initialized && this.__name === path;
-	}
-	get name() {
-		return this.__name;
+		return this.#initialized && this.name === path;
 	}
 	start() {
 		this[RESOLVE_CONFIG]();
@@ -214,7 +208,7 @@ export class AtomicState extends BaseState {
 	/** @returns {AtomicStateJson} */
 	toJSON() {
 		return {
-			name: this.__name,
+			name: this.name,
 		};
 	}
 	[RESOLVE_CONFIG]() {

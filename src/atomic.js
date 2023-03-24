@@ -193,6 +193,9 @@ export class AtomicState extends BaseState {
 	 * @param {any[]} value
 	 */
 	dispatch(event, ...value) {
+		if (!this.#initialized) {
+			throw Error('Attempted dispatch before resolving state');
+		}
 		this[RUN_ON_HANDLERS](event, value);
 		this[STATE_CALL_SUBSCRIBERS]();
 	}

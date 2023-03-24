@@ -72,8 +72,6 @@ export class CompoundState extends BaseState {
 	#exit = [];
 	/** @type {StateNode | null} */
 	#initial = null;
-	/** @type {string} */
-	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
 	/** @type {Map<string, StateNode>} */
@@ -82,12 +80,11 @@ export class CompoundState extends BaseState {
 	/** @type {StateNode | null} */
 	[STATE_ACTIVE] = null;
 	/**
-	 * @type {CompoundStateConfig & {
+	 * @type {Omit<CompoundStateConfig, 'name'> & {
 	 *     parent: CompoundState | null;
 	 * }}
 	 */
 	[STATE_CONFIG] = {
-		name: '',
 		actions: {},
 		always: [],
 		conditions: {},
@@ -97,6 +94,7 @@ export class CompoundState extends BaseState {
 		parent: null,
 		states: {},
 	};
+	__name = '';
 
 	/**
 	 * @param {Partial<CompoundStateConfig>} [stateConfig]
@@ -105,8 +103,8 @@ export class CompoundState extends BaseState {
 		super();
 		if (!stateConfig) return;
 
+		this.__name = stateConfig.name || '';
 		const config = this[STATE_CONFIG];
-		config.name = stateConfig.name || config.name;
 
 		Object.assign(config.actions, stateConfig.actions);
 		Object.assign(config.conditions, stateConfig.conditions);
@@ -219,17 +217,17 @@ export class CompoundState extends BaseState {
 	 */
 	matches(path) {
 		if (!this[STATE_ACTIVE]) return false;
-		return path === this.#name
-			|| (path.startsWith(`${this.#name}.`)
+		return path === this.__name
+			|| (path.startsWith(`${this.__name}.`)
 				&& this[STATE_ACTIVE]
-					.matches(path.slice(this.#name.length + 1)));
+					.matches(path.slice(this.__name.length + 1)));
 	}
 	get name() {
-		return this.#name;
+		return this.__name;
 	}
 	/** @param {Partial<ResolveCompoundStateConfig>} [fallbackConfig] */
 	resolve(fallbackConfig) {
-		const { always, entry, exit, name, on, states } = this[STATE_CONFIG];
+		const { always, entry, exit, on, states } = this[STATE_CONFIG];
 
 		this[STATE_CONFIG].actions = {
 			...fallbackConfig?.actions,
@@ -239,15 +237,14 @@ export class CompoundState extends BaseState {
 			...fallbackConfig?.conditions,
 			...this[STATE_CONFIG].conditions,
 		};
-		this.#name = name || '';
 
 		for (const name in states) {
 			if (Object.hasOwn(states, name)) {
 				const state = states[name];
-				if (!state[STATE_CONFIG].name) {
-					state[STATE_CONFIG].name = name;
+				if (!state.__name) {
+					state.__name = name;
 				}
-				this.#states.set(state[STATE_CONFIG].name, state);
+				this.#states.set(state.__name, state);
 				state[STATE_CONFIG].parent = this;
 			}
 		}

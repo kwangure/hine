@@ -64,18 +64,15 @@ export class AtomicState extends BaseState {
 	/** @type {ExitHandler[]} */
 	#exit = [];
 	#initialized = false;
-	/** @type {string} */
-	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
 
 	/**
-	 * @type {AtomicStateConfig & {
+	 * @type {Omit<AtomicStateConfig, 'name'> & {
 	 *     parent: import('./compound.js').CompoundState | null;
 	 * }}
 	 */
 	[STATE_CONFIG] = {
-		name: '',
 		actions: {},
 		always: [],
 		conditions: {},
@@ -84,6 +81,7 @@ export class AtomicState extends BaseState {
 		on: {},
 		parent: null,
 	};
+	__name = '';
 
 	/**
 	 * @param {Partial<AtomicStateConfig>} [stateConfig]
@@ -92,8 +90,8 @@ export class AtomicState extends BaseState {
 		super();
 		if (!stateConfig) return;
 
+		this.__name = stateConfig.name || '';
 		const config = this[STATE_CONFIG];
-		config.name = stateConfig.name || config.name;
 
 		Object.assign(config.actions, stateConfig.actions);
 		Object.assign(config.conditions, stateConfig.conditions);
@@ -204,14 +202,14 @@ export class AtomicState extends BaseState {
 	 * @return {boolean}
 	 */
 	matches(path) {
-		return this.#initialized && this.#name === path;
+		return this.#initialized && this.__name === path;
 	}
 	get name() {
-		return this.#name;
+		return this.__name;
 	}
 	/** @param {Partial<ResolveAtomicStateConfig>} [fallbackConfig] */
 	resolve(fallbackConfig) {
-		const { always, entry, exit, name, on } = this[STATE_CONFIG];
+		const { always, entry, exit, on } = this[STATE_CONFIG];
 
 		this[STATE_CONFIG].actions = {
 			...fallbackConfig?.actions,
@@ -221,7 +219,6 @@ export class AtomicState extends BaseState {
 			...fallbackConfig?.conditions,
 			...this[STATE_CONFIG].conditions,
 		};
-		this.#name = name || '';
 
 		for (const handler of always) {
 			this.#always.push({
@@ -274,7 +271,7 @@ export class AtomicState extends BaseState {
 	/** @returns {AtomicStateJson} */
 	toJSON() {
 		return {
-			name: this.name,
+			name: this.__name,
 		};
 	}
 	/** @param {any[]} value */

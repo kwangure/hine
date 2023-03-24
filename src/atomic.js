@@ -175,9 +175,11 @@ export class AtomicState extends BaseState {
 				to[RUN_ENTRY_HANDLERS]([]);
 				// always actions for transitionTo and leaves
 				to[RUN_ALWAYS_HANDLERS]([]);
+
 				return true;
 			};
 		}
+
 		/** @param {any[]} args */
 		return (args) => {
 			for (const action of actions) {
@@ -196,6 +198,7 @@ export class AtomicState extends BaseState {
 	}
 	/**
 	 * @param {string} path
+	 * @return {boolean}
 	 */
 	matches(path) {
 		return this.#initialized && this.#name === path;
@@ -236,7 +239,10 @@ export class AtomicState extends BaseState {
 		for (const handler of entry) {
 			this.#entry.push({
 				condition: this.#resolveCondition(handler),
-				handler: this.#resolveHandler(handler),
+				handler: this.#resolveHandler({
+					...handler,
+					transitionTo: undefined,
+				}),
 				type: 'entry',
 			});
 		}
@@ -244,7 +250,10 @@ export class AtomicState extends BaseState {
 		for (const handler of exit) {
 			this.#exit.push({
 				condition: this.#resolveCondition(handler),
-				handler: this.#resolveHandler(handler),
+				handler: this.#resolveHandler({
+					...handler,
+					transitionTo: undefined,
+				}),
 				type: 'exit',
 			});
 		}

@@ -62,6 +62,9 @@ describe('htstate', () => {
 						entry: [{
 							actions: ['missing'],
 						}],
+						states: {
+							s1: new AtomicState(),
+						},
 					}),
 				},
 			}).resolve()).toThrow('\'missing\'');
@@ -74,6 +77,9 @@ describe('htstate', () => {
 						exit: [{
 							actions: ['missing'],
 						}],
+						states: {
+							s1: new AtomicState(),
+						},
 					}),
 				},
 			}).resolve()).toThrow('\'missing\'');
@@ -86,6 +92,9 @@ describe('htstate', () => {
 						always: [{
 							actions: ['missing'],
 						}],
+						states: {
+							s1: new AtomicState(),
+						},
 					}),
 				},
 			}).resolve()).toThrow('\'missing\'');

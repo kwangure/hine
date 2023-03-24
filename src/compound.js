@@ -90,7 +90,9 @@ export class CompoundState extends BaseState {
 	__name = '';
 
 	/**
-	 * @param {Partial<CompoundStateConfig>} [stateConfig]
+	 * @param {Partial<CompoundStateConfig> & {
+	 *    states: CompoundStateConfig['states'],
+	 * }} [stateConfig]
 	 */
 	constructor(stateConfig) {
 		super();

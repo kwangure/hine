@@ -211,7 +211,6 @@ export class CompoundState extends BaseState {
 			this.#on[event] = handlers.map((handler) => ({
 				condition: this.resolveCondition(handler),
 				handler: this.resolveHandler(handler),
-				transitionTo: this.resolveTransition(handler),
 				type: 'dispatch',
 			}));
 		}
@@ -339,21 +338,6 @@ export class CompoundState extends BaseState {
 			}
 			return false;
 		};
-	}
-	/**
-	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
-	 */
-	resolveTransition(handler) {
-		const { transitionTo } = handler;
-		if (transitionTo) {
-			const parent = this[STATE_CONFIG].parent;
-			const state = parent?.[STATE_CONFIG].states[transitionTo];
-			if (!state) {
-				throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
-			}
-			return state;
-		}
-		return null;
 	}
 	start() {
 		this[SET_INITIAL_STATE]();

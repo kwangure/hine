@@ -11,6 +11,7 @@ import {
 	STATE_CONDITIONS,
 	STATE_CONFIG,
 	STATE_NAME,
+	STATE_PARENT,
 	STATE_STATES,
 } from './constants.js';
 import { BaseState } from './base.js';
@@ -75,9 +76,7 @@ export class CompoundState extends BaseState {
 	#states = new Map();
 
 	/**
-	 * @type {Omit<CompoundStateConfig, 'name' | 'states'> & {
-	 *     parent: CompoundState | null;
-	 * }}
+	 * @type {Omit<CompoundStateConfig, 'name' | 'states'>}
 	 */
 	[STATE_CONFIG] = {
 		actions: {},
@@ -86,7 +85,6 @@ export class CompoundState extends BaseState {
 		entry: [],
 		exit: [],
 		on: {},
-		parent: null,
 	};
 
 	/**
@@ -119,7 +117,7 @@ export class CompoundState extends BaseState {
 				state[STATE_NAME] = name;
 			}
 			this.#states.set(state.name, state);
-			state[STATE_CONFIG].parent = this;
+			state[STATE_PARENT] = this;
 		}
 	}
 
@@ -168,7 +166,7 @@ export class CompoundState extends BaseState {
 		const { transitionTo } = handler;
 		const actions = this.#resolveActions(handler);
 		if (transitionTo) {
-			const { parent } = this[STATE_CONFIG];
+			const parent = this[STATE_PARENT];
 			if (!parent) {
 				throw Error('States without a parent cannot transition');
 			}
@@ -344,7 +342,7 @@ export class CompoundState extends BaseState {
 	 * @returns {Record<string, (...args: any[]) => any>}
 	 */
 	get [STATE_ACTIONS]() {
-		const actions = this[STATE_CONFIG].parent?.[STATE_ACTIONS] || {};
+		const actions = this[STATE_PARENT]?.[STATE_ACTIONS] || {};
 		for (const name in this[STATE_CONFIG].actions) {
 			if (Object.hasOwn(this[STATE_CONFIG].actions, name)) {
 				actions[name] = this[STATE_CONFIG].actions[name].bind(this);
@@ -361,7 +359,7 @@ export class CompoundState extends BaseState {
 	 * @returns {Record<string, (...args: any[]) => boolean>}
 	 */
 	get [STATE_CONDITIONS]() {
-		const conditions = this[STATE_CONFIG].parent?.[STATE_CONDITIONS] || {};
+		const conditions = this[STATE_PARENT]?.[STATE_CONDITIONS] || {};
 		for (const name in this[STATE_CONFIG].conditions) {
 			if (Object.hasOwn(this[STATE_CONFIG].conditions, name)) {
 				conditions[name] = this[STATE_CONFIG].conditions[name]

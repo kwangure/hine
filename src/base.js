@@ -1,12 +1,16 @@
-import { STATE_CALL_SUBSCRIBERS, STATE_NAME } from './constants.js';
+import { STATE_CALL_SUBSCRIBERS, STATE_NAME, STATE_PARENT } from './constants.js';
 
 /**
  * @typedef {{
  *     name: string;
  * }} BaseStateConfig
+ *
+ * @typedef {import('./compound.js').CompoundState} CompoundState
  */
 export class BaseState {
 	#name = '';
+	/** @type {CompoundState | null} */
+	#parent = null;
 	/** @type {Set<(arg: this) => any>} */
 	#subscribers = new Set();
 
@@ -36,5 +40,11 @@ export class BaseState {
 	/** @param {string} value */
 	set [STATE_NAME](value) {
 		this.#name = value;
+	}
+	get [STATE_PARENT]() {
+		return this.#parent;
+	}
+	set [STATE_PARENT](value) {
+		this.#parent = value;
 	}
 }

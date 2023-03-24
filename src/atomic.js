@@ -10,6 +10,7 @@ import {
 	STATE_CALL_SUBSCRIBERS,
 	STATE_CONDITIONS,
 	STATE_CONFIG,
+	STATE_PARENT,
 	STATE_STATES,
 } from './constants.js';
 import { BaseState } from './base.js';
@@ -62,9 +63,7 @@ export class AtomicState extends BaseState {
 	#on = {};
 
 	/**
-	 * @type {Omit<AtomicStateConfig, 'name'> & {
-	 *     parent: import('./compound.js').CompoundState | null;
-	 * }}
+	 * @type {Omit<AtomicStateConfig, 'name'>}
 	 */
 	[STATE_CONFIG] = {
 		actions: {},
@@ -73,7 +72,6 @@ export class AtomicState extends BaseState {
 		entry: [],
 		exit: [],
 		on: {},
-		parent: null,
 	};
 
 	/**
@@ -139,7 +137,7 @@ export class AtomicState extends BaseState {
 		const { transitionTo } = handler;
 		const actions = this.#resolveActions(handler);
 		if (transitionTo) {
-			const { parent } = this[STATE_CONFIG];
+			const parent = this[STATE_PARENT];
 			if (!parent) {
 				throw Error('States without a parent cannot transition');
 			}
@@ -283,7 +281,7 @@ export class AtomicState extends BaseState {
 	 * @returns {Record<string, (...args: any[]) => any>}
 	 */
 	get [STATE_ACTIONS]() {
-		const actions = this[STATE_CONFIG].parent?.[STATE_ACTIONS] || {};
+		const actions = this[STATE_PARENT]?.[STATE_ACTIONS] || {};
 		for (const name in this[STATE_CONFIG].actions) {
 			if (Object.hasOwn(this[STATE_CONFIG].actions, name)) {
 				actions[name] = this[STATE_CONFIG].actions[name].bind(this);
@@ -296,7 +294,7 @@ export class AtomicState extends BaseState {
 	 * @returns {Record<string, (...args: any[]) => boolean>}
 	 */
 	get [STATE_CONDITIONS]() {
-		const conditions = this[STATE_CONFIG].parent?.[STATE_CONDITIONS] || {};
+		const conditions = this[STATE_PARENT]?.[STATE_CONDITIONS] || {};
 		for (const name in this[STATE_CONFIG].conditions) {
 			if (Object.hasOwn(this[STATE_CONFIG].conditions, name)) {
 				conditions[name] = this[STATE_CONFIG].conditions[name]

@@ -169,10 +169,10 @@ export class CompoundState extends BaseState {
 			}
 			const to = parent[STATE_CONFIG].states[transitionTo];
 			if (!to) {
-				throw Error(`Unknown sibling state '${handler.transitionTo}'.`);
+				throw Error(`Unknown sibling state '${transitionTo}'.`);
 			}
-
 			const from = this;
+
 			/** @param {any[]} args */
 			return (args) => {
 				// exit actions for the current state
@@ -202,9 +202,6 @@ export class CompoundState extends BaseState {
 			return false;
 		};
 	}
-	get always() {
-		return this.#always;
-	}
 	/**
 	 * @param {string} event
 	 * @param {any[]} value
@@ -215,12 +212,6 @@ export class CompoundState extends BaseState {
 		}
 		this[RUN_ON_HANDLERS](event, value);
 		this[STATE_CALL_SUBSCRIBERS]();
-	}
-	get entry() {
-		return this.#entry;
-	}
-	get exit() {
-		return this.#exit;
 	}
 	/**
 	 * @param {string} path
@@ -235,9 +226,6 @@ export class CompoundState extends BaseState {
 	}
 	get name() {
 		return this.#name;
-	}
-	get on() {
-		return this.#on;
 	}
 	/** @param {Partial<ResolveCompoundStateConfig>} [fallbackConfig] */
 	resolve(fallbackConfig) {

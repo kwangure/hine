@@ -7,6 +7,7 @@ import {
 	STATE_ACTIONS,
 	STATE_ACTIVE,
 	STATE_CALL_SUBSCRIBERS,
+	STATE_CONDITIONS,
 	STATE_CONFIG,
 } from './constants.js';
 import { BaseState } from './base.js';
@@ -46,15 +47,6 @@ import { BaseState } from './base.js';
  *         [x: string]: StateNode;
  *     },
  * }} CompoundStateConfig
- *
- * @typedef {{
- *    actions: {
- *         [x: string]: (this: StateNode, ...args: any[]) => any,
- *     };
- *    conditions: {
- *         [x: string]: (this: StateNode, ...args: any[]) => boolean,
- *     };
- * }} ResolveCompoundStateConfig
  *
  * @typedef {{
  *     name: string,
@@ -149,7 +141,7 @@ export class CompoundState extends BaseState {
 		if (handler.condition === undefined) {
 			return () => true;
 		}
-		const condition = this[STATE_CONFIG].conditions[handler.condition];
+		const condition = this[STATE_CONDITIONS][handler.condition];
 		if (!condition) {
 			throw Error(`State references unknown condition '${handler.condition}'.`);
 		}
@@ -226,14 +218,8 @@ export class CompoundState extends BaseState {
 	get name() {
 		return this.__name;
 	}
-	/** @param {Partial<ResolveCompoundStateConfig>} [fallbackConfig] */
-	resolve(fallbackConfig) {
+	resolve() {
 		const { always, entry, exit, on, states } = this[STATE_CONFIG];
-
-		this[STATE_CONFIG].conditions = {
-			...fallbackConfig?.conditions,
-			...this[STATE_CONFIG].conditions,
-		};
 
 		for (const name in states) {
 			if (Object.hasOwn(states, name)) {
@@ -293,22 +279,7 @@ export class CompoundState extends BaseState {
 
 		this.#initial = first.value;
 		for (const state of this.#states.values()) {
-			/** @type {ResolveCompoundStateConfig['actions']} */
-			const actions = {};
-			for (const name in this[STATE_CONFIG].actions) {
-				if (Object.hasOwn(this[STATE_CONFIG].actions, name)) {
-					actions[name] = this[STATE_CONFIG].actions[name].bind(this);
-				}
-			}
-			/** @type {ResolveCompoundStateConfig['conditions']} */
-			const conditions = {};
-			for (const name in this[STATE_CONFIG].conditions) {
-				if (Object.hasOwn(this[STATE_CONFIG].conditions, name)) {
-					conditions[name] = this[STATE_CONFIG]
-						.conditions[name].bind(this);
-				}
-			}
-			state.resolve({ actions, conditions });
+			state.resolve();
 		}
 
 		return this;
@@ -379,7 +350,7 @@ export class CompoundState extends BaseState {
 		this[STATE_ACTIVE]?.[SET_INITIAL_STATE]();
 	}
 	/**
-	 * @returns {ResolveCompoundStateConfig['actions']} value
+	 * @returns {Record<string, (...args: any[]) => any>} value
 	 */
 	get [STATE_ACTIONS]() {
 		const actions = this[STATE_CONFIG].parent?.[STATE_ACTIONS] || {};
@@ -390,5 +361,19 @@ export class CompoundState extends BaseState {
 		}
 
 		return actions;
+	}
+	/**
+	 * @returns {Record<string, (...args: any[]) => boolean>}
+	 */
+	get [STATE_CONDITIONS]() {
+		const conditions = this[STATE_CONFIG].parent?.[STATE_CONDITIONS] || {};
+		for (const name in this[STATE_CONFIG].conditions) {
+			if (Object.hasOwn(this[STATE_CONFIG].conditions, name)) {
+				conditions[name] = this[STATE_CONFIG].conditions[name]
+					.bind(this);
+			}
+		}
+
+		return conditions;
 	}
 }

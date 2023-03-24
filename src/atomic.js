@@ -7,6 +7,7 @@ import {
 	STATE_ACTIONS,
 	STATE_ACTIVE,
 	STATE_CALL_SUBSCRIBERS,
+	STATE_CONDITIONS,
 	STATE_CONFIG,
 } from './constants.js';
 import { BaseState } from './base.js';
@@ -27,12 +28,6 @@ import { BaseState } from './base.js';
  *         [x: string]: DispatchHandlerConfig[];
  *     };
  * }} AtomicStateConfig
- *
- * @typedef {{
- *     conditions: {
- *         [x: string]: (this: StateNode, ...args: any[]) => boolean,
- *     };
- * }} ResolveAtomicStateConfig
  *
  * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
  * @typedef {import('./types.js').DispatchHandlerConfig} DispatchHandlerConfig
@@ -205,14 +200,8 @@ export class AtomicState extends BaseState {
 	get name() {
 		return this.__name;
 	}
-	/** @param {Partial<ResolveAtomicStateConfig>} [fallbackConfig] */
-	resolve(fallbackConfig) {
+	resolve() {
 		const { always, entry, exit, on } = this[STATE_CONFIG];
-
-		this[STATE_CONFIG].conditions = {
-			...fallbackConfig?.conditions,
-			...this[STATE_CONFIG].conditions,
-		};
 
 		for (const handler of always) {
 			this.#always.push({
@@ -307,5 +296,19 @@ export class AtomicState extends BaseState {
 		}
 
 		return actions;
+	}
+	/**
+	 * @returns {Record<string, (...args: any[]) => boolean>}
+	 */
+	get [STATE_CONDITIONS]() {
+		const conditions = this[STATE_CONFIG].parent?.[STATE_CONDITIONS] || {};
+		for (const name in this[STATE_CONFIG].conditions) {
+			if (Object.hasOwn(this[STATE_CONFIG].conditions, name)) {
+				conditions[name] = this[STATE_CONFIG].conditions[name]
+					.bind(this);
+			}
+		}
+
+		return conditions;
 	}
 }

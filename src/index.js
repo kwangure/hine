@@ -5,22 +5,14 @@ import { CompoundState } from './compound.js';
  * @param {Partial<import('./atomic.js').AtomicStateConfig>} [config]
  */
 export function atomic(config) {
-	const atomic = new AtomicState();
-	if (config) {
-		atomic.configure(config);
-	}
-	return atomic;
+	return new AtomicState(config);
 }
 
 /**
  * @param {Partial<import('./compound.js').CompoundStateConfig>} [config]
  */
 export function compound(config) {
-	const compound = new CompoundState();
-	if (config) {
-		compound.configure(config);
-	}
-	return compound;
+	return new CompoundState(config);
 }
 
 export { AtomicState, CompoundState };

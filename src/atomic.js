@@ -86,13 +86,22 @@ export class AtomicState extends BaseState {
 	};
 
 	/**
-	 * @param {Partial<AtomicStateConfig>} [config]
+	 * @param {Partial<AtomicStateConfig>} [stateConfig]
 	 */
-	constructor(config) {
+	constructor(stateConfig) {
 		super();
-		if (config) {
-			this.configure(config);
-		}
+		if (!stateConfig) return;
+
+		const config = this[STATE_CONFIG];
+		config.name = stateConfig.name || config.name;
+
+		Object.assign(config.actions, stateConfig.actions);
+		Object.assign(config.conditions, stateConfig.conditions);
+		Object.assign(config.on, stateConfig.on);
+
+		if (stateConfig.always) config.always = stateConfig.always;
+		if (stateConfig.entry) config.entry = stateConfig.entry;
+		if (stateConfig.exit) config.exit = stateConfig.exit;
 	}
 
 	/**
@@ -176,21 +185,6 @@ export class AtomicState extends BaseState {
 			}
 			return false;
 		};
-	}
-	/** @param {Partial<AtomicStateConfig>} stateConfig */
-	configure(stateConfig) {
-		const config = this[STATE_CONFIG];
-		config.name = stateConfig.name || config.name;
-
-		Object.assign(config.actions, stateConfig.actions);
-		Object.assign(config.conditions, stateConfig.conditions);
-		Object.assign(config.on, stateConfig.on);
-
-		if (stateConfig.always) config.always = stateConfig.always;
-		if (stateConfig.entry) config.entry = stateConfig.entry;
-		if (stateConfig.exit) config.exit = stateConfig.exit;
-
-		return this;
 	}
 	/**
 	 * @param {string} event

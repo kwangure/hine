@@ -2,23 +2,6 @@ import { AtomicState, CompoundState } from 'src';
 import { describe, expect, it } from 'vitest';
 
 describe('subscribe', () => {
-	it('doesn\'t call subscribers on configure', () => {
-		const machine = new CompoundState();
-		let count = 0;
-		machine.subscribe(() => count++);
-		expect(count).toBe(1);
-
-		machine.configure({
-			states: {
-				s1: new CompoundState({
-					states: {
-						s11: new AtomicState(),
-					},
-				}),
-			},
-		});
-		expect(count).toBe(1);
-	});
 	it('doesn\'t call subscribers on resolve', () => {
 		const machine = new CompoundState({
 			states: {

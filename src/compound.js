@@ -99,13 +99,23 @@ export class CompoundState extends BaseState {
 	};
 
 	/**
-	 * @param {Partial<CompoundStateConfig>} [config]
+	 * @param {Partial<CompoundStateConfig>} [stateConfig]
 	 */
-	constructor(config) {
+	constructor(stateConfig) {
 		super();
-		if (config) {
-			this.configure(config);
-		}
+		if (!stateConfig) return;
+
+		const config = this[STATE_CONFIG];
+		config.name = stateConfig.name || config.name;
+
+		Object.assign(config.actions, stateConfig.actions);
+		Object.assign(config.conditions, stateConfig.conditions);
+		Object.assign(config.on, stateConfig.on);
+		Object.assign(config.states, stateConfig.states);
+
+		if (stateConfig.always) config.always = stateConfig.always;
+		if (stateConfig.entry) config.entry = stateConfig.entry;
+		if (stateConfig.exit) config.exit = stateConfig.exit;
 	}
 
 	/**
@@ -121,22 +131,6 @@ export class CompoundState extends BaseState {
 	}
 	get always() {
 		return this.#always;
-	}
-	/** @param {Partial<CompoundStateConfig>} stateConfig */
-	configure(stateConfig) {
-		const config = this[STATE_CONFIG];
-		config.name = stateConfig.name || config.name;
-
-		Object.assign(config.actions, stateConfig.actions);
-		Object.assign(config.conditions, stateConfig.conditions);
-		Object.assign(config.on, stateConfig.on);
-		Object.assign(config.states, stateConfig.states);
-
-		if (stateConfig.always) config.always = stateConfig.always;
-		if (stateConfig.entry) config.entry = stateConfig.entry;
-		if (stateConfig.exit) config.exit = stateConfig.exit;
-
-		return this;
 	}
 	/**
 	 * @param {string} event
@@ -189,12 +183,10 @@ export class CompoundState extends BaseState {
 		for (const name in states) {
 			if (Object.hasOwn(states, name)) {
 				const state = states[name];
-				if (state[STATE_CONFIG].name) {
-					this.#states.set(state[STATE_CONFIG].name, state);
-				} else {
-					state.configure({ name });
-					this.#states.set(name, state);
+				if (!state[STATE_CONFIG].name) {
+					state[STATE_CONFIG].name = name;
 				}
+				this.#states.set(state[STATE_CONFIG].name, state);
 				state[STATE_CONFIG].parent = this;
 			}
 		}
@@ -245,7 +237,7 @@ export class CompoundState extends BaseState {
 		}
 
 		this.#initial = first.value;
-		for (const [name, state] of this.#states) {
+		for (const state of this.#states.values()) {
 			/** @type {ResolveCompoundStateConfig['actions']} */
 			const actions = {};
 			for (const name in this[STATE_CONFIG].actions) {

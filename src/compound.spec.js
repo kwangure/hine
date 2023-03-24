@@ -7,8 +7,7 @@ describe('htstate', () => {
 		/** @type {CompoundState} */
 		let machine;
 		beforeEach(() => {
-			machine = new CompoundState();
-			machine.configure({
+			machine = new CompoundState({
 				states: {
 					state1: new AtomicState({
 						on: {
@@ -56,13 +55,8 @@ describe('htstate', () => {
 	});
 
 	describe('missing actions', () => {
-		/** @type {CompoundState} */
-		let machine;
-		beforeEach(() => {
-			machine = new CompoundState();
-		});
 		it('throws on missing entry actions', () => {
-			expect(() => machine.configure({
+			expect(() => new CompoundState({
 				states: {
 					first: new CompoundState({
 						entry: [{
@@ -74,7 +68,7 @@ describe('htstate', () => {
 		});
 
 		it('throws on missing exit actions', () => {
-			expect(() => machine.configure({
+			expect(() => new CompoundState({
 				states: {
 					first: new CompoundState({
 						exit: [{
@@ -86,7 +80,7 @@ describe('htstate', () => {
 		});
 
 		it('throws on missing transient actions', () => {
-			expect(() => machine.configure({
+			expect(() => new CompoundState({
 				states: {
 					first: new CompoundState({
 						always: [{
@@ -105,8 +99,7 @@ describe('htstate', () => {
 		let actions;
 		beforeEach(() => {
 			actions = [];
-			machine = new CompoundState();
-			machine.configure({
+			machine = new CompoundState({
 				states: {
 					current: new AtomicState({
 						always: [

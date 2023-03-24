@@ -46,6 +46,35 @@ describe('resolve', () => {
 
 		expect(value).toBe('run');
 	});
+	it('sets machine actions deeply', () => {
+		let value = '';
+		const machine = new CompoundState({
+			states: {
+				s1: new CompoundState({
+					states: {
+						s11: new CompoundState({
+							entry: [{
+								actions: ['run'],
+							}],
+							states: {
+								s111: new AtomicState(),
+							},
+						}),
+					},
+				}),
+			},
+		});
+
+		machine.resolve({
+			actions: {
+				run() {
+					value = 'run';
+				},
+			},
+		}).start();
+
+		expect(value).toBe('run');
+	});
 	it('does not override existing machine actions', () => {
 		let value = '';
 		const machine = new CompoundState({

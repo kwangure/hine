@@ -1,36 +1,19 @@
 import {
+	INITIALIZE,
 	RESOLVE_CONFIG,
 	RUN_ALWAYS_HANDLERS,
 	RUN_ENTRY_HANDLERS,
 	RUN_EXIT_HANDLERS,
 	RUN_ON_HANDLERS,
-	SET_INITIAL_STATE,
 	STATE_ACTIONS,
 	STATE_ACTIVE,
-	STATE_CALL_SUBSCRIBERS,
 	STATE_CONDITIONS,
-	STATE_CONFIG,
+	STATE_NAME,
 	STATE_PARENT,
 	STATE_STATES,
 } from './constants.js';
-import { BaseState } from './base.js';
 
 /**
- * @typedef {import('./base.js').BaseStateConfig & {
- *     actions: {
- *         [x: string]: (this: AtomicState, ...args: any[]) => any,
- *     }
- *     always: AlwaysHandlerConfig[],
- *     conditions: {
- *         [x: string]: (this: AtomicState, ...args: any[]) => boolean,
- *     }
- *     entry: EntryHandlerConfig[],
- *     exit: ExitHandlerConfig[],
- *     on: {
- *         [x: string]: DispatchHandlerConfig[];
- *     };
- * }} AtomicStateConfig
- *
  * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
  * @typedef {import('./types.js').DispatchHandlerConfig} DispatchHandlerConfig
  * @typedef {import('./types.js').EntryHandlerConfig} EntryHandlerConfig
@@ -41,57 +24,69 @@ import { BaseState } from './base.js';
  * @typedef {import('./types.js').DispatchHandler} DispatchHandler
  * @typedef {import('./types.js').EntryHandler} EntryHandler
  * @typedef {import('./types.js').ExitHandler} ExitHandler
- * @typedef {import('./types.js').InitHandler} InitHandler
  * @typedef {import('./types.js').Handler} Handler
  *
- * @typedef {import('./types.js').StateNode} StateNode
- *
  * @typedef {{
- *     name: string,
- * }} AtomicStateJson
+ *     actions: Record<string, (this: AtomicState, ...args: any[]) => any>;
+ *     always: AlwaysHandlerConfig[],
+ *     conditions: Record<string, (this: AtomicState, ...args: any[]) => boolean>;
+ *     entry: EntryHandlerConfig[],
+ *     exit: ExitHandlerConfig[],
+ *     name: string;
+ *     on: Record<string, DispatchHandlerConfig[]>;
+ * }} AtomicStateConfig
+ *
+ * @typedef {import('./compound.js').CompoundState} CompoundState
  */
-
-export class AtomicState extends BaseState {
+export class AtomicState {
+	/** @type {AtomicStateConfig['actions']} */
+	#actionConfig = {};
 	/** @type {AlwaysHandler[]} */
 	#always = [];
+	/** @type {AlwaysHandlerConfig[]} */
+	#alwaysConfig = [];
+	/** @type {AtomicStateConfig['conditions']} */
+	#conditionConfig = {};
 	/** @type {EntryHandler[]} */
 	#entry = [];
+	/** @type {EntryHandlerConfig[]} */
+	#entryConfig = [];
 	/** @type {ExitHandler[]} */
 	#exit = [];
+	/** @type {ExitHandlerConfig[]} */
+	#exitConfig = [];
+	/** @type {boolean} */
 	#initialized = false;
+	/** @type {string} */
+	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
 
-	/**
-	 * @type {Omit<AtomicStateConfig, 'name'>}
-	 */
-	[STATE_CONFIG] = {
-		actions: {},
-		always: [],
-		conditions: {},
-		entry: [],
-		exit: [],
-		on: {},
-	};
+	/** @type {AtomicStateConfig['on']} */
+	#onConfig = {};
+	/** @type {CompoundState | null} */
+	#parent = null;
+	/** @type {Set<(arg: this) => any>} */
+	#subscribers = new Set();
 
 	/**
 	 * @param {Partial<AtomicStateConfig>} [stateConfig]
 	 */
 	constructor(stateConfig) {
-		super(stateConfig);
 		if (!stateConfig) return;
-
-		const config = this[STATE_CONFIG];
-
-		Object.assign(config.actions, stateConfig.actions);
-		Object.assign(config.conditions, stateConfig.conditions);
-		Object.assign(config.on, stateConfig.on);
-
-		if (stateConfig.always) config.always = stateConfig.always;
-		if (stateConfig.entry) config.entry = stateConfig.entry;
-		if (stateConfig.exit) config.exit = stateConfig.exit;
+		this.#actionConfig = stateConfig.actions || {};
+		this.#alwaysConfig = stateConfig.always || [];
+		this.#conditionConfig = stateConfig.conditions || {};
+		this.#entryConfig = stateConfig.entry || [];
+		this.#exitConfig = stateConfig.exit || [];
+		this.#name = stateConfig.name || '';
+		this.#onConfig = stateConfig.on || {};
 	}
-
+	#callSubscribers() {
+		for (const subscriber of this.#subscribers) {
+			subscriber(this);
+		}
+	}
 	/**
 	 * @param {Handler[]} handlers
 	 * @param {any[]} args
@@ -137,7 +132,7 @@ export class AtomicState extends BaseState {
 		const { transitionTo } = handler;
 		const actions = this.#resolveActions(handler);
 		if (transitionTo) {
-			const parent = this[STATE_PARENT];
+			const parent = this.#parent;
 			if (!parent) {
 				throw Error('States without a parent cannot transition');
 			}
@@ -158,7 +153,7 @@ export class AtomicState extends BaseState {
 				// change the active nested state for parent state
 				parent[STATE_ACTIVE] = to;
 				// set initial state from transitionTo to leaves
-				to[SET_INITIAL_STATE]();
+				to[INITIALIZE]();
 				// entry actions for transitionTo and leaves
 				to[RUN_ENTRY_HANDLERS]([]);
 				// always actions for transitionTo and leaves
@@ -185,34 +180,45 @@ export class AtomicState extends BaseState {
 			throw Error('Attempted dispatch before resolving state');
 		}
 		this[RUN_ON_HANDLERS](event, value);
-		this[STATE_CALL_SUBSCRIBERS]();
+		this.#callSubscribers();
 	}
 	/**
 	 * @param {string} path
 	 * @return {boolean}
 	 */
 	matches(path) {
-		return this.#initialized && this.name === path;
+		return this.#initialized && this.#name === path;
+	}
+	get name() {
+		return this.#name;
 	}
 	start() {
 		this[RESOLVE_CONFIG]();
-		this[SET_INITIAL_STATE]();
+		this[INITIALIZE]();
 		this[RUN_ENTRY_HANDLERS]([]);
 		this[RUN_ALWAYS_HANDLERS]([]);
-		this[STATE_CALL_SUBSCRIBERS]();
+		this.#callSubscribers();
 
 		return this;
 	}
-	/** @returns {AtomicStateJson} */
+	/** @param {(arg: this) => any} fn */
+	subscribe(fn) {
+		fn(this);
+		this.#subscribers.add(fn);
+		return () => {
+			this.#subscribers.delete(fn);
+		};
+	}
 	toJSON() {
 		return {
 			name: this.name,
 		};
 	}
+	[INITIALIZE]() {
+		this.#initialized = true;
+	}
 	[RESOLVE_CONFIG]() {
-		const { always, entry, exit, on } = this[STATE_CONFIG];
-
-		for (const handler of always) {
+		for (const handler of this.#alwaysConfig) {
 			this.#always.push({
 				condition: this.#resolveCondition(handler),
 				handler: this.#resolveHandler(handler),
@@ -220,7 +226,7 @@ export class AtomicState extends BaseState {
 			});
 		}
 
-		for (const [event, handlers] of Object.entries(on)) {
+		for (const [event, handlers] of Object.entries(this.#onConfig)) {
 			this.#on[event] = handlers.map((handler) => ({
 				condition: this.#resolveCondition(handler),
 				handler: this.#resolveHandler(handler),
@@ -228,7 +234,7 @@ export class AtomicState extends BaseState {
 			}));
 		}
 
-		for (const handler of entry) {
+		for (const handler of this.#entryConfig) {
 			this.#entry.push({
 				condition: this.#resolveCondition(handler),
 				handler: this.#resolveHandler({
@@ -239,7 +245,7 @@ export class AtomicState extends BaseState {
 			});
 		}
 
-		for (const handler of exit) {
+		for (const handler of this.#exitConfig) {
 			this.#exit.push({
 				condition: this.#resolveCondition(handler),
 				handler: this.#resolveHandler({
@@ -252,7 +258,7 @@ export class AtomicState extends BaseState {
 	}
 	/** @param {any[]} value */
 	[RUN_ALWAYS_HANDLERS](value) {
-		return this.#executeHandlers(this.#always, value);
+		this.#executeHandlers(this.#always, value);
 	}
 	/** @param {any[]} value */
 	[RUN_ENTRY_HANDLERS](value) {
@@ -274,17 +280,14 @@ export class AtomicState extends BaseState {
 		handlers.push(...this.#always);
 		return this.#executeHandlers(handlers, value);
 	}
-	[SET_INITIAL_STATE]() {
-		this.#initialized = true;
-	}
 	/**
 	 * @returns {Record<string, (...args: any[]) => any>}
 	 */
 	get [STATE_ACTIONS]() {
-		const actions = this[STATE_PARENT]?.[STATE_ACTIONS] || {};
-		for (const name in this[STATE_CONFIG].actions) {
-			if (Object.hasOwn(this[STATE_CONFIG].actions, name)) {
-				actions[name] = this[STATE_CONFIG].actions[name].bind(this);
+		const actions = this.#parent?.[STATE_ACTIONS] || {};
+		for (const name in this.#actionConfig) {
+			if (Object.hasOwn(this.#actionConfig, name)) {
+				actions[name] = this.#actionConfig[name].bind(this);
 			}
 		}
 
@@ -294,14 +297,24 @@ export class AtomicState extends BaseState {
 	 * @returns {Record<string, (...args: any[]) => boolean>}
 	 */
 	get [STATE_CONDITIONS]() {
-		const conditions = this[STATE_PARENT]?.[STATE_CONDITIONS] || {};
-		for (const name in this[STATE_CONFIG].conditions) {
-			if (Object.hasOwn(this[STATE_CONFIG].conditions, name)) {
-				conditions[name] = this[STATE_CONFIG].conditions[name]
+		const conditions = this.#parent?.[STATE_CONDITIONS] || {};
+		for (const name in this.#conditionConfig) {
+			if (Object.hasOwn(this.#conditionConfig, name)) {
+				conditions[name] = this.#conditionConfig[name]
 					.bind(this);
 			}
 		}
 
 		return conditions;
+	}
+	/** @param {string} value */
+	set [STATE_NAME](value) {
+		this.#name = value;
+	}
+	get [STATE_PARENT]() {
+		return this.#parent;
+	}
+	set [STATE_PARENT](value) {
+		this.#parent = value;
 	}
 }

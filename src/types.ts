@@ -1,7 +1,6 @@
-import type { AtomicState, AtomicStateJson } from "./atomic";
-import type { CompoundState, CompoundStateJson } from "./compound";
+import type { AtomicState } from "./atomic";
+import type { CompoundState } from "./compound";
 
-type Action = (...args: any[]) => any;
 type Condition = (...args: any[]) => boolean;
 
 type BaseHandler<T extends string> = {
@@ -45,6 +44,5 @@ export type HandlerConfig = AlwaysHandlerConfig
  | ExitHandlerConfig
 
 export type StateNode = AtomicState | CompoundState;
-export type StateJson = AtomicStateJson | CompoundStateJson
 
 export {};

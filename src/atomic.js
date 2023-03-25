@@ -193,7 +193,9 @@ export class AtomicState {
 		return this.#name;
 	}
 	start() {
-		this[RESOLVE_CONFIG]();
+		if (!this.#initialized) {
+			this[RESOLVE_CONFIG]();
+		}
 		this[INITIALIZE]();
 		this[RUN_ENTRY_HANDLERS]([]);
 		this[RUN_ALWAYS_HANDLERS]([]);

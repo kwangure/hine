@@ -1,7 +1,7 @@
 {
     "name": "hine",
     "version": "0.0.2",
-    "description": "",
+    "description": "A state machine library",
     "scripts": {
         "format": "wireit",
         "lint": "wireit",
@@ -13,11 +13,29 @@
         "test:playwright": "wireit",
         "test:vitest": "wireit"
     },
-    "keywords": [],
+    "keywords": [
+        "state",
+        "machine",
+        "state-machine",
+        "svelte",
+        "react"
+    ],
     "license": "MIT",
+    "files": [
+        "dist",
+        "!**/*spec.js",
+        "!**/*spec.d.ts"
+    ],
     "type": "module",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        }
+    },
     "devDependencies": {
         "@kwangure/eslint-config-svelte": "^0.2.5",
+        "@sveltejs/package": "^2.0.2",
         "eslint": "^8.32.0",
         "eslint-plugin-sort-class-members": "^1.16.0",
         "eslint-plugin-svelte3": "^4.0.0",
@@ -46,7 +64,7 @@
             ]
         },
         "package": {
-            "command": "node ./scripts/package/index.js"
+            "command": "svelte-package -i ./src"
         },
         "pre-commit": {
             "dependencies": [

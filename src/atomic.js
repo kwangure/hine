@@ -45,7 +45,8 @@ export class AtomicState {
 	#always = [];
 	/** @type {AlwaysHandlerConfig[]} */
 	#alwaysConfig = [];
-	/** @type {AtomicStateConfig['conditions']} */
+	#checkingCondition = false;
+	/** @type {Record<string, (...args: any[]) => boolean>} */
 	#conditionConfig = {};
 	/** @type {EntryHandler[]} */
 	#entry = [];
@@ -74,9 +75,16 @@ export class AtomicState {
 	 */
 	constructor(stateConfig) {
 		if (!stateConfig) return;
+		const { conditions } = stateConfig;
 		this.#actionConfig = stateConfig.actions || {};
 		this.#alwaysConfig = stateConfig.always || [];
-		this.#conditionConfig = stateConfig.conditions || {};
+		if (conditions) {
+			for (const key in conditions) {
+				if (Object.hasOwn(conditions, key)) {
+					this.#conditionConfig[key] = conditions[key].bind(this);
+				}
+			}
+		}
 		this.#entryConfig = stateConfig.entry || [];
 		this.#exitConfig = stateConfig.exit || [];
 		this.#name = stateConfig.name || '';
@@ -93,7 +101,7 @@ export class AtomicState {
 	 */
 	#executeHandlers(handlers, args) {
 		for (const { condition, handler } of handlers) {
-			if (!condition.call(this, ...args)) continue;
+			if (!condition(...args)) continue;
 			const transitioned = handler(args);
 			if (transitioned) return;
 		}
@@ -170,6 +178,9 @@ export class AtomicState {
 			}
 			return false;
 		};
+	}
+	get conditions() {
+		return this.#conditionConfig;
 	}
 	/**
 	 * @param {string} event

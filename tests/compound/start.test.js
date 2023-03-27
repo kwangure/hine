@@ -22,6 +22,17 @@ describe('start', () => {
 		machine.start();
 		expect(log).toEqual(['always', 'always']);
 	});
+	it('sets initial state', () => {
+		const state = new AtomicState();
+		const machine = new CompoundState({
+			states: {
+				s1: state,
+			},
+		});
+		expect(machine.state).toBe(null);
+		machine.start();
+		expect(machine.state).toBe(state);
+	});
 	it('is resets to initial state', () => {
 		const machine = new CompoundState({
 			states: {

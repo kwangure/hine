@@ -3,57 +3,6 @@ import { AtomicState } from './atomic.js';
 import { CompoundState } from './compound.js';
 
 describe('htstate', () => {
-	describe('basics', () => {
-		/** @type {CompoundState} */
-		let machine;
-		beforeEach(() => {
-			machine = new CompoundState({
-				states: {
-					state1: new AtomicState({
-						on: {
-							to2: [{
-								transitionTo: 'state2',
-							}],
-						},
-					}),
-					state2: new AtomicState({
-						on: {
-							to1: [{
-								transitionTo: 'state1',
-							}],
-						},
-					}),
-				},
-			});
-		});
-
-		it('throws on unresolved dispatch', () => {
-			expect(() => machine.dispatch('to2'))
-				.toThrow('Attempted dispatch before resolving state');
-		});
-
-		it('sets initial state', () => {
-			machine.start();
-			expect(machine.state?.name).toBe('state1');
-		});
-
-		it('transitions on dispatch', () => {
-			machine.start();
-			machine.dispatch('to2');
-			expect(machine.state?.name).toBe('state2');
-			machine.dispatch('to1');
-			expect(machine.state?.name).toBe('state1');
-			machine.dispatch('to2');
-			expect(machine.state?.name).toBe('state2');
-		});
-
-		it('ignores invalid events', () => {
-			machine.start();
-			machine.dispatch('random');
-			expect(machine.state?.name).toBe('state1');
-		});
-	});
-
 	describe('missing actions', () => {
 		it('throws on missing entry actions', () => {
 			expect(() => new CompoundState({

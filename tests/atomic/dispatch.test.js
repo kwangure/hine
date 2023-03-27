@@ -1,0 +1,43 @@
+import { AtomicState, CompoundState } from 'src';
+import { describe, expect, it } from 'vitest';
+
+describe('dispatch', () => {
+	it('throws on unresolved dispatch', () => {
+		const machine = new AtomicState();
+		expect(() => machine.dispatch('test'))
+			.toThrow('Attempted dispatch before resolving state');
+	});
+
+	it('transitions on dispatch', () => {
+		const s1 = new AtomicState({
+			on: {
+				event: [{
+					transitionTo: 's2',
+				}],
+			},
+		});
+		const s2 = new AtomicState({
+			on: {
+				event: [{
+					transitionTo: 's1',
+				}],
+			},
+		});
+		const compound = new CompoundState({
+			states: { s1, s2 },
+		}).start();
+		compound.dispatch('event');
+		expect(compound.state).toBe(s2);
+		compound.dispatch('event');
+		expect(compound.state).toBe(s1);
+		compound.dispatch('event');
+		expect(compound.state).toBe(s2);
+	});
+
+	it('ignores invalid events', () => {
+		const machine = new AtomicState().start();
+		expect(() => {
+			machine.dispatch('random');
+		}).not.toThrow();
+	});
+});

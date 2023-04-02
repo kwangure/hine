@@ -18,3 +18,4 @@ export function compound(config) {
 }
 
 export { AtomicState, CompoundState };
+export { activePath } from './utils.js';

@@ -203,6 +203,9 @@ export class AtomicState {
 	get name() {
 		return this.#name;
 	}
+	get parent() {
+		return this.#parent;
+	}
 	start() {
 		if (!this.#initialized) {
 			this[RESOLVE_CONFIG]();

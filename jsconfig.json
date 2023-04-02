@@ -5,8 +5,7 @@
 		"checkJs": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
-		"importsNotUsedAsValues": "error",
-		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
 		"lib": [
 			"esnext",
 			"DOM",
@@ -14,7 +13,6 @@
 		],
 		"module": "esnext",
 		"moduleResolution": "node",
-		"preserveValueImports": true,
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"sourceMap": true,

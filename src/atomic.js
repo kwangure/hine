@@ -1,4 +1,5 @@
 import {
+	ACTION_OWNER,
 	INITIALIZE,
 	RESOLVE_CONFIG,
 	RUN_ALWAYS_HANDLERS,
@@ -12,6 +13,7 @@ import {
 	STATE_PARENT,
 	STATE_STATES,
 } from './constants.js';
+import { Action } from './action.js';
 
 /**
  * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
@@ -112,10 +114,12 @@ export class AtomicState {
 	#resolveActions(handler) {
 		const actions = [];
 		for (const name of handler.actions || []) {
-			const action = this[STATE_ACTIONS][name];
-			if (!action) {
+			const run = this[STATE_ACTIONS][name];
+			if (!run) {
 				throw Error(`State references unknown action '${name}'.`);
 			}
+			const action = new Action({ name, run });
+			action[ACTION_OWNER] = this;
 			actions.push(action);
 		}
 		return actions;
@@ -150,13 +154,13 @@ export class AtomicState {
 			}
 			const from = this;
 
-			/** @param {any[]} args */
-			return (args) => {
+			/** @param {any} value */
+			return (value) => {
 				// exit actions for the current state
-				from[RUN_EXIT_HANDLERS](args);
+				from[RUN_EXIT_HANDLERS](value);
 				// transition actions for the handler
 				for (const action of actions) {
-					action.call(from, ...args);
+					action.run(value);
 				}
 				// change the active nested state for parent state
 				parent[STATE_ACTIVE] = to;
@@ -171,10 +175,10 @@ export class AtomicState {
 			};
 		}
 
-		/** @param {any[]} args */
-		return (args) => {
+		/** @param {any} value */
+		return (value) => {
 			for (const action of actions) {
-				action.call(this, ...args);
+				action.run(value);
 			}
 			return false;
 		};
@@ -300,14 +304,10 @@ export class AtomicState {
 	 * @returns {Record<string, (...args: any[]) => any>}
 	 */
 	get [STATE_ACTIONS]() {
-		const actions = this.#parent?.[STATE_ACTIONS] || {};
-		for (const name in this.#actionConfig) {
-			if (Object.hasOwn(this.#actionConfig, name)) {
-				actions[name] = this.#actionConfig[name].bind(this);
-			}
-		}
-
-		return actions;
+		return {
+			...this.#parent?.[STATE_ACTIONS],
+			...this.#actionConfig,
+		};
 	}
 	/**
 	 * @returns {Record<string, (...args: any[]) => boolean>}

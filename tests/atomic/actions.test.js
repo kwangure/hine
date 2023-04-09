@@ -333,4 +333,17 @@ describe('actions', () => {
 		machine.dispatch('event');
 		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
 	});
+	it('calls actions in machine context', () => {
+		const state = new AtomicState({
+			actions: {
+				action() {
+					expect(this).toBe(state);
+				},
+			},
+			entry: [{
+				actions: ['action'],
+			}],
+		});
+		state.start();
+	});
 });

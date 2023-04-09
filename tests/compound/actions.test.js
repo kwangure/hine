@@ -679,4 +679,20 @@ describe('actions', () => {
 		expect(machine.state?.name).toEqual('s1');
 		expect(log).toEqual(['entry1', 'transition1', 'always2', 'entry1']);
 	});
+	it('calls actions in machine context', () => {
+		const state = new CompoundState({
+			actions: {
+				action() {
+					expect(this).toBe(state);
+				},
+			},
+			entry: [{
+				actions: ['action'],
+			}],
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		state.start();
+	});
 });

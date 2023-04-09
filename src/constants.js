@@ -1,3 +1,6 @@
+export const ACTION_NAME = Symbol('action-name');
+export const ACTION_OWNER = Symbol('action-name');
+
 export const STATE_ACTIONS = Symbol('state-actions');
 export const STATE_ACTIVE = Symbol('state-active');
 export const STATE_CONDITIONS = Symbol('state-conditions');

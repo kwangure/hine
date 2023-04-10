@@ -15,7 +15,7 @@ describe('conditions', () => {
 				cond1() {
 					expect(this).toBe(machine);
 					expect(() => this.conditions.cond2).not.toThrow();
-					expect(this.conditions.cond2()).toBe(false);
+					expect(this.conditions.cond2.run()).toBe(false);
 					return true;
 				},
 				cond2() {

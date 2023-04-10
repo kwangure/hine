@@ -1,5 +1,6 @@
 import {
 	ACTION_OWNER,
+	CONDITION_OWNER,
 	INITIALIZE,
 	RESOLVE_CONFIG,
 	RUN_ALWAYS_HANDLERS,
@@ -78,16 +79,9 @@ export class AtomicState {
 	 */
 	constructor(stateConfig) {
 		if (!stateConfig) return;
-		const { conditions } = stateConfig;
 		this.#actionConfig = stateConfig.actions || {};
 		this.#alwaysConfig = stateConfig.always || [];
-		if (conditions) {
-			for (const key in conditions) {
-				if (Object.hasOwn(conditions, key)) {
-					this.#conditionConfig[key] = conditions[key].bind(this);
-				}
-			}
-		}
+		this.#conditionConfig = stateConfig.conditions|| {};
 		this.#entryConfig = stateConfig.entry || [];
 		this.#exitConfig = stateConfig.exit || [];
 		this.#name = stateConfig.name || '';
@@ -115,12 +109,10 @@ export class AtomicState {
 	#resolveActions(handler) {
 		const actions = [];
 		for (const name of handler.actions || []) {
-			const run = this[STATE_ACTIONS][name];
-			if (!run) {
+			const action = this[STATE_ACTIONS][name];
+			if (!action) {
 				throw Error(`State references unknown action '${name}'.`);
 			}
-			const action = new Action({ name, run });
-			action[ACTION_OWNER] = this;
 			actions.push(action);
 		}
 		return actions;
@@ -129,14 +121,17 @@ export class AtomicState {
 	 * @param {Partial<HandlerConfig>} handler
 	 */
 	#resolveCondition(handler) {
-		const { condition } = handler;
-		if (condition === undefined) return new Condition();
-
-		const run = this[STATE_CONDITIONS][condition];
-		if (!run) {
-			throw Error(`State references unknown condition '${condition}'.`);
+		if (handler.condition === undefined) {
+			const condition = new Condition();
+			condition[CONDITION_OWNER] = this;
+			return condition;
 		}
-		return new Condition({ name: condition, run });
+
+		const condition = this[STATE_CONDITIONS][handler.condition];
+		if (!condition) {
+			throw Error(`State references unknown condition '${handler.condition}'.`);
+		}
+		return condition;
 	}
 	/**
 	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
@@ -185,7 +180,7 @@ export class AtomicState {
 		};
 	}
 	get conditions() {
-		return this.#conditionConfig;
+		return this[STATE_CONDITIONS];
 	}
 	/**
 	 * @param {string} event
@@ -302,23 +297,36 @@ export class AtomicState {
 		return this.#executeHandlers(handlers, value);
 	}
 	/**
-	 * @returns {Record<string, (...args: any[]) => any>}
+	 * @returns {Record<string, Action>}
 	 */
 	get [STATE_ACTIONS]() {
-		return {
-			...this.#parent?.[STATE_ACTIONS],
-			...this.#actionConfig,
-		};
+		const actions = this.#parent?.[STATE_ACTIONS] || {};
+		for (const name in this.#actionConfig) {
+			if (Object.hasOwn(this.#actionConfig, name)) {
+				const action = new Action({
+					name,
+					run: this.#actionConfig[name],
+				});
+				action[ACTION_OWNER] = this;
+				actions[name] = action;
+			}
+		}
+
+		return actions;
 	}
 	/**
-	 * @returns {Record<string, (...args: any[]) => boolean>}
+	 * @returns {Record<string, Condition>}
 	 */
 	get [STATE_CONDITIONS]() {
 		const conditions = this.#parent?.[STATE_CONDITIONS] || {};
 		for (const name in this.#conditionConfig) {
 			if (Object.hasOwn(this.#conditionConfig, name)) {
-				conditions[name] = this.#conditionConfig[name]
-					.bind(this);
+				const condition = new Condition({
+					name,
+					run: this.#conditionConfig[name],
+				});
+				condition[CONDITION_OWNER] = this;
+				conditions[name] = condition;
 			}
 		}
 

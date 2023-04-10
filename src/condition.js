@@ -22,7 +22,7 @@ export class Condition {
 		this.#run = options?.run || noop;
 	}
 	/**
-	 * @param {any} value
+	 * @param {any} [value]
 	 */
 	run(value) {
 		return this.#run.call(this.#ownerState, value);

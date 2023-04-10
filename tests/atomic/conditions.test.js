@@ -26,4 +26,22 @@ describe('conditions', () => {
 		});
 		machine.start();
 	});
+	it('calls condition in machine context', () => {
+		const state = new AtomicState({
+			conditions: {
+				dummy() {
+					expect(this).toBe(state);
+					return true;
+				},
+			},
+			actions: {
+				action() {},
+			},
+			entry: [{
+				condition: 'dummy',
+				actions: ['action'],
+			}],
+		});
+		state.start();
+	});
 });

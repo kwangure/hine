@@ -1,7 +1,6 @@
-import type { AtomicState } from "./atomic";
-import type { CompoundState } from "./compound";
-
-type Condition = (...args: any[]) => boolean;
+import type { AtomicState } from './atomic';
+import type { CompoundState } from './compound';
+import type { Condition } from './condition.js';
 
 type BaseHandler<T extends string> = {
 	type: T;

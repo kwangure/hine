@@ -29,4 +29,25 @@ describe('conditions', () => {
 		});
 		machine.start();
 	});
+	it('calls condition in machine context', () => {
+		const state = new CompoundState({
+			conditions: {
+				dummy() {
+					expect(this).toBe(state);
+					return true;
+				},
+			},
+			actions: {
+				action() {},
+			},
+			entry: [{
+				condition: 'dummy',
+				actions: ['action'],
+			}],
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		state.start();
+	});
 });

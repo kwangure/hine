@@ -14,6 +14,7 @@ import {
 	STATE_STATES,
 } from './constants.js';
 import { Action } from './action.js';
+import { Condition } from './condition.js';
 
 /**
  * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
@@ -99,12 +100,12 @@ export class AtomicState {
 	}
 	/**
 	 * @param {Handler[]} handlers
-	 * @param {any[]} args
+	 * @param {any} value
 	 */
-	#executeHandlers(handlers, args) {
+	#executeHandlers(handlers, value) {
 		for (const { condition, handler } of handlers) {
-			if (!condition(...args)) continue;
-			const transitioned = handler(args);
+			if (!condition.run(value)) continue;
+			const transitioned = handler(value);
 			if (transitioned) return;
 		}
 	}
@@ -128,14 +129,14 @@ export class AtomicState {
 	 * @param {Partial<HandlerConfig>} handler
 	 */
 	#resolveCondition(handler) {
-		if (handler.condition === undefined) {
-			return () => true;
+		const { condition } = handler;
+		if (condition === undefined) return new Condition();
+
+		const run = this[STATE_CONDITIONS][condition];
+		if (!run) {
+			throw Error(`State references unknown condition '${condition}'.`);
 		}
-		const condition = this[STATE_CONDITIONS][handler.condition];
-		if (!condition) {
-			throw Error(`State references unknown condition '${handler.condition}'.`);
-		}
-		return condition;
+		return new Condition({ name: condition, run });
 	}
 	/**
 	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler

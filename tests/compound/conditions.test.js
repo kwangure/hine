@@ -1,4 +1,4 @@
-import { Action, AtomicState, CompoundState } from 'src';
+import { Action, AtomicState, CompoundState, Condition } from 'src';
 import { describe, expect, it } from 'vitest';
 
 describe('conditions', () => {
@@ -14,16 +14,20 @@ describe('conditions', () => {
 				}),
 			},
 			conditions: {
-				cond1() {
-					expect(this).toBe(machine);
-					expect(() => this.conditions.cond2).not.toThrow();
-					expect(this.conditions.cond2.run()).toBe(false);
-					return true;
-				},
-				cond2() {
-					expect(this).toBe(machine);
-					return false;
-				},
+				cond1: new Condition({
+					run() {
+						expect(this).toBe(machine);
+						expect(() => this.conditions.cond2).not.toThrow();
+						expect(this.conditions.cond2.run()).toBe(false);
+						return true;
+					},
+				}),
+				cond2: new Condition({
+					run() {
+						expect(this).toBe(machine);
+						return false;
+					},
+				}),
 			},
 			states: {
 				s1: new AtomicState(),
@@ -34,10 +38,12 @@ describe('conditions', () => {
 	it('calls condition in machine context', () => {
 		const state = new CompoundState({
 			conditions: {
-				dummy() {
-					expect(this).toBe(state);
-					return true;
-				},
+				dummy: new Condition({
+					run() {
+						expect(this).toBe(state);
+						return true;
+					},
+				}),
 			},
 			actions: {
 				action: new Action({

@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Action } from './action.js';
 import { AtomicState } from './atomic.js';
 import { CompoundState } from './compound.js';
+import { Condition } from './condition.js';
 
 describe('htstate', () => {
 	describe('missing actions', () => {
@@ -143,12 +144,16 @@ describe('htstate', () => {
 							}),
 						},
 						conditions: {
-							run() {
-								return true;
-							},
-							ignore() {
-								return false;
-							},
+							run: new Condition({
+								run() {
+									return true;
+								},
+							}),
+							ignore: new Condition({
+								run() {
+									return false;
+								},
+							}),
 						},
 					}),
 					other: new AtomicState(),

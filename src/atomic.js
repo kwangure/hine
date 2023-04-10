@@ -1,6 +1,7 @@
 import {
 	ACTION_NAME,
 	ACTION_OWNER,
+	CONDITION_NAME,
 	CONDITION_OWNER,
 	INITIALIZE,
 	RESOLVE_CONFIG,
@@ -33,7 +34,7 @@ import { Condition } from './condition.js';
  * @typedef {{
  *     actions: Record<string, import('./action.js').Action<AtomicState>>;
  *     always: AlwaysHandlerConfig[],
- *     conditions: Record<string, (this: AtomicState, ...args: any[]) => boolean>;
+ *     conditions: Record<string, import('./condition.js').Condition<AtomicState>>;
  *     entry: EntryHandlerConfig[],
  *     exit: ExitHandlerConfig[],
  *     name: string;
@@ -43,14 +44,13 @@ import { Condition } from './condition.js';
  * @typedef {import('./compound.js').CompoundState} CompoundState
  */
 export class AtomicState {
-	/** @type {AtomicStateConfig['actions']} */
+	/** @type {Record<string, import('./action.js').Action<this>>} */
 	#actionConfig = {};
 	/** @type {AlwaysHandler[]} */
 	#always = [];
 	/** @type {AlwaysHandlerConfig[]} */
 	#alwaysConfig = [];
-	#checkingCondition = false;
-	/** @type {Record<string, (...args: any[]) => boolean>} */
+	/** @type {Record<string, import('./condition.js').Condition<this>>} */
 	#conditionConfig = {};
 	/** @type {EntryHandler[]} */
 	#entry = [];
@@ -321,10 +321,10 @@ export class AtomicState {
 		const conditions = this.#parent?.[STATE_CONDITIONS] || {};
 		for (const name in this.#conditionConfig) {
 			if (Object.hasOwn(this.#conditionConfig, name)) {
-				const condition = new Condition({
-					name,
-					run: this.#conditionConfig[name],
-				});
+				const condition = this.#conditionConfig[name];
+				if (!condition.name) {
+					condition[CONDITION_NAME] = name;
+				}
 				condition[CONDITION_OWNER] = this;
 				conditions[name] = condition;
 			}

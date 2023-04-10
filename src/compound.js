@@ -23,7 +23,7 @@ import { AtomicState } from './index.js';
  * @typedef {{
  *     actions: Record<string, import('./action.js').Action<CompoundState>>;
  *     always: AlwaysHandlerConfig[],
- *     conditions: Record<string, (this: CompoundState, ...args: any[]) => boolean>;
+ *     conditions: Record<string, import('./condition.js').Condition<CompoundState>>;
  *     entry: EntryHandlerConfig[],
  *     exit: ExitHandlerConfig[],
  *     name: string;
@@ -50,7 +50,6 @@ export class CompoundState extends AtomicState {
 	 * }} [stateConfig]
 	 */
 	constructor(stateConfig) {
-		// @ts-expect-error
 		super(stateConfig);
 		if (!stateConfig) return;
 

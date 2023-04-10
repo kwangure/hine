@@ -1,4 +1,4 @@
-import { AtomicState, CompoundState } from 'src';
+import { Action, AtomicState, CompoundState } from 'src';
 import { describe, expect, it } from 'vitest';
 
 describe('subscribe', () => {
@@ -24,7 +24,9 @@ describe('subscribe', () => {
 			states: {
 				s1: new CompoundState({
 					actions: {
-						noop() {},
+						noop: new Action({
+							run() {},
+						}),
 					},
 					on: {
 						event: [{

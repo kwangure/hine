@@ -1,4 +1,4 @@
-import { AtomicState, CompoundState } from 'src';
+import { Action, AtomicState, CompoundState } from 'src';
 import { describe, expect, it } from 'vitest';
 
 describe('start', () => {
@@ -10,9 +10,11 @@ describe('start', () => {
 				actions: ['always'],
 			}],
 			actions: {
-				always() {
-					log.push('always');
-				},
+				always: new Action({
+					run() {
+						log.push('always');
+					},
+				}),
 			},
 			states: {
 				s1: new AtomicState(),

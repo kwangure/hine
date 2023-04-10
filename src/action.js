@@ -1,10 +1,17 @@
 import { ACTION_NAME, ACTION_OWNER } from './constants.js';
 
+/**
+ * @typedef {import("./types").StateNode} StateNode
+ */
+
 function noop() {}
 
+/**
+ * @template {StateNode} [T=StateNode]
+ */
 export class Action {
 	#name = '';
-	/** @type {import("./types").StateNode | null} */
+	/** @type {StateNode | null} */
 	#ownerState = null;
 	/** @type {(arg: any) => any} */
 	#run = noop;
@@ -12,12 +19,15 @@ export class Action {
 	/**
 	 * @param {{
 	 *     name?: string;
-	 *     run: (arg: any) => any;
+	 *     run: (this: T, arg: any) => any;
 	 * }} options
 	 */
 	constructor(options) {
 		this.#name = options.name || '';
 		this.#run = options.run;
+	}
+	get name() {
+		return this.#name;
 	}
 	/**
 	 * @param {any} value

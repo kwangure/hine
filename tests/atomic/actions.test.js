@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { CompoundState } from '../../src/compound.js';
 
@@ -9,12 +10,16 @@ describe('actions', () => {
 		new AtomicState({
 			name: 's0',
 			actions: {
-				always0() {
-					log.push('always0');
-				},
-				entry0() {
-					log.push('entry0');
-				},
+				always0: new Action({
+					run() {
+						log.push('always0');
+					},
+				}),
+				entry0: new Action({
+					run() {
+						log.push('entry0');
+					},
+				}),
 			},
 			always: [{
 				actions: ['always0'],
@@ -40,12 +45,16 @@ describe('actions', () => {
 				}),
 				b: new AtomicState({
 					actions: {
-						always0() {
-							log.push('always0');
-						},
-						entry0() {
-							log.push('entry0');
-						},
+						always0: new Action({
+							run() {
+								log.push('always0');
+							},
+						}),
+						entry0: new Action({
+							run() {
+								log.push('entry0');
+							},
+						}),
 					},
 					always: [{
 						actions: ['always0'],
@@ -65,9 +74,11 @@ describe('actions', () => {
 		const log = [];
 		const machine = new CompoundState({
 			actions: {
-				exit0() {
-					log.push('exit0');
-				},
+				exit0: new Action({
+					run() {
+						log.push('exit0');
+					},
+				}),
 			},
 			exit: [{
 				actions: ['exit0'],
@@ -75,9 +86,11 @@ describe('actions', () => {
 			states: {
 				s1: new AtomicState({
 					actions: {
-						exit1() {
-							log.push('exit1');
-						},
+						exit1: new Action({
+							run() {
+								log.push('exit1');
+							},
+						}),
 					},
 					exit: [{
 						actions: ['exit1'],
@@ -104,9 +117,11 @@ describe('actions', () => {
 		const log = [];
 		const machine = new AtomicState({
 			actions: {
-				on0() {
-					log.push('on0');
-				},
+				on0: new Action({
+					run() {
+						log.push('on0');
+					},
+				}),
 			},
 			on: {
 				event: [{
@@ -127,12 +142,16 @@ describe('actions', () => {
 		const log = [];
 		const machine = new AtomicState({
 			actions: {
-				always0() {
-					log.push('always0');
-				},
-				on0() {
-					log.push('on0');
-				},
+				always0: new Action({
+					run() {
+						log.push('always0');
+					},
+				}),
+				on0: new Action({
+					run() {
+						log.push('on0');
+					},
+				}),
 			},
 			always: [{
 				actions: ['always0'],
@@ -159,12 +178,16 @@ describe('actions', () => {
 			states: {
 				s1: new AtomicState({
 					actions: {
-						exit1() {
-							log.push('exit1');
-						},
-						on1() {
-							log.push('on1');
-						},
+						exit1: new Action({
+							run() {
+								log.push('exit1');
+							},
+						}),
+						on1: new Action({
+							run() {
+								log.push('on1');
+							},
+						}),
 					},
 					exit: [{
 						actions: ['exit1'],
@@ -178,15 +201,22 @@ describe('actions', () => {
 				}),
 				s2: new AtomicState({
 					actions: {
-						always2() {
-							log.push('always2');
-						},
-						entry2() {
-							log.push('entry2');
-						},
-						on2() {
-							log.push('on2');
-						},
+						always2: new Action({
+							run() {
+								log.push('always2');
+							},
+						}),
+						entry2: new Action({
+							run() {
+								log.push('entry2');
+							},
+						}),
+						on2: new Action({
+							run() {
+								log.push('on2');
+
+							},
+						}),
 					},
 					always: [{
 						actions: ['always2'],
@@ -215,9 +245,11 @@ describe('actions', () => {
 				actions: ['always'],
 			}],
 			actions: {
-				always() {
-					alwaysCount++;
-				},
+				always: new Action({
+					run() {
+						alwaysCount++;
+					},
+				}),
 			},
 		}).start();
 		expect(alwaysCount).toBe(1);
@@ -232,18 +264,26 @@ describe('actions', () => {
 		const machine = new CompoundState({
 			name: 's0',
 			actions: {
-				always() {
-					log.push('always');
-				},
-				entry() {
-					log.push('entry');
-				},
-				exit() {
-					log.push('exit');
-				},
-				on() {
-					log.push('on');
-				},
+				always: new Action({
+					run() {
+						log.push('always');
+					},
+				}),
+				entry: new Action({
+					run() {
+						log.push('entry');
+					},
+				}),
+				exit: new Action({
+					run() {
+						log.push('exit');
+					},
+				}),
+				on: new Action({
+					run() {
+						log.push('on');
+					},
+				}),
 			},
 			states: {
 				s1: new CompoundState({
@@ -281,34 +321,50 @@ describe('actions', () => {
 		const machine = new CompoundState({
 			name: 's0',
 			actions: {
-				always() {
-					log.push('not always');
-				},
-				entry() {
-					log.push('not entry');
-				},
-				exit() {
-					log.push('not exit');
-				},
-				on() {
-					log.push('not on');
-				},
+				always: new Action({
+					run() {
+						log.push('not always');
+					},
+				}),
+				entry: new Action({
+					run() {
+						log.push('not entry');
+					},
+				}),
+				exit: new Action({
+					run() {
+						log.push('not exit');
+					},
+				}),
+				on: new Action({
+					run() {
+						log.push('not on');
+					},
+				}),
 			},
 			states: {
 				s1: new AtomicState({
 					actions: {
-						always() {
-							log.push('always');
-						},
-						entry() {
-							log.push('entry');
-						},
-						exit() {
-							log.push('exit');
-						},
-						on() {
-							log.push('on');
-						},
+						always: new Action({
+							run() {
+								log.push('always');
+							},
+						}),
+						entry: new Action({
+							run() {
+								log.push('entry');
+							},
+						}),
+						exit: new Action({
+							run() {
+								log.push('exit');
+							},
+						}),
+						on: new Action({
+							run() {
+								log.push('on');
+							},
+						}),
 					},
 					always: [{
 						actions: ['always'],
@@ -336,9 +392,11 @@ describe('actions', () => {
 	it('calls actions in machine context', () => {
 		const state = new AtomicState({
 			actions: {
-				action() {
-					expect(this).toBe(state);
-				},
+				action: new Action({
+					run() {
+						expect(this).toBe(state);
+					},
+				}),
 			},
 			entry: [{
 				actions: ['action'],

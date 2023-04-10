@@ -1,5 +1,5 @@
+import { Action, AtomicState } from 'src';
 import { describe, expect, it } from 'vitest';
-import { AtomicState } from 'src';
 
 describe('start', () => {
 	it('is resolves config idempotently', () => {
@@ -10,9 +10,11 @@ describe('start', () => {
 				actions: ['always'],
 			}],
 			actions: {
-				always() {
-					log.push('always');
-				},
+				always: new Action({
+					run() {
+						log.push('always');
+					},
+				}),
 			},
 		}).start();
 		expect(log).toEqual(['always']);

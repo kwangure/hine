@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { Action } from './action.js';
 import { AtomicState } from './atomic.js';
 import { CompoundState } from './compound.js';
 
@@ -115,21 +116,31 @@ describe('htstate', () => {
 							],
 						},
 						actions: {
-							ignore() {
-								actions.push('ignore');
-							},
-							always() {
-								actions.push('always');
-							},
-							entry() {
-								actions.push('entry');
-							},
-							exit() {
-								actions.push('exit');
-							},
-							transition() {
-								actions.push('transition');
-							},
+							ignore: new Action({
+								run() {
+									actions.push('ignore');
+								},
+							}),
+							always: new Action({
+								run() {
+									actions.push('always');
+								},
+							}),
+							entry: new Action({
+								run() {
+									actions.push('entry');
+								},
+							}),
+							exit: new Action({
+								run() {
+									actions.push('exit');
+								},
+							}),
+							transition: new Action({
+								run() {
+									actions.push('transition');
+								},
+							}),
 						},
 						conditions: {
 							run() {

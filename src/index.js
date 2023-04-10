@@ -1,5 +1,18 @@
+import { Action } from './action.js';
 import { AtomicState } from './atomic.js';
 import { CompoundState } from './compound.js';
+
+/**
+ * @param {ConstructorParameters<typeof Action>[0] | ((arg: any) => any)} config
+ */
+export function action(config) {
+	if (typeof config === 'function') {
+		return new Action({ run: config });
+	}
+
+	return new Action(config);
+}
+
 
 /**
  * @param {Partial<import('./atomic.js').AtomicStateConfig>} [config]
@@ -17,5 +30,5 @@ export function compound(config) {
 	return new CompoundState(config);
 }
 
-export { AtomicState, CompoundState };
+export { Action, AtomicState, CompoundState };
 export { activePath } from './utils.js';

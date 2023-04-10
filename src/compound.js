@@ -21,7 +21,7 @@ import { AtomicState } from './index.js';
  * @typedef {import('./types.js').StateNode} StateNode
  *
  * @typedef {{
- *     actions: Record<string, (this: CompoundState, ...args: any[]) => any>;
+ *     actions: Record<string, import('./action.js').Action<CompoundState>>;
  *     always: AlwaysHandlerConfig[],
  *     conditions: Record<string, (this: CompoundState, ...args: any[]) => boolean>;
  *     entry: EntryHandlerConfig[],

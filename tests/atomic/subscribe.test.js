@@ -1,5 +1,5 @@
+import { Action, AtomicState } from 'src';
 import { describe, expect, it } from 'vitest';
-import { AtomicState } from 'src';
 
 describe('subscribe', () => {
 	it('calls subscribers on start', () => {
@@ -18,7 +18,9 @@ describe('subscribe', () => {
 	it('calls subscribers on disptach', () => {
 		const machine = new AtomicState({
 			actions: {
-				noop() {},
+				noop: new Action({
+					run() {},
+				}),
 			},
 			on: {
 				event: [{

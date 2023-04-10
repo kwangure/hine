@@ -1,4 +1,5 @@
 import {
+	ACTION_NAME,
 	ACTION_OWNER,
 	CONDITION_OWNER,
 	INITIALIZE,
@@ -14,7 +15,6 @@ import {
 	STATE_PARENT,
 	STATE_STATES,
 } from './constants.js';
-import { Action } from './action.js';
 import { Condition } from './condition.js';
 
 /**
@@ -31,7 +31,7 @@ import { Condition } from './condition.js';
  * @typedef {import('./types.js').Handler} Handler
  *
  * @typedef {{
- *     actions: Record<string, (this: AtomicState, ...args: any[]) => any>;
+ *     actions: Record<string, import('./action.js').Action<AtomicState>>;
  *     always: AlwaysHandlerConfig[],
  *     conditions: Record<string, (this: AtomicState, ...args: any[]) => boolean>;
  *     entry: EntryHandlerConfig[],
@@ -297,16 +297,16 @@ export class AtomicState {
 		return this.#executeHandlers(handlers, value);
 	}
 	/**
-	 * @returns {Record<string, Action>}
+	 * @returns {Record<string, import('./action.js').Action>}
 	 */
 	get [STATE_ACTIONS]() {
 		const actions = this.#parent?.[STATE_ACTIONS] || {};
 		for (const name in this.#actionConfig) {
 			if (Object.hasOwn(this.#actionConfig, name)) {
-				const action = new Action({
-					name,
-					run: this.#actionConfig[name],
-				});
+				const action = this.#actionConfig[name];
+				if (!action.name) {
+					action[ACTION_NAME] = name;
+				}
 				action[ACTION_OWNER] = this;
 				actions[name] = action;
 			}

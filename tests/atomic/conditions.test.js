@@ -1,5 +1,5 @@
+import { Action, AtomicState } from 'src';
 import { describe, expect, it } from 'vitest';
-import { AtomicState } from 'src';
 
 describe('conditions', () => {
 	it('exposes conditions inside conditions', () => {
@@ -9,7 +9,9 @@ describe('conditions', () => {
 				actions: ['do'],
 			}],
 			actions: {
-				do() {},
+				do: new Action({
+					run() {},
+				}),
 			},
 			conditions: {
 				cond1() {
@@ -35,7 +37,9 @@ describe('conditions', () => {
 				},
 			},
 			actions: {
-				action() {},
+				action: new Action({
+					run() {},
+				}),
 			},
 			entry: [{
 				condition: 'dummy',

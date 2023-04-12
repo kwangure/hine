@@ -1,6 +1,9 @@
 import {
 	ACTION_NAME,
+	ACTION_NOTIFY_AFTER,
+	ACTION_NOTIFY_BEFORE,
 	ACTION_OWNER,
+	CALL_SUBSCRIBERS,
 	CONDITION_NAME,
 	CONDITION_OWNER,
 	INITIALIZE,
@@ -9,6 +12,7 @@ import {
 	RUN_ENTRY_HANDLERS,
 	RUN_EXIT_HANDLERS,
 	RUN_ON_HANDLERS,
+	STATE_ACTION,
 	STATE_ACTIONS,
 	STATE_ACTIVE,
 	STATE_CONDITIONS,
@@ -31,7 +35,10 @@ import { Condition } from './condition.js';
  * @typedef {import('./types.js').ExitHandler} ExitHandler
  * @typedef {import('./types.js').Handler} Handler
  *
+ * @typedef {import('./action.js').ActionConfig<AtomicState>} ActionConfig
+ *
  * @typedef {{
+ *     actionConfig: Partial<Omit<ActionConfig, 'run'>>;
  *     actions: Record<string, import('./action.js').Action<AtomicState>>;
  *     always: AlwaysHandlerConfig[],
  *     conditions: Record<string, import('./condition.js').Condition<AtomicState>>;
@@ -43,9 +50,14 @@ import { Condition } from './condition.js';
  *
  * @typedef {import('./compound.js').CompoundState} CompoundState
  */
+
 export class AtomicState {
-	/** @type {Record<string, import('./action.js').Action<this>>} */
+	/** @type {import('./action.js').Action<this> | null} */
+	#action = null;
+	/** @type {Partial<ActionConfig>} */
 	#actionConfig = {};
+	/** @type {Record<string, import('./action.js').Action<this>>} */
+	#actions = {};
 	/** @type {AlwaysHandler[]} */
 	#always = [];
 	/** @type {AlwaysHandlerConfig[]} */
@@ -79,18 +91,14 @@ export class AtomicState {
 	 */
 	constructor(stateConfig) {
 		if (!stateConfig) return;
-		this.#actionConfig = stateConfig.actions || {};
+		this.#actions = stateConfig.actions || {};
+		this.#actionConfig = stateConfig.actionConfig || {};
 		this.#alwaysConfig = stateConfig.always || [];
 		this.#conditionConfig = stateConfig.conditions|| {};
 		this.#entryConfig = stateConfig.entry || [];
 		this.#exitConfig = stateConfig.exit || [];
 		this.#name = stateConfig.name || '';
 		this.#onConfig = stateConfig.on || {};
-	}
-	#callSubscribers() {
-		for (const subscriber of this.#subscribers) {
-			subscriber(this);
-		}
 	}
 	/**
 	 * @param {Handler[]} handlers
@@ -179,6 +187,9 @@ export class AtomicState {
 			return false;
 		};
 	}
+	get action() {
+		return this.#action;
+	}
 	get conditions() {
 		return this[STATE_CONDITIONS];
 	}
@@ -191,7 +202,7 @@ export class AtomicState {
 			throw Error('Attempted dispatch before resolving state');
 		}
 		this[RUN_ON_HANDLERS](event, value);
-		this.#callSubscribers();
+		this[CALL_SUBSCRIBERS]();
 	}
 	/**
 	 * @param {string} path
@@ -213,7 +224,7 @@ export class AtomicState {
 		this[INITIALIZE]();
 		this[RUN_ENTRY_HANDLERS]([]);
 		this[RUN_ALWAYS_HANDLERS]([]);
-		this.#callSubscribers();
+		this[CALL_SUBSCRIBERS]();
 
 		return this;
 	}
@@ -229,6 +240,11 @@ export class AtomicState {
 		return {
 			name: this.name,
 		};
+	}
+	[CALL_SUBSCRIBERS]() {
+		for (const subscriber of this.#subscribers) {
+			subscriber(this);
+		}
 	}
 	[INITIALIZE]() {
 		this.#initialized = true;
@@ -296,16 +312,28 @@ export class AtomicState {
 		handlers.push(...this.#always);
 		return this.#executeHandlers(handlers, value);
 	}
+	/** @param {import('./action.js').Action<this> | null} value */
+	set [STATE_ACTION](value) {
+		this.#action = value;
+	}
 	/**
 	 * @returns {Record<string, import('./action.js').Action>}
 	 */
 	get [STATE_ACTIONS]() {
 		const actions = this.#parent?.[STATE_ACTIONS] || {};
-		for (const name in this.#actionConfig) {
-			if (Object.hasOwn(this.#actionConfig, name)) {
-				const action = this.#actionConfig[name];
+		for (const name in this.#actions) {
+			if (Object.hasOwn(this.#actions, name)) {
+				const action = this.#actions[name];
 				if (!action.name) {
 					action[ACTION_NAME] = name;
+				}
+				if (typeof action[ACTION_NOTIFY_AFTER] !== 'boolean') {
+					action[ACTION_NOTIFY_AFTER]
+						= this.#actionConfig.notifyAfter ?? false;
+				}
+				if (typeof action[ACTION_NOTIFY_BEFORE] !== 'boolean') {
+					action[ACTION_NOTIFY_BEFORE]
+						= this.#actionConfig.notifyBefore ?? false;
 				}
 				action[ACTION_OWNER] = this;
 				actions[name] = action;

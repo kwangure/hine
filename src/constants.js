@@ -1,10 +1,15 @@
 export const ACTION_NAME = Symbol('action-name');
+export const ACTION_NOTIFY_AFTER = Symbol('action-notify-after');
+export const ACTION_NOTIFY_BEFORE = Symbol('action-notify-before');
 export const ACTION_OWNER = Symbol('action-owner');
+
+export const CALL_SUBSCRIBERS = Symbol('call-subscribers');
 
 export const CONDITION_NAME = Symbol('condition-name');
 export const CONDITION_OWNER = Symbol('condition-owner');
 
 export const STATE_ACTIONS = Symbol('state-actions');
+export const STATE_ACTION = Symbol('state-action');
 export const STATE_ACTIVE = Symbol('state-active');
 export const STATE_CONDITIONS = Symbol('state-conditions');
 export const STATE_NAME = Symbol('state-name');

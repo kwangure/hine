@@ -404,4 +404,137 @@ describe('actions', () => {
 		});
 		state.start();
 	});
+	it('calls subscribers before action', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new AtomicState({
+			actions: {
+				action: new Action({
+					notifyBefore: true,
+					run() {
+						log.push('action');
+					},
+				}),
+			},
+			on: {
+				event: [{
+					actions: ['action'],
+				}],
+			},
+		});
+		state.start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'sub', // notifyBefore
+			'action',
+			'sub',
+		]);
+	});
+	it('calls subscribers after action', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new AtomicState({
+			actions: {
+				action: new Action({
+					notifyAfter: true,
+					run() {
+						log.push('action');
+					},
+				}),
+			},
+			on: {
+				event: [{
+					actions: ['action'],
+				}],
+			},
+		}).start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'action',
+			'sub', // notifyAfter
+			'sub',
+		]);
+	});
+	it('passes action config from parent', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new AtomicState({
+			actionConfig: {
+				notifyBefore: true,
+			},
+			actions: {
+				action: new Action({
+					run() {
+						log.push('action');
+					},
+				}),
+			},
+			on: {
+				event: [{
+					actions: ['action'],
+				}],
+			},
+		}).start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'sub', // notifyBefore
+			'action',
+			'sub',
+		]);
+	});
+	it('does not override child with parent config', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new AtomicState({
+			actionConfig: {
+				notifyBefore: true,
+			},
+			actions: {
+				action: new Action({
+					notifyBefore: false,
+					run() {
+						log.push('action');
+					},
+				}),
+			},
+			on: {
+				event: [{
+					actions: ['action'],
+				}],
+			},
+		}).start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'action',
+			'sub',
+		]);
+	});
+	it('sets state action during action', () => {
+		const action = new Action({
+			notifyBefore: false,
+			run() {
+				expect(this.action).toBe(action);
+			},
+		});
+		const state = new AtomicState({
+			actions: {
+				action,
+			},
+			entry: [{
+				actions: ['action'],
+			}],
+		});
+		expect(state.action).toBe(null);
+		state.start();
+		expect(state.action).toBe(null);
+
+	});
 });

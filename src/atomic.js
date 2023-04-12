@@ -5,6 +5,8 @@ import {
 	ACTION_OWNER,
 	CALL_SUBSCRIBERS,
 	CONDITION_NAME,
+	CONDITION_NOTIFY_AFTER,
+	CONDITION_NOTIFY_BEFORE,
 	CONDITION_OWNER,
 	INITIALIZE,
 	RESOLVE_CONFIG,
@@ -15,6 +17,7 @@ import {
 	STATE_ACTION,
 	STATE_ACTIONS,
 	STATE_ACTIVE,
+	STATE_CONDITION,
 	STATE_CONDITIONS,
 	STATE_NAME,
 	STATE_PARENT,
@@ -36,11 +39,13 @@ import { Condition } from './condition.js';
  * @typedef {import('./types.js').Handler} Handler
  *
  * @typedef {import('./action.js').ActionConfig<AtomicState>} ActionConfig
+ * @typedef {import('./condition.js').ConditionConfig<AtomicState>} ConditionConfig
  *
  * @typedef {{
  *     actionConfig: Partial<Omit<ActionConfig, 'run'>>;
  *     actions: Record<string, import('./action.js').Action<AtomicState>>;
  *     always: AlwaysHandlerConfig[],
+ *     conditionConfig: Partial<Omit<ConditionConfig, 'run'>>;
  *     conditions: Record<string, import('./condition.js').Condition<AtomicState>>;
  *     entry: EntryHandlerConfig[],
  *     exit: ExitHandlerConfig[],
@@ -62,8 +67,12 @@ export class AtomicState {
 	#always = [];
 	/** @type {AlwaysHandlerConfig[]} */
 	#alwaysConfig = [];
-	/** @type {Record<string, import('./condition.js').Condition<this>>} */
+	/** @type {import('./condition.js').Condition<this> | null} */
+	#condition = null;
+	/** @type {Partial<ConditionConfig>} */
 	#conditionConfig = {};
+	/** @type {Record<string, import('./condition.js').Condition<this>>} */
+	#conditions = {};
 	/** @type {EntryHandler[]} */
 	#entry = [];
 	/** @type {EntryHandlerConfig[]} */
@@ -94,7 +103,8 @@ export class AtomicState {
 		this.#actions = stateConfig.actions || {};
 		this.#actionConfig = stateConfig.actionConfig || {};
 		this.#alwaysConfig = stateConfig.always || [];
-		this.#conditionConfig = stateConfig.conditions|| {};
+		this.#conditions = stateConfig.conditions|| {};
+		this.#conditionConfig = stateConfig.conditionConfig || {};
 		this.#entryConfig = stateConfig.entry || [];
 		this.#exitConfig = stateConfig.exit || [];
 		this.#name = stateConfig.name || '';
@@ -130,7 +140,9 @@ export class AtomicState {
 	 */
 	#resolveCondition(handler) {
 		if (handler.condition === undefined) {
-			const condition = new Condition();
+			const condition = new Condition({ run() {
+				return true;
+			} });
 			condition[CONDITION_OWNER] = this;
 			return condition;
 		}
@@ -189,6 +201,9 @@ export class AtomicState {
 	}
 	get action() {
 		return this.#action;
+	}
+	get condition() {
+		return this.#condition;
 	}
 	get conditions() {
 		return this[STATE_CONDITIONS];
@@ -342,16 +357,28 @@ export class AtomicState {
 
 		return actions;
 	}
+	/** @param {import('./condition.js').Condition<this> | null} value */
+	set [STATE_CONDITION](value) {
+		this.#condition = value;
+	}
 	/**
 	 * @returns {Record<string, Condition>}
 	 */
 	get [STATE_CONDITIONS]() {
 		const conditions = this.#parent?.[STATE_CONDITIONS] || {};
-		for (const name in this.#conditionConfig) {
-			if (Object.hasOwn(this.#conditionConfig, name)) {
-				const condition = this.#conditionConfig[name];
+		for (const name in this.#conditions) {
+			if (Object.hasOwn(this.#conditions, name)) {
+				const condition = this.#conditions[name];
 				if (!condition.name) {
 					condition[CONDITION_NAME] = name;
+				}
+				if (typeof condition[CONDITION_NOTIFY_AFTER] !== 'boolean') {
+					condition[CONDITION_NOTIFY_AFTER]
+						= this.#conditionConfig.notifyAfter ?? false;
+				}
+				if (typeof condition[CONDITION_NOTIFY_BEFORE] !== 'boolean') {
+					condition[CONDITION_NOTIFY_BEFORE]
+						= this.#conditionConfig.notifyBefore ?? false;
 				}
 				condition[CONDITION_OWNER] = this;
 				conditions[name] = condition;

@@ -55,4 +55,161 @@ describe('conditions', () => {
 		});
 		state.start();
 	});
+	it('calls subscribers before condition', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new AtomicState({
+			conditions: {
+				condition: new Condition({
+					notifyBefore: true,
+					run() {
+						log.push('condition');
+						return true;
+					},
+				}),
+			},
+			actions: {
+				action: new Action({ run() {} }),
+			},
+			on: {
+				event: [{
+					condition: 'condition',
+					actions: ['action'],
+				}],
+			},
+		});
+		state.start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'sub', // notifyBefore
+			'condition',
+			'sub',
+		]);
+	});
+	it('calls subscribers after condition', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new AtomicState({
+			conditions: {
+				condition: new Condition({
+					notifyAfter: true,
+					run() {
+						log.push('condition');
+						return true;
+					},
+				}),
+			},
+			actions: {
+				action: new Action({ run() {} }),
+			},
+			on: {
+				event: [{
+					condition: 'condition',
+					actions: ['action'],
+				}],
+			},
+		}).start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'condition',
+			'sub', // notifyAfter
+			'sub',
+		]);
+	});
+	it('passes action config from parent', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new AtomicState({
+			conditionConfig: {
+				notifyBefore: true,
+			},
+			conditions: {
+				condition: new Condition({
+					run() {
+						log.push('condition');
+						return true;
+					},
+				}),
+			},
+			actions: {
+				action: new Action({ run() {} }),
+			},
+			on: {
+				event: [{
+					condition: 'condition',
+					actions: ['action'],
+				}],
+			},
+		}).start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'sub', // notifyBefore
+			'condition',
+			'sub',
+		]);
+	});
+	it('does not override child with parent config', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new AtomicState({
+			conditionConfig: {
+				notifyBefore: true,
+			},
+			conditions: {
+				condition: new Condition({
+					notifyBefore: false,
+					run() {
+						log.push('condition');
+						return true;
+					},
+				}),
+			},
+			actions: {
+				action: new Action({ run() {} }),
+			},
+			on: {
+				event: [{
+					condition: 'condition',
+					actions: ['action'],
+				}],
+			},
+		}).start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'condition',
+			'sub',
+		]);
+	});
+	it('sets state condition during condition', () => {
+		const condition = new Condition({
+			notifyBefore: false,
+			run() {
+				expect(this.condition).toBe(condition);
+				return true;
+			},
+		});
+		const state = new AtomicState({
+			conditions: {
+				condition,
+			},
+			actions: {
+				action: new Action({ run() {} }),
+			},
+			entry: [{
+				condition: 'condition',
+				actions: ['action'],
+			}],
+		});
+		expect(state.condition).toBe(null);
+		state.start();
+		expect(state.condition).toBe(null);
+	});
 });

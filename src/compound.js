@@ -20,9 +20,14 @@ import { AtomicState } from './index.js';
  *
  * @typedef {import('./types.js').StateNode} StateNode
  *
+ * @typedef {import('./action.js').ActionConfig<CompoundState>} ActionConfig
+ * @typedef {import('./condition.js').ConditionConfig<CompoundState>} ConditionConfig
+ *
  * @typedef {{
+ *     actionConfig: Partial<Omit<ActionConfig, 'run'>>;
  *     actions: Record<string, import('./action.js').Action<CompoundState>>;
  *     always: AlwaysHandlerConfig[],
+ *     conditionConfig: Partial<Omit<ConditionConfig, 'run'>>;
  *     conditions: Record<string, import('./condition.js').Condition<CompoundState>>;
  *     entry: EntryHandlerConfig[],
  *     exit: ExitHandlerConfig[],

@@ -1,8 +1,18 @@
-import { CONDITION_NAME, CONDITION_OWNER } from './constants.js';
+import { CALL_SUBSCRIBERS, CONDITION_NAME, CONDITION_NOTIFY_AFTER, CONDITION_NOTIFY_BEFORE, CONDITION_OWNER, STATE_CONDITION } from './constants.js';
 
 /**
  * @typedef {import("./types").StateNode} StateNode
  */
+
+/**
+ * @template T
+ * @typedef {{
+*     name?: string;
+*     notifyAfter?: boolean;
+*     notifyBefore?: boolean;
+*     run: (this: T, arg: any) => boolean;
+* }} ConditionConfig
+*/
 
 function noop() {
 	return true;
@@ -17,16 +27,31 @@ export class Condition {
 	#ownerState = null;
 	/** @type {(arg: any) => boolean} */
 	#run = noop;
+	/** @type {boolean | undefined} */
+	[CONDITION_NOTIFY_AFTER] = undefined;
+	/** @type {boolean | undefined} */
+	[CONDITION_NOTIFY_BEFORE] = undefined;
 
 	/**
-	 * @param {{
-	 *     name?: string;
-	 *     run?: (this: T, arg: any) => boolean;
-	 * }} [options]
+	 * @param {ConditionConfig<T>} options
 	 */
 	constructor(options) {
-		this.#name = options?.name || '';
-		this.#run = options?.run || noop;
+		this.#name = options.name || '';
+		if (typeof options.notifyAfter === 'boolean') {
+			this[CONDITION_NOTIFY_AFTER] = options.notifyAfter;
+		}
+		if (typeof options.notifyBefore === 'boolean') {
+			this[CONDITION_NOTIFY_BEFORE] = options.notifyBefore;
+		}
+		this.#run = options.run || noop;
+	}
+	#notifyAfter() {
+		if (!this[CONDITION_NOTIFY_AFTER]) return;
+		this.#ownerState?.[CALL_SUBSCRIBERS]();
+	}
+	#notifyBefore() {
+		if (!this[CONDITION_NOTIFY_BEFORE]) return;
+		this.#ownerState?.[CALL_SUBSCRIBERS]();
 	}
 	get name() {
 		return this.#name;
@@ -35,7 +60,13 @@ export class Condition {
 	 * @param {any} [value]
 	 */
 	run(value) {
-		return this.#run.call(this.#ownerState, value);
+		if (!this.#ownerState) return;
+		this.#ownerState[STATE_CONDITION] = this;
+		this.#notifyBefore();
+		const result = this.#run.call(this.#ownerState, value);
+		this.#notifyAfter();
+		this.#ownerState[STATE_CONDITION] = null;
+		return result;
 	}
 	toJSON() {
 		return {

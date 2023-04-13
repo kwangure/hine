@@ -743,7 +743,6 @@ describe('actions', () => {
 		machine.dispatch('event');
 		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
 	});
-
 	it('runs transitions in always handlers', () => {
 		/** @type {string[]} */
 		const log = [];
@@ -815,5 +814,153 @@ describe('actions', () => {
 			},
 		});
 		state.start();
+	});
+	it('calls subscribers before action', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new CompoundState({
+			actions: {
+				action: new Action({
+					notifyBefore: true,
+					run() {
+						log.push('action');
+					},
+				}),
+			},
+			on: {
+				event: [{
+					actions: ['action'],
+				}],
+			},
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		state.start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'sub', // notifyBefore
+			'action',
+			'sub',
+		]);
+	});
+	it('calls subscribers after action', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new CompoundState({
+			actions: {
+				action: new Action({
+					notifyAfter: true,
+					run() {
+						log.push('action');
+					},
+				}),
+			},
+			on: {
+				event: [{
+					actions: ['action'],
+				}],
+			},
+			states: {
+				s1: new AtomicState(),
+			},
+		}).start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'action',
+			'sub', // notifyAfter
+			'sub',
+		]);
+	});
+	it('passes action config from parent', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new CompoundState({
+			actionConfig: {
+				notifyBefore: true,
+			},
+			actions: {
+				action: new Action({
+					run() {
+						log.push('action');
+					},
+				}),
+			},
+			on: {
+				event: [{
+					actions: ['action'],
+				}],
+			},
+			states: {
+				s1: new AtomicState(),
+			},
+		}).start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'sub', // notifyBefore
+			'action',
+			'sub',
+		]);
+	});
+	it('does not override child with parent config', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new CompoundState({
+			actionConfig: {
+				notifyBefore: true,
+			},
+			actions: {
+				action: new Action({
+					notifyBefore: false,
+					run() {
+						log.push('action');
+					},
+				}),
+			},
+			on: {
+				event: [{
+					actions: ['action'],
+				}],
+			},
+			states: {
+				s1: new AtomicState(),
+			},
+		}).start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'action',
+			'sub',
+		]);
+	});
+	it('sets state action during action', () => {
+		const action = new Action({
+			notifyBefore: false,
+			run() {
+				expect(this.action).toBe(action);
+			},
+		});
+		const state = new CompoundState({
+			actions: {
+				action,
+			},
+			entry: [{
+				actions: ['action'],
+			}],
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		expect(state.action).toBe(null);
+		state.start();
+		expect(state.action).toBe(null);
+
 	});
 });

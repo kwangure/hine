@@ -18,6 +18,7 @@ import {
 	STATE_ACTIONS,
 	STATE_ACTIVE,
 	STATE_CONDITION,
+	STATE_CONDITION_CONFIGS,
 	STATE_CONDITIONS,
 	STATE_NAME,
 	STATE_PARENT,
@@ -260,6 +261,7 @@ export class AtomicState {
 		for (const subscriber of this.#subscribers) {
 			subscriber(this);
 		}
+		this.#parent?.[CALL_SUBSCRIBERS]();
 	}
 	[INITIALIZE]() {
 		this.#initialized = true;
@@ -357,6 +359,22 @@ export class AtomicState {
 
 		return actions;
 	}
+	/**
+	 * @returns {{
+	 *     notifyBefore: boolean;
+	 *     notifyAfter: boolean;
+	 * }}
+	 */
+	get [STATE_CONDITION_CONFIGS]() {
+		return {
+			notifyAfter: this.#conditionConfig.notifyAfter
+				?? this.#parent?.[STATE_CONDITION_CONFIGS].notifyAfter
+				?? false,
+			notifyBefore: this.#conditionConfig.notifyBefore
+				?? this.#parent?.[STATE_CONDITION_CONFIGS].notifyBefore
+				?? false,
+		};
+	}
 	/** @param {import('./condition.js').Condition<this> | null} value */
 	set [STATE_CONDITION](value) {
 		this.#condition = value;
@@ -374,11 +392,11 @@ export class AtomicState {
 				}
 				if (typeof condition[CONDITION_NOTIFY_AFTER] !== 'boolean') {
 					condition[CONDITION_NOTIFY_AFTER]
-						= this.#conditionConfig.notifyAfter ?? false;
+						= this[STATE_CONDITION_CONFIGS].notifyAfter;
 				}
 				if (typeof condition[CONDITION_NOTIFY_BEFORE] !== 'boolean') {
 					condition[CONDITION_NOTIFY_BEFORE]
-						= this.#conditionConfig.notifyBefore ?? false;
+						= this[STATE_CONDITION_CONFIGS].notifyBefore;
 				}
 				condition[CONDITION_OWNER] = this;
 				conditions[name] = condition;

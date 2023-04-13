@@ -131,7 +131,7 @@ describe('conditions', () => {
 			'sub',
 		]);
 	});
-	it('passes condition config from parent', () => {
+	it('passes condition config from parent state', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
@@ -157,6 +157,47 @@ describe('conditions', () => {
 			},
 			states: {
 				s1: new AtomicState(),
+			},
+		}).start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'sub', // notifyBefore
+			'condition',
+			'sub',
+		]);
+	});
+	it('passes condition config from grandparent state', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new CompoundState({
+			conditionConfig: {
+				notifyBefore: true,
+			},
+			states: {
+				s1: new CompoundState({
+					conditions: {
+						condition: new Condition({
+							run() {
+								log.push('condition');
+								return true;
+							},
+						}),
+					},
+					actions: {
+						action: new Action({ run() {} }),
+					},
+					on: {
+						event: [{
+							condition: 'condition',
+							actions: ['action'],
+						}],
+					},
+					states: {
+						s11: new AtomicState(),
+					},
+				}),
 			},
 		}).start();
 		state.subscribe(() => log.push('sub'));

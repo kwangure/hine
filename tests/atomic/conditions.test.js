@@ -1,4 +1,4 @@
-import { Action, AtomicState, Condition } from 'src';
+import { Action, AtomicState, CompoundState, Condition } from 'src';
 import { describe, expect, it } from 'vitest';
 
 describe('conditions', () => {
@@ -120,7 +120,7 @@ describe('conditions', () => {
 			'sub',
 		]);
 	});
-	it('passes action config from parent', () => {
+	it('passes action config from parent state', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new AtomicState({
@@ -146,6 +146,50 @@ describe('conditions', () => {
 			},
 		}).start();
 		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'sub', // notifyBefore
+			'condition',
+			'sub',
+		]);
+	});
+	it('passes condition config from grandparent state', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new CompoundState({
+			conditionConfig: {
+				notifyBefore: true,
+			},
+			states: {
+				s1: new CompoundState({
+					states: {
+						s11: new AtomicState({
+							conditions: {
+								condition: new Condition({
+									run() {
+										log.push('condition');
+										return true;
+									},
+								}),
+							},
+							actions: {
+								action: new Action({ run() {} }),
+							},
+							on: {
+								event: [{
+									condition: 'condition',
+									actions: ['action'],
+								}],
+							},
+						}),
+					},
+				}),
+			},
+		}).start();
+		state.subscribe(() => {
+			log.push('sub');
+		});
 		log.length = 0;
 		state.dispatch('event');
 		expect(log).toEqual([

@@ -12,6 +12,7 @@ export const CONDITION_OWNER = Symbol('condition-owner');
 
 export const STATE_ACTIONS = Symbol('state-actions');
 export const STATE_ACTION = Symbol('state-action');
+export const STATE_ACTION_CONFIGS = Symbol('state-action-configs');
 export const STATE_ACTIVE = Symbol('state-active');
 export const STATE_CONDITIONS = Symbol('state-conditions');
 export const STATE_CONDITION = Symbol('state-condition');

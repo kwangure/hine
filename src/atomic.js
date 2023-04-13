@@ -15,6 +15,7 @@ import {
 	RUN_EXIT_HANDLERS,
 	RUN_ON_HANDLERS,
 	STATE_ACTION,
+	STATE_ACTION_CONFIGS,
 	STATE_ACTIONS,
 	STATE_ACTIVE,
 	STATE_CONDITION,
@@ -329,6 +330,22 @@ export class AtomicState {
 		handlers.push(...this.#always);
 		return this.#executeHandlers(handlers, value);
 	}
+	/**
+	 * @returns {{
+	 *     notifyBefore: boolean;
+	 *     notifyAfter: boolean;
+	 * }}
+	 */
+	get [STATE_ACTION_CONFIGS]() {
+		return {
+			notifyAfter: this.#actionConfig.notifyAfter
+				?? this.#parent?.[STATE_ACTION_CONFIGS].notifyAfter
+				?? false,
+			notifyBefore: this.#actionConfig.notifyBefore
+				?? this.#parent?.[STATE_ACTION_CONFIGS].notifyBefore
+				?? false,
+		};
+	}
 	/** @param {import('./action.js').Action<this> | null} value */
 	set [STATE_ACTION](value) {
 		this.#action = value;
@@ -346,11 +363,11 @@ export class AtomicState {
 				}
 				if (typeof action[ACTION_NOTIFY_AFTER] !== 'boolean') {
 					action[ACTION_NOTIFY_AFTER]
-						= this.#actionConfig.notifyAfter ?? false;
+						= this[STATE_ACTION_CONFIGS].notifyAfter;
 				}
 				if (typeof action[ACTION_NOTIFY_BEFORE] !== 'boolean') {
 					action[ACTION_NOTIFY_BEFORE]
-						= this.#actionConfig.notifyBefore ?? false;
+						= this[STATE_ACTION_CONFIGS].notifyBefore;
 				}
 				action[ACTION_OWNER] = this;
 				actions[name] = action;

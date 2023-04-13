@@ -940,6 +940,43 @@ describe('actions', () => {
 			'sub',
 		]);
 	});
+	it('passes condition config from grandparent state', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new CompoundState({
+			actionConfig: {
+				notifyBefore: true,
+			},
+			states: {
+				s1: new CompoundState({
+					actions: {
+						action: new Action({
+							run() {
+								log.push('action');
+								return true;
+							},
+						}),
+					},
+					on: {
+						event: [{
+							actions: ['action'],
+						}],
+					},
+					states: {
+						s11: new AtomicState(),
+					},
+				}),
+			},
+		}).start();
+		state.subscribe(() => log.push('sub'));
+		log.length = 0;
+		state.dispatch('event');
+		expect(log).toEqual([
+			'sub', // notifyBefore
+			'action',
+			'sub',
+		]);
+	});
 	it('sets state action during action', () => {
 		const action = new Action({
 			notifyBefore: false,

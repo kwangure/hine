@@ -517,7 +517,7 @@ describe('actions', () => {
 			'sub',
 		]);
 	});
-	it.only('passes condition config from grandparent state', () => {
+	it('passes condition config from grandparent state', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({

@@ -34,7 +34,7 @@
         }
     },
     "devDependencies": {
-        "@kwangure/eslint-config-svelte": "^0.2.5",
+        "@kwangure/eslint-config-svelte": "^0.2.6",
         "@sveltejs/package": "^2.0.2",
         "eslint": "^8.32.0",
         "eslint-plugin-sort-class-members": "^1.16.0",

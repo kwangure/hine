@@ -212,9 +212,9 @@ export class AtomicState {
 	}
 	/**
 	 * @param {string} event
-	 * @param {any[]} value
+	 * @param {any} [value]
 	 */
-	dispatch(event, ...value) {
+	dispatch(event, value) {
 		if (!this.#initialized) {
 			throw Error('Attempted dispatch before resolving state');
 		}

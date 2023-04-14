@@ -370,7 +370,7 @@ export class AtomicState {
 						= this[STATE_ACTION_CONFIGS].notifyBefore;
 				}
 				action[ACTION_OWNER] = this;
-				actions[name] = action;
+				actions[action.name] = action;
 			}
 		}
 
@@ -416,7 +416,7 @@ export class AtomicState {
 						= this[STATE_CONDITION_CONFIGS].notifyBefore;
 				}
 				condition[CONDITION_OWNER] = this;
-				conditions[name] = condition;
+				conditions[condition.name] = condition;
 			}
 		}
 

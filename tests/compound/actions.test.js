@@ -977,6 +977,43 @@ describe('actions', () => {
 			'sub',
 		]);
 	});
+	it('resolves action using most specific configured name', () => {
+		const state = new CompoundState({
+			actions: {
+				action: new Action({
+					name: 'other-action',
+					run() { },
+				}),
+			},
+			on: {
+				event: [{
+					actions: ['action'],
+				}],
+			},
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		expect(() => state.start()).toThrow(/unknown action/);
+		const state2 = new CompoundState({
+			actions: {
+				action: new Action({
+					name: 'other-action',
+					run() { },
+				}),
+			},
+			on: {
+				event: [{
+					actions: ['other-action'],
+				}],
+			},
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		expect(() => state2.start()).not.toThrow();
+
+	});
 	it('sets state action during action', () => {
 		const action = new Action({
 			notifyBefore: false,

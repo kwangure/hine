@@ -557,6 +557,37 @@ describe('actions', () => {
 			'sub',
 		]);
 	});
+	it('resolves action using most specific configured name', () => {
+		const state = new AtomicState({
+			actions: {
+				action: new Action({
+					name: 'other-action',
+					run() { },
+				}),
+			},
+			on: {
+				event: [{
+					actions: ['action'],
+				}],
+			},
+		});
+		expect(() => state.start()).toThrow(/unknown action/);
+		const state2 = new AtomicState({
+			actions: {
+				action: new Action({
+					name: 'other-action',
+					run() { },
+				}),
+			},
+			on: {
+				event: [{
+					actions: ['other-action'],
+				}],
+			},
+		});
+		expect(() => state2.start()).not.toThrow();
+
+	});
 	it('sets state action during action', () => {
 		const action = new Action({
 			notifyBefore: false,

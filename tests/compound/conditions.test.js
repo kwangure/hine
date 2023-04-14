@@ -246,6 +246,54 @@ describe('conditions', () => {
 			'sub',
 		]);
 	});
+	it('resolves condition using most specific configured name', () => {
+		const state1 = new CompoundState({
+			conditions: {
+				condition: new Condition({
+					name: 'other-condition',
+					run() {
+						return true;
+					},
+				}),
+			},
+			actions: {
+				action: new Action({ run() {} }),
+			},
+			on: {
+				event: [{
+					condition: 'condition',
+					actions: ['action'],
+				}],
+			},
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		expect(() => state1.start()).toThrow(/unknown condition/);
+		const state2 = new CompoundState({
+			conditions: {
+				condition: new Condition({
+					name: 'other-condition',
+					run() {
+						return true;
+					},
+				}),
+			},
+			actions: {
+				action: new Action({ run() {} }),
+			},
+			on: {
+				event: [{
+					condition: 'other-condition',
+					actions: ['action'],
+				}],
+			},
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		expect(() => state2.start()).not.toThrow();
+	});
 	it('sets state condition during condition', () => {
 		const condition = new Condition({
 			notifyBefore: false,

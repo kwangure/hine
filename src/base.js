@@ -24,6 +24,7 @@ import {
 	STATE_NAME,
 	STATE_PARENT,
 	STATE_STATES,
+	STATE_SUBSCRIBERS,
 } from './constants.js';
 import { Condition } from './condition.js';
 
@@ -72,7 +73,7 @@ export class BaseState {
 	/** @type {CompoundState | null} */
 	#parent = null;
 	/** @type {Set<(arg: BaseState) => any>} */
-	#subscribers = new Set();
+	[STATE_SUBSCRIBERS] = new Set();
 
 	/**
 	 * @param {import('./types.js').AtomicStateConfig} [stateConfig]
@@ -221,16 +222,8 @@ export class BaseState {
 
 		return this;
 	}
-	/** @param {(arg: this) => any} fn */
-	subscribe(fn) {
-		fn(this);
-		this.#subscribers.add(/** @type {(arg: BaseState) => any} */(fn));
-		return () => {
-			this.#subscribers.delete(/** @type {(arg: BaseState) => any} */(fn));
-		};
-	}
 	[CALL_SUBSCRIBERS]() {
-		for (const subscriber of this.#subscribers) {
+		for (const subscriber of this[STATE_SUBSCRIBERS]) {
 			subscriber(this);
 		}
 		this.#parent?.[CALL_SUBSCRIBERS]();

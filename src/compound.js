@@ -9,6 +9,7 @@ import {
 	STATE_NAME,
 	STATE_PARENT,
 	STATE_STATES,
+	STATE_SUBSCRIBERS,
 } from './constants.js';
 import { BaseState } from './base.js';
 
@@ -58,6 +59,14 @@ export class CompoundState extends BaseState {
 	}
 	get state() {
 		return this.#state;
+	}
+	/** @param {(arg: this) => any} fn */
+	subscribe(fn) {
+		fn(this);
+		this[STATE_SUBSCRIBERS].add(/** @type {(arg: BaseState) => any} */(fn));
+		return () => {
+			this[STATE_SUBSCRIBERS].delete(/** @type {(arg: BaseState) => any} */(fn));
+		};
 	}
 	/**
 	 * @returns {import('./types').CompoundStateJSON}

@@ -20,6 +20,7 @@ export const STATE_CONDITION_CONFIGS = Symbol('state-condition-configs');
 export const STATE_NAME = Symbol('state-name');
 export const STATE_PARENT = Symbol('state-parent');
 export const STATE_STATES = Symbol('state-states');
+export const STATE_SUBSCRIBERS = Symbol('state-subscribers');
 
 export const INITIALIZE = Symbol('initialize');
 export const RESOLVE_CONFIG = Symbol('resolve-config');

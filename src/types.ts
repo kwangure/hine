@@ -1,16 +1,17 @@
 import type { Action } from './action.js';
 import { AtomicState } from './atomic';
+import type { BaseState } from './base.js';
 import type { CompoundState } from './compound';
 import type { Condition } from './condition.js';
 
-export type ActionConfig<T extends StateNode = StateNode> = {
+export type ActionConfig<T extends BaseState> = {
 	name?: string,
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
 	run: (this: T, arg: any) => any;
 }
 
-export type ConditionConfig<T extends StateNode = StateNode> = {
+export type ConditionConfig<T extends BaseState> = {
    name?: string,
    notifyAfter?: boolean;
    notifyBefore?: boolean;
@@ -59,7 +60,7 @@ export type HandlerConfig = AlwaysHandlerConfig
 
 export type StateNode = AtomicState | CompoundState;
 
-type StateNodeConfig<T extends StateNode = StateNode> = {
+type StateNodeConfig<T extends BaseState> = {
 	actionConfig: Partial<Omit<ActionConfig<T>, 'run'>>;
 	actions: Record<string, Action<T>>;
 	always: AlwaysHandlerConfig[];
@@ -78,11 +79,13 @@ export type CompoundStateConfig = Partial<StateNodeConfig<CompoundState>> & {
 
 export type AtomicStateJSON = {
 	name: string;
+	type: 'atomic',
 }
 
 export type CompoundStateJSON = {
 	name: string;
 	states: Record<string, StateNodeJSON>;
+	type: 'compound',
 }
 
 export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;

@@ -2,6 +2,7 @@ import { CALL_SUBSCRIBERS, CONDITION_NAME, CONDITION_NOTIFY_AFTER, CONDITION_NOT
 
 /**
  * @typedef {import('./types').StateNode} StateNode
+ * @typedef {import('./base').BaseState} BaseState
  */
 
 function noop() {
@@ -9,7 +10,7 @@ function noop() {
 }
 
 /**
- * @template {StateNode} [T=StateNode]
+ * @template {BaseState} [T=BaseState]
  */
 export class Condition {
 	#name = '';
@@ -67,8 +68,8 @@ export class Condition {
 	set [CONDITION_NAME](value) {
 		this.#name = value;
 	}
-	/** @param {import('./types').StateNode} owner */
+	/** @param {StateNode | BaseState} owner */
 	set [CONDITION_OWNER](owner) {
-		this.#ownerState = owner;
+		this.#ownerState = /** @type {StateNode} */(owner);
 	}
 }

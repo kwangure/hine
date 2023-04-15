@@ -10,13 +10,13 @@ import {
 	STATE_PARENT,
 	STATE_STATES,
 } from './constants.js';
-import { AtomicState } from './index.js';
+import { BaseState } from './base.js';
 
 /**
  * @typedef {import('./types').StateNode} StateNode
  */
 
-export class CompoundState extends AtomicState {
+export class CompoundState extends BaseState {
 	/** @type {StateNode | null} */
 	#initial = null;
 	/** @type {StateNode | null} */
@@ -70,9 +70,9 @@ export class CompoundState extends AtomicState {
 		}
 
 		return {
-			// AtomicStateJSON
-			...super.toJSON(),
+			name: this.name,
 			states,
+			type: 'compound',
 		};
 	}
 	[INITIALIZE]() {

@@ -4,6 +4,15 @@ import { CompoundState } from './compound.js';
 import { Condition } from './condition.js';
 
 /**
+ * @typedef {import('./types').AtomicStateConfig} AtomicStateConfig
+ * @typedef {import('./types').CompoundStateConfig} CompoundStateConfig
+ * @typedef {import('./types').AtomicStateJSON} AtomicStateJSON
+ * @typedef {import('./types').CompoundStateJSON} CompoundStateJSON
+ * @typedef {import('./types').StateNode} StateNode
+ * @typedef {import('./types').StateNodeJSON} StateNodeJSON
+ */
+
+/**
  * @param {ConstructorParameters<typeof Action>[0] | ((arg: any) => any)} config
  */
 export function action(config) {
@@ -14,25 +23,23 @@ export function action(config) {
 	return new Action(config);
 }
 
-
 /**
- * @param {Partial<import('./atomic.js').AtomicStateConfig>} [config]
+ * @param {AtomicStateConfig} [config]
  */
 export function atomic(config) {
 	return new AtomicState(config);
 }
 
 /**
- * @param {Partial<import('./compound.js').CompoundStateConfig> & {
- *     states: Record<string, import('./types.js').StateNode>
- * }} [config]
+ * @param {CompoundStateConfig} [config]
  */
 export function compound(config) {
 	return new CompoundState(config);
 }
 
 /**
- * @param {ConstructorParameters<typeof Condition>[0] | ((arg: any) => boolean)} config
+ * @template {StateNode} T
+ * @param {import('./types').ConditionConfig<T> | import('./types').ConditionConfig<T>['run']} config
  */
 export function condition(config) {
 	if (typeof config === 'function') {

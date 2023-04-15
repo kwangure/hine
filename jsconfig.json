@@ -8,11 +8,9 @@
 		"verbatimModuleSyntax": true,
 		"lib": [
 			"esnext",
-			"DOM",
-			"DOM.Iterable"
 		],
 		"module": "esnext",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
@@ -22,14 +20,10 @@
 	"include": [
 		"./src/**/*.js",
 		"./src/**/*.ts",
-		"./src/**/*.js",
-		"./src/**/*.ts",
 		"./tests/**/*.js",
-		"./tests/**/*.ts",
-		"./scripts/**/*.js",
-		"./scripts/**/*.ts"
+		"./tests/**/*.ts"
 	],
 	"exclude": [
-		"../node_modules/**",
+		"./node_modules/**",
 	]
 }

@@ -1,18 +1,8 @@
 import { CALL_SUBSCRIBERS, CONDITION_NAME, CONDITION_NOTIFY_AFTER, CONDITION_NOTIFY_BEFORE, CONDITION_OWNER, STATE_CONDITION } from './constants.js';
 
 /**
- * @typedef {import("./types").StateNode} StateNode
+ * @typedef {import('./types').StateNode} StateNode
  */
-
-/**
- * @template T
- * @typedef {{
-*     name?: string;
-*     notifyAfter?: boolean;
-*     notifyBefore?: boolean;
-*     run: (this: T, arg: any) => boolean;
-* }} ConditionConfig
-*/
 
 function noop() {
 	return true;
@@ -23,7 +13,7 @@ function noop() {
  */
 export class Condition {
 	#name = '';
-	/** @type {import('./types').StateNode | null} */
+	/** @type {StateNode | null} */
 	#ownerState = null;
 	/** @type {(arg: any) => boolean} */
 	#run = noop;
@@ -33,7 +23,7 @@ export class Condition {
 	[CONDITION_NOTIFY_BEFORE] = undefined;
 
 	/**
-	 * @param {ConditionConfig<T>} options
+	 * @param {import('./types').ConditionConfig<T>} options
 	 */
 	constructor(options) {
 		this.#name = options.name || '';

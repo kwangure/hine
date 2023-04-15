@@ -40,20 +40,8 @@ import { Condition } from './condition.js';
  * @typedef {import('./types.js').ExitHandler} ExitHandler
  * @typedef {import('./types.js').Handler} Handler
  *
- * @typedef {import('./action.js').ActionConfig<AtomicState>} ActionConfig
- * @typedef {import('./condition.js').ConditionConfig<AtomicState>} ConditionConfig
- *
- * @typedef {{
- *     actionConfig: Partial<Omit<ActionConfig, 'run'>>;
- *     actions: Record<string, import('./action.js').Action<AtomicState>>;
- *     always: AlwaysHandlerConfig[],
- *     conditionConfig: Partial<Omit<ConditionConfig, 'run'>>;
- *     conditions: Record<string, import('./condition.js').Condition<AtomicState>>;
- *     entry: EntryHandlerConfig[],
- *     exit: ExitHandlerConfig[],
- *     name: string;
- *     on: Record<string, DispatchHandlerConfig[]>;
- * }} AtomicStateConfig
+ * @typedef {import('./types.js').ActionConfig<AtomicState>} ActionConfig
+ * @typedef {import('./types.js').ConditionConfig<AtomicState>} ConditionConfig
  *
  * @typedef {import('./compound.js').CompoundState} CompoundState
  */
@@ -61,56 +49,45 @@ import { Condition } from './condition.js';
 export class AtomicState {
 	/** @type {import('./action.js').Action<this> | null} */
 	#action = null;
-	/** @type {Partial<ActionConfig>} */
-	#actionConfig = {};
-	/** @type {Record<string, import('./action.js').Action<this>>} */
-	#actions = {};
+	#actionConfig;
+	#actions;
 	/** @type {AlwaysHandler[]} */
 	#always = [];
-	/** @type {AlwaysHandlerConfig[]} */
-	#alwaysConfig = [];
+	#alwaysConfig;
 	/** @type {import('./condition.js').Condition<this> | null} */
 	#condition = null;
-	/** @type {Partial<ConditionConfig>} */
-	#conditionConfig = {};
-	/** @type {Record<string, import('./condition.js').Condition<this>>} */
-	#conditions = {};
+	#conditionConfig;
+	#conditions;
 	/** @type {EntryHandler[]} */
 	#entry = [];
-	/** @type {EntryHandlerConfig[]} */
-	#entryConfig = [];
+	#entryConfig;
 	/** @type {ExitHandler[]} */
 	#exit = [];
-	/** @type {ExitHandlerConfig[]} */
-	#exitConfig = [];
-	/** @type {boolean} */
+	#exitConfig;
 	#initialized = false;
-	/** @type {string} */
 	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
 
-	/** @type {AtomicStateConfig['on']} */
-	#onConfig = {};
+	#onConfig;
 	/** @type {CompoundState | null} */
 	#parent = null;
 	/** @type {Set<(arg: this) => any>} */
 	#subscribers = new Set();
 
 	/**
-	 * @param {Partial<AtomicStateConfig>} [stateConfig]
+	 * @param {import('./types.js').AtomicStateConfig} [stateConfig]
 	 */
 	constructor(stateConfig) {
-		if (!stateConfig) return;
-		this.#actions = stateConfig.actions || {};
-		this.#actionConfig = stateConfig.actionConfig || {};
-		this.#alwaysConfig = stateConfig.always || [];
-		this.#conditions = stateConfig.conditions|| {};
-		this.#conditionConfig = stateConfig.conditionConfig || {};
-		this.#entryConfig = stateConfig.entry || [];
-		this.#exitConfig = stateConfig.exit || [];
-		this.#name = stateConfig.name || '';
-		this.#onConfig = stateConfig.on || {};
+		this.#actions = stateConfig?.actions || {};
+		this.#actionConfig = stateConfig?.actionConfig || {};
+		this.#alwaysConfig = stateConfig?.always || [];
+		this.#conditions = stateConfig?.conditions || {};
+		this.#conditionConfig = stateConfig?.conditionConfig || {};
+		this.#entryConfig = stateConfig?.entry || [];
+		this.#exitConfig = stateConfig?.exit || [];
+		this.#name = stateConfig?.name || '';
+		this.#onConfig = stateConfig?.on || {};
 	}
 	/**
 	 * @param {Handler[]} handlers
@@ -253,6 +230,9 @@ export class AtomicState {
 			this.#subscribers.delete(fn);
 		};
 	}
+	/**
+	 * @returns {import('./types').AtomicStateJSON}
+	 */
 	toJSON() {
 		return {
 			name: this.name,

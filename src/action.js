@@ -1,17 +1,7 @@
 import { ACTION_NAME, ACTION_NOTIFY_AFTER, ACTION_NOTIFY_BEFORE, ACTION_OWNER, CALL_SUBSCRIBERS, STATE_ACTION } from './constants.js';
 
 /**
- * @typedef {import("./types").StateNode} StateNode
- */
-
-/**
- * @template T
- * @typedef {{
- *     name?: string;
- *     notifyAfter?: boolean;
- *     notifyBefore?: boolean;
- *     run: (this: T, arg: any) => any;
- * }} ActionConfig
+ * @typedef {import('./types').StateNode} StateNode
  */
 
 function noop() {}
@@ -30,7 +20,7 @@ export class Action {
 	/** @type {boolean | undefined} */
 	[ACTION_NOTIFY_BEFORE] = undefined;
 	/**
-	 * @param {ActionConfig<T>} options
+	 * @param {import('./types').ActionConfig<T>} options
 	 */
 	constructor(options) {
 		this.#name = options.name || '';

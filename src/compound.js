@@ -13,32 +13,7 @@ import {
 import { AtomicState } from './index.js';
 
 /**
- * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
- * @typedef {import('./types.js').DispatchHandlerConfig} DispatchHandlerConfig
- * @typedef {import('./types.js').EntryHandlerConfig} EntryHandlerConfig
- * @typedef {import('./types.js').ExitHandlerConfig} ExitHandlerConfig
- *
- * @typedef {import('./types.js').StateNode} StateNode
- *
- * @typedef {import('./action.js').ActionConfig<CompoundState>} ActionConfig
- * @typedef {import('./condition.js').ConditionConfig<CompoundState>} ConditionConfig
- *
- * @typedef {{
- *     actionConfig: Partial<Omit<ActionConfig, 'run'>>;
- *     actions: Record<string, import('./action.js').Action<CompoundState>>;
- *     always: AlwaysHandlerConfig[],
- *     conditionConfig: Partial<Omit<ConditionConfig, 'run'>>;
- *     conditions: Record<string, import('./condition.js').Condition<CompoundState>>;
- *     entry: EntryHandlerConfig[],
- *     exit: ExitHandlerConfig[],
- *     name: string;
- *     on: {
- *         [x: string]: DispatchHandlerConfig[];
- *     };
- *     states: {
- *         [x: string]: StateNode;
- *     },
- * }} CompoundStateConfig
+ * @typedef {import('./types').StateNode} StateNode
  */
 
 export class CompoundState extends AtomicState {
@@ -50,9 +25,7 @@ export class CompoundState extends AtomicState {
 	#states = new Map();
 
 	/**
-	 * @param {Partial<CompoundStateConfig> & {
-	 *    states: CompoundStateConfig['states'],
-	 * }} [stateConfig]
+	 * @param {import('./types').CompoundStateConfig} [stateConfig]
 	 */
 	constructor(stateConfig) {
 		super(stateConfig);
@@ -87,20 +60,20 @@ export class CompoundState extends AtomicState {
 		return this.#state;
 	}
 	/**
-	 * @returns {{
-     *     name: string,
-	 *     states: Record<string, ReturnType<StateNode['toJSON']>>
-	 * }}
+	 * @returns {import('./types').CompoundStateJSON}
 	 */
 	toJSON() {
-		const json = super.toJSON();
-		/** @type {Record<string, ReturnType<StateNode['toJSON']>>} */
+		/** @type {Record<string, import('./types').StateNodeJSON>} */
 		const states = {};
 		for (const [name, state] of this.#states) {
 			states[name] = state.toJSON();
 		}
 
-		return { ...json, states };
+		return {
+			// AtomicStateJSON
+			...super.toJSON(),
+			states,
+		};
 	}
 	[INITIALIZE]() {
 		this.#state = this.#initial;

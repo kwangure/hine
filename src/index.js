@@ -49,5 +49,12 @@ export function condition(config) {
 	return new Condition(config);
 }
 
+export const h = {
+	action,
+	atomic,
+	compound,
+	condition,
+};
+
 export { Action, AtomicState, CompoundState, Condition };
 export { activePath } from './utils.js';

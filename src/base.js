@@ -8,12 +8,15 @@ import {
 	CONDITION_NOTIFY_AFTER,
 	CONDITION_NOTIFY_BEFORE,
 	CONDITION_OWNER,
+	EXECUTE_HANDLERS,
+	HANDLER_QUEUE,
 	INITIALIZE,
+	QUEUE_ALWAYS_HANDLERS,
+	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
 	RUN_ALWAYS_HANDLERS,
 	RUN_ENTRY_HANDLERS,
 	RUN_EXIT_HANDLERS,
-	RUN_ON_HANDLERS,
 	STATE_ACTION,
 	STATE_ACTION_CONFIGS,
 	STATE_ACTIONS,
@@ -72,6 +75,9 @@ export class BaseState {
 	#onConfig;
 	/** @type {CompoundState | null} */
 	#parent = null;
+
+	/** @type {Handler[]} */
+	[HANDLER_QUEUE] = [];
 	/** @type {Set<(arg: BaseState) => any>} */
 	[STATE_SUBSCRIBERS] = new Set();
 
@@ -195,7 +201,9 @@ export class BaseState {
 		if (!this.#initialized) {
 			throw Error('Attempted dispatch before resolving state');
 		}
-		this[RUN_ON_HANDLERS](event, value);
+		this[QUEUE_ON_HANDLERS](event);
+		this[QUEUE_ALWAYS_HANDLERS]();
+		this[EXECUTE_HANDLERS](value);
 		this[CALL_SUBSCRIBERS]();
 	}
 	/**
@@ -228,8 +236,30 @@ export class BaseState {
 		}
 		this.#parent?.[CALL_SUBSCRIBERS]();
 	}
+	/**
+	 * @param {any} value
+	 */
+	[EXECUTE_HANDLERS](value) {
+		for (const { condition, handler } of this[HANDLER_QUEUE]) {
+			if (!condition.run(value)) continue;
+			const transitioned = handler(value);
+			if (transitioned) break;
+		}
+		this[HANDLER_QUEUE].length = 0;
+	}
 	[INITIALIZE]() {
 		this.#initialized = true;
+	}
+	[QUEUE_ALWAYS_HANDLERS]() {
+		this[HANDLER_QUEUE].push(...this.#always);
+	}
+	/**
+	 * @param {string} event
+	 */
+	[QUEUE_ON_HANDLERS](event) {
+		if (Object.hasOwn(this.#on, event)) {
+			this[HANDLER_QUEUE].push(...this.#on[event]);
+		}
 	}
 	[RESOLVE_CONFIG]() {
 		for (const handler of this.#alwaysConfig) {
@@ -281,18 +311,6 @@ export class BaseState {
 	/** @param {any[]} value */
 	[RUN_EXIT_HANDLERS](value) {
 		this.#executeHandlers(this.#exit, value);
-	}
-	/**
-	 * @param {string} event
-	 * @param {any[]} value
-	 */
-	[RUN_ON_HANDLERS](event, value) {
-		const handlers = [];
-		if (Object.hasOwn(this.#on, event)) {
-			handlers.push(...this.#on[event]);
-		}
-		handlers.push(...this.#always);
-		return this.#executeHandlers(handlers, value);
 	}
 	/**
 	 * @returns {{

@@ -22,10 +22,13 @@ export const STATE_PARENT = Symbol('state-parent');
 export const STATE_STATES = Symbol('state-states');
 export const STATE_SUBSCRIBERS = Symbol('state-subscribers');
 
+export const EXECUTE_HANDLERS = Symbol('execute-handlers');
+export const HANDLER_QUEUE = Symbol('handler-queue');
 export const INITIALIZE = Symbol('initialize');
 export const RESOLVE_CONFIG = Symbol('resolve-config');
 
 export const RUN_ALWAYS_HANDLERS = Symbol('run-always');
 export const RUN_ENTRY_HANDLERS = Symbol('run-entry');
 export const RUN_EXIT_HANDLERS = Symbol('run-exit');
-export const RUN_ON_HANDLERS = Symbol('run-on');
+export const QUEUE_ALWAYS_HANDLERS = Symbol('queue-always');
+export const QUEUE_ON_HANDLERS = Symbol('queue-on');

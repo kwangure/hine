@@ -1,10 +1,12 @@
 import {
+	EXECUTE_HANDLERS,
 	INITIALIZE,
+	QUEUE_ALWAYS_HANDLERS,
+	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
 	RUN_ALWAYS_HANDLERS,
 	RUN_ENTRY_HANDLERS,
 	RUN_EXIT_HANDLERS,
-	RUN_ON_HANDLERS,
 	STATE_ACTIVE,
 	STATE_NAME,
 	STATE_PARENT,
@@ -84,10 +86,28 @@ export class CompoundState extends BaseState {
 			type: 'compound',
 		};
 	}
+	/**
+	 * @param {any} value
+	 */
+	[EXECUTE_HANDLERS](value) {
+		this.state?.[EXECUTE_HANDLERS](value);
+		super[EXECUTE_HANDLERS](value);
+	}
 	[INITIALIZE]() {
 		this.#state = this.#initial;
 		this.#state?.[INITIALIZE]();
 		super[INITIALIZE]();
+	}
+	[QUEUE_ALWAYS_HANDLERS]() {
+		this.#state?.[QUEUE_ALWAYS_HANDLERS]();
+		super[QUEUE_ALWAYS_HANDLERS]();
+	}
+	/**
+	 * @param {string} event
+	 */
+	[QUEUE_ON_HANDLERS](event) {
+		this.#state?.[QUEUE_ON_HANDLERS](event);
+		super[QUEUE_ON_HANDLERS](event);
 	}
 	[RESOLVE_CONFIG]() {
 		super[RESOLVE_CONFIG]();
@@ -115,14 +135,6 @@ export class CompoundState extends BaseState {
 	[RUN_EXIT_HANDLERS](value) {
 		this.#state?.[RUN_EXIT_HANDLERS](value);
 		super[RUN_EXIT_HANDLERS](value);
-	}
-	/**
-	 * @param {string} event
-	 * @param {any[]} value
-	 */
-	[RUN_ON_HANDLERS](event, value) {
-		this.#state?.[RUN_ON_HANDLERS](event, value);
-		return super[RUN_ON_HANDLERS](event, value);
 	}
 	/** @param {StateNode} value */
 	set [STATE_ACTIVE](value) {

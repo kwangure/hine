@@ -6,7 +6,6 @@ import {
 	QUEUE_ENTRY_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
-	RUN_ALWAYS_HANDLERS,
 	RUN_EXIT_HANDLERS,
 	STATE_ACTIVE,
 	STATE_NAME,
@@ -133,11 +132,7 @@ export class CompoundState extends BaseState {
 			state[RESOLVE_CONFIG]();
 		}
 	}
-	/** @param {any[]} value */
-	[RUN_ALWAYS_HANDLERS](value) {
-		super[RUN_ALWAYS_HANDLERS](value);
-		this.#state?.[RUN_ALWAYS_HANDLERS](value);
-	}
+
 	/** @param {any[]} value */
 	[RUN_EXIT_HANDLERS](value) {
 		this.#state?.[RUN_EXIT_HANDLERS](value);

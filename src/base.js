@@ -17,7 +17,6 @@ import {
 	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
-	RUN_ALWAYS_HANDLERS,
 	RUN_EXIT_HANDLERS,
 	STATE_ACTION,
 	STATE_ACTION_CONFIGS,
@@ -321,10 +320,6 @@ export class BaseState {
 				type: 'exit',
 			});
 		}
-	}
-	/** @param {any[]} value */
-	[RUN_ALWAYS_HANDLERS](value) {
-		this.#executeHandlers(this.#always, value);
 	}
 	/** @param {any[]} value */
 	[RUN_EXIT_HANDLERS](value) {

@@ -28,7 +28,6 @@ export const HANDLER_QUEUE = Symbol('handler-queue');
 export const INITIALIZE = Symbol('initialize');
 export const RESOLVE_CONFIG = Symbol('resolve-config');
 
-export const RUN_ALWAYS_HANDLERS = Symbol('run-always');
 export const RUN_EXIT_HANDLERS = Symbol('run-exit');
 export const QUEUE_ALWAYS_HANDLERS = Symbol('queue-always');
 export const QUEUE_ENTRY_HANDLERS = Symbol('queue-entry');

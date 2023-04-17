@@ -1,11 +1,12 @@
 import {
-	EXECUTE_HANDLERS,
+	EXECUTE_HANDLERS_LEAF_FIRST,
+	EXECUTE_HANDLERS_ROOT_FIRST,
 	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
+	QUEUE_ENTRY_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
 	RUN_ALWAYS_HANDLERS,
-	RUN_ENTRY_HANDLERS,
 	RUN_EXIT_HANDLERS,
 	STATE_ACTIVE,
 	STATE_NAME,
@@ -89,9 +90,16 @@ export class CompoundState extends BaseState {
 	/**
 	 * @param {any} value
 	 */
-	[EXECUTE_HANDLERS](value) {
-		this.state?.[EXECUTE_HANDLERS](value);
-		super[EXECUTE_HANDLERS](value);
+	[EXECUTE_HANDLERS_LEAF_FIRST](value) {
+		this.state?.[EXECUTE_HANDLERS_LEAF_FIRST](value);
+		super[EXECUTE_HANDLERS_LEAF_FIRST](value);
+	}
+	/**
+	 * @param {any} value
+	 */
+	[EXECUTE_HANDLERS_ROOT_FIRST](value) {
+		super[EXECUTE_HANDLERS_ROOT_FIRST](value);
+		this.state?.[EXECUTE_HANDLERS_ROOT_FIRST](value);
 	}
 	[INITIALIZE]() {
 		this.#state = this.#initial;
@@ -101,6 +109,10 @@ export class CompoundState extends BaseState {
 	[QUEUE_ALWAYS_HANDLERS]() {
 		this.#state?.[QUEUE_ALWAYS_HANDLERS]();
 		super[QUEUE_ALWAYS_HANDLERS]();
+	}
+	[QUEUE_ENTRY_HANDLERS]() {
+		super[QUEUE_ENTRY_HANDLERS]();
+		this.#state?.[QUEUE_ENTRY_HANDLERS]();
 	}
 	/**
 	 * @param {string} event
@@ -125,11 +137,6 @@ export class CompoundState extends BaseState {
 	[RUN_ALWAYS_HANDLERS](value) {
 		super[RUN_ALWAYS_HANDLERS](value);
 		this.#state?.[RUN_ALWAYS_HANDLERS](value);
-	}
-	/** @param {any[]} value */
-	[RUN_ENTRY_HANDLERS](value) {
-		super[RUN_ENTRY_HANDLERS](value);
-		this.#state?.[RUN_ENTRY_HANDLERS](value);
 	}
 	/** @param {any[]} value */
 	[RUN_EXIT_HANDLERS](value) {

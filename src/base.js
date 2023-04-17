@@ -8,14 +8,16 @@ import {
 	CONDITION_NOTIFY_AFTER,
 	CONDITION_NOTIFY_BEFORE,
 	CONDITION_OWNER,
-	EXECUTE_HANDLERS,
+	EXECUTE_HANDLERS_LEAF_FIRST,
+	EXECUTE_HANDLERS_ROOT_FIRST,
 	HANDLER_QUEUE,
 	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
+	QUEUE_ENTRY_HANDLERS,
+	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
 	RUN_ALWAYS_HANDLERS,
-	RUN_ENTRY_HANDLERS,
 	RUN_EXIT_HANDLERS,
 	STATE_ACTION,
 	STATE_ACTION_CONFIGS,
@@ -157,6 +159,7 @@ export class BaseState {
 
 			/** @param {any} value */
 			return (value) => {
+				from[HANDLER_QUEUE].length = 0;
 				// exit actions for the current state
 				from[RUN_EXIT_HANDLERS](value);
 				// transition actions for the handler
@@ -167,10 +170,12 @@ export class BaseState {
 				parent[STATE_ACTIVE] = to;
 				// set initial state from transitionTo to leaves
 				to[INITIALIZE]();
-				// entry actions for transitionTo and leaves
-				to[RUN_ENTRY_HANDLERS]([]);
-				// always actions for transitionTo and leaves
-				to[RUN_ALWAYS_HANDLERS]([]);
+
+				to[QUEUE_ENTRY_HANDLERS]();
+				to[EXECUTE_HANDLERS_ROOT_FIRST](value);
+
+				to[QUEUE_ALWAYS_HANDLERS]();
+				to[EXECUTE_HANDLERS_ROOT_FIRST](value);
 
 				return true;
 			};
@@ -203,7 +208,7 @@ export class BaseState {
 		}
 		this[QUEUE_ON_HANDLERS](event);
 		this[QUEUE_ALWAYS_HANDLERS]();
-		this[EXECUTE_HANDLERS](value);
+		this[EXECUTE_HANDLERS_LEAF_FIRST](value);
 		this[CALL_SUBSCRIBERS]();
 	}
 	/**
@@ -224,8 +229,10 @@ export class BaseState {
 			this[RESOLVE_CONFIG]();
 		}
 		this[INITIALIZE]();
-		this[RUN_ENTRY_HANDLERS]([]);
-		this[RUN_ALWAYS_HANDLERS]([]);
+		this[QUEUE_ENTRY_HANDLERS]();
+		this[EXECUTE_HANDLERS_ROOT_FIRST]();
+		this[QUEUE_ALWAYS_HANDLERS]();
+		this[EXECUTE_HANDLERS_ROOT_FIRST]();
 		this[CALL_SUBSCRIBERS]();
 
 		return this;
@@ -237,13 +244,22 @@ export class BaseState {
 		this.#parent?.[CALL_SUBSCRIBERS]();
 	}
 	/**
-	 * @param {any} value
+	 * @param {any} [value]
 	 */
-	[EXECUTE_HANDLERS](value) {
+	[EXECUTE_HANDLERS_LEAF_FIRST](value) {
 		for (const { condition, handler } of this[HANDLER_QUEUE]) {
 			if (!condition.run(value)) continue;
-			const transitioned = handler(value);
-			if (transitioned) break;
+			handler(value);
+		}
+		this[HANDLER_QUEUE].length = 0;
+	}
+	/**
+	 * @param {any} [value]
+	 */
+	[EXECUTE_HANDLERS_ROOT_FIRST](value) {
+		for (const { condition, handler } of this[HANDLER_QUEUE]) {
+			if (!condition.run(value)) continue;
+			handler(value);
 		}
 		this[HANDLER_QUEUE].length = 0;
 	}
@@ -252,6 +268,12 @@ export class BaseState {
 	}
 	[QUEUE_ALWAYS_HANDLERS]() {
 		this[HANDLER_QUEUE].push(...this.#always);
+	}
+	[QUEUE_ENTRY_HANDLERS]() {
+		this[HANDLER_QUEUE].push(...this.#entry);
+	}
+	[QUEUE_EXIT_HANDLERS]() {
+		this[HANDLER_QUEUE].push(...this.#exit);
 	}
 	/**
 	 * @param {string} event
@@ -303,10 +325,6 @@ export class BaseState {
 	/** @param {any[]} value */
 	[RUN_ALWAYS_HANDLERS](value) {
 		this.#executeHandlers(this.#always, value);
-	}
-	/** @param {any[]} value */
-	[RUN_ENTRY_HANDLERS](value) {
-		this.#executeHandlers(this.#entry, value);
 	}
 	/** @param {any[]} value */
 	[RUN_EXIT_HANDLERS](value) {

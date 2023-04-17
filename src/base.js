@@ -17,7 +17,6 @@ import {
 	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
-	RUN_EXIT_HANDLERS,
 	STATE_ACTION,
 	STATE_ACTION_CONFIGS,
 	STATE_ACTIONS,
@@ -97,17 +96,6 @@ export class BaseState {
 		this.#onConfig = stateConfig?.on || {};
 	}
 	/**
-	 * @param {Handler[]} handlers
-	 * @param {any} value
-	 */
-	#executeHandlers(handlers, value) {
-		for (const { condition, handler } of handlers) {
-			if (!condition.run(value)) continue;
-			const transitioned = handler(value);
-			if (transitioned) return;
-		}
-	}
-	/**
 	 * @param {Partial<HandlerConfig>} handler
 	 */
 	#resolveActions(handler) {
@@ -160,7 +148,8 @@ export class BaseState {
 			return (value) => {
 				from[HANDLER_QUEUE].length = 0;
 				// exit actions for the current state
-				from[RUN_EXIT_HANDLERS](value);
+				from[QUEUE_EXIT_HANDLERS]();
+				from[EXECUTE_HANDLERS_LEAF_FIRST](value);
 				// transition actions for the handler
 				for (const action of actions) {
 					action.run(value);
@@ -320,10 +309,6 @@ export class BaseState {
 				type: 'exit',
 			});
 		}
-	}
-	/** @param {any[]} value */
-	[RUN_EXIT_HANDLERS](value) {
-		this.#executeHandlers(this.#exit, value);
 	}
 	/**
 	 * @returns {{

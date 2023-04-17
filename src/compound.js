@@ -4,9 +4,9 @@ import {
 	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
+	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
-	RUN_EXIT_HANDLERS,
 	STATE_ACTIVE,
 	STATE_NAME,
 	STATE_PARENT,
@@ -113,6 +113,10 @@ export class CompoundState extends BaseState {
 		super[QUEUE_ENTRY_HANDLERS]();
 		this.#state?.[QUEUE_ENTRY_HANDLERS]();
 	}
+	[QUEUE_EXIT_HANDLERS]() {
+		this.#state?.[QUEUE_EXIT_HANDLERS]();
+		super[QUEUE_EXIT_HANDLERS]();
+	}
 	/**
 	 * @param {string} event
 	 */
@@ -131,12 +135,6 @@ export class CompoundState extends BaseState {
 		for (const state of this.#states.values()) {
 			state[RESOLVE_CONFIG]();
 		}
-	}
-
-	/** @param {any[]} value */
-	[RUN_EXIT_HANDLERS](value) {
-		this.#state?.[RUN_EXIT_HANDLERS](value);
-		super[RUN_EXIT_HANDLERS](value);
 	}
 	/** @param {StateNode} value */
 	set [STATE_ACTIVE](value) {

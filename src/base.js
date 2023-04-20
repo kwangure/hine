@@ -68,6 +68,7 @@ export class BaseState {
 	#exit = [];
 	#exitConfig;
 	#initialized = false;
+	#isStepping = false;
 	#name = '';
 	/** @type {Record<string, DispatchHandler[]>} */
 	#on = {};
@@ -194,6 +195,9 @@ export class BaseState {
 		if (!this.#initialized) {
 			throw Error('Attempted dispatch before resolving state');
 		}
+		if (this.#isStepping) {
+			throw Error('Attempted to dispatch while stepping is in progress.');
+		}
 		this[QUEUE_ON_HANDLERS](event);
 		this[QUEUE_ALWAYS_HANDLERS]();
 		this[EXECUTE_HANDLERS_LEAF_FIRST](value);
@@ -224,6 +228,41 @@ export class BaseState {
 		this[CALL_SUBSCRIBERS]();
 
 		return this;
+	}
+	/**
+	 * @param {string} event
+	 * @param {any} [eventValue]
+	 */
+	* step(event, eventValue) {
+		if (!this.#initialized) {
+			throw Error('Attempted to step before calling \'state.start()\'.');
+		}
+		if (this.#isStepping) {
+			throw Error('Stepping is aleady in progress.');
+		}
+
+		this.#isStepping = true;
+		this[QUEUE_ON_HANDLERS](event);
+		this[QUEUE_ALWAYS_HANDLERS]();
+
+		const iterator = this[HANDLER_QUEUE][Symbol.iterator]();
+		/** @type {boolean | undefined} */
+		let queueDone = false;
+		/** @type {Handler} */
+		let queueNext;
+
+		({ value: queueNext, done: queueDone } = iterator.next());
+		while (!queueDone) {
+			const { condition, handler } = queueNext;
+			if (condition.run(eventValue)) {
+				handler(eventValue);
+			}
+			({ value: queueNext, done: queueDone } = iterator.next());
+			yield this;
+		}
+		this.#isStepping = false;
+		this[HANDLER_QUEUE].length = 0;
+		this[CALL_SUBSCRIBERS]();
 	}
 	[CALL_SUBSCRIBERS]() {
 		for (const subscriber of this[STATE_SUBSCRIBERS]) {

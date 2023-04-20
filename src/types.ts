@@ -20,7 +20,7 @@ export type ConditionConfig<T extends BaseState> = {
 
 type BaseHandler<T extends string> = {
 	type: T;
-	handler: (args: any[]) => boolean;
+	handler: (args: any[]) => void;
 	condition: Condition;
 }
 

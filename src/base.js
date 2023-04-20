@@ -165,8 +165,6 @@ export class BaseState {
 
 				to[QUEUE_ALWAYS_HANDLERS]();
 				to[EXECUTE_HANDLERS_ROOT_FIRST](value);
-
-				return true;
 			};
 		}
 
@@ -175,7 +173,6 @@ export class BaseState {
 			for (const action of actions) {
 				action.run(value);
 			}
-			return false;
 		};
 	}
 	get action() {

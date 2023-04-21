@@ -39,7 +39,6 @@ import { Condition } from './condition.js';
  * @typedef {import('./types.js').DispatchHandlerConfig} DispatchHandlerConfig
  * @typedef {import('./types.js').EntryHandlerConfig} EntryHandlerConfig
  * @typedef {import('./types.js').ExitHandlerConfig} ExitHandlerConfig
- * @typedef {import('./types.js').HandlerConfig} HandlerConfig
  *
  * @typedef {import('./types.js').AlwaysHandler} AlwaysHandler
  * @typedef {import('./types.js').DispatchHandler} DispatchHandler
@@ -53,14 +52,14 @@ import { Condition } from './condition.js';
  */
 
 export class BaseState {
-	/** @type {import('./action.js').Action<this> | null} */
+	/** @type {import('./action.js').Action<StateNode> | null} */
 	#action = null;
 	#actionConfig;
 	#actions;
 	/** @type {AlwaysHandler[]} */
 	#always = [];
 	#alwaysConfig;
-	/** @type {import('./condition.js').Condition<this> | null} */
+	/** @type {import('./condition.js').Condition<StateNode> | null} */
 	#condition = null;
 	#conditionConfig;
 	#conditions;
@@ -100,7 +99,7 @@ export class BaseState {
 		this.#onConfig = stateConfig?.on || {};
 	}
 	/**
-	 * @param {Partial<HandlerConfig>} handler
+	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig | EntryHandlerConfig | ExitHandlerConfig>} handler
 	 */
 	#resolveActions(handler) {
 		const actions = [];
@@ -114,13 +113,14 @@ export class BaseState {
 		return actions;
 	}
 	/**
-	 * @param {Partial<HandlerConfig>} handler
+	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig | EntryHandlerConfig | ExitHandlerConfig>} handler
 	 */
 	#resolveCondition(handler) {
 		if (handler.condition === undefined) {
 			const condition = new Condition({ run() {
 				return true;
 			} });
+			// @ts-ignore
 			condition[CONDITION_OWNER] = this;
 			return condition;
 		}
@@ -387,7 +387,7 @@ export class BaseState {
 				?? false,
 		};
 	}
-	/** @param {import('./action.js').Action<this> | null} value */
+	/** @param {import('./action.js').Action<StateNode> | null} value */
 	set [STATE_ACTION](value) {
 		this.#action = value;
 	}
@@ -410,6 +410,7 @@ export class BaseState {
 					action[ACTION_NOTIFY_BEFORE]
 						= this[STATE_ACTION_CONFIGS].notifyBefore;
 				}
+				// @ts-ignore
 				action[ACTION_OWNER] = this;
 				actions[action.name] = action;
 			}
@@ -433,7 +434,7 @@ export class BaseState {
 				?? false,
 		};
 	}
-	/** @param {import('./condition.js').Condition<this> | null} value */
+	/** @param {import('./condition.js').Condition<StateNode> | null} value */
 	set [STATE_CONDITION](value) {
 		this.#condition = value;
 	}
@@ -456,6 +457,7 @@ export class BaseState {
 					condition[CONDITION_NOTIFY_BEFORE]
 						= this[STATE_CONDITION_CONFIGS].notifyBefore;
 				}
+				// @ts-ignore
 				condition[CONDITION_OWNER] = this;
 				conditions[condition.name] = condition;
 			}

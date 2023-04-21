@@ -2,13 +2,12 @@ import { ACTION_NAME, ACTION_NOTIFY_AFTER, ACTION_NOTIFY_BEFORE, ACTION_OWNER, C
 
 /**
  * @typedef {import('./types').StateNode} StateNode
- * @typedef {import('./base').BaseState} BaseState
  */
 
 function noop() {}
 
 /**
- * @template {BaseState} [T=BaseState]
+ * @template {StateNode} [T=StateNode]
  */
 export class Action {
 	#name = '';
@@ -64,9 +63,9 @@ export class Action {
 	set [ACTION_NAME](value) {
 		this.#name = value;
 	}
-	/** @param {StateNode | BaseState} owner */
+	/** @param {StateNode} owner */
 	set [ACTION_OWNER](owner) {
-		this.#ownerState = /** @type {StateNode} */(owner);
+		this.#ownerState = owner;
 	}
 }
 

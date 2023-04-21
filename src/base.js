@@ -8,7 +8,6 @@ import {
 	CONDITION_NOTIFY_AFTER,
 	CONDITION_NOTIFY_BEFORE,
 	CONDITION_OWNER,
-	EXECUTE_HANDLERS,
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
 	HANDLER_QUEUE,
@@ -18,12 +17,9 @@ import {
 	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
-	RETURN_HANDLERS_LEAF_FIRST,
-	RETURN_HANDLERS_ROOT_FIRST,
 	STATE_ACTION,
 	STATE_ACTION_CONFIGS,
 	STATE_ACTIONS,
-	STATE_ACTIVE,
 	STATE_CONDITION,
 	STATE_CONDITION_CONFIGS,
 	STATE_CONDITIONS,
@@ -33,14 +29,13 @@ import {
 	STATE_SUBSCRIBERS,
 } from './constants.js';
 import { Condition } from './condition.js';
+import { Handler } from './handler.js';
 
 /**
  * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
  * @typedef {import('./types.js').DispatchHandlerConfig} DispatchHandlerConfig
  * @typedef {import('./types.js').EntryHandlerConfig} EntryHandlerConfig
  * @typedef {import('./types.js').ExitHandlerConfig} ExitHandlerConfig
- *
- * @typedef {import('./types.js').Handler} Handler
  *
  * @typedef {import('./compound.js').CompoundState} CompoundState
  *
@@ -133,47 +128,24 @@ export class BaseState {
 	#resolveHandler(handler) {
 		const { transitionTo } = handler;
 		const actions = this.#resolveActions(handler);
+		let to = null;
 		if (transitionTo) {
 			const parent = this.#parent;
 			if (!parent) {
 				throw Error('States without a parent cannot transition');
 			}
-			const to = parent[STATE_STATES].get(transitionTo);
+			to = parent[STATE_STATES].get(transitionTo);
 			if (!to) {
 				throw Error(`Unknown sibling state '${transitionTo}'.`);
 			}
-			const from = this;
-
-			/** @param {any} value */
-			return (value) => {
-				from[HANDLER_QUEUE].length = 0;
-				// exit actions for the current state
-				from[QUEUE_EXIT_HANDLERS]();
-				this[EXECUTE_HANDLERS](from[RETURN_HANDLERS_LEAF_FIRST]());
-
-				// transition actions for the handler
-				for (const action of actions) {
-					action.run(value);
-				}
-				// change the active nested state for parent state
-				parent[STATE_ACTIVE] = to;
-				// set initial state from transitionTo to leaves
-				to[INITIALIZE]();
-
-				to[QUEUE_ENTRY_HANDLERS]();
-				this[EXECUTE_HANDLERS](to[RETURN_HANDLERS_ROOT_FIRST]());
-
-				to[QUEUE_ALWAYS_HANDLERS]();
-				this[EXECUTE_HANDLERS](to[RETURN_HANDLERS_ROOT_FIRST]());
-			};
 		}
 
-		/** @param {any} value */
-		return (value) => {
-			for (const action of actions) {
-				action.run(value);
-			}
-		};
+		return new Handler({
+			actions,
+			condition: this.#resolveCondition(handler),
+			ownerState: this,
+			transitionTo: to,
+		});
 	}
 	get action() {
 		return this.#action;
@@ -220,9 +192,9 @@ export class BaseState {
 		}
 		this[INITIALIZE]();
 		this[QUEUE_ENTRY_HANDLERS]();
-		this[EXECUTE_HANDLERS](this[RETURN_HANDLERS_ROOT_FIRST]());
+		this[EXECUTE_HANDLERS_ROOT_FIRST]();
 		this[QUEUE_ALWAYS_HANDLERS]();
-		this[EXECUTE_HANDLERS](this[RETURN_HANDLERS_ROOT_FIRST]());
+		this[EXECUTE_HANDLERS_ROOT_FIRST]();
 		this[CALL_SUBSCRIBERS]();
 
 		return this;
@@ -251,15 +223,11 @@ export class BaseState {
 
 		({ value: queueNext, done: queueDone } = iterator.next());
 		while (!queueDone) {
-			const { condition, handler } = queueNext;
-			if (condition.run(eventValue)) {
-				handler(eventValue);
-			}
+			queueNext.run(eventValue);
 			({ value: queueNext, done: queueDone } = iterator.next());
 			yield this;
 		}
 		this.#isStepping = false;
-		this[HANDLER_QUEUE].length = 0;
 		this[CALL_SUBSCRIBERS]();
 	}
 	[CALL_SUBSCRIBERS]() {
@@ -272,9 +240,9 @@ export class BaseState {
 	 * @param {any} [value]
 	 */
 	[EXECUTE_HANDLERS_LEAF_FIRST](value) {
-		for (const { condition, handler } of this[HANDLER_QUEUE]) {
-			if (!condition.run(value)) continue;
-			handler(value);
+		for (const handler of this[HANDLER_QUEUE]) {
+			const transitioned = handler.run(value);
+			if (transitioned) break;
 		}
 		this[HANDLER_QUEUE].length = 0;
 	}
@@ -282,21 +250,11 @@ export class BaseState {
 	 * @param {any} [value]
 	 */
 	[EXECUTE_HANDLERS_ROOT_FIRST](value) {
-		for (const { condition, handler } of this[HANDLER_QUEUE]) {
-			if (!condition.run(value)) continue;
-			handler(value);
+		for (const handler of this[HANDLER_QUEUE]) {
+			const transitioned = handler.run(value);
+			if (transitioned) break;
 		}
 		this[HANDLER_QUEUE].length = 0;
-	}
-	/**
-	 * @param {Handler[]} handlers
-	 * @param {any} [value]
-	 */
-	[EXECUTE_HANDLERS](handlers, value) {
-		for (const { condition, handler } of handlers) {
-			if (!condition.run(value)) continue;
-			handler(value);
-		}
 	}
 	[INITIALIZE]() {
 		this.#initialized = true;
@@ -320,48 +278,21 @@ export class BaseState {
 	}
 	[RESOLVE_CONFIG]() {
 		for (const handler of this.#alwaysConfig) {
-			this.#always.push({
-				condition: this.#resolveCondition(handler),
-				handler: this.#resolveHandler(handler),
-			});
+			this.#always.push(this.#resolveHandler(handler));
 		}
 
 		for (const [event, handlers] of Object.entries(this.#onConfig)) {
-			this.#on[event] = handlers.map((handler) => ({
-				condition: this.#resolveCondition(handler),
-				handler: this.#resolveHandler(handler),
-			}));
+			this.#on[event] = handlers
+				.map((handler) => this.#resolveHandler(handler));
 		}
 
 		for (const handler of this.#entryConfig) {
-			this.#entry.push({
-				condition: this.#resolveCondition(handler),
-				handler: this.#resolveHandler({
-					...handler,
-					transitionTo: undefined,
-				}),
-			});
+			this.#entry.push(this.#resolveHandler(handler));
 		}
 
 		for (const handler of this.#exitConfig) {
-			this.#exit.push({
-				condition: this.#resolveCondition(handler),
-				handler: this.#resolveHandler({
-					...handler,
-					transitionTo: undefined,
-				}),
-			});
+			this.#exit.push(this.#resolveHandler(handler));
 		}
-	}
-	[RETURN_HANDLERS_LEAF_FIRST]() {
-		const result = [...this[HANDLER_QUEUE]];
-		this[HANDLER_QUEUE].length = 0;
-		return result;
-	}
-	[RETURN_HANDLERS_ROOT_FIRST]() {
-		const result = [...this[HANDLER_QUEUE]];
-		this[HANDLER_QUEUE].length = 0;
-		return result;
 	}
 	/**
 	 * @returns {{

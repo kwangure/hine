@@ -3,6 +3,10 @@ export const ACTION_NOTIFY_AFTER = Symbol('action-notify-after');
 export const ACTION_NOTIFY_BEFORE = Symbol('action-notify-before');
 export const ACTION_OWNER = Symbol('action-owner');
 
+export const HANDLER_NOTIFY_AFTER = Symbol('handler-notify-after');
+export const HANDLER_NOTIFY_BEFORE = Symbol('handler-notify-before');
+export const HANDLER_OWNER = Symbol('handler-owner');
+
 export const CALL_SUBSCRIBERS = Symbol('call-subscribers');
 
 export const CONDITION_NAME = Symbol('condition-name');
@@ -22,11 +26,8 @@ export const STATE_PARENT = Symbol('state-parent');
 export const STATE_STATES = Symbol('state-states');
 export const STATE_SUBSCRIBERS = Symbol('state-subscribers');
 
-export const EXECUTE_HANDLERS = Symbol('execute-handlers-leaf');
 export const EXECUTE_HANDLERS_LEAF_FIRST = Symbol('execute-handlers-leaf');
 export const EXECUTE_HANDLERS_ROOT_FIRST = Symbol('execute-handlers-root');
-export const RETURN_HANDLERS_LEAF_FIRST = Symbol('return-handlers-leaf');
-export const RETURN_HANDLERS_ROOT_FIRST = Symbol('return-handlers-root');
 export const HANDLER_QUEUE = Symbol('handler-queue');
 export const INITIALIZE = Symbol('initialize');
 export const RESOLVE_CONFIG = Symbol('resolve-config');

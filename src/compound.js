@@ -7,8 +7,6 @@ import {
 	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
-	RETURN_HANDLERS_LEAF_FIRST,
-	RETURN_HANDLERS_ROOT_FIRST,
 	STATE_ACTIVE,
 	STATE_NAME,
 	STATE_PARENT,
@@ -137,22 +135,6 @@ export class CompoundState extends BaseState {
 		for (const state of this.#states.values()) {
 			state[RESOLVE_CONFIG]();
 		}
-	}
-	/**
-	 * @returns {import('./types').Handler[]}
-	 */
-	[RETURN_HANDLERS_LEAF_FIRST]() {
-		if (!this.state) throw Error('State not initialized');
-		return this.state[RETURN_HANDLERS_LEAF_FIRST]()
-			.concat(super[RETURN_HANDLERS_LEAF_FIRST]());
-	}
-	/**
-	 * @returns {import('./types').Handler[]}
-	 */
-	[RETURN_HANDLERS_ROOT_FIRST]() {
-		if (!this.state) throw Error('State not initialized');
-		return super[RETURN_HANDLERS_ROOT_FIRST]()
-			.concat(this.state[RETURN_HANDLERS_ROOT_FIRST]());
 	}
 	/** @param {StateNode} value */
 	set [STATE_ACTIVE](value) {

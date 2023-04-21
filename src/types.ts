@@ -1,5 +1,6 @@
 import type { Action } from './action.js';
 import { AtomicState } from './atomic';
+import type { BaseState } from './handler.js';
 import type { CompoundState } from './compound';
 import type { Condition } from './condition.js';
 
@@ -17,9 +18,13 @@ export type ConditionConfig<T extends StateNode> = {
 	run: (this: T, arg: any) => boolean;
 }
 
-export type Handler = {
-	handler: (args: any[]) => void;
+export type HandlerConfig<T extends StateNode> = {
+	actions: Action[];
 	condition: Condition;
+	notifyAfter?: boolean;
+	notifyBefore?: boolean;
+	ownerState: T | BaseState;
+	transitionTo: T | null;
 }
 
 export type AlwaysHandlerConfig = {

@@ -40,10 +40,6 @@ import { Condition } from './condition.js';
  * @typedef {import('./types.js').EntryHandlerConfig} EntryHandlerConfig
  * @typedef {import('./types.js').ExitHandlerConfig} ExitHandlerConfig
  *
- * @typedef {import('./types.js').AlwaysHandler} AlwaysHandler
- * @typedef {import('./types.js').DispatchHandler} DispatchHandler
- * @typedef {import('./types.js').EntryHandler} EntryHandler
- * @typedef {import('./types.js').ExitHandler} ExitHandler
  * @typedef {import('./types.js').Handler} Handler
  *
  * @typedef {import('./compound.js').CompoundState} CompoundState
@@ -56,23 +52,23 @@ export class BaseState {
 	#action = null;
 	#actionConfig;
 	#actions;
-	/** @type {AlwaysHandler[]} */
+	/** @type {Handler[]} */
 	#always = [];
 	#alwaysConfig;
 	/** @type {import('./condition.js').Condition<StateNode> | null} */
 	#condition = null;
 	#conditionConfig;
 	#conditions;
-	/** @type {EntryHandler[]} */
+	/** @type {Handler[]} */
 	#entry = [];
 	#entryConfig;
-	/** @type {ExitHandler[]} */
+	/** @type {Handler[]} */
 	#exit = [];
 	#exitConfig;
 	#initialized = false;
 	#isStepping = false;
 	#name = '';
-	/** @type {Record<string, DispatchHandler[]>} */
+	/** @type {Record<string, Handler[]>} */
 	#on = {};
 
 	#onConfig;
@@ -327,7 +323,6 @@ export class BaseState {
 			this.#always.push({
 				condition: this.#resolveCondition(handler),
 				handler: this.#resolveHandler(handler),
-				type: 'always',
 			});
 		}
 
@@ -335,7 +330,6 @@ export class BaseState {
 			this.#on[event] = handlers.map((handler) => ({
 				condition: this.#resolveCondition(handler),
 				handler: this.#resolveHandler(handler),
-				type: 'dispatch',
 			}));
 		}
 
@@ -346,7 +340,6 @@ export class BaseState {
 					...handler,
 					transitionTo: undefined,
 				}),
-				type: 'entry',
 			});
 		}
 
@@ -357,7 +350,6 @@ export class BaseState {
 					...handler,
 					transitionTo: undefined,
 				}),
-				type: 'exit',
 			});
 		}
 	}

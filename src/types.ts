@@ -11,28 +11,16 @@ export type ActionConfig<T extends StateNode> = {
 }
 
 export type ConditionConfig<T extends StateNode> = {
-   name?: string,
-   notifyAfter?: boolean;
-   notifyBefore?: boolean;
-   run: (this: T, arg: any) => boolean;
+	name?: string,
+	notifyAfter?: boolean;
+	notifyBefore?: boolean;
+	run: (this: T, arg: any) => boolean;
 }
 
-type BaseHandler<T extends string> = {
-	type: T;
+export type Handler = {
 	handler: (args: any[]) => void;
 	condition: Condition;
 }
-
-export type AlwaysHandler = BaseHandler<'always'>;
-export type DispatchHandler = BaseHandler<'dispatch'>;
-export type EntryHandler = BaseHandler<'entry'>;
-export type ExitHandler = BaseHandler<'exit'>;
-export type InitHandler = BaseHandler<'init'>;
-export type Handler = AlwaysHandler
- | DispatchHandler
- | EntryHandler
- | ExitHandler
- | InitHandler;
 
 export type AlwaysHandlerConfig = {
 	actions?: string[];
@@ -85,4 +73,4 @@ export type CompoundStateJSON = {
 
 export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
 
-export {};
+export { };

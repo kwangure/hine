@@ -8,6 +8,7 @@ import {
 	CONDITION_NOTIFY_AFTER,
 	CONDITION_NOTIFY_BEFORE,
 	CONDITION_OWNER,
+	EXECUTE_HANDLERS,
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
 	HANDLER_QUEUE,
@@ -17,6 +18,8 @@ import {
 	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
+	RETURN_HANDLERS_LEAF_FIRST,
+	RETURN_HANDLERS_ROOT_FIRST,
 	STATE_ACTION,
 	STATE_ACTION_CONFIGS,
 	STATE_ACTIONS,
@@ -150,7 +153,8 @@ export class BaseState {
 				from[HANDLER_QUEUE].length = 0;
 				// exit actions for the current state
 				from[QUEUE_EXIT_HANDLERS]();
-				from[EXECUTE_HANDLERS_LEAF_FIRST](value);
+				this[EXECUTE_HANDLERS](from[RETURN_HANDLERS_LEAF_FIRST]());
+
 				// transition actions for the handler
 				for (const action of actions) {
 					action.run(value);
@@ -161,10 +165,10 @@ export class BaseState {
 				to[INITIALIZE]();
 
 				to[QUEUE_ENTRY_HANDLERS]();
-				to[EXECUTE_HANDLERS_ROOT_FIRST](value);
+				this[EXECUTE_HANDLERS](to[RETURN_HANDLERS_ROOT_FIRST]());
 
 				to[QUEUE_ALWAYS_HANDLERS]();
-				to[EXECUTE_HANDLERS_ROOT_FIRST](value);
+				this[EXECUTE_HANDLERS](to[RETURN_HANDLERS_ROOT_FIRST]());
 			};
 		}
 
@@ -198,6 +202,7 @@ export class BaseState {
 		this[QUEUE_ON_HANDLERS](event);
 		this[QUEUE_ALWAYS_HANDLERS]();
 		this[EXECUTE_HANDLERS_LEAF_FIRST](value);
+
 		this[CALL_SUBSCRIBERS]();
 	}
 	/**
@@ -219,9 +224,9 @@ export class BaseState {
 		}
 		this[INITIALIZE]();
 		this[QUEUE_ENTRY_HANDLERS]();
-		this[EXECUTE_HANDLERS_ROOT_FIRST]();
+		this[EXECUTE_HANDLERS](this[RETURN_HANDLERS_ROOT_FIRST]());
 		this[QUEUE_ALWAYS_HANDLERS]();
-		this[EXECUTE_HANDLERS_ROOT_FIRST]();
+		this[EXECUTE_HANDLERS](this[RETURN_HANDLERS_ROOT_FIRST]());
 		this[CALL_SUBSCRIBERS]();
 
 		return this;
@@ -287,6 +292,16 @@ export class BaseState {
 		}
 		this[HANDLER_QUEUE].length = 0;
 	}
+	/**
+	 * @param {Handler[]} handlers
+	 * @param {any} [value]
+	 */
+	[EXECUTE_HANDLERS](handlers, value) {
+		for (const { condition, handler } of handlers) {
+			if (!condition.run(value)) continue;
+			handler(value);
+		}
+	}
 	[INITIALIZE]() {
 		this.#initialized = true;
 	}
@@ -345,6 +360,16 @@ export class BaseState {
 				type: 'exit',
 			});
 		}
+	}
+	[RETURN_HANDLERS_LEAF_FIRST]() {
+		const result = [...this[HANDLER_QUEUE]];
+		this[HANDLER_QUEUE].length = 0;
+		return result;
+	}
+	[RETURN_HANDLERS_ROOT_FIRST]() {
+		const result = [...this[HANDLER_QUEUE]];
+		this[HANDLER_QUEUE].length = 0;
+		return result;
 	}
 	/**
 	 * @returns {{

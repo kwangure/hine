@@ -22,8 +22,11 @@ export const STATE_PARENT = Symbol('state-parent');
 export const STATE_STATES = Symbol('state-states');
 export const STATE_SUBSCRIBERS = Symbol('state-subscribers');
 
+export const EXECUTE_HANDLERS = Symbol('execute-handlers-leaf');
 export const EXECUTE_HANDLERS_LEAF_FIRST = Symbol('execute-handlers-leaf');
 export const EXECUTE_HANDLERS_ROOT_FIRST = Symbol('execute-handlers-root');
+export const RETURN_HANDLERS_LEAF_FIRST = Symbol('return-handlers-leaf');
+export const RETURN_HANDLERS_ROOT_FIRST = Symbol('return-handlers-root');
 export const HANDLER_QUEUE = Symbol('handler-queue');
 export const INITIALIZE = Symbol('initialize');
 export const RESOLVE_CONFIG = Symbol('resolve-config');

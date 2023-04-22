@@ -1,39 +1,9 @@
-import { Action, AtomicState } from 'src';
+import { Action, AtomicState, Condition } from 'src';
 import { describe, expect, it } from 'vitest';
+import { Handler } from '../../src/handler.js';
+import { zip } from 'src/utils/iterator';
 
 describe('step', () => {
-	it('steps through dispatched function', () => {
-		const state = new AtomicState({
-			always: [{
-				actions: ['action'],
-			}],
-			actions: {
-				action: new Action({
-					run() {},
-				}),
-			},
-			on: {
-				event: [{
-					actions: ['action'],
-				}],
-			},
-		}).start();
-
-		const eventIterator = state.step('event');
-		let value;
-		let done;
-		({ value, done } = eventIterator.next());
-		expect(value).toBe(state);
-		expect(done).toBe(false);
-
-		({ value, done } = eventIterator.next());
-		expect(value).toBe(state);
-		expect(done).toBe(false);
-
-		({ value, done } = eventIterator.next());
-		expect(value).toBe(undefined);
-		expect(done).toBe(true);
-	});
 	it('call subscribers at the end', () => {
 		const state = new AtomicState({
 			always: [{
@@ -56,39 +26,52 @@ describe('step', () => {
 		expect(count).toBe(1);
 
 		const eventIterator = state.step('event');
-		eventIterator.next();
-		expect(count).toBe(1);
+		// consume the iterator yield values
+		// eslint-disable-next-line no-unused-vars
+		for (const _item of eventIterator) {
+			expect(count).toBe(1);
+		}
 
-		eventIterator.next();
-		expect(count).toBe(1);
-
+		// consume the iterator return value
 		eventIterator.next();
 		expect(count).toBe(2);
 	});
 	it('respects iterator protocol', () => {
+		const action = new Action({
+			run() {},
+		});
+		const condition = new Condition({
+			run: () => true,
+		});
 		const state = new AtomicState({
 			always: [{
 				actions: ['action'],
 			}],
-			actions: {
-				action: new Action({
-					run() {},
-				}),
-			},
+			actions: { action },
+			conditions: { condition },
 			on: {
 				event: [{
+					condition: 'condition',
 					actions: ['action'],
 				}],
 			},
 		}).start();
 
+		const expected = [Handler, condition, action, Handler, action];
+		const expectedIterator = expected[Symbol.iterator]();
 		const eventIterator = state.step('event');
-		let count = 0;
-		for (const value of eventIterator) {
-			expect(value).toBe(state);
-			count++;
+		for (const [expected, actual] of zip(expectedIterator, eventIterator)) {
+			switch (typeof expected) {
+				case 'object':
+					expect(actual).toBe(expected);
+					break;
+				case 'function':
+					expect(actual).toBeInstanceOf(expected);
+					break;
+				default:
+					throw Error('Not implemented.');
+			}
 		}
-		expect(count).toBe(2);
 	});
 	it('throws if state is not initialized', () => {
 		const state = new AtomicState({

@@ -10,6 +10,7 @@ import {
 	CONDITION_OWNER,
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
+	FILTER_HANDLERS,
 	HANDLER_QUEUE,
 	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
@@ -28,7 +29,6 @@ import {
 	STATE_STATES,
 	STATE_SUBSCRIBERS,
 } from './constants.js';
-import { Condition } from './condition.js';
 import { Handler } from './handler.js';
 
 /**
@@ -107,19 +107,13 @@ export class BaseState {
 	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig | EntryHandlerConfig | ExitHandlerConfig>} handler
 	 */
 	#resolveCondition(handler) {
-		if (handler.condition === undefined) {
-			const condition = new Condition({ run() {
-				return true;
-			} });
-			// @ts-ignore
-			condition[CONDITION_OWNER] = this;
-			return condition;
-		}
+		if (handler.condition === undefined) return null;
 
 		const condition = this[STATE_CONDITIONS][handler.condition];
 		if (!condition) {
 			throw Error(`State references unknown condition '${handler.condition}'.`);
 		}
+
 		return condition;
 	}
 	/**
@@ -215,17 +209,30 @@ export class BaseState {
 		this[QUEUE_ON_HANDLERS](event);
 		this[QUEUE_ALWAYS_HANDLERS]();
 
-		const iterator = this[HANDLER_QUEUE][Symbol.iterator]();
-		/** @type {boolean | undefined} */
-		let queueDone = false;
-		/** @type {Handler} */
-		let queueNext;
+		const filtered = this[FILTER_HANDLERS]().map(([handler, runner]) => {
+			switch (runner) {
+				case 'runActions':
+					return /** @type {const} */([handler, 'stepActions']);
+				case 'runTransition':
+					return /** @type {const} */([handler, 'stepTransition']);
+				default:
+					throw Error('Because typescript.');
+			}
+		});
 
-		({ value: queueNext, done: queueDone } = iterator.next());
+		const iterator = filtered[Symbol.iterator]();
+		const first = iterator.next();
+		let queueDone = first.done;
+		/** @type {typeof filtered[0]} */
+		let queueNext = first.value;
 		while (!queueDone) {
-			queueNext.run(eventValue);
+			const [handler, runner] = queueNext;
+			yield handler;
+			if (handler.condition) {
+				yield handler.condition;
+			}
+			yield* handler[runner](eventValue);
 			({ value: queueNext, done: queueDone } = iterator.next());
-			yield this;
 		}
 		this.#isStepping = false;
 		this[CALL_SUBSCRIBERS]();
@@ -240,21 +247,35 @@ export class BaseState {
 	 * @param {any} [value]
 	 */
 	[EXECUTE_HANDLERS_LEAF_FIRST](value) {
-		for (const handler of this[HANDLER_QUEUE]) {
-			const transitioned = handler.run(value);
-			if (transitioned) break;
+		for (const [handler, runner] of this[FILTER_HANDLERS]()) {
+			handler[runner](value);
 		}
-		this[HANDLER_QUEUE].length = 0;
 	}
 	/**
 	 * @param {any} [value]
 	 */
 	[EXECUTE_HANDLERS_ROOT_FIRST](value) {
+		for (const [handler, runner] of this[FILTER_HANDLERS]()) {
+			handler[runner](value);
+		}
+	}
+	/**
+	 * @param {any} [value]
+	 */
+	[FILTER_HANDLERS](value) {
+		const queue = [];
 		for (const handler of this[HANDLER_QUEUE]) {
-			const transitioned = handler.run(value);
-			if (transitioned) break;
+			if (handler.condition && !handler.condition.run(value)) continue;
+			if (handler.transitionTo) {
+				queue.push(/** @type {const} */([handler, 'runTransition']));
+				// Handlers after the first transition are ignored
+				break;
+			} else {
+				queue.push(/** @type {const} */([handler, 'runActions']));
+			}
 		}
 		this[HANDLER_QUEUE].length = 0;
+		return queue;
 	}
 	[INITIALIZE]() {
 		this.#initialized = true;
@@ -357,12 +378,14 @@ export class BaseState {
 				?? false,
 		};
 	}
-	/** @param {import('./condition.js').Condition<StateNode> | null} value */
+	/**
+	 * @param {import('./condition.js').Condition<StateNode> | null} value
+	 */
 	set [STATE_CONDITION](value) {
 		this.#condition = value;
 	}
 	/**
-	 * @returns {Record<string, Condition>}
+	 * @returns {Record<string, import('./condition').Condition>}
 	 */
 	get [STATE_CONDITIONS]() {
 		const conditions = this.#parent?.[STATE_CONDITIONS] || {};

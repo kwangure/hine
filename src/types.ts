@@ -20,7 +20,7 @@ export type ConditionConfig<T extends StateNode> = {
 
 export type HandlerConfig<T extends StateNode> = {
 	actions: Action[];
-	condition: Condition;
+	condition: Condition | null;
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
 	ownerState: T | BaseState;

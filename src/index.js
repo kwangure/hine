@@ -57,4 +57,4 @@ export const h = {
 };
 
 export { Action, AtomicState, CompoundState, Condition };
-export { activePath } from './utils.js';
+export { activePath } from './utils/state.js';

@@ -1,8 +1,8 @@
-import { CompoundState } from './compound.js';
+import { CompoundState } from '../compound.js';
 
 /**
  * Returns the active path of a state
- * @param {import('./types').StateNode | null} state
+ * @param {import('../types.js').StateNode | null} state
  * @returns {string}
  */
 export function activePath(state) {

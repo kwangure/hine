@@ -1,5 +1,5 @@
+import { STATE_SUBSCRIBERS, TO_JSON } from './constants.js';
 import { BaseState } from './base.js';
-import { STATE_SUBSCRIBERS } from './constants.js';
 
 export class AtomicState extends BaseState {
 	#type = /** @type {const} */('atomic');
@@ -11,13 +11,11 @@ export class AtomicState extends BaseState {
 			this[STATE_SUBSCRIBERS].delete(/** @type {(arg: BaseState) => any} */(fn));
 		};
 	}
-	/**
-	 * @returns {import('./types').AtomicStateJSON}
-	 */
 	toJSON() {
+		const baseJSON = super[TO_JSON]();
 		return {
-			name: this.name,
 			type: this.#type,
+			...baseJSON,
 		};
 	}
 	get type() {

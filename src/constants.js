@@ -32,6 +32,7 @@ export const FILTER_HANDLERS = Symbol('filter-handlers');
 export const HANDLER_QUEUE = Symbol('handler-queue');
 export const INITIALIZE = Symbol('initialize');
 export const RESOLVE_CONFIG = Symbol('resolve-config');
+export const TO_JSON = Symbol('to-json');
 
 export const QUEUE_ALWAYS_HANDLERS = Symbol('queue-always');
 export const QUEUE_ENTRY_HANDLERS = Symbol('queue-entry');

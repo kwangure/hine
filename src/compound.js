@@ -12,6 +12,7 @@ import {
 	STATE_PARENT,
 	STATE_STATES,
 	STATE_SUBSCRIBERS,
+	TO_JSON,
 } from './constants.js';
 import { BaseState } from './base.js';
 
@@ -70,20 +71,18 @@ export class CompoundState extends BaseState {
 			this[STATE_SUBSCRIBERS].delete(/** @type {(arg: BaseState) => any} */(fn));
 		};
 	}
-	/**
-	 * @returns {import('./types').CompoundStateJSON}
-	 */
 	toJSON() {
 		/** @type {Record<string, import('./types').StateNodeJSON>} */
 		const states = {};
 		for (const [name, state] of this.#states) {
 			states[name] = state.toJSON();
 		}
+		const baseJSON = super[TO_JSON]();
 
 		return {
-			name: this.name,
-			states,
 			type: this.#type,
+			...baseJSON,
+			states,
 		};
 	}
 	get type() {

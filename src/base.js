@@ -28,6 +28,7 @@ import {
 	STATE_PARENT,
 	STATE_STATES,
 	STATE_SUBSCRIBERS,
+	TO_JSON,
 } from './constants.js';
 import { Handler } from './handler.js';
 
@@ -422,5 +423,27 @@ export class BaseState {
 	}
 	set [STATE_PARENT](value) {
 		this.#parent = value;
+	}
+	[TO_JSON]() {
+		const onEntries = Object.entries(this.#on);
+		/** @type {Record<string, import('./types.js').HandlerJSON[]>} */
+		const on = {};
+		for (const [event, handlers] of onEntries) {
+			on[event] = handlers.map((handler) => handler.toJSON());
+		}
+
+		return {
+			always: this.#always.length
+				? this.#always.map((handler) => handler.toJSON())
+				: undefined,
+			entry: this.#entry.length
+				? this.#entry.map((handler) => handler.toJSON())
+				: undefined,
+			exit: this.#exit.length
+				? this.#exit.map((handler) => handler.toJSON())
+				: undefined,
+			name: this.#name,
+			on: onEntries.length ? on : undefined,
+		};
 	}
 }

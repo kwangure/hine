@@ -2,6 +2,7 @@ import { BaseState } from './base.js';
 import { STATE_SUBSCRIBERS } from './constants.js';
 
 export class AtomicState extends BaseState {
+	#type = /** @type {const} */('atomic');
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
 		fn(this);
@@ -16,7 +17,10 @@ export class AtomicState extends BaseState {
 	toJSON() {
 		return {
 			name: this.name,
-			type: 'atomic',
+			type: this.#type,
 		};
+	}
+	get type() {
+		return this.#type;
 	}
 }

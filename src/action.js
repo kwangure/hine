@@ -15,6 +15,7 @@ export class Action {
 	#ownerState = null;
 	/** @type {(arg: any) => any} */
 	#run = noop;
+	#type = /** @type {const} */('action');
 	/** @type {boolean | undefined} */
 	[ACTION_NOTIFY_AFTER] = undefined;
 	/** @type {boolean | undefined} */
@@ -57,7 +58,11 @@ export class Action {
 	toJSON() {
 		return {
 			name: this.#name,
+			type: this.#type,
 		};
+	}
+	get type() {
+		return this.#type;
 	}
 	/** @param {string} value */
 	set [ACTION_NAME](value) {

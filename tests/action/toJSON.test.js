@@ -18,4 +18,11 @@ describe('toJSON', () => {
 		const json = action.toJSON();
 		expect(json.name).toBe('');
 	});
+	it('includes type', () => {
+		const action = new Action({
+			run() {},
+		});
+		const json = action.toJSON();
+		expect(json.type).toEqual('action');
+	});
 });

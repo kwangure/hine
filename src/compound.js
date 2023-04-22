@@ -26,6 +26,7 @@ export class CompoundState extends BaseState {
 	#state = null;
 	/** @type {Map<string, StateNode>} */
 	#states = new Map();
+	#type = /** @type {const} */('compound');
 
 	/**
 	 * @param {import('./types').CompoundStateConfig} stateConfig
@@ -82,8 +83,11 @@ export class CompoundState extends BaseState {
 		return {
 			name: this.name,
 			states,
-			type: 'compound',
+			type: this.#type,
 		};
+	}
+	get type() {
+		return this.#type;
 	}
 	/**
 	 * @param {any} value

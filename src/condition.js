@@ -17,6 +17,9 @@ export class Condition {
 	#ownerState = null;
 	/** @type {(arg: any) => boolean} */
 	#run = noop;
+	#type = /** @type {const} */('condition');
+
+
 	/** @type {boolean | undefined} */
 	[CONDITION_NOTIFY_AFTER] = undefined;
 	/** @type {boolean | undefined} */
@@ -61,7 +64,11 @@ export class Condition {
 	toJSON() {
 		return {
 			name: this.#name,
+			type: this.#type,
 		};
+	}
+	get type() {
+		return this.#type;
 	}
 	/** @param {string} value */
 	set [CONDITION_NAME](value) {

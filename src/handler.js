@@ -26,10 +26,12 @@ export class Handler {
 	#actions = [];
 	/** @type {import('./condition').Condition | null} */
 	#condition = null;
+	#name;
 	/** @type {StateNode | null} */
 	#ownerState = null;
 	/** @type {StateNode | null} */
 	#transitionTo = null;
+	#type = /** @type {const} */('handler');
 	/** @type {boolean | undefined} */
 	[HANDLER_NOTIFY_AFTER] = undefined;
 	/** @type {boolean | undefined} */
@@ -44,10 +46,11 @@ export class Handler {
 		if (typeof options.notifyBefore === 'boolean') {
 			this[HANDLER_NOTIFY_BEFORE] = options.notifyBefore;
 		}
-		this.#actions = options.actions;
-		this.#condition = options.condition;
+		this.#actions = options.actions || [];
+		this.#condition = options.condition || null;
+		this.#name = options.name;
 		this.#ownerState = /** @type {StateNode} */ (options.ownerState);
-		this.#transitionTo = options.transitionTo;
+		this.#transitionTo = options.transitionTo || null;
 	}
 	#notifyAfter() {
 		if (!this[HANDLER_NOTIFY_AFTER]) return;
@@ -59,6 +62,9 @@ export class Handler {
 	}
 	get condition() {
 		return this.#condition;
+	}
+	get name() {
+		return this.#name;
 	}
 	/**
 	 * @param {any} value
@@ -150,8 +156,20 @@ export class Handler {
 		to[EXECUTE_HANDLERS_ROOT_FIRST](value);
 		this.#notifyAfter();
 	}
+	toJSON() {
+		return {
+			type: this.#type,
+			name: this.#name,
+			transitionTo: this.#transitionTo?.name,
+			condition: this.#condition?.name,
+			actions: this.#actions.map((action) => action.name),
+		};
+	}
 	get transitionTo() {
 		return this.#transitionTo;
+	}
+	get type() {
+		return this.#type;
 	}
 }
 

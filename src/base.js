@@ -107,7 +107,7 @@ export class BaseState {
 	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig | EntryHandlerConfig | ExitHandlerConfig>} handler
 	 */
 	#resolveCondition(handler) {
-		if (handler.condition === undefined) return null;
+		if (handler.condition === undefined) return;
 
 		const condition = this[STATE_CONDITIONS][handler.condition];
 		if (!condition) {
@@ -118,11 +118,12 @@ export class BaseState {
 	}
 	/**
 	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
+	 * @param {string} name
 	 */
-	#resolveHandler(handler) {
+	#resolveHandler(handler, name) {
 		const { transitionTo } = handler;
 		const actions = this.#resolveActions(handler);
-		let to = null;
+		let to;
 		if (transitionTo) {
 			const parent = this.#parent;
 			if (!parent) {
@@ -136,6 +137,7 @@ export class BaseState {
 
 		return new Handler({
 			actions,
+			name,
 			condition: this.#resolveCondition(handler),
 			ownerState: this,
 			transitionTo: to,
@@ -298,21 +300,21 @@ export class BaseState {
 		}
 	}
 	[RESOLVE_CONFIG]() {
-		for (const handler of this.#alwaysConfig) {
-			this.#always.push(this.#resolveHandler(handler));
+		for (const [index, handler] of this.#alwaysConfig.entries()) {
+			this.#always.push(this.#resolveHandler(handler, String(index)));
 		}
 
 		for (const [event, handlers] of Object.entries(this.#onConfig)) {
 			this.#on[event] = handlers
-				.map((handler) => this.#resolveHandler(handler));
+				.map((handler, i) => this.#resolveHandler(handler, String(i)));
 		}
 
-		for (const handler of this.#entryConfig) {
-			this.#entry.push(this.#resolveHandler(handler));
+		for (const [index, handler] of this.#entryConfig.entries()) {
+			this.#entry.push(this.#resolveHandler(handler, String(index)));
 		}
 
-		for (const handler of this.#exitConfig) {
-			this.#exit.push(this.#resolveHandler(handler));
+		for (const [index, handler] of this.#exitConfig.entries()) {
+			this.#exit.push(this.#resolveHandler(handler, String(index)));
 		}
 	}
 	/**

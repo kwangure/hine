@@ -1,4 +1,5 @@
 import type { Action } from './action.js';
+import type { Handler } from './handler.js';
 import { AtomicState } from './atomic';
 import type { BaseState } from './handler.js';
 import type { CompoundState } from './compound';
@@ -19,12 +20,13 @@ export type ConditionConfig<T extends StateNode> = {
 }
 
 export type HandlerConfig<T extends StateNode> = {
-	actions: Action[];
-	condition: Condition | null;
+	actions?: Action[];
+	condition?: Condition;
+	name: string;
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
-	ownerState: T | BaseState;
-	transitionTo: T | null;
+	ownerState?: T | BaseState;
+	transitionTo?: T;
 }
 
 export type AlwaysHandlerConfig = {
@@ -77,5 +79,9 @@ export type CompoundStateJSON = {
 }
 
 export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
+
+export type ActionJSON = ReturnType<Action['toJSON']>
+export type ConditionJSON = ReturnType<Condition['toJSON']>
+export type HandlerJSON = ReturnType<Handler['toJSON']>
 
 export { };

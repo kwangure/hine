@@ -28,11 +28,10 @@ export class CompoundState extends BaseState {
 	#states = new Map();
 
 	/**
-	 * @param {import('./types').CompoundStateConfig} [stateConfig]
+	 * @param {import('./types').CompoundStateConfig} stateConfig
 	 */
 	constructor(stateConfig) {
 		super(stateConfig);
-		if (!stateConfig) return;
 
 		const missingError = Error('Compound states require at least one child');
 		if (!stateConfig.states) throw missingError;

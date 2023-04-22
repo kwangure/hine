@@ -31,7 +31,7 @@ export function atomic(config) {
 }
 
 /**
- * @param {CompoundStateConfig} [config]
+ * @param {CompoundStateConfig} config
  */
 export function compound(config) {
 	return new CompoundState(config);

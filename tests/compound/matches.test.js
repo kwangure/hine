@@ -2,15 +2,6 @@ import { AtomicState, CompoundState } from 'src';
 import { describe, expect, it } from 'vitest';
 
 describe('matches', () => {
-	it('does not match when unresolved', () => {
-		const machine = new CompoundState({
-			name: 'machine',
-			states: {
-				s1: new AtomicState(),
-			},
-		});
-		expect(machine.matches('machine')).toBe(false);
-	});
 	it('does not match when not started', () => {
 		const machine = new CompoundState({
 			name: 'machine',

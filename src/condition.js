@@ -49,6 +49,12 @@ export class Condition {
 	get name() {
 		return this.#name;
 	}
+	/** @type {string[]} */
+	get path() {
+		return this.#ownerState
+			? [...this.#ownerState.path, `?${this.#name}`]
+			: [`?${this.#name}`];
+	}
 	/**
 	 * @param {any} [value]
 	 */

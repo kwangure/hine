@@ -47,13 +47,25 @@ export class BaseState {
 	/** @type {import('./action.js').Action<StateNode> | null} */
 	#action = null;
 	#actionConfig;
+	/** Actions from the user config */
 	#actions;
+	/**
+	 * Actions from all ancestor states and the config
+	 * @type {Record<string, import('./action').Action<StateNode>>}
+	 */
+	#allActions = {};
+	/**
+	 * Conditions from all ancestor states and the config
+	 * @type {Record<string, import('./condition').Condition<StateNode>>}
+	 */
+	#allConditions = {};
 	/** @type {Handler[]} */
 	#always = [];
 	#alwaysConfig;
 	/** @type {import('./condition.js').Condition<StateNode> | null} */
 	#condition = null;
 	#conditionConfig;
+	/** Conditions from the user config */
 	#conditions;
 	/** @type {Handler[]} */
 	#entry = [];
@@ -96,7 +108,7 @@ export class BaseState {
 	#resolveActions(handler) {
 		const actions = [];
 		for (const name of handler.actions || []) {
-			const action = this[STATE_ACTIONS][name];
+			const action = this.#allActions[name];
 			if (!action) {
 				throw Error(`State references unknown action '${name}'.`);
 			}
@@ -110,7 +122,7 @@ export class BaseState {
 	#resolveCondition(handler) {
 		if (handler.condition === undefined) return;
 
-		const condition = this[STATE_CONDITIONS][handler.condition];
+		const condition = this.#allConditions[handler.condition];
 		if (!condition) {
 			throw Error(`State references unknown condition '${handler.condition}'.`);
 		}
@@ -182,6 +194,12 @@ export class BaseState {
 	}
 	get parent() {
 		return this.#parent;
+	}
+	/** @type {string[]} */
+	get path() {
+		return this.#parent
+			? [...this.#parent.path, this.#name]
+			: [this.#name];
 	}
 	start() {
 		if (!this.#initialized) {
@@ -301,6 +319,9 @@ export class BaseState {
 		}
 	}
 	[RESOLVE_CONFIG]() {
+		this.#allActions = this[STATE_ACTIONS];
+		this.#allConditions = this[STATE_CONDITIONS];
+
 		for (const [index, handler] of this.#alwaysConfig.entries()) {
 			this.#always.push(this.#resolveHandler(handler, String(index)));
 		}

@@ -48,7 +48,7 @@ export class Handler {
 		}
 		this.#actions = options.actions || [];
 		this.#condition = options.condition || null;
-		this.#name = options.name;
+		this.#name = options.name || '';
 		this.#ownerState = /** @type {StateNode} */ (options.ownerState);
 		this.#transitionTo = options.transitionTo || null;
 	}
@@ -65,6 +65,12 @@ export class Handler {
 	}
 	get name() {
 		return this.#name;
+	}
+	/** @type {string[]} */
+	get path() {
+		return this.#ownerState
+			? [...this.#ownerState.path, `[${this.#name}]`]
+			: [`[${this.#name}]`];
 	}
 	/**
 	 * @param {any} value

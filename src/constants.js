@@ -21,6 +21,7 @@ export const STATE_ACTIVE = Symbol('state-active');
 export const STATE_CONDITIONS = Symbol('state-conditions');
 export const STATE_CONDITION = Symbol('state-condition');
 export const STATE_CONDITION_CONFIGS = Symbol('state-condition-configs');
+export const STATE_HANDLER = Symbol('state-handler');
 export const STATE_NAME = Symbol('state-name');
 export const STATE_PARENT = Symbol('state-parent');
 export const STATE_STATES = Symbol('state-states');

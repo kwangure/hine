@@ -24,6 +24,7 @@ import {
 	STATE_CONDITION,
 	STATE_CONDITION_CONFIGS,
 	STATE_CONDITIONS,
+	STATE_HANDLER,
 	STATE_NAME,
 	STATE_PARENT,
 	STATE_STATES,
@@ -73,6 +74,12 @@ export class BaseState {
 	/** @type {Handler[]} */
 	#exit = [];
 	#exitConfig;
+	/**
+	 * The active handler that is currently executing
+	 *
+	 * @type {import('./handler').Handler | null}
+	 */
+	#handler = null;
 	#initialized = false;
 	#isStepping = false;
 	#name = '';
@@ -181,6 +188,9 @@ export class BaseState {
 		this[EXECUTE_HANDLERS_LEAF_FIRST](value);
 
 		this[CALL_SUBSCRIBERS]();
+	}
+	get handler() {
+		return this.#handler;
 	}
 	/**
 	 * @param {string} path
@@ -434,6 +444,12 @@ export class BaseState {
 		}
 
 		return conditions;
+	}
+	/**
+	 * @param {import('./handler').Handler | null} value
+	 */
+	set [STATE_HANDLER](value) {
+		this.#handler = value;
 	}
 	/** @param {string} value */
 	set [STATE_NAME](value) {

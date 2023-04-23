@@ -10,6 +10,7 @@ import {
 	QUEUE_ENTRY_HANDLERS,
 	QUEUE_EXIT_HANDLERS,
 	STATE_ACTIVE,
+	STATE_HANDLER,
 } from './constants.js';
 
 /**
@@ -76,11 +77,16 @@ export class Handler {
 	 * @param {any} value
 	 */
 	runActions(value) {
+		// This should never happen. Its mostly to help TypeScript out
+		if (!this.#ownerState) throw Error('Missing handler ownerState');
+
+		this.#ownerState[STATE_HANDLER] = this;
 		this.#notifyBefore();
 		for (const action of this.#actions) {
 			action.run(value);
 		}
 		this.#notifyAfter();
+		this.#ownerState[STATE_HANDLER] = null;
 	}
 	/**
 	 * @param {any} value
@@ -92,6 +98,7 @@ export class Handler {
 		if (!from) throw Error('Missing handler ownerState');
 		if (!to) throw Error('Missing handler transitionTo');
 
+		from[STATE_HANDLER] = this;
 		this.#notifyBefore();
 		from[HANDLER_QUEUE].length = 0;
 		// exit actions for the current state
@@ -115,6 +122,7 @@ export class Handler {
 		to[QUEUE_ALWAYS_HANDLERS]();
 		to[EXECUTE_HANDLERS_ROOT_FIRST](value);
 		this.#notifyAfter();
+		from[STATE_HANDLER] = null;
 	}
 	/**
 	 * @param {any} value

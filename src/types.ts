@@ -4,6 +4,8 @@ import { AtomicState } from './atomic';
 import type { BaseState } from './handler.js';
 import type { CompoundState } from './compound';
 import type { Condition } from './condition.js';
+import type { TO_JSON } from './constants.js';
+import type { Simplify } from 'type-fest';
 
 export type ActionConfig<T extends StateNode> = {
 	name?: string,
@@ -67,21 +69,21 @@ export type CompoundStateConfig = Partial<StateNodeConfig<CompoundState>> & {
 	states: Record<string, StateNode>
 };
 
-export type AtomicStateJSON = {
-	name: string;
-	type: 'atomic',
-}
+type BaseJSON = ReturnType<BaseState[typeof TO_JSON]>;
 
-export type CompoundStateJSON = {
-	name: string;
+export type AtomicStateJSON = Simplify<BaseJSON & {
+	type: 'atomic';
+}>;
+
+export type CompoundStateJSON = Simplify<BaseJSON & {
+	type: 'compound';
 	states: Record<string, StateNodeJSON>;
-	type: 'compound',
-}
+}>;
 
 export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
 
-export type ActionJSON = ReturnType<Action['toJSON']>
-export type ConditionJSON = ReturnType<Condition['toJSON']>
-export type HandlerJSON = ReturnType<Handler['toJSON']>
+export type ActionJSON = ReturnType<Action['toJSON']>;
+export type ConditionJSON = ReturnType<Condition['toJSON']>;
+export type HandlerJSON = ReturnType<Handler['toJSON']>;
 
 export { };

@@ -166,7 +166,6 @@ export class Handler {
 			shouldExecute = this.condition.run(value);
 		}
 		if (shouldExecute) {
-			yield this.condition;
 			from[HANDLER_QUEUE].length = 0;
 			// exit actions for the current state
 			from[QUEUE_EXIT_HANDLERS]();

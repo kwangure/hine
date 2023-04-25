@@ -82,8 +82,10 @@ export class Handler {
 
 		this.#ownerState[STATE_HANDLER] = this;
 		this.#notifyBefore();
-		for (const action of this.#actions) {
-			action.run(value);
+		if (!this.condition || this.condition.run(value)) {
+			for (const action of this.#actions) {
+				action.run(value);
+			}
 		}
 		this.#notifyAfter();
 		this.#ownerState[STATE_HANDLER] = null;
@@ -100,38 +102,49 @@ export class Handler {
 
 		from[STATE_HANDLER] = this;
 		this.#notifyBefore();
-		from[HANDLER_QUEUE].length = 0;
-		// exit actions for the current state
-		from[QUEUE_EXIT_HANDLERS]();
-		from[EXECUTE_HANDLERS_LEAF_FIRST](value);
+		const shouldExecute = !this.condition || this.condition.run(value);
+		if (shouldExecute) {
+			from[HANDLER_QUEUE].length = 0;
+			// exit actions for the current state
+			from[QUEUE_EXIT_HANDLERS]();
+			from[EXECUTE_HANDLERS_LEAF_FIRST](value);
 
-		// transition actions for the handler
-		for (const action of this.#actions) {
-			action.run(value);
+			// transition actions for the handler
+			for (const action of this.#actions) {
+				action.run(value);
+			}
+			// This should never happen. They're mostly to help TypeScript out
+			if (!from.parent) throw Error('Missing state parent');
+			// change the active nested state for parent state
+			from.parent[STATE_ACTIVE] = to;
+			// set initial state from transitionTo to leaves
+			to[INITIALIZE]();
+
+			to[QUEUE_ENTRY_HANDLERS]();
+			to[EXECUTE_HANDLERS_ROOT_FIRST](value);
+
+			to[QUEUE_ALWAYS_HANDLERS]();
+			to[EXECUTE_HANDLERS_ROOT_FIRST](value);
 		}
-		// This should never happen. They're mostly to help TypeScript out
-		if (!from.parent) throw Error('Missing state parent');
-		// change the active nested state for parent state
-		from.parent[STATE_ACTIVE] = to;
-		// set initial state from transitionTo to leaves
-		to[INITIALIZE]();
-
-		to[QUEUE_ENTRY_HANDLERS]();
-		to[EXECUTE_HANDLERS_ROOT_FIRST](value);
-
-		to[QUEUE_ALWAYS_HANDLERS]();
-		to[EXECUTE_HANDLERS_ROOT_FIRST](value);
 		this.#notifyAfter();
 		from[STATE_HANDLER] = null;
+		return shouldExecute;
 	}
 	/**
 	 * @param {any} value
 	 */
 	* stepActions(value) {
 		this.#notifyBefore();
-		for (const action of this.#actions) {
-			yield action;
-			action.run(value);
+		let shouldExecute = false;
+		if (this.condition) {
+			yield this.condition;
+			shouldExecute = this.condition.run(value);
+		}
+		if (shouldExecute) {
+			for (const action of this.#actions) {
+				yield action;
+				action.run(value);
+			}
 		}
 		this.#notifyAfter();
 	}
@@ -145,30 +158,41 @@ export class Handler {
 		if (!from) throw Error('Missing handler ownerState');
 		if (!to) throw Error('Missing handler transitionTo');
 
+		from[STATE_HANDLER] = this;
 		this.#notifyBefore();
-		from[HANDLER_QUEUE].length = 0;
-		// exit actions for the current state
-		from[QUEUE_EXIT_HANDLERS]();
-		from[EXECUTE_HANDLERS_LEAF_FIRST](value);
-
-		// transition actions for the handler
-		for (const action of this.#actions) {
-			yield action;
-			action.run(value);
+		let shouldExecute = false;
+		if (this.condition) {
+			yield this.condition;
+			shouldExecute = this.condition.run(value);
 		}
-		// This should never happen. They're mostly to help TypeScript out
-		if (!from.parent) throw Error('Missing state parent');
-		// change the active nested state for parent state
-		from.parent[STATE_ACTIVE] = to;
-		// set initial state from transitionTo to leaves
-		to[INITIALIZE]();
+		if (shouldExecute) {
+			yield this.condition;
+			from[HANDLER_QUEUE].length = 0;
+			// exit actions for the current state
+			from[QUEUE_EXIT_HANDLERS]();
+			from[EXECUTE_HANDLERS_LEAF_FIRST](value);
 
-		to[QUEUE_ENTRY_HANDLERS]();
-		to[EXECUTE_HANDLERS_ROOT_FIRST](value);
+			// transition actions for the handler
+			for (const action of this.#actions) {
+				yield action;
+				action.run(value);
+			}
+			// This should never happen. They're mostly to help TypeScript out
+			if (!from.parent) throw Error('Missing state parent');
+			// change the active nested state for parent state
+			from.parent[STATE_ACTIVE] = to;
+			// set initial state from transitionTo to leaves
+			to[INITIALIZE]();
 
-		to[QUEUE_ALWAYS_HANDLERS]();
-		to[EXECUTE_HANDLERS_ROOT_FIRST](value);
+			to[QUEUE_ENTRY_HANDLERS]();
+			to[EXECUTE_HANDLERS_ROOT_FIRST](value);
+
+			to[QUEUE_ALWAYS_HANDLERS]();
+			to[EXECUTE_HANDLERS_ROOT_FIRST](value);
+		}
 		this.#notifyAfter();
+		from[STATE_HANDLER] = null;
+		return shouldExecute;
 	}
 	toJSON() {
 		return {

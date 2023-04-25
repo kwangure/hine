@@ -59,7 +59,7 @@ export class Condition {
 	 * @param {any} [value]
 	 */
 	run(value) {
-		if (!this.#ownerState) return;
+		if (!this.#ownerState) return false;
 		this.#ownerState[STATE_CONDITION] = this;
 		this.#notifyBefore();
 		const result = this.#run.call(this.#ownerState, value);

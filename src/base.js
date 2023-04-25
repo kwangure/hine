@@ -8,6 +8,7 @@ import {
 	CONDITION_NOTIFY_AFTER,
 	CONDITION_NOTIFY_BEFORE,
 	CONDITION_OWNER,
+	EXECUTE_HANDLERS,
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
 	FILTER_HANDLERS,
@@ -246,31 +247,17 @@ export class BaseState {
 		this[QUEUE_ON_HANDLERS](event);
 		this[QUEUE_ALWAYS_HANDLERS]();
 
-		const filtered = this[FILTER_HANDLERS]().map(([handler, runner]) => {
-			switch (runner) {
-				case 'runActions':
-					return /** @type {const} */([handler, 'stepActions']);
-				case 'runTransition':
-					return /** @type {const} */([handler, 'stepTransition']);
-				default:
-					throw Error('Because typescript.');
-			}
-		});
-
-		const iterator = filtered[Symbol.iterator]();
-		const first = iterator.next();
-		let queueDone = first.done;
-		/** @type {typeof filtered[0]} */
-		let queueNext = first.value;
-		while (!queueDone) {
-			const [handler, runner] = queueNext;
+		for (const handler of this[HANDLER_QUEUE]) {
 			yield handler;
-			if (handler.condition) {
-				yield handler.condition;
+			if (handler.transitionTo) {
+				const executed = yield* handler.stepTransition(eventValue);
+				if (executed) break;
+			} else {
+				yield* handler.stepActions(eventValue);
 			}
-			yield* handler[runner](eventValue);
-			({ value: queueNext, done: queueDone } = iterator.next());
 		}
+
+		this[HANDLER_QUEUE].length = 0;
 		this.#isStepping = false;
 		this[CALL_SUBSCRIBERS]();
 	}
@@ -284,17 +271,27 @@ export class BaseState {
 	 * @param {any} [value]
 	 */
 	[EXECUTE_HANDLERS_LEAF_FIRST](value) {
-		for (const [handler, runner] of this[FILTER_HANDLERS]()) {
-			handler[runner](value);
-		}
+		this[EXECUTE_HANDLERS](value);
 	}
 	/**
 	 * @param {any} [value]
 	 */
 	[EXECUTE_HANDLERS_ROOT_FIRST](value) {
-		for (const [handler, runner] of this[FILTER_HANDLERS]()) {
-			handler[runner](value);
+		this[EXECUTE_HANDLERS](value);
+	}
+	/**
+	 * @param {any} [value]
+	 */
+	[EXECUTE_HANDLERS](value) {
+		for (const handler of this[HANDLER_QUEUE]) {
+			if (handler.transitionTo) {
+				const executed = handler.runTransition(value);
+				if (executed) break;
+			} else {
+				handler.runActions(value);
+			}
 		}
+		this[HANDLER_QUEUE].length = 0;
 	}
 	/**
 	 * @param {any} [value]
@@ -304,11 +301,11 @@ export class BaseState {
 		for (const handler of this[HANDLER_QUEUE]) {
 			if (handler.condition && !handler.condition.run(value)) continue;
 			if (handler.transitionTo) {
-				queue.push(/** @type {const} */([handler, 'runTransition']));
+				queue.push(/** @type {const} */([handler, 'stepTransition']));
 				// Handlers after the first transition are ignored
 				break;
 			} else {
-				queue.push(/** @type {const} */([handler, 'runActions']));
+				queue.push(/** @type {const} */([handler, 'stepActions']));
 			}
 		}
 		this[HANDLER_QUEUE].length = 0;

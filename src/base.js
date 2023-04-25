@@ -197,7 +197,13 @@ export class BaseState {
 	 * @return {boolean}
 	 */
 	matches(path) {
-		return this.#initialized && this.#name === path;
+		if (!this.#initialized) return false;
+		return Boolean(
+			path === this.#name
+			|| (this.#action && path === this.#action.path.join('.'))
+			|| (this.#condition && path === this.#condition.path.join('.'))
+			|| (this.#handler && path === this.#handler.path.join('.')),
+		);
 	}
 	get name() {
 		return this.#name;

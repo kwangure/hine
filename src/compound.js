@@ -55,10 +55,11 @@ export class CompoundState extends BaseState {
 	 */
 	matches(path) {
 		if (!this.#state) return false;
-		return path === this.name
-			|| (path.startsWith(`${this.name}.`)
-				&& this.#state
-					.matches(path.slice(this.name.length + 1)));
+
+		return super.matches(path) || (
+			(path.startsWith(`${this.name}.`)
+			&& this.#state.matches(path.slice(this.name.length + 1)))
+		);
 	}
 	get state() {
 		return this.#state;

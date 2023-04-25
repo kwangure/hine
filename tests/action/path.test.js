@@ -1,4 +1,4 @@
-import { Action, AtomicState } from 'src';
+import { Action, AtomicState } from '../../src';
 import { describe, expect, it } from 'vitest';
 
 describe('path', () => {

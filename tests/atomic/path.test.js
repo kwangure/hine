@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AtomicState } from 'src';
+import { AtomicState } from '../../src';
 
 describe('path', () => {
 	it('returns path with name', () => {

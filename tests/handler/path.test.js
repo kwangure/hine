@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { AtomicState } from 'src';
-import { Handler } from 'src/handler';
+import { AtomicState } from '../../src';
+import { Handler } from '../../src/handler';
 
 describe('path', () => {
 	it('returns path with name', () => {

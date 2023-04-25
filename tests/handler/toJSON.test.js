@@ -1,6 +1,6 @@
-import { Action, Condition } from 'src';
+import { Action, Condition } from '../../src';
 import { describe, expect, it } from 'vitest';
-import { Handler } from 'src/handler.js';
+import { Handler } from '../../src/handler.js';
 
 describe('toJSON', () => {
 	it('includes name', () => {

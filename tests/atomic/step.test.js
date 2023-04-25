@@ -1,7 +1,10 @@
-import { Action, AtomicState, Condition } from 'src';
 import { describe, expect, it } from 'vitest';
+import { Action } from '../../src/action.js';
+import { AtomicState } from '../../src/atomic.js';
+import { Condition } from '../../src/condition.js';
 import { Handler } from '../../src/handler.js';
-import { zip } from 'src/utils/iterator';
+import { zip } from '../../src/utils/iterator.js';
+
 
 describe('step', () => {
 	it('call subscribers at the end', () => {

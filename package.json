@@ -3,6 +3,7 @@
     "version": "0.0.6",
     "description": "A state machine library",
     "scripts": {
+        "check": "wireit",
         "format": "wireit",
         "lint": "wireit",
         "package": "wireit",
@@ -47,6 +48,14 @@
         "wireit": "^0.9.3"
     },
     "wireit": {
+        "check": {
+            "command": "tsc",
+            "files": [
+                "src/**/*.{js,ts}",
+                "tests/**/*.{js,ts}"
+            ],
+            "output": []
+        },
         "format": {
             "command": "eslint \"**/*.{js,svelte}\" --color --cache --fix --cache-location .eslintcache",
             "files": [
@@ -69,7 +78,8 @@
         "pre-commit": {
             "dependencies": [
                 "test",
-                "format"
+                "format",
+                "check"
             ]
         },
         "test": {

@@ -33,6 +33,7 @@ describe('toJSON', () => {
 	});
 	it('serializes nested states', () => {
 		const state = new CompoundState({
+			name: 'state',
 			states: {
 				s1: new AtomicState(),
 			},
@@ -42,6 +43,10 @@ describe('toJSON', () => {
 			s1: {
 				name: 's1',
 				type: 'atomic',
+				path: [
+					'state',
+					's1',
+				],
 			},
 		});
 	});
@@ -70,6 +75,7 @@ describe('toJSON', () => {
 				name: '0',
 				transitionTo: undefined,
 				type: 'handler',
+				path: ['', '[0]'],
 			},
 		]);
 	});
@@ -98,6 +104,7 @@ describe('toJSON', () => {
 				name: '0',
 				transitionTo: undefined,
 				type: 'handler',
+				path: ['', '[0]'],
 			},
 		]);
 	});
@@ -126,6 +133,7 @@ describe('toJSON', () => {
 				name: '0',
 				transitionTo: undefined,
 				type: 'handler',
+				path: ['', '[0]'],
 			},
 		]);
 	});
@@ -154,7 +162,23 @@ describe('toJSON', () => {
 				name: '0',
 				transitionTo: undefined,
 				type: 'handler',
+				path: ['', '[0]'],
 			}],
 		});
+	});
+	it('includes path', () => {
+		const s1 = new CompoundState({
+			states: {
+				s11: new AtomicState(),
+			},
+		});
+		new CompoundState({
+			name: 'state',
+			states: {
+				s1,
+			},
+		});
+		const json = s1.toJSON();
+		expect(json.path).toEqual(['state', 's1']);
 	});
 });

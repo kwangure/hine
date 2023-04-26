@@ -18,4 +18,11 @@ describe('toJSON', () => {
 		const json = state.toJSON();
 		expect(json.type).toEqual('atomic');
 	});
+	it('includes path', () => {
+		const state = new AtomicState({
+			name: 'state',
+		});
+		const json = state.toJSON();
+		expect(json.path).toEqual(['state']);
+	});
 });

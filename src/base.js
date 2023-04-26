@@ -484,6 +484,7 @@ export class BaseState {
 				: undefined,
 			name: this.#name,
 			on: onEntries.length ? on : undefined,
+			path: this.path,
 		};
 	}
 }

@@ -25,4 +25,12 @@ describe('toJSON', () => {
 		const json = action.toJSON();
 		expect(json.type).toEqual('action');
 	});
+	it('includes path', () => {
+		const action = new Action({
+			name: 'action',
+			run() {},
+		});
+		const json = action.toJSON();
+		expect(json.path).toEqual(['(action)']);
+	});
 });

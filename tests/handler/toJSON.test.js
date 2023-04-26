@@ -15,6 +15,12 @@ describe('toJSON', () => {
 		const json = handler.toJSON();
 		expect(json.type).toEqual('handler');
 	});
+	it('includes path', () => {
+		const name = 'handler';
+		const handler = new Handler({ name });
+		const json = handler.toJSON();
+		expect(json.path).toEqual(['[handler]']);
+	});
 	it('serializes nested actions', () => {
 		const name = 'handler';
 		const state = new Handler({

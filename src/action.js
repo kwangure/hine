@@ -64,6 +64,7 @@ export class Action {
 	toJSON() {
 		return {
 			name: this.#name,
+			path: this.path,
 			type: this.#type,
 		};
 	}

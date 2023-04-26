@@ -200,6 +200,7 @@ export class Handler {
 			transitionTo: this.#transitionTo?.name,
 			condition: this.#condition?.name,
 			actions: this.#actions.map((action) => action.name),
+			path: this.path,
 		};
 	}
 	get transitionTo() {

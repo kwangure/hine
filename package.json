@@ -4,9 +4,11 @@
     "description": "A state machine library",
     "scripts": {
         "check": "wireit",
+        "clear": "rm -rf ./hine-*.tgz",
         "format": "wireit",
         "lint": "wireit",
         "package": "wireit",
+        "prepack": "wireit",
         "pre-commit": "wireit",
         "prepare": "husky install",
         "release": "wireit",
@@ -81,6 +83,12 @@
             ],
             "output": ["dist/**"]
         },
+        "prepack": {
+            "dependencies": [
+                "clear",
+                "package"
+            ]
+        },
         "pre-commit": {
             "dependencies": [
                 "test",
@@ -90,13 +98,11 @@
             ]
         },
         "release": {
-            "command": "release-it",
-            "dependencies": [
-                "test",
-                "format",
-                "check",
-                "package"
-            ]
+            "//": [
+                "release-it triggers 'pre-commit' and 'prepack' since it makes",
+                "a release commit and runs 'npm publish'"
+            ],
+            "command": "release-it"
         },
         "test": {
             "command": "vitest run"

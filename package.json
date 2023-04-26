@@ -9,10 +9,8 @@
         "package": "wireit",
         "pre-commit": "wireit",
         "prepare": "husky install",
-        "release": "release-it",
-        "test": "wireit",
-        "test:playwright": "wireit",
-        "test:vitest": "wireit"
+        "release": "wireit",
+        "test": "wireit"
     },
     "keywords": [
         "state",
@@ -57,40 +55,50 @@
             "output": []
         },
         "format": {
-            "command": "eslint \"**/*.{js,svelte}\" --color --cache --fix --cache-location .eslintcache",
+            "command": "eslint src/**/*.js tests/**/*.js --color --cache --fix",
             "files": [
-                "\"**/*.{js,svelte,ts}\"",
+                "src/**/*.{js,ts}",
+                "tests/**/*.{js,ts}",
                 ".eslintignore",
                 ".eslintrc.cjs"
-            ]
+            ],
+            "output": []
         },
         "lint": {
-            "command": "eslint \"**/*.{js,svelte}\" --color --cache --cache-location .eslintcache",
+            "command": "eslint src/**/*.js tests/**/*.js --color --cache",
             "files": [
-                "\"**/*.{js,svelte,ts}\"",
+                "src/**/*.{js,ts}",
+                "tests/**/*.{js,ts}",
                 ".eslintignore",
                 ".eslintrc.cjs"
-            ]
+            ],
+            "output": []
         },
         "package": {
-            "command": "svelte-package -i ./src"
+            "command": "svelte-package -i ./src",
+            "files": [
+                "src/**/*.{js,ts,svelte}"
+            ],
+            "output": ["dist/**"]
         },
         "pre-commit": {
             "dependencies": [
                 "test",
                 "format",
-                "check"
+                "check",
+                "package"
+            ]
+        },
+        "release": {
+            "command": "release-it",
+            "dependencies": [
+                "test",
+                "format",
+                "check",
+                "package"
             ]
         },
         "test": {
-            "dependencies": [
-                "test:vitest"
-            ]
-        },
-        "test:playwright": {
-            "command": "playwright test"
-        },
-        "test:vitest": {
             "command": "vitest run"
         }
     }

@@ -52,7 +52,8 @@
             "command": "tsc",
             "files": [
                 "src/**/*.{js,ts}",
-                "tests/**/*.{js,ts}"
+                "tests/**/*.{js,ts}",
+                "tsconfig.json"
             ],
             "output": []
         },
@@ -105,7 +106,12 @@
             "command": "release-it"
         },
         "test": {
-            "command": "vitest run"
+            "command": "vitest run",
+            "files": [
+                "src/**/*.{js,ts}",
+                "tests/**/*.{js,ts}"
+            ],
+            "output": []
         }
     }
 }

@@ -11,7 +11,7 @@
         "prepack": "wireit",
         "pre-commit": "wireit",
         "prepare": "husky install",
-        "release": "wireit",
+        "release": "release-it",
         "test": "wireit"
     },
     "keywords": [
@@ -99,13 +99,6 @@
                 "check",
                 "package"
             ]
-        },
-        "release": {
-            "//": [
-                "release-it triggers 'pre-commit' and 'prepack' since it makes",
-                "a release commit and runs 'npm publish'"
-            ],
-            "command": "release-it"
         },
         "test": {
             "command": "vitest run",

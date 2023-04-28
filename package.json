@@ -24,9 +24,9 @@
     "license": "MIT",
     "files": [
         "dist",
-        "!**/*spec.js",
-        "!**/*spec.d.ts"
-    ],
+        "!**/*.test.*",
+		"!**/*.spec.*"
+	],
     "type": "module",
     "exports": {
         ".": {

@@ -218,6 +218,8 @@ export class BaseState {
 			? [...this.#parent.path, this.#name]
 			: [this.#name];
 	}
+	// Type return as derived class instead of `BaseState`
+	/** @returns {this} */
 	start() {
 		if (!this.#initialized) {
 			this[RESOLVE_CONFIG]();

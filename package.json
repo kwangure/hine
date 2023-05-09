@@ -4,13 +4,13 @@
     "description": "A state machine library",
     "scripts": {
         "check": "wireit",
-        "clear": "rm -rf ./hine-*.tgz",
         "format": "wireit",
         "lint": "wireit",
+        "pack": "wireit",
         "package": "wireit",
-        "prepack": "wireit",
         "pre-commit": "wireit",
         "prepare": "husky install",
+        "publint": "wireit",
         "release": "release-it",
         "test": "wireit"
     },
@@ -25,8 +25,8 @@
     "files": [
         "dist",
         "!**/*.test.*",
-		"!**/*.spec.*"
-	],
+        "!**/*.spec.*"
+    ],
     "type": "module",
     "exports": {
         ".": {
@@ -41,6 +41,7 @@
         "eslint-plugin-sort-class-members": "^1.16.0",
         "eslint-plugin-svelte3": "^4.0.0",
         "husky": "^8.0.3",
+        "publint": "^0.1.11",
         "release-it": "^15.6.0",
         "type-fest": "^3.6.1",
         "typescript": "^5.0.3",
@@ -77,6 +78,22 @@
             ],
             "output": []
         },
+        "pack": {
+            "command": "npm pack",
+            "dependencies": [
+                "publint"
+            ],
+            "files": [
+                "dist/**",
+                "!**/*.test.*",
+                "!**/*.spec.*",
+                "LICENSE",
+                "README.md"
+            ],
+            "output": [
+                "hine*.tgz"
+            ]
+        },
         "package": {
             "command": "svelte-package -i ./src",
             "files": [
@@ -86,11 +103,16 @@
                 "dist/**"
             ]
         },
-        "prepack": {
+        "publint": {
+            "command": "publint",
             "dependencies": [
-                "clear",
                 "package"
-            ]
+            ],
+            "files": [
+                "dist/**",
+                "package.json"
+            ],
+            "output": []
         },
         "pre-commit": {
             "dependencies": [

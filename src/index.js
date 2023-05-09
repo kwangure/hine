@@ -57,4 +57,4 @@ export const h = {
 };
 
 export { Action, AtomicState, CompoundState, Condition };
-export { activePath, nextStateNames, stateEventNames } from './utils/state.js';
+export { activePath, stateEventNames } from './utils/state.js';

@@ -7,15 +7,11 @@ import { ON_HANDLER } from '../constants.js';
  * @returns {string}
  */
 export function activePath(state) {
-	if (state instanceof CompoundState) {
-		if (state.state) {
-			return state.state
-				? `${state.name}.${activePath(state.state)}`
-				: state.name;
-		}
+	if (state instanceof CompoundState && state.state) {
+		return `${state.name}.${activePath(state.state)}`;
 	}
 
-	return state.name || '';
+	return state.name;
 }
 
 /**

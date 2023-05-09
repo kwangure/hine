@@ -14,6 +14,7 @@ import {
 	FILTER_HANDLERS,
 	HANDLER_QUEUE,
 	INITIALIZE,
+	ON_HANDLER,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
 	QUEUE_EXIT_HANDLERS,
@@ -84,15 +85,14 @@ export class BaseState {
 	#initialized = false;
 	#isStepping = false;
 	#name = '';
-	/** @type {Record<string, Handler[]>} */
-	#on = {};
-
 	#onConfig;
 	/** @type {CompoundState | null} */
 	#parent = null;
 
 	/** @type {Handler[]} */
 	[HANDLER_QUEUE] = [];
+	/** @type {Record<string, Handler[]>} */
+	[ON_HANDLER] = {};
 	/** @type {Set<(arg: BaseState) => any>} */
 	[STATE_SUBSCRIBERS] = new Set();
 
@@ -329,8 +329,8 @@ export class BaseState {
 	 * @param {string} event
 	 */
 	[QUEUE_ON_HANDLERS](event) {
-		if (Object.hasOwn(this.#on, event)) {
-			this[HANDLER_QUEUE].push(...this.#on[event]);
+		if (Object.hasOwn(this[ON_HANDLER], event)) {
+			this[HANDLER_QUEUE].push(...this[ON_HANDLER][event]);
 		}
 	}
 	[RESOLVE_CONFIG]() {
@@ -342,7 +342,7 @@ export class BaseState {
 		}
 
 		for (const [event, handlers] of Object.entries(this.#onConfig)) {
-			this.#on[event] = handlers
+			this[ON_HANDLER][event] = handlers
 				.map((handler, i) => this.#resolveHandler(handler, String(i)));
 		}
 
@@ -467,7 +467,7 @@ export class BaseState {
 		this.#parent = value;
 	}
 	[TO_JSON]() {
-		const onEntries = Object.entries(this.#on);
+		const onEntries = Object.entries(this[ON_HANDLER]);
 		/** @type {Record<string, import('./types.js').HandlerJSON[]>} */
 		const on = {};
 		for (const [event, handlers] of onEntries) {

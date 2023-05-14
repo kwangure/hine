@@ -41,6 +41,9 @@ export class Action {
 		if (!this[ACTION_NOTIFY_BEFORE]) return;
 		this.#ownerState?.[CALL_SUBSCRIBERS]();
 	}
+	get actions() {
+		return this.#ownerState?.actions;
+	}
 	get name() {
 		return this.#name;
 	}
@@ -51,15 +54,16 @@ export class Action {
 			: [`(${this.#name})`];
 	}
 	/**
-	 * @param {any} value
+	 * @param {any} [value]
 	 */
 	run(value) {
 		if (!this.#ownerState) return;
 		this.#ownerState[STATE_ACTION] = this;
 		this.#notifyBefore();
-		this.#run(value);
+		const result = this.#run(value);
 		this.#notifyAfter();
 		this.#ownerState[STATE_ACTION] = null;
+		return result;
 	}
 	toJSON() {
 		return {

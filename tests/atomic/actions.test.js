@@ -607,6 +607,31 @@ describe('actions', () => {
 		expect(state.action).toBe(null);
 		state.start();
 		expect(state.action).toBe(null);
-
+	});
+	it('exposes actions inside actions', () => {
+		const action1 = new Action({
+			run() {
+				expect(this).toBe(action1);
+				expect(() => this.actions.action2).not.toThrow();
+				expect(this.actions.action2).toBe(action2);
+				expect(this.actions.action2.run()).toBe('test');
+				return true;
+			},
+		});
+		const action2 = new Action({
+			run() {
+				expect(this).toBe(action2);
+				return 'test';
+			},
+		});
+		new AtomicState({
+			entry: [{
+				actions: ['action1'],
+			}],
+			actions: {
+				action1,
+				action2,
+			},
+		}).start();
 	});
 });

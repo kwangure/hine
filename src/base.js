@@ -167,6 +167,9 @@ export class BaseState {
 	get action() {
 		return this.#action;
 	}
+	get actions() {
+		return this[STATE_ACTIONS];
+	}
 	get condition() {
 		return this.#condition;
 	}

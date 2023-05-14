@@ -798,13 +798,14 @@ describe('actions', () => {
 		expect(log).toEqual(['entry1', 'transition1', 'always2', 'entry1']);
 	});
 	it('calls actions in machine context', () => {
+		const action = new Action({
+			run() {
+				expect(this).toBe(action);
+			},
+		});
 		const state = new CompoundState({
 			actions: {
-				action: new Action({
-					run() {
-						expect(this).toBe(state);
-					},
-				}),
+				action,
 			},
 			entry: [{
 				actions: ['action'],
@@ -1018,7 +1019,7 @@ describe('actions', () => {
 		const action = new Action({
 			notifyBefore: false,
 			run() {
-				expect(this.action).toBe(action);
+				expect(state.action).toBe(action);
 			},
 		});
 		const state = new CompoundState({

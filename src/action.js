@@ -57,7 +57,7 @@ export class Action {
 		if (!this.#ownerState) return;
 		this.#ownerState[STATE_ACTION] = this;
 		this.#notifyBefore();
-		this.#run.call(this.#ownerState, value);
+		this.#run(value);
 		this.#notifyAfter();
 		this.#ownerState[STATE_ACTION] = null;
 	}

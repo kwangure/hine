@@ -3,7 +3,22 @@ import { describe, expect, it } from 'vitest';
 
 describe('conditions', () => {
 	it('exposes conditions inside conditions', () => {
-		const machine = new AtomicState({
+		const cond1 = new Condition({
+			run() {
+				expect(this).toBe(cond1);
+				expect(() => this.conditions.cond2).not.toThrow();
+				expect(this.conditions.cond2).toBe(cond2);
+				expect(this.conditions.cond2.run()).toBe(false);
+				return true;
+			},
+		});
+		const cond2 = new Condition({
+			run() {
+				expect(this).toBe(cond2);
+				return false;
+			},
+		});
+		new AtomicState({
 			entry: [{
 				condition: 'cond1',
 				actions: ['do'],
@@ -14,34 +29,21 @@ describe('conditions', () => {
 				}),
 			},
 			conditions: {
-				cond1: new Condition({
-					run() {
-						expect(this).toBe(machine);
-						expect(() => this.conditions.cond2).not.toThrow();
-						expect(this.conditions.cond2.run()).toBe(false);
-						return true;
-
-					},
-				}),
-				cond2: new Condition({
-					run() {
-						expect(this).toBe(machine);
-						return false;
-					},
-				}),
+				cond1,
+				cond2,
 			},
-		});
-		machine.start();
+		}).start();
 	});
 	it('calls condition in machine context', () => {
+		const dummy = new Condition({
+			run() {
+				expect(this).toBe(dummy);
+				return true;
+			},
+		});
 		const state = new AtomicState({
 			conditions: {
-				dummy: new Condition({
-					run() {
-						expect(this).toBe(state);
-						return true;
-					},
-				}),
+				dummy,
 			},
 			actions: {
 				action: new Action({
@@ -278,7 +280,7 @@ describe('conditions', () => {
 		const condition = new Condition({
 			notifyBefore: false,
 			run() {
-				expect(this.condition).toBe(condition);
+				expect(state.condition).toBe(condition);
 				return true;
 			},
 		});

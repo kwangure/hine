@@ -46,6 +46,9 @@ export class Condition {
 		if (!this[CONDITION_NOTIFY_BEFORE]) return;
 		this.#ownerState?.[CALL_SUBSCRIBERS]();
 	}
+	get conditions() {
+		return this.#ownerState?.conditions;
+	}
 	get name() {
 		return this.#name;
 	}
@@ -62,7 +65,7 @@ export class Condition {
 		if (!this.#ownerState) return false;
 		this.#ownerState[STATE_CONDITION] = this;
 		this.#notifyBefore();
-		const result = this.#run.call(this.#ownerState, value);
+		const result = this.#run(value);
 		this.#notifyAfter();
 		this.#ownerState[STATE_CONDITION] = null;
 		return result;

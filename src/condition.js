@@ -8,9 +8,6 @@ function noop() {
 	return true;
 }
 
-/**
- * @template {StateNode} [T=StateNode]
- */
 export class Condition {
 	#name = '';
 	/** @type {StateNode | null} */
@@ -26,7 +23,7 @@ export class Condition {
 	[CONDITION_NOTIFY_BEFORE] = undefined;
 
 	/**
-	 * @param {import('./types').ConditionConfig<T>} options
+	 * @param {import('./types').ConditionConfig} options
 	 */
 	constructor(options) {
 		this.#name = options.name || '';

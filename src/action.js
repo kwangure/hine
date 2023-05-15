@@ -6,9 +6,6 @@ import { ACTION_NAME, ACTION_NOTIFY_AFTER, ACTION_NOTIFY_BEFORE, ACTION_OWNER, C
 
 function noop() {}
 
-/**
- * @template {StateNode} [T=StateNode]
- */
 export class Action {
 	#name = '';
 	/** @type {StateNode | null} */
@@ -21,7 +18,7 @@ export class Action {
 	/** @type {boolean | undefined} */
 	[ACTION_NOTIFY_BEFORE] = undefined;
 	/**
-	 * @param {import('./types').ActionConfig<T>} options
+	 * @param {import('./types').ActionConfig} options
 	 */
 	constructor(options) {
 		this.#name = options.name || '';

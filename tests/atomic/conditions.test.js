@@ -6,9 +6,9 @@ describe('conditions', () => {
 		const cond1 = new Condition({
 			run() {
 				expect(this).toBe(cond1);
-				expect(() => this.conditions.cond2).not.toThrow();
-				expect(this.conditions.cond2).toBe(cond2);
-				expect(this.conditions.cond2.run()).toBe(false);
+				expect(() => this.conditions?.cond2).not.toThrow();
+				expect(this.conditions?.cond2).toBe(cond2);
+				expect(this.conditions?.cond2.run()).toBe(false);
 				return true;
 			},
 		});

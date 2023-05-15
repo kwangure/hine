@@ -7,18 +7,18 @@ import type { Condition } from './condition.js';
 import type { TO_JSON } from './constants.js';
 import type { Simplify } from 'type-fest';
 
-export type ActionConfig<T extends StateNode> = {
+export interface ActionConfig {
 	name?: string,
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
-	run: (this: T, arg: any) => any;
+	run: (this: Action, arg: any) => any;
 }
 
-export type ConditionConfig<T extends StateNode> = {
+export interface ConditionConfig {
 	name?: string,
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
-	run: (this: T, arg: any) => boolean;
+	run: (this: Condition, arg: any) => boolean;
 }
 
 export type HandlerConfig<T extends StateNode> = {
@@ -52,20 +52,20 @@ export type ExitHandlerConfig = {
 
 export type StateNode = AtomicState | CompoundState;
 
-type StateNodeConfig<T extends StateNode> = {
-	actionConfig: Partial<Omit<ActionConfig<T>, 'run'>>;
-	actions: Record<string, Action<T>>;
+type StateNodeConfig = {
+	actionConfig: Partial<Omit<ActionConfig, 'run'>>;
+	actions: Record<string, Action>;
 	always: AlwaysHandlerConfig[];
-	conditionConfig: Partial<Omit<ConditionConfig<T>, 'run'>>;
-	conditions: Record<string, Condition<T>>;
+	conditionConfig: Partial<Omit<ConditionConfig, 'run'>>;
+	conditions: Record<string, Condition>;
 	entry: EntryHandlerConfig[],
 	exit: ExitHandlerConfig[],
 	name: string;
 	on: Record<string, DispatchHandlerConfig[]>;
 };
 
-export type AtomicStateConfig = Partial<StateNodeConfig<AtomicState>>;
-export type CompoundStateConfig = Partial<StateNodeConfig<CompoundState>> & {
+export type AtomicStateConfig = Partial<StateNodeConfig>;
+export type CompoundStateConfig = Partial<StateNodeConfig> & {
 	states: Record<string, StateNode>
 };
 

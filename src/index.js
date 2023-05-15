@@ -38,8 +38,7 @@ export function compound(config) {
 }
 
 /**
- * @template {StateNode} T
- * @param {import('./types').ConditionConfig<T> | import('./types').ConditionConfig<T>['run']} config
+ * @param {import('./types').ConditionConfig | import('./types').ConditionConfig['run']} config
  */
 export function condition(config) {
 	if (typeof config === 'function') {

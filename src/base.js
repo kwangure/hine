@@ -47,25 +47,25 @@ import { Handler } from './handler.js';
  */
 
 export class BaseState {
-	/** @type {import('./action.js').Action<StateNode> | null} */
+	/** @type {import('./action.js').Action | null} */
 	#action = null;
 	#actionConfig;
 	/** Actions from the user config */
 	#actions;
 	/**
 	 * Actions from all ancestor states and the config
-	 * @type {Record<string, import('./action').Action<StateNode>>}
+	 * @type {Record<string, import('./action').Action>}
 	 */
 	#allActions = {};
 	/**
 	 * Conditions from all ancestor states and the config
-	 * @type {Record<string, import('./condition').Condition<StateNode>>}
+	 * @type {Record<string, import('./condition').Condition>}
 	 */
 	#allConditions = {};
 	/** @type {Handler[]} */
 	#always = [];
 	#alwaysConfig;
-	/** @type {import('./condition.js').Condition<StateNode> | null} */
+	/** @type {import('./condition.js').Condition | null} */
 	#condition = null;
 	#conditionConfig;
 	/** Conditions from the user config */
@@ -373,7 +373,7 @@ export class BaseState {
 				?? false,
 		};
 	}
-	/** @param {import('./action.js').Action<StateNode> | null} value */
+	/** @param {import('./action.js').Action | null} value */
 	set [STATE_ACTION](value) {
 		this.#action = value;
 	}
@@ -421,7 +421,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @param {import('./condition.js').Condition<StateNode> | null} value
+	 * @param {import('./condition.js').Condition | null} value
 	 */
 	set [STATE_CONDITION](value) {
 		this.#condition = value;

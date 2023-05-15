@@ -1041,8 +1041,8 @@ describe('actions', () => {
 		const action1 = new Action({
 			run() {
 				expect(this).toBe(action1);
-				expect(() => this.actions.action2).not.toThrow();
-				expect(this.actions.action2.run()).toBe('test');
+				expect(() => this.actions?.action2).not.toThrow();
+				expect(this.actions?.action2.run()).toBe('test');
 				return true;
 			},
 		});

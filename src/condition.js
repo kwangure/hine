@@ -43,11 +43,11 @@ export class Condition {
 		if (!this[CONDITION_NOTIFY_BEFORE]) return;
 		this.#ownerState?.[CALL_SUBSCRIBERS]();
 	}
-	get conditions() {
-		return this.#ownerState?.conditions;
-	}
 	get name() {
 		return this.#name;
+	}
+	get ownerState() {
+		return this.#ownerState;
 	}
 	/** @type {string[]} */
 	get path() {

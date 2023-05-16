@@ -612,9 +612,9 @@ describe('actions', () => {
 		const action1 = new Action({
 			run() {
 				expect(this).toBe(action1);
-				expect(() => this.actions?.action2).not.toThrow();
-				expect(this.actions?.action2).toBe(action2);
-				expect(this.actions?.action2.run()).toBe('test');
+				expect(() => this.ownerState?.actions.action2).not.toThrow();
+				expect(this.ownerState?.actions.action2).toBe(action2);
+				expect(this.ownerState?.actions.action2.run()).toBe('test');
 				return true;
 			},
 		});

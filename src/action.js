@@ -38,11 +38,11 @@ export class Action {
 		if (!this[ACTION_NOTIFY_BEFORE]) return;
 		this.#ownerState?.[CALL_SUBSCRIBERS]();
 	}
-	get actions() {
-		return this.#ownerState?.actions;
-	}
 	get name() {
 		return this.#name;
+	}
+	get ownerState() {
+		return this.#ownerState;
 	}
 	/** @type {string[]} */
 	get path() {

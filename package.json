@@ -1,6 +1,6 @@
 {
     "name": "hine",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "A state machine library",
     "scripts": {
         "check": "wireit",

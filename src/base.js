@@ -118,7 +118,13 @@ export class BaseState {
 		for (const name of handler.actions || []) {
 			const action = this.#allActions[name];
 			if (!action) {
-				throw Error(`State references unknown action '${name}'.`);
+				const actions = Object.keys(this.#allActions);
+				if (this.path.some((segment) => Boolean(segment))) {
+					const path = this.path.join('.');
+					throw Error(`State '${path}' references unknown action '${name}'. Expected one of: ${actions.join(', ')}`);
+				} else {
+					throw Error(`State references unknown action '${name}'. Expected one of: ${actions.join(', ')}`);
+				}
 			}
 			actions.push(action);
 		}
@@ -128,11 +134,18 @@ export class BaseState {
 	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig | EntryHandlerConfig | ExitHandlerConfig>} handler
 	 */
 	#resolveCondition(handler) {
-		if (handler.condition === undefined) return;
+		const { condition: name } = handler;
+		if (name === undefined) return;
 
-		const condition = this.#allConditions[handler.condition];
+		const condition = this.#allConditions[name];
 		if (!condition) {
-			throw Error(`State references unknown condition '${handler.condition}'.`);
+			const conditions = Object.keys(this.#allConditions);
+			if (this.path.some((segment) => Boolean(segment))) {
+				const path = this.path.join('.');
+				throw Error(`State '${path}' references unknown condition '${name}'. Expected one of: ${conditions.join(', ')}`);
+			} else {
+				throw Error(`State references unknown condition '${name}'. Expected one of: ${conditions.join(', ')}`);
+			}
 		}
 
 		return condition;
@@ -148,11 +161,21 @@ export class BaseState {
 		if (transitionTo) {
 			const parent = this.#parent;
 			if (!parent) {
-				throw Error('States without a parent cannot transition');
+				if (this.path.some((segment) => Boolean(segment))) {
+					const path = this.path.join('.');
+					throw Error(`State '${path}' references unknown transition target '${transitionTo}'. '${path}' does not have siblings.`);
+				} else {
+					throw Error(`State references unknown transition target '${transitionTo}'. It does not have sibling states.`);
+				}
 			}
 			to = parent[STATE_STATES].get(transitionTo);
 			if (!to) {
-				throw Error(`Unknown sibling state '${transitionTo}'.`);
+				if (this.path.some((segment) => Boolean(segment))) {
+					const path = this.path.join('.');
+					throw Error(`State '${path}' references unknown transition target target '${transitionTo}'. Expected one of: ${[...parent[STATE_STATES].keys()].join(', ')}.`);
+				} else {
+					throw Error(`State references unknown transition target '${transitionTo}'. Expected one of: ${[...parent[STATE_STATES].keys()].join(', ')}.`);
+				}
 			}
 		}
 

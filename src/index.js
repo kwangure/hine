@@ -13,7 +13,7 @@ import { Condition } from './condition.js';
  */
 
 /**
- * @param {ConstructorParameters<typeof Action>[0] | ((arg: any) => any)} config
+ * @param {import('./types').ActionConfig | import('./types').ActionConfig['run']} config
  */
 export function action(config) {
 	if (typeof config === 'function') {

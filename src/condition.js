@@ -62,7 +62,9 @@ export class Condition {
 		if (!this.#ownerState) return false;
 		this.#ownerState[STATE_CONDITION] = this;
 		this.#notifyBefore();
-		const result = this.#run(value);
+		this.value = value;
+		const result = this.#run.call(undefined, this);
+		this.value = undefined;
 		this.#notifyAfter();
 		this.#ownerState[STATE_CONDITION] = null;
 		return result;

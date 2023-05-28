@@ -18,7 +18,7 @@ export interface ConditionConfig {
 	name?: string,
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
-	run: (this: Condition, arg: any) => boolean;
+	run: (this: undefined, arg: Condition) => boolean;
 }
 
 export type HandlerConfig<T extends StateNode> = {

@@ -3,19 +3,8 @@ import { describe, expect, it } from 'vitest';
 
 describe('conditions', () => {
 	it('exposes conditions inside conditions', () => {
-		const cond1 = new Condition({
-			run() {
-				expect(this).toBe(cond1);
-				expect(() => this.ownerState?.conditions.cond2).not.toThrow();
-				expect(this.ownerState?.conditions.cond2.run()).toBe(false);
-				return true;
-			},
-		});
 		const cond2 = new Condition({
-			run() {
-				expect(this).toBe(cond2);
-				return false;
-			},
+			run: () => false,
 		});
 		const machine = new CompoundState({
 			entry: [{
@@ -28,7 +17,14 @@ describe('conditions', () => {
 				}),
 			},
 			conditions: {
-				cond1,
+				cond1: new Condition({
+					run({ ownerState }) {
+						expect(() => ownerState?.conditions.cond2).not.toThrow();
+						expect(ownerState?.conditions.cond2).toBe(cond2);
+						expect(ownerState?.conditions.cond2.run()).toBe(false);
+						return true;
+					},
+				}),
 				cond2,
 			},
 			states: {
@@ -37,16 +33,17 @@ describe('conditions', () => {
 		});
 		machine.start();
 	});
-	it('calls condition in machine context', () => {
-		const dummy = new Condition({
-			run() {
-				expect(this).toBe(dummy);
+	it('calls condition with self-reference', () => {
+		const condition = new Condition({
+			run(value) {
+				expect(this).toBe(undefined);
+				expect(value).toBe(condition);
 				return true;
 			},
 		});
 		const state = new CompoundState({
 			conditions: {
-				dummy,
+				condition,
 			},
 			actions: {
 				action: new Action({
@@ -54,7 +51,7 @@ describe('conditions', () => {
 				}),
 			},
 			entry: [{
-				condition: 'dummy',
+				condition: 'condition',
 				actions: ['action'],
 			}],
 			states: {

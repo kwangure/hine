@@ -797,10 +797,11 @@ describe('actions', () => {
 		expect(machine.state?.name).toEqual('s1');
 		expect(log).toEqual(['entry1', 'transition1', 'always2', 'entry1']);
 	});
-	it('calls actions in machine context', () => {
+	it('calls actions with self reference', () => {
 		const action = new Action({
-			run() {
-				expect(this).toBe(action);
+			run(value) {
+				expect(this).toBe(undefined);
+				expect(value).toBe(action);
 			},
 		});
 		const state = new CompoundState({
@@ -1037,32 +1038,47 @@ describe('actions', () => {
 		state.start();
 		expect(state.action).toBe(null);
 	});
-	it('exposes conditions inside conditions', () => {
-		const action1 = new Action({
-			run() {
-				expect(this).toBe(action1);
-				expect(() => this.ownerState?.actions.action2).not.toThrow();
-				expect(this.ownerState?.actions.action2.run()).toBe('test');
-				return true;
-			},
-		});
+	it('exposes actions inside actions', () => {
 		const action2 = new Action({
-			run() {
-				expect(this).toBe(action2);
-				return 'test';
-			},
+			run: () => 'test',
 		});
 		new CompoundState({
 			entry: [{
 				actions: ['action1'],
 			}],
 			actions: {
-				action1,
+				action1: new Action({
+					run({ ownerState }) {
+						expect(() => ownerState?.actions.action2).not.toThrow();
+						expect(ownerState?.actions.action2).toBe(action2);
+						expect(ownerState?.actions.action2.run()).toBe('test');
+						return true;
+					},
+				}),
 				action2,
 			},
 			states: {
 				s1: new AtomicState(),
 			},
 		}).start();
+	});
+	it('calls actions with value', () => {
+		const state = new CompoundState({
+			on: {
+				event: [{ actions: ['action']}],
+			},
+			actions: {
+				action: new Action({
+					run({ value }) {
+						expect(value).toBe('my-value');
+					},
+				}),
+			},
+			states: {
+				s1: new AtomicState(),
+			},
+		}).start();
+
+		state.dispatch('event', 'my-value');
 	});
 });

@@ -389,10 +389,11 @@ describe('actions', () => {
 		machine.dispatch('event');
 		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
 	});
-	it('calls actions in action context', () => {
+	it('calls actions with self-reference', () => {
 		const action = new Action({
-			run() {
-				expect(this).toBe(action);
+			run(value) {
+				expect(this).toBe(undefined);
+				expect(value).toBe(action);
 			},
 		});
 		const state = new AtomicState({
@@ -609,29 +610,40 @@ describe('actions', () => {
 		expect(state.action).toBe(null);
 	});
 	it('exposes actions inside actions', () => {
-		const action1 = new Action({
-			run() {
-				expect(this).toBe(action1);
-				expect(() => this.ownerState?.actions.action2).not.toThrow();
-				expect(this.ownerState?.actions.action2).toBe(action2);
-				expect(this.ownerState?.actions.action2.run()).toBe('test');
-				return true;
-			},
-		});
 		const action2 = new Action({
-			run() {
-				expect(this).toBe(action2);
-				return 'test';
-			},
+			run: () => 'test',
 		});
 		new AtomicState({
 			entry: [{
 				actions: ['action1'],
 			}],
 			actions: {
-				action1,
+				action1: new Action({
+					run({ ownerState }) {
+						expect(() => ownerState?.actions.action2).not.toThrow();
+						expect(ownerState?.actions.action2).toBe(action2);
+						expect(ownerState?.actions.action2.run()).toBe('test');
+						return true;
+					},
+				}),
 				action2,
 			},
 		}).start();
+	});
+	it('calls actions with value', () => {
+		const state = new AtomicState({
+			on: {
+				event: [{ actions: ['action']}],
+			},
+			actions: {
+				action: new Action({
+					run({ value }) {
+						expect(value).toBe('my-value');
+					},
+				}),
+			},
+		}).start();
+
+		state.dispatch('event', 'my-value');
 	});
 });

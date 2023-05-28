@@ -57,7 +57,9 @@ export class Action {
 		if (!this.#ownerState) return;
 		this.#ownerState[STATE_ACTION] = this;
 		this.#notifyBefore();
-		const result = this.#run(value);
+		this.value = value;
+		const result = this.#run.call(undefined, this);
+		this.value = undefined;
 		this.#notifyAfter();
 		this.#ownerState[STATE_ACTION] = null;
 		return result;

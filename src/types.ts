@@ -11,7 +11,7 @@ export interface ActionConfig {
 	name?: string,
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
-	run: (this: Action, arg: any) => any;
+	run: (this: undefined, arg: Action) => any;
 }
 
 export interface ConditionConfig {

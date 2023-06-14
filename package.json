@@ -1,135 +1,26 @@
 {
-    "name": "hine",
-    "version": "0.0.11",
-    "description": "A state machine library",
-    "scripts": {
-        "check": "wireit",
-        "format": "wireit",
-        "lint": "wireit",
-        "pack": "wireit",
-        "package": "wireit",
-        "pre-commit": "wireit",
-        "prepare": "husky install",
-        "publint": "wireit",
-        "release": "release-it",
-        "test": "wireit"
-    },
-    "keywords": [
-        "state",
-        "machine",
-        "state-machine",
-        "svelte",
-        "react"
-    ],
-    "license": "MIT",
-    "files": [
-        "dist",
-        "!**/*.test.*",
-        "!**/*.spec.*"
-    ],
-    "type": "module",
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "default": "./dist/index.js"
+	"name": "hine-monorepo",
+	"preview": false,
+	"type": "module",
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"pre-commit": "wireit",
+		"prepare": "husky install"
+	},
+	"devDependencies": {
+		"@changesets/cli": "^2.26.1",
+		"@kwangure/eslint-config-svelte": "^0.2.9",
+		"eslint": "^8.32.0",
+		"husky": "^8.0.3",
+		"wireit": "^0.9.3"
+	},
+	"wireit": {
+		"pre-commit": {
+            "dependencies": [
+                "./packages/hine:pre-commit"
+            ]
         }
-    },
-    "devDependencies": {
-        "@changesets/cli": "^2.26.1",
-        "@kwangure/eslint-config-svelte": "^0.2.6",
-        "@sveltejs/package": "^2.0.2",
-        "eslint": "^8.32.0",
-        "eslint-plugin-sort-class-members": "^1.16.0",
-        "eslint-plugin-svelte3": "^4.0.0",
-        "husky": "^8.0.3",
-        "publint": "^0.1.11",
-        "release-it": "^15.6.0",
-        "type-fest": "^3.6.1",
-        "typescript": "^5.0.3",
-        "vitest": "^0.27.2",
-        "wireit": "^0.9.3"
-    },
-    "wireit": {
-        "check": {
-            "command": "tsc",
-            "files": [
-                "src/**/*.{js,ts}",
-                "tests/**/*.{js,ts}",
-                "tsconfig.json"
-            ],
-            "output": []
-        },
-        "format": {
-            "command": "eslint src/**/*.js tests/**/*.js --color --cache --fix",
-            "files": [
-                "src/**/*.{js,ts}",
-                "tests/**/*.{js,ts}",
-                ".eslintignore",
-                ".eslintrc.cjs"
-            ],
-            "output": []
-        },
-        "lint": {
-            "command": "eslint src/**/*.js tests/**/*.js --color --cache",
-            "files": [
-                "src/**/*.{js,ts}",
-                "tests/**/*.{js,ts}",
-                ".eslintignore",
-                ".eslintrc.cjs"
-            ],
-            "output": []
-        },
-        "pack": {
-            "command": "npm pack",
-            "dependencies": [
-                "publint"
-            ],
-            "files": [
-                "dist/**",
-                "!**/*.test.*",
-                "!**/*.spec.*",
-                "LICENSE",
-                "README.md"
-            ],
-            "output": [
-                "hine*.tgz"
-            ]
-        },
-        "package": {
-            "command": "svelte-package -i ./src",
-            "files": [
-                "src/**/*.{js,ts,svelte}"
-            ],
-            "output": [
-                "dist/**"
-            ]
-        },
-        "publint": {
-            "command": "publint",
-            "dependencies": [
-                "package"
-            ],
-            "files": [
-                "dist/**",
-                "package.json"
-            ],
-            "output": []
-        },
-        "pre-commit": {
-            "dependencies": [
-                "test",
-                "format",
-                "check",
-                "package"
-            ]
-        },
-        "test": {
-            "command": "vitest run",
-            "files": [
-                "src/**/*.{js,ts}",
-                "tests/**/*.{js,ts}"
-            ],
-            "output": []
-        }
-    }
+	}
 }

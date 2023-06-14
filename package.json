@@ -6,6 +6,7 @@
 		"packages/*"
 	],
 	"scripts": {
+		"lint": "wireit",
 		"pre-commit": "wireit",
 		"prepare": "husky install"
 	},
@@ -17,8 +18,18 @@
 		"wireit": "^0.9.3"
 	},
 	"wireit": {
+		"lint": {
+            "command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
+            "files": [
+                "**/*.{js,svelte}",
+                ".eslintignore",
+                ".eslintrc.cjs"
+            ],
+            "output": []
+        },
 		"pre-commit": {
             "dependencies": [
+				"lint",
                 "./packages/hine:pre-commit"
             ]
         }

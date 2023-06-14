@@ -4,8 +4,6 @@
     "description": "A state machine library",
     "scripts": {
         "check": "wireit",
-        "format": "wireit",
-        "lint": "wireit",
         "pack": "wireit",
         "package": "wireit",
         "pre-commit": "wireit",
@@ -51,26 +49,6 @@
             ],
             "output": []
         },
-        "format": {
-            "command": "eslint src/**/*.js tests/**/*.js --color --cache --fix",
-            "files": [
-                "src/**/*.{js,ts}",
-                "tests/**/*.{js,ts}",
-                ".eslintignore",
-                ".eslintrc.cjs"
-            ],
-            "output": []
-        },
-        "lint": {
-            "command": "eslint src/**/*.js tests/**/*.js --color --cache",
-            "files": [
-                "src/**/*.{js,ts}",
-                "tests/**/*.{js,ts}",
-                ".eslintignore",
-                ".eslintrc.cjs"
-            ],
-            "output": []
-        },
         "pack": {
             "command": "npm pack",
             "dependencies": [
@@ -109,9 +87,8 @@
         },
         "pre-commit": {
             "dependencies": [
-                "test",
-                "format",
                 "check",
+                "test",
                 "package"
             ]
         },

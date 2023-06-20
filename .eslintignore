@@ -1,2 +1,6 @@
 .wireit
 node_modules
+
+# ESLint CJS doesn't like exports field
+vite.config.js
+svelte.config.js

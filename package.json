@@ -3,9 +3,11 @@
 	"preview": false,
 	"type": "module",
 	"workspaces": [
-		"packages/*"
+		"packages/*",
+		"packages/hine-next/playground"
 	],
 	"scripts": {
+		"dev": "wireit",
 		"lint": "wireit",
 		"pre-commit": "wireit",
 		"prepare": "husky install"
@@ -18,20 +20,26 @@
 		"wireit": "^0.9.3"
 	},
 	"wireit": {
+		"dev": {
+			"dependencies": [
+				"./packages/hine-next/playground:dev"
+			]
+		},
 		"lint": {
-            "command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
-            "files": [
-                "**/*.{js,svelte}",
-                ".eslintignore",
-                ".eslintrc.cjs"
-            ],
-            "output": []
-        },
+			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
+			"files": [
+				"**/*.{js,svelte}",
+				"!**/dist/**",
+				".eslintignore",
+				".eslintrc.cjs"
+			],
+			"output": []
+		},
 		"pre-commit": {
-            "dependencies": [
+			"dependencies": [
 				"lint",
-                "./packages/hine:pre-commit"
-            ]
-        }
+				"./packages/hine:pre-commit"
+			]
+		}
 	}
 }

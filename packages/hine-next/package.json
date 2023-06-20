@@ -1,0 +1,7 @@
+{
+	"name": "hine-next",
+	"version": "0.0.0",
+	"dependencies": {
+		"parserer": "^0.0.1"
+	}
+}

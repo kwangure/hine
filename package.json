@@ -10,7 +10,8 @@
 		"dev": "wireit",
 		"lint": "wireit",
 		"pre-commit": "wireit",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"test": "wireit"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.26.1",
@@ -39,6 +40,11 @@
 			"dependencies": [
 				"lint",
 				"./packages/hine:pre-commit"
+			]
+		},
+		"test": {
+			"dependencies": [
+				"./packages/hine:test"
 			]
 		}
 	}

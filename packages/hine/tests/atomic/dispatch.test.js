@@ -40,4 +40,18 @@ describe('dispatch', () => {
 			machine.dispatch('random');
 		}).not.toThrow();
 	});
+	it('displays emitted event', () => {
+		const machine = new AtomicState().start();
+		expect(machine.event).toBe(null);
+		const event = 'my-event';
+		let initial = true;
+		machine.subscribe((machine) => {
+			if (initial) {
+				initial = false;
+				return;
+			}
+			expect(machine.event?.name).toBe(event);
+		});
+		machine.dispatch(event);
+	});
 });

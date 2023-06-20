@@ -121,11 +121,11 @@ export class CompoundState extends BaseState {
 		super[QUEUE_EXIT_HANDLERS]();
 	}
 	/**
-	 * @param {string} event
+	 * @param {string} eventName
 	 */
-	[QUEUE_ON_HANDLERS](event) {
-		this.#state?.[QUEUE_ON_HANDLERS](event);
-		super[QUEUE_ON_HANDLERS](event);
+	[QUEUE_ON_HANDLERS](eventName) {
+		this.#state?.[QUEUE_ON_HANDLERS](eventName);
+		super[QUEUE_ON_HANDLERS](eventName);
 	}
 	[RESOLVE_CONFIG]() {
 		super[RESOLVE_CONFIG]();

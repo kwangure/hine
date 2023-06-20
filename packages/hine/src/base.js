@@ -34,6 +34,7 @@ import {
 	TO_JSON,
 } from './constants.js';
 import { Handler } from './handler.js';
+import { StateEvent } from './event.js';
 
 /**
  * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
@@ -73,6 +74,8 @@ export class BaseState {
 	/** @type {Handler[]} */
 	#entry = [];
 	#entryConfig;
+	/** @type {StateEvent | null} */
+	#event = null;
 	/** @type {Handler[]} */
 	#exit = [];
 	#exitConfig;
@@ -200,21 +203,28 @@ export class BaseState {
 		return this[STATE_CONDITIONS];
 	}
 	/**
-	 * @param {string} event
+	 * @param {string} eventName
 	 * @param {any} [value]
 	 */
-	dispatch(event, value) {
+	dispatch(eventName, value) {
 		if (!this.#initialized) {
 			throw Error('Attempted dispatch before resolving state');
 		}
 		if (this.#isStepping) {
 			throw Error('Attempted to dispatch while stepping is in progress.');
 		}
-		this[QUEUE_ON_HANDLERS](event);
+
+		const event = new StateEvent(eventName);
+		this.#event = event;
+		this[QUEUE_ON_HANDLERS](eventName);
 		this[QUEUE_ALWAYS_HANDLERS]();
 		this[EXECUTE_HANDLERS_LEAF_FIRST](value);
 
 		this[CALL_SUBSCRIBERS]();
+		this.#event = null;
+	}
+	get event() {
+		return this.#event;
 	}
 	get handler() {
 		return this.#handler;
@@ -251,19 +261,23 @@ export class BaseState {
 			this[RESOLVE_CONFIG]();
 		}
 		this[INITIALIZE]();
+
+		const event = new StateEvent('_start');
+		this.#event = event;
 		this[QUEUE_ENTRY_HANDLERS]();
 		this[EXECUTE_HANDLERS_ROOT_FIRST]();
 		this[QUEUE_ALWAYS_HANDLERS]();
 		this[EXECUTE_HANDLERS_ROOT_FIRST]();
 		this[CALL_SUBSCRIBERS]();
+		this.#event = null;
 
 		return this;
 	}
 	/**
-	 * @param {string} event
+	 * @param {string} eventName
 	 * @param {any} [eventValue]
 	 */
-	* step(event, eventValue) {
+	* step(eventName, eventValue) {
 		if (!this.#initialized) {
 			throw Error('Attempted to step before calling \'state.start()\'.');
 		}
@@ -272,7 +286,9 @@ export class BaseState {
 		}
 
 		this.#isStepping = true;
-		this[QUEUE_ON_HANDLERS](event);
+		const event = new StateEvent(eventName);
+		this.#event = event;
+		this[QUEUE_ON_HANDLERS](eventName);
 		this[QUEUE_ALWAYS_HANDLERS]();
 
 		for (const handler of this[HANDLER_QUEUE]) {
@@ -288,6 +304,7 @@ export class BaseState {
 		this[HANDLER_QUEUE].length = 0;
 		this.#isStepping = false;
 		this[CALL_SUBSCRIBERS]();
+		this.#event = null;
 	}
 	[CALL_SUBSCRIBERS]() {
 		for (const subscriber of this[STATE_SUBSCRIBERS]) {
@@ -352,11 +369,11 @@ export class BaseState {
 		this[HANDLER_QUEUE].push(...this.#exit);
 	}
 	/**
-	 * @param {string} event
+	 * @param {string} eventName
 	 */
-	[QUEUE_ON_HANDLERS](event) {
-		if (Object.hasOwn(this[ON_HANDLER], event)) {
-			this[HANDLER_QUEUE].push(...this[ON_HANDLER][event]);
+	[QUEUE_ON_HANDLERS](eventName) {
+		if (Object.hasOwn(this[ON_HANDLER], eventName)) {
+			this[HANDLER_QUEUE].push(...this[ON_HANDLER][eventName]);
 		}
 	}
 	[RESOLVE_CONFIG]() {

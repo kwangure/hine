@@ -6,9 +6,11 @@ describe('start', () => {
 		/** @type {string[]} */
 		const log = [];
 		const machine = new CompoundState({
-			always: [{
-				actions: ['always'],
-			}],
+			always: [
+				{
+					actions: ['always'],
+				},
+			],
 			actions: {
 				always: new Action({
 					run() {

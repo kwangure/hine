@@ -1,104 +1,104 @@
 {
-    "name": "hine",
-    "version": "0.0.11",
-    "description": "A state machine library",
-    "scripts": {
-        "check": "wireit",
-        "pack": "wireit",
-        "package": "wireit",
-        "pre-commit": "wireit",
-        "publint": "wireit",
-        "release": "release-it",
-        "test": "wireit"
-    },
-    "keywords": [
-        "state",
-        "machine",
-        "state-machine",
-        "svelte",
-        "react"
-    ],
-    "license": "MIT",
-    "files": [
-        "dist",
-        "!**/*.test.*",
-        "!**/*.spec.*"
-    ],
-    "type": "module",
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "default": "./dist/index.js"
-        }
-    },
-    "devDependencies": {
-        "@sveltejs/package": "^2.0.2",
-        "publint": "^0.1.11",
-        "release-it": "^15.6.0",
-        "type-fest": "^3.6.1",
-        "typescript": "^5.0.3",
-        "vitest": "^0.27.2"
-    },
-    "wireit": {
-        "check": {
-            "command": "tsc",
-            "files": [
-                "src/**/*.{js,ts}",
-                "tests/**/*.{js,ts}",
-                "tsconfig.json"
-            ],
-            "output": []
-        },
-        "pack": {
-            "command": "npm pack",
-            "dependencies": [
-                "publint"
-            ],
-            "files": [
-                "dist/**",
-                "!**/*.test.*",
-                "!**/*.spec.*",
-                "LICENSE",
-                "README.md"
-            ],
-            "output": [
-                "hine*.tgz"
-            ]
-        },
-        "package": {
-            "command": "svelte-package -i ./src",
-            "files": [
-                "src/**/*.{js,ts,svelte}"
-            ],
-            "output": [
-                "dist/**"
-            ]
-        },
-        "publint": {
-            "command": "publint",
-            "dependencies": [
-                "package"
-            ],
-            "files": [
-                "dist/**",
-                "package.json"
-            ],
-            "output": []
-        },
-        "pre-commit": {
-            "dependencies": [
-                "check",
-                "test",
-                "package"
-            ]
-        },
-        "test": {
-            "command": "vitest run",
-            "files": [
-                "src/**/*.{js,ts}",
-                "tests/**/*.{js,ts}"
-            ],
-            "output": []
-        }
-    }
+	"name": "hine",
+	"version": "0.0.11",
+	"description": "A state machine library",
+	"scripts": {
+		"check": "wireit",
+		"pack": "wireit",
+		"package": "wireit",
+		"pre-commit": "wireit",
+		"publint": "wireit",
+		"release": "release-it",
+		"test": "wireit"
+	},
+	"keywords": [
+		"state",
+		"machine",
+		"state-machine",
+		"svelte",
+		"react"
+	],
+	"license": "MIT",
+	"files": [
+		"dist",
+		"!**/*.test.*",
+		"!**/*.spec.*"
+	],
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		}
+	},
+	"devDependencies": {
+		"@sveltejs/package": "^2.0.2",
+		"publint": "^0.1.11",
+		"release-it": "^15.6.0",
+		"type-fest": "^3.6.1",
+		"typescript": "^5.0.3",
+		"vitest": "^0.27.2"
+	},
+	"wireit": {
+		"check": {
+			"command": "tsc",
+			"files": [
+				"src/**/*.{js,ts}",
+				"tests/**/*.{js,ts}",
+				"tsconfig.json"
+			],
+			"output": []
+		},
+		"pack": {
+			"command": "npm pack",
+			"dependencies": [
+				"publint"
+			],
+			"files": [
+				"dist/**",
+				"!**/*.test.*",
+				"!**/*.spec.*",
+				"LICENSE",
+				"README.md"
+			],
+			"output": [
+				"hine*.tgz"
+			]
+		},
+		"package": {
+			"command": "svelte-package -i ./src",
+			"files": [
+				"src/**/*.{js,ts,svelte}"
+			],
+			"output": [
+				"dist/**"
+			]
+		},
+		"publint": {
+			"command": "publint",
+			"dependencies": [
+				"package"
+			],
+			"files": [
+				"dist/**",
+				"package.json"
+			],
+			"output": []
+		},
+		"pre-commit": {
+			"dependencies": [
+				"check",
+				"test",
+				"package"
+			]
+		},
+		"test": {
+			"command": "vitest run",
+			"files": [
+				"src/**/*.{js,ts}",
+				"tests/**/*.{js,ts}"
+			],
+			"output": []
+		}
+	}
 }

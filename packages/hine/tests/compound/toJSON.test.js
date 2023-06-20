@@ -43,10 +43,7 @@ describe('toJSON', () => {
 			s1: {
 				name: 's1',
 				type: 'atomic',
-				path: [
-					'state',
-					's1',
-				],
+				path: ['state', 's1'],
 			},
 		});
 	});
@@ -140,9 +137,11 @@ describe('toJSON', () => {
 	it('serializes on handlers', () => {
 		const state = new CompoundState({
 			on: {
-				event: [{
-					actions: ['action'],
-				}],
+				event: [
+					{
+						actions: ['action'],
+					},
+				],
 			},
 			actions: {
 				action: new Action({ run() {} }),
@@ -156,14 +155,16 @@ describe('toJSON', () => {
 		}).start();
 		const json = state.toJSON();
 		expect(json.on).toEqual({
-			event: [{
-				actions: ['action'],
-				condition: undefined,
-				name: '0',
-				transitionTo: undefined,
-				type: 'handler',
-				path: ['', '[0]'],
-			}],
+			event: [
+				{
+					actions: ['action'],
+					condition: undefined,
+					name: '0',
+					transitionTo: undefined,
+					type: 'handler',
+					path: ['', '[0]'],
+				},
+			],
 		});
 	});
 	it('includes path', () => {

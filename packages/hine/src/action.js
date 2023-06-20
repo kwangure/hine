@@ -1,4 +1,11 @@
-import { ACTION_NAME, ACTION_NOTIFY_AFTER, ACTION_NOTIFY_BEFORE, ACTION_OWNER, CALL_SUBSCRIBERS, STATE_ACTION } from './constants.js';
+import {
+	ACTION_NAME,
+	ACTION_NOTIFY_AFTER,
+	ACTION_NOTIFY_BEFORE,
+	ACTION_OWNER,
+	CALL_SUBSCRIBERS,
+	STATE_ACTION,
+} from './constants.js';
 
 /**
  * @typedef {import('./types').StateNode} StateNode
@@ -12,7 +19,7 @@ export class Action {
 	#ownerState = null;
 	/** @type {(arg: any) => any} */
 	#run = noop;
-	#type = /** @type {const} */('action');
+	#type = /** @type {const} */ ('action');
 	/** @type {boolean | undefined} */
 	[ACTION_NOTIFY_AFTER] = undefined;
 	/** @type {boolean | undefined} */
@@ -46,9 +53,7 @@ export class Action {
 	}
 	/** @type {string[]} */
 	get path() {
-		return this.#ownerState
-			? [...this.#ownerState.path, `(${this.#name})`]
-			: [`(${this.#name})`];
+		return this.#ownerState ? [...this.#ownerState.path, `(${this.#name})`] : [`(${this.#name})`];
 	}
 	/**
 	 * @param {any} [value]
@@ -83,5 +88,3 @@ export class Action {
 		this.#ownerState = owner;
 	}
 }
-
-

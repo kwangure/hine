@@ -33,9 +33,7 @@ describe('toJSON', () => {
 			],
 		});
 		const json = state.toJSON();
-		expect(json.actions).toEqual([
-			'action',
-		]);
+		expect(json.actions).toEqual(['action']);
 	});
 	it('serializes nested condition', () => {
 		const name = 'handler';

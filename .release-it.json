@@ -1,12 +1,12 @@
 {
-    "git": {
-        "commitMessage": "chore(release): v${version}",
-        "push": true
-    },
-    "hooks": {
-        "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
-    },
-    "npm": {
-        "publish": true
-    }
+	"git": {
+		"commitMessage": "chore(release): v${version}",
+		"push": true
+	},
+	"hooks": {
+		"after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
+	},
+	"npm": {
+		"publish": true
+	}
 }

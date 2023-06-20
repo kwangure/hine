@@ -14,7 +14,6 @@ export function activePath(state) {
 	return state.name;
 }
 
-
 /**
  * @param {import("../types.js").StateNode} state
  * @param {string[]} [stateTreeEvents]

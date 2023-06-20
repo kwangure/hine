@@ -20,9 +20,11 @@ describe('stateEventNames', () => {
 						}),
 					},
 					on: {
-						event11: [{
-							transitionTo: 's2',
-						}],
+						event11: [
+							{
+								transitionTo: 's2',
+							},
+						],
 						event12: [],
 					},
 				}),
@@ -35,14 +37,7 @@ describe('stateEventNames', () => {
 			},
 		}).start();
 
-		expect(stateEventNames(state))
-			.toEqual([
-				'event',
-				'event11',
-				'event12',
-				'event111',
-				'event112',
-			]);
+		expect(stateEventNames(state)).toEqual(['event', 'event11', 'event12', 'event111', 'event112']);
 		state.dispatch('event11');
 		expect(stateEventNames(state)).toEqual(['event', 'event21', 'event22']);
 	});

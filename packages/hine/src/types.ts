@@ -8,14 +8,14 @@ import type { TO_JSON } from './constants.js';
 import type { Simplify } from 'type-fest';
 
 export interface ActionConfig {
-	name?: string,
+	name?: string;
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
 	run: (this: undefined, arg: Action) => any;
 }
 
 export interface ConditionConfig {
-	name?: string,
+	name?: string;
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
 	run: (this: undefined, arg: Condition) => boolean;
@@ -29,26 +29,26 @@ export type HandlerConfig<T extends StateNode> = {
 	notifyBefore?: boolean;
 	ownerState?: T | BaseState;
 	transitionTo?: T;
-}
+};
 
 export type AlwaysHandlerConfig = {
 	actions?: string[];
 	condition?: string;
 	transitionTo?: string;
-}
+};
 export type DispatchHandlerConfig = {
 	actions?: string[];
 	condition?: string;
 	transitionTo?: string;
-}
+};
 export type EntryHandlerConfig = {
 	actions?: string[];
 	condition?: string;
-}
+};
 export type ExitHandlerConfig = {
 	actions?: string[];
 	condition?: string;
-}
+};
 
 export type StateNode = AtomicState | CompoundState;
 
@@ -58,27 +58,31 @@ type StateNodeConfig = {
 	always: AlwaysHandlerConfig[];
 	conditionConfig: Partial<Omit<ConditionConfig, 'run'>>;
 	conditions: Record<string, Condition>;
-	entry: EntryHandlerConfig[],
-	exit: ExitHandlerConfig[],
+	entry: EntryHandlerConfig[];
+	exit: ExitHandlerConfig[];
 	name: string;
 	on: Record<string, DispatchHandlerConfig[]>;
 };
 
 export type AtomicStateConfig = Partial<StateNodeConfig>;
 export type CompoundStateConfig = Partial<StateNodeConfig> & {
-	states: Record<string, StateNode>
+	states: Record<string, StateNode>;
 };
 
 type BaseJSON = ReturnType<BaseState[typeof TO_JSON]>;
 
-export type AtomicStateJSON = Simplify<BaseJSON & {
-	type: 'atomic';
-}>;
+export type AtomicStateJSON = Simplify<
+	BaseJSON & {
+		type: 'atomic';
+	}
+>;
 
-export type CompoundStateJSON = Simplify<BaseJSON & {
-	type: 'compound';
-	states: Record<string, StateNodeJSON>;
-}>;
+export type CompoundStateJSON = Simplify<
+	BaseJSON & {
+		type: 'compound';
+		states: Record<string, StateNodeJSON>;
+	}
+>;
 
 export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
 
@@ -86,4 +90,4 @@ export type ActionJSON = ReturnType<Action['toJSON']>;
 export type ConditionJSON = ReturnType<Condition['toJSON']>;
 export type HandlerJSON = ReturnType<Handler['toJSON']>;
 
-export { };
+export {};

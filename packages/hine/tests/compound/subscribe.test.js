@@ -29,9 +29,11 @@ describe('subscribe', () => {
 						}),
 					},
 					on: {
-						event: [{
-							actions: ['noop'],
-						}],
+						event: [
+							{
+								actions: ['noop'],
+							},
+						],
 					},
 					states: {
 						s11: new AtomicState(),

@@ -21,12 +21,16 @@ describe('actions', () => {
 					},
 				}),
 			},
-			always: [{
-				actions: ['always0'],
-			}],
-			entry: [{
-				actions: ['entry0'],
-			}],
+			always: [
+				{
+					actions: ['always0'],
+				},
+			],
+			entry: [
+				{
+					actions: ['entry0'],
+				},
+			],
 		}).start();
 		expect(log).toEqual(['entry0', 'always0']);
 	});
@@ -38,9 +42,11 @@ describe('actions', () => {
 			states: {
 				a: new AtomicState({
 					on: {
-						event: [{
-							transitionTo: 'b',
-						}],
+						event: [
+							{
+								transitionTo: 'b',
+							},
+						],
 					},
 				}),
 				b: new AtomicState({
@@ -56,12 +62,16 @@ describe('actions', () => {
 							},
 						}),
 					},
-					always: [{
-						actions: ['always0'],
-					}],
-					entry: [{
-						actions: ['entry0'],
-					}],
+					always: [
+						{
+							actions: ['always0'],
+						},
+					],
+					entry: [
+						{
+							actions: ['entry0'],
+						},
+					],
 				}),
 			},
 		}).start();
@@ -80,9 +90,11 @@ describe('actions', () => {
 					},
 				}),
 			},
-			exit: [{
-				actions: ['exit0'],
-			}],
+			exit: [
+				{
+					actions: ['exit0'],
+				},
+			],
 			states: {
 				s1: new AtomicState({
 					actions: {
@@ -92,13 +104,17 @@ describe('actions', () => {
 							},
 						}),
 					},
-					exit: [{
-						actions: ['exit1'],
-					}],
+					exit: [
+						{
+							actions: ['exit1'],
+						},
+					],
 					on: {
-						event: [{
-							transitionTo: 's2',
-						}],
+						event: [
+							{
+								transitionTo: 's2',
+							},
+						],
 					},
 				}),
 				s2: new AtomicState(),
@@ -107,9 +123,7 @@ describe('actions', () => {
 		log.length = 0;
 
 		machine.dispatch('event');
-		expect(log).toEqual([
-			'exit1',
-		]);
+		expect(log).toEqual(['exit1']);
 	});
 
 	it('runs on actions', () => {
@@ -124,17 +138,17 @@ describe('actions', () => {
 				}),
 			},
 			on: {
-				event: [{
-					actions: ['on0'],
-				}],
+				event: [
+					{
+						actions: ['on0'],
+					},
+				],
 			},
 		}).start();
 		log.length = 0;
 
 		machine.dispatch('event');
-		expect(log).toEqual([
-			'on0',
-		]);
+		expect(log).toEqual(['on0']);
 	});
 
 	it('runs on actions then always actions', () => {
@@ -153,22 +167,23 @@ describe('actions', () => {
 					},
 				}),
 			},
-			always: [{
-				actions: ['always0'],
-			}],
+			always: [
+				{
+					actions: ['always0'],
+				},
+			],
 			on: {
-				event: [{
-					actions: ['on0'],
-				}],
+				event: [
+					{
+						actions: ['on0'],
+					},
+				],
 			},
 		}).start();
 		log.length = 0;
 
 		machine.dispatch('event');
-		expect(log).toEqual([
-			'on0',
-			'always0',
-		]);
+		expect(log).toEqual(['on0', 'always0']);
 	});
 
 	it('runs exit, transition, entry then always actions', () => {
@@ -189,14 +204,18 @@ describe('actions', () => {
 							},
 						}),
 					},
-					exit: [{
-						actions: ['exit1'],
-					}],
+					exit: [
+						{
+							actions: ['exit1'],
+						},
+					],
 					on: {
-						event: [{
-							transitionTo: 's2',
-							actions: ['on1'],
-						}],
+						event: [
+							{
+								transitionTo: 's2',
+								actions: ['on1'],
+							},
+						],
 					},
 				}),
 				s2: new AtomicState({
@@ -214,36 +233,36 @@ describe('actions', () => {
 						on2: new Action({
 							run() {
 								log.push('on2');
-
 							},
 						}),
 					},
-					always: [{
-						actions: ['always2'],
-					}],
-					entry: [{
-						actions: ['entry2'],
-					}],
+					always: [
+						{
+							actions: ['always2'],
+						},
+					],
+					entry: [
+						{
+							actions: ['entry2'],
+						},
+					],
 				}),
 			},
 		}).start();
 		log.length = 0;
 
 		machine.dispatch('event');
-		expect(log).toEqual([
-			'exit1',
-			'on1',
-			'entry2',
-			'always2',
-		]);
+		expect(log).toEqual(['exit1', 'on1', 'entry2', 'always2']);
 	});
 
 	it('runs always actions on unhandled events', () => {
 		let alwaysCount = 0;
 		const machine = new AtomicState({
-			always: [{
-				actions: ['always'],
-			}],
+			always: [
+				{
+					actions: ['always'],
+				},
+			],
 			actions: {
 				always: new Action({
 					run() {
@@ -289,20 +308,28 @@ describe('actions', () => {
 				s1: new CompoundState({
 					states: {
 						s11: new AtomicState({
-							always: [{
-								actions: ['always'],
-							}],
-							entry: [{
-								actions: ['entry'],
-							}],
-							exit: [{
-								actions: ['exit'],
-							}],
+							always: [
+								{
+									actions: ['always'],
+								},
+							],
+							entry: [
+								{
+									actions: ['entry'],
+								},
+							],
+							exit: [
+								{
+									actions: ['exit'],
+								},
+							],
 							on: {
-								event: [{
-									transitionTo: 's12',
-									actions: ['on'],
-								}],
+								event: [
+									{
+										transitionTo: 's12',
+										actions: ['on'],
+									},
+								],
 							},
 						}),
 						s12: new AtomicState(),
@@ -366,20 +393,28 @@ describe('actions', () => {
 							},
 						}),
 					},
-					always: [{
-						actions: ['always'],
-					}],
-					entry: [{
-						actions: ['entry'],
-					}],
-					exit: [{
-						actions: ['exit'],
-					}],
+					always: [
+						{
+							actions: ['always'],
+						},
+					],
+					entry: [
+						{
+							actions: ['entry'],
+						},
+					],
+					exit: [
+						{
+							actions: ['exit'],
+						},
+					],
 					on: {
-						event: [{
-							transitionTo: 's2',
-							actions: ['on'],
-						}],
+						event: [
+							{
+								transitionTo: 's2',
+								actions: ['on'],
+							},
+						],
 					},
 				}),
 				s2: new AtomicState(),
@@ -400,9 +435,11 @@ describe('actions', () => {
 			actions: {
 				action,
 			},
-			entry: [{
-				actions: ['action'],
-			}],
+			entry: [
+				{
+					actions: ['action'],
+				},
+			],
 		});
 		state.start();
 	});
@@ -419,9 +456,11 @@ describe('actions', () => {
 				}),
 			},
 			on: {
-				event: [{
-					actions: ['action'],
-				}],
+				event: [
+					{
+						actions: ['action'],
+					},
+				],
 			},
 		});
 		state.start();
@@ -447,9 +486,11 @@ describe('actions', () => {
 				}),
 			},
 			on: {
-				event: [{
-					actions: ['action'],
-				}],
+				event: [
+					{
+						actions: ['action'],
+					},
+				],
 			},
 		}).start();
 		state.subscribe(() => log.push('sub'));
@@ -476,9 +517,11 @@ describe('actions', () => {
 				}),
 			},
 			on: {
-				event: [{
-					actions: ['action'],
-				}],
+				event: [
+					{
+						actions: ['action'],
+					},
+				],
 			},
 		}).start();
 		state.subscribe(() => log.push('sub'));
@@ -506,18 +549,17 @@ describe('actions', () => {
 				}),
 			},
 			on: {
-				event: [{
-					actions: ['action'],
-				}],
+				event: [
+					{
+						actions: ['action'],
+					},
+				],
 			},
 		}).start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
-		expect(log).toEqual([
-			'action',
-			'sub',
-		]);
+		expect(log).toEqual(['action', 'sub']);
 	});
 	it('passes condition config from grandparent state', () => {
 		/** @type {string[]} */
@@ -539,9 +581,11 @@ describe('actions', () => {
 								}),
 							},
 							on: {
-								event: [{
-									actions: ['action'],
-								}],
+								event: [
+									{
+										actions: ['action'],
+									},
+								],
 							},
 						}),
 					},
@@ -564,13 +608,15 @@ describe('actions', () => {
 			actions: {
 				action: new Action({
 					name: 'other-action',
-					run() { },
+					run() {},
 				}),
 			},
 			on: {
-				event: [{
-					actions: ['action'],
-				}],
+				event: [
+					{
+						actions: ['action'],
+					},
+				],
 			},
 		});
 		expect(() => state.start()).toThrow(/unknown action/);
@@ -578,17 +624,18 @@ describe('actions', () => {
 			actions: {
 				action: new Action({
 					name: 'other-action',
-					run() { },
+					run() {},
 				}),
 			},
 			on: {
-				event: [{
-					actions: ['other-action'],
-				}],
+				event: [
+					{
+						actions: ['other-action'],
+					},
+				],
 			},
 		});
 		expect(() => state2.start()).not.toThrow();
-
 	});
 	it('sets state action during action', () => {
 		const action = new Action({
@@ -601,9 +648,11 @@ describe('actions', () => {
 			actions: {
 				action,
 			},
-			entry: [{
-				actions: ['action'],
-			}],
+			entry: [
+				{
+					actions: ['action'],
+				},
+			],
 		});
 		expect(state.action).toBe(null);
 		state.start();
@@ -614,9 +663,11 @@ describe('actions', () => {
 			run: () => 'test',
 		});
 		new AtomicState({
-			entry: [{
-				actions: ['action1'],
-			}],
+			entry: [
+				{
+					actions: ['action1'],
+				},
+			],
 			actions: {
 				action1: new Action({
 					run({ ownerState }) {

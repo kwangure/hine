@@ -3,11 +3,13 @@
 A JavaScript state machine library.
 
 ### Install
+
 ```bash
 npm install hine
 ```
 
 ### Getting started
+
 ```javascript
 import { h } from 'hine';
 
@@ -29,7 +31,7 @@ toggle.subscribe((alsoToggle) => {
 	// toggle === alsoToggle
 	console.log({ state: toggle.state.name });
 	// { state: null };
-})
+});
 
 toggle.start();
 // { state: 'inactive' };

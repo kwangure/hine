@@ -32,7 +32,7 @@ export class Handler {
 	#ownerState = null;
 	/** @type {StateNode | null} */
 	#transitionTo = null;
-	#type = /** @type {const} */('handler');
+	#type = /** @type {const} */ ('handler');
 	/** @type {boolean | undefined} */
 	[HANDLER_NOTIFY_AFTER] = undefined;
 	/** @type {boolean | undefined} */
@@ -69,9 +69,7 @@ export class Handler {
 	}
 	/** @type {string[]} */
 	get path() {
-		return this.#ownerState
-			? [...this.#ownerState.path, `[${this.#name}]`]
-			: [`[${this.#name}]`];
+		return this.#ownerState ? [...this.#ownerState.path, `[${this.#name}]`] : [`[${this.#name}]`];
 	}
 	/**
 	 * @param {any} value
@@ -210,4 +208,3 @@ export class Handler {
 		return this.#type;
 	}
 }
-

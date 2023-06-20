@@ -23,9 +23,11 @@ describe('subscribe', () => {
 				}),
 			},
 			on: {
-				event: [{
-					actions: ['noop'],
-				}],
+				event: [
+					{
+						actions: ['noop'],
+					},
+				],
 			},
 		}).start();
 		let count = 0;

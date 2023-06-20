@@ -1,0 +1,7 @@
+.DS_Store
+node_modules
+.wireit
+.env
+.env.*
+!.env.example
+package-lock.json

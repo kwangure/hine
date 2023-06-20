@@ -14,5 +14,4 @@ export class StateEvent {
 	get time() {
 		return this.#time;
 	}
-
 }

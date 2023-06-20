@@ -1,4 +1,11 @@
-import { CALL_SUBSCRIBERS, CONDITION_NAME, CONDITION_NOTIFY_AFTER, CONDITION_NOTIFY_BEFORE, CONDITION_OWNER, STATE_CONDITION } from './constants.js';
+import {
+	CALL_SUBSCRIBERS,
+	CONDITION_NAME,
+	CONDITION_NOTIFY_AFTER,
+	CONDITION_NOTIFY_BEFORE,
+	CONDITION_OWNER,
+	STATE_CONDITION,
+} from './constants.js';
 
 /**
  * @typedef {import('./types').StateNode} StateNode
@@ -14,8 +21,7 @@ export class Condition {
 	#ownerState = null;
 	/** @type {(arg: any) => boolean} */
 	#run = noop;
-	#type = /** @type {const} */('condition');
-
+	#type = /** @type {const} */ ('condition');
 
 	/** @type {boolean | undefined} */
 	[CONDITION_NOTIFY_AFTER] = undefined;
@@ -51,9 +57,7 @@ export class Condition {
 	}
 	/** @type {string[]} */
 	get path() {
-		return this.#ownerState
-			? [...this.#ownerState.path, `?${this.#name}`]
-			: [`?${this.#name}`];
+		return this.#ownerState ? [...this.#ownerState.path, `?${this.#name}`] : [`?${this.#name}`];
 	}
 	/**
 	 * @param {any} [value]

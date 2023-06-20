@@ -5,22 +5,25 @@ import { Condition } from '../../src/condition.js';
 import { Handler } from '../../src/handler.js';
 import { zip } from '../../src/utils/iterator.js';
 
-
 describe('step', () => {
 	it('call subscribers at the end', () => {
 		const state = new AtomicState({
-			always: [{
-				actions: ['action'],
-			}],
+			always: [
+				{
+					actions: ['action'],
+				},
+			],
 			actions: {
 				action: new Action({
 					run() {},
 				}),
 			},
 			on: {
-				event: [{
-					actions: ['action'],
-				}],
+				event: [
+					{
+						actions: ['action'],
+					},
+				],
 			},
 		}).start();
 
@@ -47,16 +50,20 @@ describe('step', () => {
 			run: () => true,
 		});
 		const state = new AtomicState({
-			always: [{
-				actions: ['action'],
-			}],
+			always: [
+				{
+					actions: ['action'],
+				},
+			],
 			actions: { action },
 			conditions: { condition },
 			on: {
-				event: [{
-					condition: 'condition',
-					actions: ['action'],
-				}],
+				event: [
+					{
+						condition: 'condition',
+						actions: ['action'],
+					},
+				],
 			},
 		}).start();
 
@@ -78,9 +85,11 @@ describe('step', () => {
 	});
 	it('throws if state is not initialized', () => {
 		const state = new AtomicState({
-			always: [{
-				actions: ['action'],
-			}],
+			always: [
+				{
+					actions: ['action'],
+				},
+			],
 			actions: {
 				action: new Action({
 					run() {},
@@ -92,9 +101,11 @@ describe('step', () => {
 	});
 	it('throws if step is already in progress', () => {
 		const state = new AtomicState({
-			always: [{
-				actions: ['action'],
-			}],
+			always: [
+				{
+					actions: ['action'],
+				},
+			],
 			actions: {
 				action: new Action({
 					run() {},

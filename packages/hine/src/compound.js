@@ -27,7 +27,7 @@ export class CompoundState extends BaseState {
 	#state = null;
 	/** @type {Map<string, StateNode>} */
 	#states = new Map();
-	#type = /** @type {const} */('compound');
+	#type = /** @type {const} */ ('compound');
 
 	/**
 	 * @param {import('./types').CompoundStateConfig} stateConfig
@@ -56,9 +56,9 @@ export class CompoundState extends BaseState {
 	matches(path) {
 		if (!this.#state) return false;
 
-		return super.matches(path) || (
-			(path.startsWith(`${this.name}.`)
-			&& this.#state.matches(path.slice(this.name.length + 1)))
+		return (
+			super.matches(path)
+			|| (path.startsWith(`${this.name}.`) && this.#state.matches(path.slice(this.name.length + 1)))
 		);
 	}
 	get state() {
@@ -67,9 +67,9 @@ export class CompoundState extends BaseState {
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
 		fn(this);
-		this[STATE_SUBSCRIBERS].add(/** @type {(arg: BaseState) => any} */(fn));
+		this[STATE_SUBSCRIBERS].add(/** @type {(arg: BaseState) => any} */ (fn));
 		return () => {
-			this[STATE_SUBSCRIBERS].delete(/** @type {(arg: BaseState) => any} */(fn));
+			this[STATE_SUBSCRIBERS].delete(/** @type {(arg: BaseState) => any} */ (fn));
 		};
 	}
 	toJSON() {

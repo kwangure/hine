@@ -124,9 +124,15 @@ export class BaseState {
 				const actions = Object.keys(this.#allActions);
 				if (this.path.some((segment) => Boolean(segment))) {
 					const path = this.path.join('.');
-					throw Error(`State '${path}' references unknown action '${name}'. Expected one of: ${actions.join(', ')}`);
+					throw Error(
+						`State '${path}' references unknown action '${name}'. Expected one of: ${actions.join(
+							', ',
+						)}`,
+					);
 				} else {
-					throw Error(`State references unknown action '${name}'. Expected one of: ${actions.join(', ')}`);
+					throw Error(
+						`State references unknown action '${name}'. Expected one of: ${actions.join(', ')}`,
+					);
 				}
 			}
 			actions.push(action);
@@ -145,9 +151,15 @@ export class BaseState {
 			const conditions = Object.keys(this.#allConditions);
 			if (this.path.some((segment) => Boolean(segment))) {
 				const path = this.path.join('.');
-				throw Error(`State '${path}' references unknown condition '${name}'. Expected one of: ${conditions.join(', ')}`);
+				throw Error(
+					`State '${path}' references unknown condition '${name}'. Expected one of: ${conditions.join(
+						', ',
+					)}`,
+				);
 			} else {
-				throw Error(`State references unknown condition '${name}'. Expected one of: ${conditions.join(', ')}`);
+				throw Error(
+					`State references unknown condition '${name}'. Expected one of: ${conditions.join(', ')}`,
+				);
 			}
 		}
 
@@ -166,18 +178,30 @@ export class BaseState {
 			if (!parent) {
 				if (this.path.some((segment) => Boolean(segment))) {
 					const path = this.path.join('.');
-					throw Error(`State '${path}' references unknown transition target '${transitionTo}'. '${path}' does not have siblings.`);
+					throw Error(
+						`State '${path}' references unknown transition target '${transitionTo}'. '${path}' does not have siblings.`,
+					);
 				} else {
-					throw Error(`State references unknown transition target '${transitionTo}'. It does not have sibling states.`);
+					throw Error(
+						`State references unknown transition target '${transitionTo}'. It does not have sibling states.`,
+					);
 				}
 			}
 			to = parent[STATE_STATES].get(transitionTo);
 			if (!to) {
 				if (this.path.some((segment) => Boolean(segment))) {
 					const path = this.path.join('.');
-					throw Error(`State '${path}' references unknown transition target target '${transitionTo}'. Expected one of: ${[...parent[STATE_STATES].keys()].join(', ')}.`);
+					throw Error(
+						`State '${path}' references unknown transition target target '${transitionTo}'. Expected one of: ${[
+							...parent[STATE_STATES].keys(),
+						].join(', ')}.`,
+					);
 				} else {
-					throw Error(`State references unknown transition target '${transitionTo}'. Expected one of: ${[...parent[STATE_STATES].keys()].join(', ')}.`);
+					throw Error(
+						`State references unknown transition target '${transitionTo}'. Expected one of: ${[
+							...parent[STATE_STATES].keys(),
+						].join(', ')}.`,
+					);
 				}
 			}
 		}
@@ -237,9 +261,9 @@ export class BaseState {
 		if (!this.#initialized) return false;
 		return Boolean(
 			path === this.#name
-			|| (this.#action && path === this.#action.path.join('.'))
-			|| (this.#condition && path === this.#condition.path.join('.'))
-			|| (this.#handler && path === this.#handler.path.join('.')),
+				|| (this.#action && path === this.#action.path.join('.'))
+				|| (this.#condition && path === this.#condition.path.join('.'))
+				|| (this.#handler && path === this.#handler.path.join('.')),
 		);
 	}
 	get name() {
@@ -250,9 +274,7 @@ export class BaseState {
 	}
 	/** @type {string[]} */
 	get path() {
-		return this.#parent
-			? [...this.#parent.path, this.#name]
-			: [this.#name];
+		return this.#parent ? [...this.#parent.path, this.#name] : [this.#name];
 	}
 	// Type return as derived class instead of `BaseState`
 	/** @returns {this} */
@@ -346,11 +368,11 @@ export class BaseState {
 		for (const handler of this[HANDLER_QUEUE]) {
 			if (handler.condition && !handler.condition.run(value)) continue;
 			if (handler.transitionTo) {
-				queue.push(/** @type {const} */([handler, 'stepTransition']));
+				queue.push(/** @type {const} */ ([handler, 'stepTransition']));
 				// Handlers after the first transition are ignored
 				break;
 			} else {
-				queue.push(/** @type {const} */([handler, 'stepActions']));
+				queue.push(/** @type {const} */ ([handler, 'stepActions']));
 			}
 		}
 		this[HANDLER_QUEUE].length = 0;
@@ -385,8 +407,7 @@ export class BaseState {
 		}
 
 		for (const [event, handlers] of Object.entries(this.#onConfig)) {
-			this[ON_HANDLER][event] = handlers
-				.map((handler, i) => this.#resolveHandler(handler, String(i)));
+			this[ON_HANDLER][event] = handlers.map((handler, i) => this.#resolveHandler(handler, String(i)),);
 		}
 
 		for (const [index, handler] of this.#entryConfig.entries()) {
@@ -405,10 +426,10 @@ export class BaseState {
 	 */
 	get [STATE_ACTION_CONFIGS]() {
 		return {
-			notifyAfter: this.#actionConfig.notifyAfter
-				?? this.#parent?.[STATE_ACTION_CONFIGS].notifyAfter
-				?? false,
-			notifyBefore: this.#actionConfig.notifyBefore
+			notifyAfter:
+				this.#actionConfig.notifyAfter ?? this.#parent?.[STATE_ACTION_CONFIGS].notifyAfter ?? false,
+			notifyBefore:
+				this.#actionConfig.notifyBefore
 				?? this.#parent?.[STATE_ACTION_CONFIGS].notifyBefore
 				?? false,
 		};
@@ -429,12 +450,10 @@ export class BaseState {
 					action[ACTION_NAME] = name;
 				}
 				if (typeof action[ACTION_NOTIFY_AFTER] !== 'boolean') {
-					action[ACTION_NOTIFY_AFTER]
-						= this[STATE_ACTION_CONFIGS].notifyAfter;
+					action[ACTION_NOTIFY_AFTER] = this[STATE_ACTION_CONFIGS].notifyAfter;
 				}
 				if (typeof action[ACTION_NOTIFY_BEFORE] !== 'boolean') {
-					action[ACTION_NOTIFY_BEFORE]
-						= this[STATE_ACTION_CONFIGS].notifyBefore;
+					action[ACTION_NOTIFY_BEFORE] = this[STATE_ACTION_CONFIGS].notifyBefore;
 				}
 				// @ts-ignore
 				action[ACTION_OWNER] = this;
@@ -452,10 +471,12 @@ export class BaseState {
 	 */
 	get [STATE_CONDITION_CONFIGS]() {
 		return {
-			notifyAfter: this.#conditionConfig.notifyAfter
+			notifyAfter:
+				this.#conditionConfig.notifyAfter
 				?? this.#parent?.[STATE_CONDITION_CONFIGS].notifyAfter
 				?? false,
-			notifyBefore: this.#conditionConfig.notifyBefore
+			notifyBefore:
+				this.#conditionConfig.notifyBefore
 				?? this.#parent?.[STATE_CONDITION_CONFIGS].notifyBefore
 				?? false,
 		};
@@ -478,12 +499,10 @@ export class BaseState {
 					condition[CONDITION_NAME] = name;
 				}
 				if (typeof condition[CONDITION_NOTIFY_AFTER] !== 'boolean') {
-					condition[CONDITION_NOTIFY_AFTER]
-						= this[STATE_CONDITION_CONFIGS].notifyAfter;
+					condition[CONDITION_NOTIFY_AFTER] = this[STATE_CONDITION_CONFIGS].notifyAfter;
 				}
 				if (typeof condition[CONDITION_NOTIFY_BEFORE] !== 'boolean') {
-					condition[CONDITION_NOTIFY_BEFORE]
-						= this[STATE_CONDITION_CONFIGS].notifyBefore;
+					condition[CONDITION_NOTIFY_BEFORE] = this[STATE_CONDITION_CONFIGS].notifyBefore;
 				}
 				// @ts-ignore
 				condition[CONDITION_OWNER] = this;
@@ -518,15 +537,9 @@ export class BaseState {
 		}
 
 		return {
-			always: this.#always.length
-				? this.#always.map((handler) => handler.toJSON())
-				: undefined,
-			entry: this.#entry.length
-				? this.#entry.map((handler) => handler.toJSON())
-				: undefined,
-			exit: this.#exit.length
-				? this.#exit.map((handler) => handler.toJSON())
-				: undefined,
+			always: this.#always.length ? this.#always.map((handler) => handler.toJSON()) : undefined,
+			entry: this.#entry.length ? this.#entry.map((handler) => handler.toJSON()) : undefined,
+			exit: this.#exit.length ? this.#exit.map((handler) => handler.toJSON()) : undefined,
 			name: this.#name,
 			on: onEntries.length ? on : undefined,
 			path: this.path,

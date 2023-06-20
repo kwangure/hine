@@ -8,47 +8,53 @@ describe('htstate', () => {
 	describe('missing actions', () => {
 		it('throws on missing entry actions', () => {
 			expect(() => new CompoundState({
-				states: {
-					first: new CompoundState({
-						entry: [{
-							actions: ['missing'],
-						}],
-						states: {
-							s1: new AtomicState(),
-						},
-					}),
-				},
-			}).start()).toThrow('\'missing\'');
+					states: {
+						first: new CompoundState({
+							entry: [
+								{
+									actions: ['missing'],
+								},
+							],
+							states: {
+								s1: new AtomicState(),
+							},
+						}),
+					},
+				}).start(),).toThrow('\'missing\'');
 		});
 
 		it('throws on missing exit actions', () => {
 			expect(() => new CompoundState({
-				states: {
-					first: new CompoundState({
-						exit: [{
-							actions: ['missing'],
-						}],
-						states: {
-							s1: new AtomicState(),
-						},
-					}),
-				},
-			}).start()).toThrow('\'missing\'');
+					states: {
+						first: new CompoundState({
+							exit: [
+								{
+									actions: ['missing'],
+								},
+							],
+							states: {
+								s1: new AtomicState(),
+							},
+						}),
+					},
+				}).start(),).toThrow('\'missing\'');
 		});
 
 		it('throws on missing transient actions', () => {
 			expect(() => new CompoundState({
-				states: {
-					first: new CompoundState({
-						always: [{
-							actions: ['missing'],
-						}],
-						states: {
-							s1: new AtomicState(),
-						},
-					}),
-				},
-			}).start()).toThrow('\'missing\'');
+					states: {
+						first: new CompoundState({
+							always: [
+								{
+									actions: ['missing'],
+								},
+							],
+							states: {
+								s1: new AtomicState(),
+							},
+						}),
+					},
+				}).start(),).toThrow('\'missing\'');
 		});
 	});
 

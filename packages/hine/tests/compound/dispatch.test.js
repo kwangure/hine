@@ -8,16 +8,17 @@ describe('dispatch', () => {
 				s1: new AtomicState(),
 			},
 		});
-		expect(() => machine.dispatch('test'))
-			.toThrow('Attempted dispatch before resolving state');
+		expect(() => machine.dispatch('test')).toThrow('Attempted dispatch before resolving state');
 	});
 
 	it('transitions on dispatch', () => {
 		const s1 = new CompoundState({
 			on: {
-				event: [{
-					transitionTo: 's2',
-				}],
+				event: [
+					{
+						transitionTo: 's2',
+					},
+				],
 			},
 			states: {
 				s11: new AtomicState(),
@@ -25,9 +26,11 @@ describe('dispatch', () => {
 		});
 		const s2 = new CompoundState({
 			on: {
-				event: [{
-					transitionTo: 's1',
-				}],
+				event: [
+					{
+						transitionTo: 's1',
+					},
+				],
 			},
 			states: {
 				s21: new AtomicState(),

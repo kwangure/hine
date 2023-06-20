@@ -57,9 +57,11 @@ describe('matches', () => {
 	it('matches actions', () => {
 		const state = new CompoundState({
 			name: 'state',
-			always: [{
-				actions: ['action'],
-			}],
+			always: [
+				{
+					actions: ['action'],
+				},
+			],
 			actions: {
 				action: new Action({
 					notifyBefore: true,
@@ -84,10 +86,12 @@ describe('matches', () => {
 	it('matches conditions', () => {
 		const state = new CompoundState({
 			name: 'state',
-			always: [{
-				condition: 'condition',
-				actions: ['action'],
-			}],
+			always: [
+				{
+					condition: 'condition',
+					actions: ['action'],
+				},
+			],
 			actions: {
 				action: new Action({ run() {} }),
 			},
@@ -115,10 +119,12 @@ describe('matches', () => {
 	it('matches handler', () => {
 		const state = new CompoundState({
 			name: 'state',
-			always: [{
-				condition: 'condition',
-				actions: ['action'],
-			}],
+			always: [
+				{
+					condition: 'condition',
+					actions: ['action'],
+				},
+			],
 			actions: {
 				action: new Action({
 					notifyBefore: true,

@@ -28,7 +28,9 @@ describe('dispatch', () => {
 		});
 		const compound = new CompoundState({
 			states: { s1, s2 },
-		}).start();
+		});
+		compound.monitor({});
+		compound.start();
 		compound.dispatch('event');
 		expect(compound.state).toBe(s2);
 		compound.dispatch('event');

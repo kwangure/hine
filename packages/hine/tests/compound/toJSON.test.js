@@ -54,16 +54,19 @@ describe('toJSON', () => {
 					actions: ['action'],
 				},
 			],
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			conditions: {
 				condition: new Condition({ run: () => true }),
 			},
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
+		state.start();
 		const json = state.toJSON();
 		expect(json.always).toEqual([
 			{
@@ -83,16 +86,19 @@ describe('toJSON', () => {
 					actions: ['action'],
 				},
 			],
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			conditions: {
 				condition: new Condition({ run: () => true }),
 			},
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
+		state.start();
 		const json = state.toJSON();
 		expect(json.entry).toEqual([
 			{
@@ -112,16 +118,19 @@ describe('toJSON', () => {
 					actions: ['action'],
 				},
 			],
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			conditions: {
 				condition: new Condition({ run: () => true }),
 			},
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
+		state.start();
 		const json = state.toJSON();
 		expect(json.exit).toEqual([
 			{
@@ -143,16 +152,19 @@ describe('toJSON', () => {
 					},
 				],
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			conditions: {
 				condition: new Condition({ run: () => true }),
 			},
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
+		state.start();
 		const json = state.toJSON();
 		expect(json.on).toEqual({
 			event: [

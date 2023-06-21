@@ -6,18 +6,13 @@ describe('conditions', () => {
 		const cond2 = new Condition({
 			run: () => false,
 		});
-		const machine = new CompoundState({
+		const state = new CompoundState({
 			entry: [
 				{
 					condition: 'cond1',
 					actions: ['do'],
 				},
 			],
-			actions: {
-				do: new Action({
-					run() {},
-				}),
-			},
 			conditions: {
 				cond1: new Condition({
 					run({ ownerState }) {
@@ -33,7 +28,14 @@ describe('conditions', () => {
 				s1: new AtomicState(),
 			},
 		});
-		machine.start();
+		state.monitor({
+			actions: {
+				do: new Action({
+					run() {},
+				}),
+			},
+		});
+		state.start();
 	});
 	it('calls condition with self-reference', () => {
 		const condition = new Condition({
@@ -47,11 +49,6 @@ describe('conditions', () => {
 			conditions: {
 				condition,
 			},
-			actions: {
-				action: new Action({
-					run() {},
-				}),
-			},
 			entry: [
 				{
 					condition: 'condition',
@@ -60,6 +57,13 @@ describe('conditions', () => {
 			],
 			states: {
 				s1: new AtomicState(),
+			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					run() {},
+				}),
 			},
 		});
 		state.start();
@@ -77,9 +81,6 @@ describe('conditions', () => {
 					},
 				}),
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			on: {
 				event: [
 					{
@@ -90,6 +91,11 @@ describe('conditions', () => {
 			},
 			states: {
 				s1: new AtomicState(),
+			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
 			},
 		});
 		state.start();
@@ -115,9 +121,6 @@ describe('conditions', () => {
 					},
 				}),
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			on: {
 				event: [
 					{
@@ -129,7 +132,13 @@ describe('conditions', () => {
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
+		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -154,9 +163,6 @@ describe('conditions', () => {
 					},
 				}),
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			on: {
 				event: [
 					{
@@ -168,7 +174,13 @@ describe('conditions', () => {
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
+		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -195,9 +207,6 @@ describe('conditions', () => {
 							},
 						}),
 					},
-					actions: {
-						action: new Action({ run() {} }),
-					},
 					on: {
 						event: [
 							{
@@ -211,7 +220,17 @@ describe('conditions', () => {
 					},
 				}),
 			},
-		}).start();
+		});
+		state.monitor({
+			states: {
+				s1: {
+					actions: {
+						action: new Action({ run() {} }),
+					},
+				},
+			},
+		});
+		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -237,9 +256,6 @@ describe('conditions', () => {
 					},
 				}),
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			on: {
 				event: [
 					{
@@ -251,7 +267,13 @@ describe('conditions', () => {
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
+		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -267,9 +289,6 @@ describe('conditions', () => {
 					},
 				}),
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			on: {
 				event: [
 					{
@@ -282,6 +301,11 @@ describe('conditions', () => {
 				s1: new AtomicState(),
 			},
 		});
+		state1.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
 		expect(() => state1.start()).toThrow(/unknown condition/);
 		const state2 = new CompoundState({
 			conditions: {
@@ -291,9 +315,6 @@ describe('conditions', () => {
 						return true;
 					},
 				}),
-			},
-			actions: {
-				action: new Action({ run() {} }),
 			},
 			on: {
 				event: [
@@ -305,6 +326,11 @@ describe('conditions', () => {
 			},
 			states: {
 				s1: new AtomicState(),
+			},
+		});
+		state2.monitor({
+			actions: {
+				action: new Action({ run() {} }),
 			},
 		});
 		expect(() => state2.start()).not.toThrow();
@@ -321,9 +347,6 @@ describe('conditions', () => {
 			conditions: {
 				condition,
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			entry: [
 				{
 					condition: 'condition',
@@ -332,6 +355,11 @@ describe('conditions', () => {
 			],
 			states: {
 				s1: new AtomicState(),
+			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
 			},
 		});
 		expect(state.condition).toBe(null);

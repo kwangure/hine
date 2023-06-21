@@ -122,6 +122,25 @@ describe('htstate', () => {
 								},
 							],
 						},
+						conditions: {
+							run: new Condition({
+								run() {
+									return true;
+								},
+							}),
+							ignore: new Condition({
+								run() {
+									return false;
+								},
+							}),
+						},
+					}),
+					other: new AtomicState(),
+				},
+			});
+			machine.monitor({
+				states: {
+					current: {
 						actions: {
 							ignore: new Action({
 								run() {
@@ -149,22 +168,10 @@ describe('htstate', () => {
 								},
 							}),
 						},
-						conditions: {
-							run: new Condition({
-								run() {
-									return true;
-								},
-							}),
-							ignore: new Condition({
-								run() {
-									return false;
-								},
-							}),
-						},
-					}),
-					other: new AtomicState(),
+					},
 				},
-			}).start();
+			});
+			machine.start();
 		});
 
 		it('ignores initial entry then transient actions', () => {

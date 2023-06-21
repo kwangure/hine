@@ -6,18 +6,13 @@ describe('conditions', () => {
 		const cond2 = new Condition({
 			run: () => false,
 		});
-		new AtomicState({
+		const state = new AtomicState({
 			entry: [
 				{
 					condition: 'cond1',
 					actions: ['do'],
 				},
 			],
-			actions: {
-				do: new Action({
-					run() {},
-				}),
-			},
 			conditions: {
 				cond1: new Condition({
 					run({ ownerState }) {
@@ -29,7 +24,15 @@ describe('conditions', () => {
 				}),
 				cond2,
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				do: new Action({
+					run() {},
+				}),
+			},
+		});
+		state.start();
 	});
 	it('calls condition in machine context', () => {
 		const condition = new Condition({
@@ -43,17 +46,19 @@ describe('conditions', () => {
 			conditions: {
 				condition,
 			},
-			actions: {
-				action: new Action({
-					run() {},
-				}),
-			},
 			entry: [
 				{
 					condition: 'condition',
 					actions: ['action'],
 				},
 			],
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					run() {},
+				}),
+			},
 		});
 		state.start();
 	});
@@ -70,9 +75,6 @@ describe('conditions', () => {
 					},
 				}),
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			on: {
 				event: [
 					{
@@ -80,6 +82,11 @@ describe('conditions', () => {
 						actions: ['action'],
 					},
 				],
+			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
 			},
 		});
 		state.start();
@@ -105,9 +112,6 @@ describe('conditions', () => {
 					},
 				}),
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			on: {
 				event: [
 					{
@@ -116,7 +120,13 @@ describe('conditions', () => {
 					},
 				],
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
+		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -141,9 +151,6 @@ describe('conditions', () => {
 					},
 				}),
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			on: {
 				event: [
 					{
@@ -152,7 +159,13 @@ describe('conditions', () => {
 					},
 				],
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
+		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -181,9 +194,6 @@ describe('conditions', () => {
 									},
 								}),
 							},
-							actions: {
-								action: new Action({ run() {} }),
-							},
 							on: {
 								event: [
 									{
@@ -196,7 +206,21 @@ describe('conditions', () => {
 					},
 				}),
 			},
-		}).start();
+		});
+		state.monitor({
+			states: {
+				s1: {
+					states: {
+						s11: {
+							actions: {
+								action: new Action({ run() {} }),
+							},
+						},
+					},
+				},
+			},
+		});
+		state.start();
 		state.subscribe(() => {
 			log.push('sub');
 		});
@@ -224,9 +248,6 @@ describe('conditions', () => {
 					},
 				}),
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			on: {
 				event: [
 					{
@@ -235,7 +256,13 @@ describe('conditions', () => {
 					},
 				],
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
+		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -251,9 +278,6 @@ describe('conditions', () => {
 					},
 				}),
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			on: {
 				event: [
 					{
@@ -261,6 +285,11 @@ describe('conditions', () => {
 						actions: ['action'],
 					},
 				],
+			},
+		});
+		state1.monitor({
+			actions: {
+				action: new Action({ run() {} }),
 			},
 		});
 		expect(() => state1.start()).toThrow(/unknown condition/);
@@ -273,9 +302,6 @@ describe('conditions', () => {
 					},
 				}),
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			on: {
 				event: [
 					{
@@ -283,6 +309,11 @@ describe('conditions', () => {
 						actions: ['action'],
 					},
 				],
+			},
+		});
+		state2.monitor({
+			actions: {
+				action: new Action({ run() {} }),
 			},
 		});
 		expect(() => state2.start()).not.toThrow();
@@ -299,15 +330,17 @@ describe('conditions', () => {
 			conditions: {
 				condition,
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			entry: [
 				{
 					condition: 'condition',
 					actions: ['action'],
 				},
 			],
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
 		});
 		expect(state.condition).toBe(null);
 		state.start();

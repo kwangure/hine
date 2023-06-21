@@ -13,11 +13,6 @@ describe('step', () => {
 					actions: ['action'],
 				},
 			],
-			actions: {
-				action: new Action({
-					run() {},
-				}),
-			},
 			on: {
 				event: [
 					{
@@ -25,7 +20,15 @@ describe('step', () => {
 					},
 				],
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					run() {},
+				}),
+			},
+		});
+		state.start();
 
 		let count = 0;
 		state.subscribe(() => count++);
@@ -55,7 +58,6 @@ describe('step', () => {
 					actions: ['action'],
 				},
 			],
-			actions: { action },
 			conditions: { condition },
 			on: {
 				event: [
@@ -65,7 +67,9 @@ describe('step', () => {
 					},
 				],
 			},
-		}).start();
+		});
+		state.monitor({ actions: { action }});
+		state.start();
 
 		const expected = [Handler, condition, action, Handler, action];
 		const expectedIterator = expected[Symbol.iterator]();
@@ -90,6 +94,8 @@ describe('step', () => {
 					actions: ['action'],
 				},
 			],
+		});
+		state.monitor({
 			actions: {
 				action: new Action({
 					run() {},
@@ -106,12 +112,15 @@ describe('step', () => {
 					actions: ['action'],
 				},
 			],
+		});
+		state.monitor({
 			actions: {
 				action: new Action({
 					run() {},
 				}),
 			},
-		}).start();
+		});
+		state.start();
 		state.step('event').next();
 		expect(() => state.step('event').next()).toThrow(/in progress/);
 	});

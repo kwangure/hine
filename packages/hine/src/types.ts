@@ -54,7 +54,6 @@ export type StateNode = AtomicState | CompoundState;
 
 type StateNodeConfig = {
 	actionConfig: Partial<Omit<ActionConfig, 'run'>>;
-	actions: Record<string, Action>;
 	always: AlwaysHandlerConfig[];
 	conditionConfig: Partial<Omit<ConditionConfig, 'run'>>;
 	conditions: Record<string, Condition>;
@@ -89,5 +88,13 @@ export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
 export type ActionJSON = ReturnType<Action['toJSON']>;
 export type ConditionJSON = ReturnType<Condition['toJSON']>;
 export type HandlerJSON = ReturnType<Handler['toJSON']>;
+
+export type MonitorConfig = {
+	actions?: Record<string, Action>;
+}
+
+export type CompoundMonitorConfig = MonitorConfig & {
+	states?: Record<string, MonitorConfig | CompoundMonitorConfig>;
+}
 
 export {};

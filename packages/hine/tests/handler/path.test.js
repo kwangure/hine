@@ -19,7 +19,9 @@ describe('path', () => {
 		const state = new AtomicState({
 			name: 'state',
 			always: [{}],
-		}).start();
+		});
+		state.monitor({});
+		state.start();
 		// Currently the only way the end user ever reaches a Handler object
 		const eventIterator = state.step('event');
 		const { value: handler, done } = eventIterator.next();

@@ -3,11 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 describe('subscribe', () => {
 	it('calls subscribers on start', () => {
-		const machine = new AtomicState({
-			actions: {},
-			always: [],
-			entry: [],
-		});
+		const machine = new AtomicState();
 		let count = 0;
 		machine.subscribe(() => count++);
 		expect(count).toBe(1);
@@ -16,12 +12,7 @@ describe('subscribe', () => {
 		expect(count).toBe(2);
 	});
 	it('calls subscribers on disptach', () => {
-		const machine = new AtomicState({
-			actions: {
-				noop: new Action({
-					run() {},
-				}),
-			},
+		const state = new AtomicState({
 			on: {
 				event: [
 					{
@@ -29,15 +20,23 @@ describe('subscribe', () => {
 					},
 				],
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				noop: new Action({
+					run() {},
+				}),
+			},
+		});
+		state.start();
 		let count = 0;
-		machine.subscribe(() => count++);
+		state.subscribe(() => count++);
 		expect(count).toBe(1);
 
-		machine.dispatch('event');
+		state.dispatch('event');
 		expect(count).toBe(2);
 
-		machine.dispatch('useless');
+		state.dispatch('useless');
 		expect(count).toBe(3);
 	});
 });

@@ -51,8 +51,11 @@ export class BaseState {
 	/** @type {import('./action.js').Action | null} */
 	#action = null;
 	#actionConfig;
-	/** Actions from the user config */
-	#actions;
+	/**
+	 * Actions from the user config
+	 * @type {Record<string, import('./action.js').Action>}
+	 */
+	#actions = {};
 	/**
 	 * Actions from all ancestor states and the config
 	 * @type {Record<string, import('./action').Action>}
@@ -103,7 +106,6 @@ export class BaseState {
 	 * @param {import('./types.js').AtomicStateConfig} [stateConfig]
 	 */
 	constructor(stateConfig) {
-		this.#actions = stateConfig?.actions || {};
 		this.#actionConfig = stateConfig?.actionConfig || {};
 		this.#alwaysConfig = stateConfig?.always || [];
 		this.#conditions = stateConfig?.conditions || {};
@@ -265,6 +267,14 @@ export class BaseState {
 				|| (this.#condition && path === this.#condition.path.join('.'))
 				|| (this.#handler && path === this.#handler.path.join('.')),
 		);
+	}
+	/** @param {import('./types.js').MonitorConfig} config */
+	monitor(config) {
+		if (config.actions) {
+			for (const [name, action] of Object.entries(config.actions)) {
+				this.#actions[name] = action;
+			}
+		}
 	}
 	get name() {
 		return this.#name;

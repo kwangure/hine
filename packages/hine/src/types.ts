@@ -91,10 +91,10 @@ export type MonitorConfig = {
 	actions?: Record<string, Action>;
 	entry?: EntryHandlerConfig[];
 	exit?: ExitHandlerConfig[];
-}
+};
 
 export type CompoundMonitorConfig = MonitorConfig & {
 	states?: Record<string, MonitorConfig | CompoundMonitorConfig>;
-}
+};
 
 export {};

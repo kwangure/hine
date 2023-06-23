@@ -8,8 +8,7 @@ describe('dispatch', () => {
 				s1: new AtomicState(),
 			},
 		});
-		expect(() => state.dispatch('test'))
-			.toThrow('Attempted dispatch before resolving state');
+		expect(() => state.dispatch('test')).toThrow('Attempted dispatch before resolving state');
 	});
 
 	it('transitions on dispatch', () => {

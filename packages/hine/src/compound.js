@@ -57,8 +57,8 @@ export class CompoundState extends BaseState {
 		if (!this.#state) return false;
 
 		return (
-			super.matches(path)
-			|| (path.startsWith(`${this.name}.`) && this.#state.matches(path.slice(this.name.length + 1)))
+			super.matches(path) ||
+			(path.startsWith(`${this.name}.`) && this.#state.matches(path.slice(this.name.length + 1)))
 		);
 	}
 	/** @param {import('./types.js').CompoundMonitorConfig} config */
@@ -69,11 +69,11 @@ export class CompoundState extends BaseState {
 			const state = this.#states.get(name);
 			if (!state) {
 				const parentPath = this.parent?.path || [];
-				const pathString = parentPath.length
-					? `${parentPath.join('.')}.${name}`
-					: name;
+				const pathString = parentPath.length ? `${parentPath.join('.')}.${name}` : name;
 				throw Error(
-					`State '${pathString}' defined on monitor does not exist in state tree. Expected one of: ${[...this.#states.keys()].join(', ')}`,
+					`State '${pathString}' defined on monitor does not exist in state tree. Expected one of: ${[
+						...this.#states.keys(),
+					].join(', ')}`,
 				);
 			}
 			state.monitor(monitorConfig);

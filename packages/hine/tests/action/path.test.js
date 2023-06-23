@@ -21,7 +21,7 @@ describe('path', () => {
 			run() {},
 		});
 		const state = new AtomicState({ name: 'state' });
-		state.monitor({ actions: { action }});
+		state.monitor({ actions: { action } });
 		state.start();
 		expect(action.path).toEqual(['state', '(action)']);
 	});

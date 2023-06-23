@@ -262,10 +262,10 @@ export class BaseState {
 	matches(path) {
 		if (!this.#initialized) return false;
 		return Boolean(
-			path === this.#name
-				|| (this.#action && path === this.#action.path.join('.'))
-				|| (this.#condition && path === this.#condition.path.join('.'))
-				|| (this.#handler && path === this.#handler.path.join('.')),
+			path === this.#name ||
+				(this.#action && path === this.#action.path.join('.')) ||
+				(this.#condition && path === this.#condition.path.join('.')) ||
+				(this.#handler && path === this.#handler.path.join('.')),
 		);
 	}
 	/** @param {import('./types.js').MonitorConfig} config */
@@ -321,7 +321,7 @@ export class BaseState {
 	 */
 	* step(eventName, eventValue) {
 		if (!this.#initialized) {
-			throw Error('Attempted to step before calling \'state.start()\'.');
+			throw Error("Attempted to step before calling 'state.start()'.");
 		}
 		if (this.#isStepping) {
 			throw Error('Stepping is aleady in progress.');
@@ -427,7 +427,9 @@ export class BaseState {
 		}
 
 		for (const [event, handlers] of Object.entries(this.#onConfig)) {
-			this[ON_HANDLER][event] = handlers.map((handler, i) => this.#resolveHandler(handler, String(i)),);
+			this[ON_HANDLER][event] = handlers.map((handler, i) =>
+				this.#resolveHandler(handler, String(i)),
+			);
 		}
 
 		for (const [index, handler] of this.#entryConfig.entries()) {
@@ -449,9 +451,9 @@ export class BaseState {
 			notifyAfter:
 				this.#actionConfig.notifyAfter ?? this.#parent?.[STATE_ACTION_CONFIGS].notifyAfter ?? false,
 			notifyBefore:
-				this.#actionConfig.notifyBefore
-				?? this.#parent?.[STATE_ACTION_CONFIGS].notifyBefore
-				?? false,
+				this.#actionConfig.notifyBefore ??
+				this.#parent?.[STATE_ACTION_CONFIGS].notifyBefore ??
+				false,
 		};
 	}
 	/** @param {import('./action.js').Action | null} value */
@@ -492,13 +494,13 @@ export class BaseState {
 	get [STATE_CONDITION_CONFIGS]() {
 		return {
 			notifyAfter:
-				this.#conditionConfig.notifyAfter
-				?? this.#parent?.[STATE_CONDITION_CONFIGS].notifyAfter
-				?? false,
+				this.#conditionConfig.notifyAfter ??
+				this.#parent?.[STATE_CONDITION_CONFIGS].notifyAfter ??
+				false,
 			notifyBefore:
-				this.#conditionConfig.notifyBefore
-				?? this.#parent?.[STATE_CONDITION_CONFIGS].notifyBefore
-				?? false,
+				this.#conditionConfig.notifyBefore ??
+				this.#parent?.[STATE_CONDITION_CONFIGS].notifyBefore ??
+				false,
 		};
 	}
 	/**

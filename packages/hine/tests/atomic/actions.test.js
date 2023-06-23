@@ -661,10 +661,10 @@ describe('actions', () => {
 									},
 								}),
 							},
-						}
-					}
-				}
-			}
+						},
+					},
+				},
+			},
 		});
 		state.start();
 		state.subscribe(() => {
@@ -766,7 +766,7 @@ describe('actions', () => {
 	it('calls actions with value', () => {
 		const state = new AtomicState({
 			on: {
-				event: [{ actions: ['action']}],
+				event: [{ actions: ['action'] }],
 			},
 		});
 		state.monitor({

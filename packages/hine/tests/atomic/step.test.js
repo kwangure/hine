@@ -68,7 +68,7 @@ describe('step', () => {
 				],
 			},
 		});
-		state.monitor({ actions: { action }});
+		state.monitor({ actions: { action } });
 		state.start();
 
 		const expected = [Handler, condition, action, Handler, action];

@@ -23,7 +23,7 @@ describe('htstate', () => {
 					},
 				],
 			});
-			expect(() => state.start()).toThrow('\'missing\'');
+			expect(() => state.start()).toThrow("'missing'");
 		});
 
 		it('throws on missing exit actions', () => {
@@ -43,11 +43,12 @@ describe('htstate', () => {
 					},
 				],
 			});
-			expect(() => state.start()).toThrow('\'missing\'');
+			expect(() => state.start()).toThrow("'missing'");
 		});
 
 		it('throws on missing transient actions', () => {
-			expect(() => new CompoundState({
+			expect(() =>
+				new CompoundState({
 					states: {
 						first: new CompoundState({
 							always: [
@@ -60,7 +61,8 @@ describe('htstate', () => {
 							},
 						}),
 					},
-				}).start(),).toThrow('\'missing\'');
+				}).start(),
+			).toThrow("'missing'");
 		});
 	});
 

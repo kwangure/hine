@@ -757,8 +757,8 @@ describe('actions', () => {
 							},
 						}),
 					},
-				}
-			}
+				},
+			},
 		});
 		state.start();
 		expect(alwaysCount).toBe(1);
@@ -1320,7 +1320,7 @@ describe('actions', () => {
 	it('calls actions with value', () => {
 		const state = new CompoundState({
 			on: {
-				event: [{ actions: ['action']}],
+				event: [{ actions: ['action'] }],
 			},
 			states: {
 				s1: new AtomicState(),

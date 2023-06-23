@@ -7,12 +7,6 @@ describe('conditions', () => {
 			run: () => false,
 		});
 		const state = new AtomicState({
-			entry: [
-				{
-					condition: 'cond1',
-					actions: ['do'],
-				},
-			],
 			conditions: {
 				cond1: new Condition({
 					run({ ownerState }) {
@@ -31,6 +25,12 @@ describe('conditions', () => {
 					run() {},
 				}),
 			},
+			entry: [
+				{
+					condition: 'cond1',
+					actions: ['do'],
+				},
+			],
 		});
 		state.start();
 	});
@@ -46,12 +46,6 @@ describe('conditions', () => {
 			conditions: {
 				condition,
 			},
-			entry: [
-				{
-					condition: 'condition',
-					actions: ['action'],
-				},
-			],
 		});
 		state.monitor({
 			actions: {
@@ -59,6 +53,12 @@ describe('conditions', () => {
 					run() {},
 				}),
 			},
+			entry: [
+				{
+					condition: 'condition',
+					actions: ['action'],
+				},
+			],
 		});
 		state.start();
 	});
@@ -330,17 +330,17 @@ describe('conditions', () => {
 			conditions: {
 				condition,
 			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
 			entry: [
 				{
 					condition: 'condition',
 					actions: ['action'],
 				},
 			],
-		});
-		state.monitor({
-			actions: {
-				action: new Action({ run() {} }),
-			},
 		});
 		expect(state.condition).toBe(null);
 		state.start();

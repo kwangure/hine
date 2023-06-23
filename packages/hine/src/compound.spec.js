@@ -7,37 +7,43 @@ import { Condition } from './condition.js';
 describe('htstate', () => {
 	describe('missing actions', () => {
 		it('throws on missing entry actions', () => {
-			expect(() => new CompoundState({
-					states: {
-						first: new CompoundState({
-							entry: [
-								{
-									actions: ['missing'],
-								},
-							],
-							states: {
-								s1: new AtomicState(),
-							},
-						}),
+			const state = new CompoundState({
+				states: {
+					first: new CompoundState({
+						states: {
+							s1: new AtomicState(),
+						},
+					}),
+				},
+			});
+			state.monitor({
+				entry: [
+					{
+						actions: ['missing'],
 					},
-				}).start(),).toThrow('\'missing\'');
+				],
+			});
+			expect(() => state.start()).toThrow('\'missing\'');
 		});
 
 		it('throws on missing exit actions', () => {
-			expect(() => new CompoundState({
-					states: {
-						first: new CompoundState({
-							exit: [
-								{
-									actions: ['missing'],
-								},
-							],
-							states: {
-								s1: new AtomicState(),
-							},
-						}),
+			const state = new CompoundState({
+				states: {
+					first: new CompoundState({
+						states: {
+							s1: new AtomicState(),
+						},
+					}),
+				},
+			});
+			state.monitor({
+				exit: [
+					{
+						actions: ['missing'],
 					},
-				}).start(),).toThrow('\'missing\'');
+				],
+			});
+			expect(() => state.start()).toThrow('\'missing\'');
 		});
 
 		it('throws on missing transient actions', () => {
@@ -75,32 +81,6 @@ describe('htstate', () => {
 							},
 							{
 								actions: ['always'],
-							},
-							{
-								actions: ['ignore'],
-								condition: 'ignore',
-							},
-						],
-						entry: [
-							{
-								actions: ['entry'],
-								condition: 'run',
-							},
-							{
-								actions: ['entry'],
-							},
-							{
-								actions: ['ignore'],
-								condition: 'ignore',
-							},
-						],
-						exit: [
-							{
-								actions: ['exit'],
-								condition: 'run',
-							},
-							{
-								actions: ['exit'],
 							},
 							{
 								actions: ['ignore'],
@@ -168,6 +148,32 @@ describe('htstate', () => {
 								},
 							}),
 						},
+						entry: [
+							{
+								actions: ['entry'],
+								condition: 'run',
+							},
+							{
+								actions: ['entry'],
+							},
+							{
+								actions: ['ignore'],
+								condition: 'ignore',
+							},
+						],
+						exit: [
+							{
+								actions: ['exit'],
+								condition: 'run',
+							},
+							{
+								actions: ['exit'],
+							},
+							{
+								actions: ['ignore'],
+								condition: 'ignore',
+							},
+						],
 					},
 				},
 			});

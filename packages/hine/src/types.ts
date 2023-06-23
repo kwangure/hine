@@ -57,8 +57,6 @@ type StateNodeConfig = {
 	always: AlwaysHandlerConfig[];
 	conditionConfig: Partial<Omit<ConditionConfig, 'run'>>;
 	conditions: Record<string, Condition>;
-	entry: EntryHandlerConfig[];
-	exit: ExitHandlerConfig[];
 	name: string;
 	on: Record<string, DispatchHandlerConfig[]>;
 };
@@ -91,6 +89,8 @@ export type HandlerJSON = ReturnType<Handler['toJSON']>;
 
 export type MonitorConfig = {
 	actions?: Record<string, Action>;
+	entry?: EntryHandlerConfig[];
+	exit?: ExitHandlerConfig[];
 }
 
 export type CompoundMonitorConfig = MonitorConfig & {

@@ -76,12 +76,14 @@ export class BaseState {
 	#conditions;
 	/** @type {Handler[]} */
 	#entry = [];
-	#entryConfig;
+	/** @type {EntryHandlerConfig[]} */
+	#entryConfig = [];
 	/** @type {StateEvent | null} */
 	#event = null;
 	/** @type {Handler[]} */
 	#exit = [];
-	#exitConfig;
+	/** @type {ExitHandlerConfig[]} */
+	#exitConfig = [];
 	/**
 	 * The active handler that is currently executing
 	 *
@@ -110,8 +112,6 @@ export class BaseState {
 		this.#alwaysConfig = stateConfig?.always || [];
 		this.#conditions = stateConfig?.conditions || {};
 		this.#conditionConfig = stateConfig?.conditionConfig || {};
-		this.#entryConfig = stateConfig?.entry || [];
-		this.#exitConfig = stateConfig?.exit || [];
 		this.#name = stateConfig?.name || '';
 		this.#onConfig = stateConfig?.on || {};
 	}
@@ -273,6 +273,16 @@ export class BaseState {
 		if (config.actions) {
 			for (const [name, action] of Object.entries(config.actions)) {
 				this.#actions[name] = action;
+			}
+		}
+		if (config.entry) {
+			for (const handler of config.entry) {
+				this.#entryConfig.push(handler);
+			}
+		}
+		if (config.exit) {
+			for (const handler of config.exit) {
+				this.#exitConfig.push(handler);
 			}
 		}
 	}

@@ -7,12 +7,6 @@ describe('conditions', () => {
 			run: () => false,
 		});
 		const state = new CompoundState({
-			entry: [
-				{
-					condition: 'cond1',
-					actions: ['do'],
-				},
-			],
 			conditions: {
 				cond1: new Condition({
 					run({ ownerState }) {
@@ -34,6 +28,12 @@ describe('conditions', () => {
 					run() {},
 				}),
 			},
+			entry: [
+				{
+					condition: 'cond1',
+					actions: ['do'],
+				},
+			],
 		});
 		state.start();
 	});
@@ -49,12 +49,6 @@ describe('conditions', () => {
 			conditions: {
 				condition,
 			},
-			entry: [
-				{
-					condition: 'condition',
-					actions: ['action'],
-				},
-			],
 			states: {
 				s1: new AtomicState(),
 			},
@@ -65,6 +59,12 @@ describe('conditions', () => {
 					run() {},
 				}),
 			},
+			entry: [
+				{
+					condition: 'condition',
+					actions: ['action'],
+				},
+			],
 		});
 		state.start();
 	});
@@ -347,12 +347,6 @@ describe('conditions', () => {
 			conditions: {
 				condition,
 			},
-			entry: [
-				{
-					condition: 'condition',
-					actions: ['action'],
-				},
-			],
 			states: {
 				s1: new AtomicState(),
 			},
@@ -361,6 +355,12 @@ describe('conditions', () => {
 			actions: {
 				action: new Action({ run() {} }),
 			},
+			entry: [
+				{
+					condition: 'condition',
+					actions: ['action'],
+				},
+			],
 		});
 		expect(state.condition).toBe(null);
 		state.start();

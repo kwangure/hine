@@ -13,7 +13,8 @@
 		"pack": "wireit",
 		"pre-commit": "wireit",
 		"prepare": "husky install",
-		"test": "wireit"
+		"test": "wireit",
+		"version": "wireit"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.26.1",
@@ -63,6 +64,18 @@
 		"test": {
 			"dependencies": [
 				"./packages/hine:test"
+			]
+		},
+		"version": {
+			"#comment": [
+				"Changesets doesn't bump package-lock.json so we run `npm install`",
+				"to do it for us"
+			],
+			"command": "changeset version && npm install",
+			"files": [
+				"./changeset/*.md",
+				"./packages/**/package.json",
+				"./packages/**/CHANGELOG.md"
 			]
 		}
 	}

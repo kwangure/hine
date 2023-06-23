@@ -28,7 +28,9 @@ describe('path', () => {
 				}),
 				s2,
 			},
-		}).start();
+		});
+		state.monitor({});
+		state.start();
 		expect(state.path).toEqual(['state']);
 		expect(s11.path).toEqual(['state', 's1', 's11']);
 		expect(s2.path).toEqual(['state', 's2']);
@@ -49,7 +51,9 @@ describe('path', () => {
 				}),
 				s2,
 			},
-		}).start();
+		});
+		state.monitor({});
+		state.start();
 		expect(state.path).toEqual(['']);
 		expect(s11.path).toEqual(['', 's1', 's11']);
 		expect(s2.path).toEqual(['', 's2']);

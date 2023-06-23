@@ -7,8 +7,33 @@ describe('actions', () => {
 	it('runs initial entry then transient actions', () => {
 		/** @type {string[]} */
 		const log = [];
-		new CompoundState({
+		const state = new CompoundState({
 			name: 's0',
+			always: [
+				{
+					actions: ['always0'],
+				},
+			],
+			states: {
+				s1: new CompoundState({
+					always: [
+						{
+							actions: ['always1'],
+						},
+					],
+					states: {
+						s2: new AtomicState({
+							always: [
+								{
+									actions: ['always2'],
+								},
+							],
+						}),
+					},
+				}),
+			},
+		});
+		state.monitor({
 			actions: {
 				always0: new Action({
 					run() {
@@ -21,18 +46,13 @@ describe('actions', () => {
 					},
 				}),
 			},
-			always: [
-				{
-					actions: ['always0'],
-				},
-			],
 			entry: [
 				{
 					actions: ['entry0'],
 				},
 			],
 			states: {
-				s1: new CompoundState({
+				s1: {
 					actions: {
 						always1: new Action({
 							run() {
@@ -45,18 +65,13 @@ describe('actions', () => {
 							},
 						}),
 					},
-					always: [
-						{
-							actions: ['always1'],
-						},
-					],
 					entry: [
 						{
 							actions: ['entry1'],
 						},
 					],
 					states: {
-						s2: new AtomicState({
+						s2: {
 							actions: {
 								always2: new Action({
 									run() {
@@ -69,28 +84,24 @@ describe('actions', () => {
 									},
 								}),
 							},
-							always: [
-								{
-									actions: ['always2'],
-								},
-							],
 							entry: [
 								{
 									actions: ['entry2'],
 								},
 							],
-						}),
+						},
 					},
-				}),
+				},
 			},
-		}).start();
+		});
+		state.start();
 		expect(log).toEqual(['entry0', 'entry1', 'entry2', 'always0', 'always1', 'always2']);
 	});
 
 	it('runs entry then always actions on transition', () => {
 		/** @type {string[]} */
 		const log = [];
-		const machine = new CompoundState({
+		const state = new CompoundState({
 			states: {
 				a: new AtomicState({
 					on: {
@@ -102,6 +113,35 @@ describe('actions', () => {
 					},
 				}),
 				b: new CompoundState({
+					always: [
+						{
+							actions: ['always0'],
+						},
+					],
+					states: {
+						s1: new CompoundState({
+							always: [
+								{
+									actions: ['always1'],
+								},
+							],
+							states: {
+								s2: new AtomicState({
+									always: [
+										{
+											actions: ['always2'],
+										},
+									],
+								}),
+							},
+						}),
+					},
+				}),
+			},
+		});
+		state.monitor({
+			states: {
+				b: {
 					actions: {
 						always0: new Action({
 							run() {
@@ -114,18 +154,13 @@ describe('actions', () => {
 							},
 						}),
 					},
-					always: [
-						{
-							actions: ['always0'],
-						},
-					],
 					entry: [
 						{
 							actions: ['entry0'],
 						},
 					],
 					states: {
-						s1: new CompoundState({
+						s1: {
 							actions: {
 								always1: new Action({
 									run() {
@@ -138,18 +173,13 @@ describe('actions', () => {
 									},
 								}),
 							},
-							always: [
-								{
-									actions: ['always1'],
-								},
-							],
 							entry: [
 								{
 									actions: ['entry1'],
 								},
 							],
 							states: {
-								s2: new AtomicState({
+								s2: {
 									actions: {
 										always2: new Action({
 											run() {
@@ -162,31 +192,48 @@ describe('actions', () => {
 											},
 										}),
 									},
-									always: [
-										{
-											actions: ['always2'],
-										},
-									],
 									entry: [
 										{
 											actions: ['entry2'],
 										},
 									],
-								}),
+								},
 							},
-						}),
+						},
 					},
-				}),
+				},
 			},
-		}).start();
-		machine.dispatch('event');
+		});
+		state.start();
+		state.dispatch('event');
 		expect(log).toEqual(['entry0', 'entry1', 'entry2', 'always0', 'always1', 'always2']);
 	});
 
 	it('runs exit actions with leaves first and root last', () => {
 		/** @type {string[]} */
 		const log = [];
-		const machine = new CompoundState({
+		const state = new CompoundState({
+			states: {
+				s1: new CompoundState({
+					on: {
+						event: [
+							{
+								transitionTo: 's2',
+							},
+						],
+					},
+					states: {
+						s11: new CompoundState({
+							states: {
+								s111: new AtomicState(),
+							},
+						}),
+					},
+				}),
+				s2: new AtomicState(),
+			},
+		});
+		state.monitor({
 			actions: {
 				exit0: new Action({
 					run() {
@@ -200,7 +247,7 @@ describe('actions', () => {
 				},
 			],
 			states: {
-				s1: new CompoundState({
+				s1: {
 					actions: {
 						exit1: new Action({
 							run() {
@@ -213,15 +260,8 @@ describe('actions', () => {
 							actions: ['exit1'],
 						},
 					],
-					on: {
-						event: [
-							{
-								transitionTo: 's2',
-							},
-						],
-					},
 					states: {
-						s11: new CompoundState({
+						s11: {
 							actions: {
 								exit11: new Action({
 									run() {
@@ -235,7 +275,7 @@ describe('actions', () => {
 								},
 							],
 							states: {
-								s111: new AtomicState({
+								s111: {
 									actions: {
 										exit111: new Action({
 											run() {
@@ -248,31 +288,24 @@ describe('actions', () => {
 											actions: ['exit111'],
 										},
 									],
-								}),
+								},
 							},
-						}),
+						},
 					},
-				}),
-				s2: new AtomicState(),
+				},
 			},
-		}).start();
+		});
+		state.start();
 		log.length = 0;
 
-		machine.dispatch('event');
+		state.dispatch('event');
 		expect(log).toEqual(['exit111', 'exit11', 'exit1']);
 	});
 
 	it('runs on actions with leaves first and root last', () => {
 		/** @type {string[]} */
 		const log = [];
-		const machine = new CompoundState({
-			actions: {
-				on0: new Action({
-					run() {
-						log.push('on0');
-					},
-				}),
-			},
+		const state = new CompoundState({
 			on: {
 				event: [
 					{
@@ -282,13 +315,6 @@ describe('actions', () => {
 			},
 			states: {
 				s1: new CompoundState({
-					actions: {
-						on1: new Action({
-							run() {
-								log.push('on1');
-							},
-						}),
-					},
 					on: {
 						event: [
 							{
@@ -298,13 +324,6 @@ describe('actions', () => {
 					},
 					states: {
 						s11: new CompoundState({
-							actions: {
-								on11: new Action({
-									run() {
-										log.push('on11');
-									},
-								}),
-							},
 							on: {
 								event: [
 									{
@@ -314,13 +333,6 @@ describe('actions', () => {
 							},
 							states: {
 								s111: new AtomicState({
-									actions: {
-										on111: new Action({
-											run() {
-												log.push('on111');
-											},
-										}),
-									},
 									on: {
 										event: [
 											{
@@ -335,29 +347,60 @@ describe('actions', () => {
 				}),
 				s2: new AtomicState(),
 			},
-		}).start();
-		log.length = 0;
-
-		machine.dispatch('event');
-		expect(log).toEqual(['on111', 'on11', 'on1', 'on0']);
-	});
-
-	it('interleaves on actions with always actions', () => {
-		/** @type {string[]} */
-		const log = [];
-		const machine = new CompoundState({
+		});
+		state.monitor({
 			actions: {
-				always0: new Action({
-					run() {
-						log.push('always0');
-					},
-				}),
 				on0: new Action({
 					run() {
 						log.push('on0');
 					},
 				}),
 			},
+			states: {
+				s1: {
+					actions: {
+						on1: new Action({
+							run() {
+								log.push('on1');
+							},
+						}),
+					},
+					states: {
+						s11: {
+							actions: {
+								on11: new Action({
+									run() {
+										log.push('on11');
+									},
+								}),
+							},
+							states: {
+								s111: {
+									actions: {
+										on111: new Action({
+											run() {
+												log.push('on111');
+											},
+										}),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		});
+		state.start();
+		log.length = 0;
+
+		state.dispatch('event');
+		expect(log).toEqual(['on111', 'on11', 'on1', 'on0']);
+	});
+
+	it('interleaves on actions with always actions', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new CompoundState({
 			always: [
 				{
 					actions: ['always0'],
@@ -372,18 +415,6 @@ describe('actions', () => {
 			},
 			states: {
 				s1: new CompoundState({
-					actions: {
-						always1: new Action({
-							run() {
-								log.push('always1');
-							},
-						}),
-						on1: new Action({
-							run() {
-								log.push('on1');
-							},
-						}),
-					},
 					always: [
 						{
 							actions: ['always1'],
@@ -398,18 +429,6 @@ describe('actions', () => {
 					},
 					states: {
 						s11: new CompoundState({
-							actions: {
-								always11: new Action({
-									run() {
-										log.push('always11');
-									},
-								}),
-								on11: new Action({
-									run() {
-										log.push('on11');
-									},
-								}),
-							},
 							always: [
 								{
 									actions: ['always11'],
@@ -424,18 +443,6 @@ describe('actions', () => {
 							},
 							states: {
 								s111: new AtomicState({
-									actions: {
-										always111: new Action({
-											run() {
-												log.push('always111');
-											},
-										}),
-										on111: new Action({
-											run() {
-												log.push('on111');
-											},
-										}),
-									},
 									always: [
 										{
 											actions: ['always111'],
@@ -455,10 +462,73 @@ describe('actions', () => {
 				}),
 				s2: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				always0: new Action({
+					run() {
+						log.push('always0');
+					},
+				}),
+				on0: new Action({
+					run() {
+						log.push('on0');
+					},
+				}),
+			},
+			states: {
+				s1: {
+					actions: {
+						always1: new Action({
+							run() {
+								log.push('always1');
+							},
+						}),
+						on1: new Action({
+							run() {
+								log.push('on1');
+							},
+						}),
+					},
+					states: {
+						s11: {
+							actions: {
+								always11: new Action({
+									run() {
+										log.push('always11');
+									},
+								}),
+								on11: new Action({
+									run() {
+										log.push('on11');
+									},
+								}),
+							},
+							states: {
+								s111: {
+									actions: {
+										always111: new Action({
+											run() {
+												log.push('always111');
+											},
+										}),
+										on111: new Action({
+											run() {
+												log.push('on111');
+											},
+										}),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		});
+		state.start();
 		log.length = 0;
 
-		machine.dispatch('event');
+		state.dispatch('event');
 		expect(log).toEqual([
 			'on111',
 			'always111',
@@ -474,7 +544,52 @@ describe('actions', () => {
 	it('runs exit, transition, entry then always actions', () => {
 		/** @type {string[]} */
 		const log = [];
-		const machine = new CompoundState({
+		const state = new CompoundState({
+			always: [
+				{
+					actions: ['always0'],
+				},
+			],
+			states: {
+				s1: new CompoundState({
+					on: {
+						event: [
+							{
+								transitionTo: 's2',
+								actions: ['on1'],
+							},
+						],
+					},
+					states: {
+						s11: new CompoundState({
+							states: {
+								s111: new AtomicState(),
+							},
+						}),
+					},
+				}),
+				s2: new CompoundState({
+					always: [
+						{
+							actions: ['always2'],
+						},
+					],
+					states: {
+						s21: new CompoundState({
+							always: [
+								{
+									actions: ['always21'],
+								},
+							],
+							states: {
+								s211: new AtomicState(),
+							},
+						}),
+					},
+				}),
+			},
+		});
+		state.monitor({
 			actions: {
 				always0: new Action({
 					run() {
@@ -497,11 +612,6 @@ describe('actions', () => {
 					},
 				}),
 			},
-			always: [
-				{
-					actions: ['always0'],
-				},
-			],
 			entry: [
 				{
 					actions: ['entry0'],
@@ -513,7 +623,7 @@ describe('actions', () => {
 				},
 			],
 			states: {
-				s1: new CompoundState({
+				s1: {
 					actions: {
 						exit1: new Action({
 							run() {
@@ -531,16 +641,8 @@ describe('actions', () => {
 							actions: ['exit1'],
 						},
 					],
-					on: {
-						event: [
-							{
-								transitionTo: 's2',
-								actions: ['on1'],
-							},
-						],
-					},
 					states: {
-						s11: new CompoundState({
+						s11: {
 							actions: {
 								exit11: new Action({
 									run() {
@@ -558,13 +660,10 @@ describe('actions', () => {
 									actions: ['exit11'],
 								},
 							],
-							states: {
-								s111: new AtomicState(),
-							},
-						}),
+						},
 					},
-				}),
-				s2: new CompoundState({
+				},
+				s2: {
 					actions: {
 						always2: new Action({
 							run() {
@@ -582,18 +681,13 @@ describe('actions', () => {
 							},
 						}),
 					},
-					always: [
-						{
-							actions: ['always2'],
-						},
-					],
 					entry: [
 						{
 							actions: ['entry2'],
 						},
 					],
 					states: {
-						s21: new CompoundState({
+						s21: {
 							actions: {
 								always21: new Action({
 									run() {
@@ -611,27 +705,20 @@ describe('actions', () => {
 									},
 								}),
 							},
-							always: [
-								{
-									actions: ['always21'],
-								},
-							],
 							entry: [
 								{
 									actions: ['entry21'],
 								},
 							],
-							states: {
-								s211: new AtomicState(),
-							},
-						}),
+						},
 					},
-				}),
+				},
 			},
-		}).start();
+		});
+		state.start();
 		log.length = 0;
 
-		machine.dispatch('event');
+		state.dispatch('event');
 		expect(log).toEqual([
 			'exit11',
 			'exit1',
@@ -646,7 +733,7 @@ describe('actions', () => {
 
 	it('runs always actions on unhandled events', () => {
 		let alwaysCount = 0;
-		const machine = new CompoundState({
+		const state = new CompoundState({
 			states: {
 				current: new CompoundState({
 					always: [
@@ -654,6 +741,15 @@ describe('actions', () => {
 							actions: ['always'],
 						},
 					],
+					states: {
+						s: new AtomicState(),
+					},
+				}),
+			},
+		});
+		state.monitor({
+			states: {
+				current: {
 					actions: {
 						always: new Action({
 							run() {
@@ -661,23 +757,48 @@ describe('actions', () => {
 							},
 						}),
 					},
-					states: {
-						s: new AtomicState(),
-					},
-				}),
-			},
-		}).start();
+				}
+			}
+		});
+		state.start();
 		expect(alwaysCount).toBe(1);
 
-		machine.dispatch('non-existent');
+		state.dispatch('non-existent');
 		expect(alwaysCount).toBe(2);
 	});
 
 	it('runs actions on parents', () => {
 		/** @type {string[]} */
 		const log = [];
-		const machine = new CompoundState({
+		const state = new CompoundState({
 			name: 's0',
+			states: {
+				s1: new CompoundState({
+					always: [
+						{
+							actions: ['always'],
+						},
+					],
+					on: {
+						event: [
+							{
+								transitionTo: 's2',
+								actions: ['on'],
+							},
+						],
+					},
+					states: {
+						s11: new AtomicState(),
+					},
+				}),
+				s2: new CompoundState({
+					states: {
+						s21: new AtomicState(),
+					},
+				}),
+			},
+		});
+		state.monitor({
 			actions: {
 				always: new Action({
 					run() {
@@ -701,12 +822,7 @@ describe('actions', () => {
 				}),
 			},
 			states: {
-				s1: new CompoundState({
-					always: [
-						{
-							actions: ['always'],
-						},
-					],
+				s1: {
 					entry: [
 						{
 							actions: ['entry'],
@@ -715,6 +831,27 @@ describe('actions', () => {
 					exit: [
 						{
 							actions: ['exit'],
+						},
+					],
+				},
+			},
+		});
+		state.start();
+
+		state.dispatch('event');
+		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
+	});
+
+	it('does not run parent actions if own action matches', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new CompoundState({
+			name: 's0',
+			states: {
+				s1: new CompoundState({
+					always: [
+						{
+							actions: ['always'],
 						},
 					],
 					on: {
@@ -735,17 +872,8 @@ describe('actions', () => {
 					},
 				}),
 			},
-		}).start();
-
-		machine.dispatch('event');
-		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
-	});
-
-	it('does not run parent actions if own action matches', () => {
-		/** @type {string[]} */
-		const log = [];
-		const machine = new CompoundState({
-			name: 's0',
+		});
+		state.monitor({
 			actions: {
 				always: new Action({
 					run() {
@@ -769,7 +897,7 @@ describe('actions', () => {
 				}),
 			},
 			states: {
-				s1: new CompoundState({
+				s1: {
 					actions: {
 						always: new Action({
 							run() {
@@ -792,11 +920,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					always: [
-						{
-							actions: ['always'],
-						},
-					],
 					entry: [
 						{
 							actions: ['entry'],
@@ -807,11 +930,25 @@ describe('actions', () => {
 							actions: ['exit'],
 						},
 					],
+				},
+			},
+		});
+		state.start();
+
+		state.dispatch('event');
+		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
+	});
+	it('runs transitions in always handlers', () => {
+		/** @type {string[]} */
+		const log = [];
+		const state = new CompoundState({
+			states: {
+				s1: new CompoundState({
 					on: {
 						event: [
 							{
 								transitionTo: 's2',
-								actions: ['on'],
+								actions: ['transition1'],
 							},
 						],
 					},
@@ -820,22 +957,21 @@ describe('actions', () => {
 					},
 				}),
 				s2: new CompoundState({
+					always: [
+						{
+							transitionTo: 's1',
+							actions: ['always2'],
+						},
+					],
 					states: {
 						s21: new AtomicState(),
 					},
 				}),
 			},
-		}).start();
-
-		machine.dispatch('event');
-		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
-	});
-	it('runs transitions in always handlers', () => {
-		/** @type {string[]} */
-		const log = [];
-		const machine = new CompoundState({
+		});
+		state.monitor({
 			states: {
-				s1: new CompoundState({
+				s1: {
 					actions: {
 						entry1: new Action({
 							run() {
@@ -853,19 +989,8 @@ describe('actions', () => {
 							actions: ['entry1'],
 						},
 					],
-					on: {
-						event: [
-							{
-								transitionTo: 's2',
-								actions: ['transition1'],
-							},
-						],
-					},
-					states: {
-						s11: new AtomicState(),
-					},
-				}),
-				s2: new CompoundState({
+				},
+				s2: {
 					actions: {
 						always2: new Action({
 							run() {
@@ -873,21 +998,13 @@ describe('actions', () => {
 							},
 						}),
 					},
-					always: [
-						{
-							transitionTo: 's1',
-							actions: ['always2'],
-						},
-					],
-					states: {
-						s21: new AtomicState(),
-					},
-				}),
+				},
 			},
-		}).start();
+		});
+		state.start();
 
-		machine.dispatch('event');
-		expect(machine.state?.name).toEqual('s1');
+		state.dispatch('event');
+		expect(state.state?.name).toEqual('s1');
 		expect(log).toEqual(['entry1', 'transition1', 'always2', 'entry1']);
 	});
 	it('calls actions with self reference', () => {
@@ -898,6 +1015,11 @@ describe('actions', () => {
 			},
 		});
 		const state = new CompoundState({
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		state.monitor({
 			actions: {
 				action,
 			},
@@ -906,9 +1028,6 @@ describe('actions', () => {
 					actions: ['action'],
 				},
 			],
-			states: {
-				s1: new AtomicState(),
-			},
 		});
 		state.start();
 	});
@@ -916,14 +1035,6 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			actions: {
-				action: new Action({
-					notifyBefore: true,
-					run() {
-						log.push('action');
-					},
-				}),
-			},
 			on: {
 				event: [
 					{
@@ -933,6 +1044,16 @@ describe('actions', () => {
 			},
 			states: {
 				s1: new AtomicState(),
+			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					notifyBefore: true,
+					run() {
+						log.push('action');
+					},
+				}),
 			},
 		});
 		state.start();
@@ -949,14 +1070,6 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			actions: {
-				action: new Action({
-					notifyAfter: true,
-					run() {
-						log.push('action');
-					},
-				}),
-			},
 			on: {
 				event: [
 					{
@@ -967,7 +1080,18 @@ describe('actions', () => {
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					notifyAfter: true,
+					run() {
+						log.push('action');
+					},
+				}),
+			},
+		});
+		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -984,13 +1108,6 @@ describe('actions', () => {
 			actionConfig: {
 				notifyBefore: true,
 			},
-			actions: {
-				action: new Action({
-					run() {
-						log.push('action');
-					},
-				}),
-			},
 			on: {
 				event: [
 					{
@@ -1001,7 +1118,17 @@ describe('actions', () => {
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					run() {
+						log.push('action');
+					},
+				}),
+			},
+		});
+		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -1018,14 +1145,6 @@ describe('actions', () => {
 			actionConfig: {
 				notifyBefore: true,
 			},
-			actions: {
-				action: new Action({
-					notifyBefore: false,
-					run() {
-						log.push('action');
-					},
-				}),
-			},
 			on: {
 				event: [
 					{
@@ -1036,7 +1155,18 @@ describe('actions', () => {
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					notifyBefore: false,
+					run() {
+						log.push('action');
+					},
+				}),
+			},
+		});
+		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -1051,14 +1181,6 @@ describe('actions', () => {
 			},
 			states: {
 				s1: new CompoundState({
-					actions: {
-						action: new Action({
-							run() {
-								log.push('action');
-								return true;
-							},
-						}),
-					},
 					on: {
 						event: [
 							{
@@ -1071,7 +1193,22 @@ describe('actions', () => {
 					},
 				}),
 			},
-		}).start();
+		});
+		state.monitor({
+			states: {
+				s1: {
+					actions: {
+						action: new Action({
+							run() {
+								log.push('action');
+								return true;
+							},
+						}),
+					},
+				},
+			},
+		});
+		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -1083,12 +1220,6 @@ describe('actions', () => {
 	});
 	it('resolves action using most specific configured name', () => {
 		const state = new CompoundState({
-			actions: {
-				action: new Action({
-					name: 'other-action',
-					run() {},
-				}),
-			},
 			on: {
 				event: [
 					{
@@ -1100,14 +1231,16 @@ describe('actions', () => {
 				s1: new AtomicState(),
 			},
 		});
-		expect(() => state.start()).toThrow(/unknown action/);
-		const state2 = new CompoundState({
+		state.monitor({
 			actions: {
 				action: new Action({
 					name: 'other-action',
 					run() {},
 				}),
 			},
+		});
+		expect(() => state.start()).toThrow(/unknown action/);
+		const state2 = new CompoundState({
 			on: {
 				event: [
 					{
@@ -1117,6 +1250,14 @@ describe('actions', () => {
 			},
 			states: {
 				s1: new AtomicState(),
+			},
+		});
+		state2.monitor({
+			actions: {
+				action: new Action({
+					name: 'other-action',
+					run() {},
+				}),
 			},
 		});
 		expect(() => state2.start()).not.toThrow();
@@ -1129,6 +1270,11 @@ describe('actions', () => {
 			},
 		});
 		const state = new CompoundState({
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		state.monitor({
 			actions: {
 				action,
 			},
@@ -1137,9 +1283,6 @@ describe('actions', () => {
 					actions: ['action'],
 				},
 			],
-			states: {
-				s1: new AtomicState(),
-			},
 		});
 		expect(state.action).toBe(null);
 		state.start();
@@ -1149,12 +1292,12 @@ describe('actions', () => {
 		const action2 = new Action({
 			run: () => 'test',
 		});
-		new CompoundState({
-			entry: [
-				{
-					actions: ['action1'],
-				},
-			],
+		const state = new CompoundState({
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		state.monitor({
 			actions: {
 				action1: new Action({
 					run({ ownerState }) {
@@ -1166,16 +1309,24 @@ describe('actions', () => {
 				}),
 				action2,
 			},
-			states: {
-				s1: new AtomicState(),
-			},
-		}).start();
+			entry: [
+				{
+					actions: ['action1'],
+				},
+			],
+		});
+		state.start();
 	});
 	it('calls actions with value', () => {
 		const state = new CompoundState({
 			on: {
 				event: [{ actions: ['action']}],
 			},
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		state.monitor({
 			actions: {
 				action: new Action({
 					run({ value }) {
@@ -1183,10 +1334,8 @@ describe('actions', () => {
 					},
 				}),
 			},
-			states: {
-				s1: new AtomicState(),
-			},
-		}).start();
+		});
+		state.start();
 
 		state.dispatch('event', 'my-value');
 	});

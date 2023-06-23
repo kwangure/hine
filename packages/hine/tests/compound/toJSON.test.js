@@ -54,16 +54,19 @@ describe('toJSON', () => {
 					actions: ['action'],
 				},
 			],
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			conditions: {
 				condition: new Condition({ run: () => true }),
 			},
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
+		state.start();
 		const json = state.toJSON();
 		expect(json.always).toEqual([
 			{
@@ -78,21 +81,24 @@ describe('toJSON', () => {
 	});
 	it('serializes entry handlers', () => {
 		const state = new CompoundState({
-			entry: [
-				{
-					actions: ['action'],
-				},
-			],
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			conditions: {
 				condition: new Condition({ run: () => true }),
 			},
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+			entry: [
+				{
+					actions: ['action'],
+				},
+			],
+		});
+		state.start();
 		const json = state.toJSON();
 		expect(json.entry).toEqual([
 			{
@@ -107,21 +113,24 @@ describe('toJSON', () => {
 	});
 	it('serializes exit handlers', () => {
 		const state = new CompoundState({
-			exit: [
-				{
-					actions: ['action'],
-				},
-			],
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			conditions: {
 				condition: new Condition({ run: () => true }),
 			},
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+			exit: [
+				{
+					actions: ['action'],
+				},
+			],
+		});
+		state.start();
 		const json = state.toJSON();
 		expect(json.exit).toEqual([
 			{
@@ -143,16 +152,19 @@ describe('toJSON', () => {
 					},
 				],
 			},
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			conditions: {
 				condition: new Condition({ run: () => true }),
 			},
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
+		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
+		state.start();
 		const json = state.toJSON();
 		expect(json.on).toEqual({
 			event: [

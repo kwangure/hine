@@ -61,6 +61,24 @@ export class CompoundState extends BaseState {
 			|| (path.startsWith(`${this.name}.`) && this.#state.matches(path.slice(this.name.length + 1)))
 		);
 	}
+	/** @param {import('./types.js').CompoundMonitorConfig} config */
+	monitor(config) {
+		super.monitor(config);
+		if (!config?.states) return;
+		for (const [name, monitorConfig] of Object.entries(config.states)) {
+			const state = this.#states.get(name);
+			if (!state) {
+				const parentPath = this.parent?.path || [];
+				const pathString = parentPath.length
+					? `${parentPath.join('.')}.${name}`
+					: name;
+				throw Error(
+					`State '${pathString}' defined on monitor does not exist in state tree. Expected one of: ${[...this.#states.keys()].join(', ')}`,
+				);
+			}
+			state.monitor(monitorConfig);
+		}
+	}
 	get state() {
 		return this.#state;
 	}

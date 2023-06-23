@@ -12,16 +12,17 @@ describe('matches', () => {
 		expect(machine.matches('machine')).toBe(false);
 	});
 	it('matches state name when started', () => {
-		const machine = new CompoundState({
+		const state = new CompoundState({
 			name: 'machine',
 			states: {
 				s1: new AtomicState(),
 			},
-		}).start();
-		expect(machine.matches('machine')).toBe(true);
+		});
+		state.start();
+		expect(state.matches('machine')).toBe(true);
 	});
 	it('matches nested states', () => {
-		const machine = new CompoundState({
+		const state = new CompoundState({
 			name: 'machine',
 			states: {
 				s1: new CompoundState({
@@ -35,14 +36,15 @@ describe('matches', () => {
 					},
 				}),
 			},
-		}).start();
-		expect(machine.matches('machine.s1')).toBe(true);
-		expect(machine.matches('machine.s1.s11')).toBe(true);
-		expect(machine.matches('machine.s2')).toBe(false);
-		expect(machine.matches('machine.s2.s21')).toBe(false);
+		});
+		state.start();
+		expect(state.matches('machine.s1')).toBe(true);
+		expect(state.matches('machine.s1.s11')).toBe(true);
+		expect(state.matches('machine.s2')).toBe(false);
+		expect(state.matches('machine.s2.s21')).toBe(false);
 	});
 	it('matches anonymous states', () => {
-		const machine = new CompoundState({
+		const state = new CompoundState({
 			states: {
 				s1: new CompoundState({
 					states: {
@@ -51,8 +53,8 @@ describe('matches', () => {
 				}),
 			},
 		}).start();
-		expect(machine.matches('.s1')).toBe(true);
-		expect(machine.matches('.s1.s11')).toBe(true);
+		expect(state.matches('.s1')).toBe(true);
+		expect(state.matches('.s1.s11')).toBe(true);
 	});
 	it('matches actions', () => {
 		const state = new CompoundState({
@@ -62,12 +64,6 @@ describe('matches', () => {
 					actions: ['action'],
 				},
 			],
-			actions: {
-				action: new Action({
-					notifyBefore: true,
-					run() {},
-				}),
-			},
 			states: {
 				s1: new AtomicState(),
 			},
@@ -81,6 +77,14 @@ describe('matches', () => {
 			}
 			count += 1;
 		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					notifyBefore: true,
+					run() {},
+				}),
+			},
+		});
 		state.start();
 	});
 	it('matches conditions', () => {
@@ -92,9 +96,6 @@ describe('matches', () => {
 					actions: ['action'],
 				},
 			],
-			actions: {
-				action: new Action({ run() {} }),
-			},
 			conditions: {
 				condition: new Condition({
 					notifyBefore: true,
@@ -114,6 +115,11 @@ describe('matches', () => {
 			}
 			count += 1;
 		});
+		state.monitor({
+			actions: {
+				action: new Action({ run() {} }),
+			},
+		});
 		state.start();
 	});
 	it('matches handler', () => {
@@ -125,12 +131,6 @@ describe('matches', () => {
 					actions: ['action'],
 				},
 			],
-			actions: {
-				action: new Action({
-					notifyBefore: true,
-					run() {},
-				}),
-			},
 			conditions: {
 				condition: new Condition({
 					notifyBefore: true,
@@ -155,6 +155,14 @@ describe('matches', () => {
 				expect(state.matches('state.[0]')).toBe(true);
 			}
 			count += 1;
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					notifyBefore: true,
+					run() {},
+				}),
+			},
 		});
 		state.start();
 	});

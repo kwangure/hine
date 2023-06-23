@@ -5,12 +5,14 @@ describe('start', () => {
 	it('is resolves config idempotently', () => {
 		/** @type {string[]} */
 		const log = [];
-		const machine = new AtomicState({
+		const state = new AtomicState({
 			always: [
 				{
 					actions: ['always'],
 				},
 			],
+		});
+		state.monitor({
 			actions: {
 				always: new Action({
 					run() {
@@ -18,9 +20,10 @@ describe('start', () => {
 					},
 				}),
 			},
-		}).start();
+		});
+		state.start();
 		expect(log).toEqual(['always']);
-		machine.start();
+		state.start();
 		expect(log).toEqual(['always', 'always']);
 	});
 	it('emits start event', () => {

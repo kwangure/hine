@@ -35,7 +35,9 @@ describe('stateEventNames', () => {
 					},
 				}),
 			},
-		}).start();
+		});
+		state.monitor({});
+		state.start();
 
 		expect(stateEventNames(state)).toEqual(['event', 'event11', 'event12', 'event111', 'event112']);
 		state.dispatch('event11');

@@ -3,12 +3,13 @@ import { describe, expect, it } from 'vitest';
 
 describe('dispatch', () => {
 	it('throws on unresolved dispatch', () => {
-		const machine = new CompoundState({
+		const state = new CompoundState({
 			states: {
 				s1: new AtomicState(),
 			},
 		});
-		expect(() => machine.dispatch('test')).toThrow('Attempted dispatch before resolving state');
+		expect(() => state.dispatch('test'))
+			.toThrow('Attempted dispatch before resolving state');
 	});
 
 	it('transitions on dispatch', () => {
@@ -36,28 +37,30 @@ describe('dispatch', () => {
 				s21: new AtomicState(),
 			},
 		});
-		const compound = new CompoundState({
+		const state = new CompoundState({
 			states: { s1, s2 },
-		}).start();
-		compound.dispatch('event');
-		expect(compound.state).toBe(s2);
-		compound.dispatch('event');
-		expect(compound.state).toBe(s1);
-		compound.dispatch('event');
-		expect(compound.state).toBe(s2);
+		});
+		state.monitor({});
+		state.start();
+		state.dispatch('event');
+		expect(state.state).toBe(s2);
+		state.dispatch('event');
+		expect(state.state).toBe(s1);
+		state.dispatch('event');
+		expect(state.state).toBe(s2);
 	});
 
 	it('ignores invalid events', () => {
 		const s1 = new AtomicState();
-		const machine = new CompoundState({
+		const state = new CompoundState({
 			states: {
 				s1,
 				s2: new AtomicState(),
 			},
 		}).start();
 		expect(() => {
-			machine.dispatch('random');
+			state.dispatch('random');
 		}).not.toThrow();
-		expect(machine.state).toBe(s1);
+		expect(state.state).toBe(s1);
 	});
 });

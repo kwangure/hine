@@ -5,12 +5,17 @@ describe('start', () => {
 	it('is resolves config idempotently', () => {
 		/** @type {string[]} */
 		const log = [];
-		const machine = new CompoundState({
+		const state = new CompoundState({
 			always: [
 				{
 					actions: ['always'],
 				},
 			],
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		state.monitor({
 			actions: {
 				always: new Action({
 					run() {
@@ -18,12 +23,10 @@ describe('start', () => {
 					},
 				}),
 			},
-			states: {
-				s1: new AtomicState(),
-			},
-		}).start();
+		});
+		state.start();
 		expect(log).toEqual(['always']);
-		machine.start();
+		state.start();
 		expect(log).toEqual(['always', 'always']);
 	});
 	it('sets initial state', () => {
@@ -38,7 +41,7 @@ describe('start', () => {
 		expect(machine.state).toBe(state);
 	});
 	it('is resets to initial state', () => {
-		const machine = new CompoundState({
+		const state = new CompoundState({
 			states: {
 				s1: new AtomicState({
 					on: {
@@ -47,11 +50,12 @@ describe('start', () => {
 				}),
 				s2: new AtomicState(),
 			},
-		}).start();
-		expect(machine.state?.name).toEqual('s1');
-		machine.dispatch('event');
-		expect(machine.state?.name).toEqual('s2');
-		machine.start();
-		expect(machine.state?.name).toEqual('s1');
+		});
+		state.start();
+		expect(state.state?.name).toEqual('s1');
+		state.dispatch('event');
+		expect(state.state?.name).toEqual('s2');
+		state.start();
+		expect(state.state?.name).toEqual('s1');
 	});
 });

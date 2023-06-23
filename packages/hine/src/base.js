@@ -51,8 +51,11 @@ export class BaseState {
 	/** @type {import('./action.js').Action | null} */
 	#action = null;
 	#actionConfig;
-	/** Actions from the user config */
-	#actions;
+	/**
+	 * Actions from the user config
+	 * @type {Record<string, import('./action.js').Action>}
+	 */
+	#actions = {};
 	/**
 	 * Actions from all ancestor states and the config
 	 * @type {Record<string, import('./action').Action>}
@@ -73,12 +76,14 @@ export class BaseState {
 	#conditions;
 	/** @type {Handler[]} */
 	#entry = [];
-	#entryConfig;
+	/** @type {EntryHandlerConfig[]} */
+	#entryConfig = [];
 	/** @type {StateEvent | null} */
 	#event = null;
 	/** @type {Handler[]} */
 	#exit = [];
-	#exitConfig;
+	/** @type {ExitHandlerConfig[]} */
+	#exitConfig = [];
 	/**
 	 * The active handler that is currently executing
 	 *
@@ -103,13 +108,10 @@ export class BaseState {
 	 * @param {import('./types.js').AtomicStateConfig} [stateConfig]
 	 */
 	constructor(stateConfig) {
-		this.#actions = stateConfig?.actions || {};
 		this.#actionConfig = stateConfig?.actionConfig || {};
 		this.#alwaysConfig = stateConfig?.always || [];
 		this.#conditions = stateConfig?.conditions || {};
 		this.#conditionConfig = stateConfig?.conditionConfig || {};
-		this.#entryConfig = stateConfig?.entry || [];
-		this.#exitConfig = stateConfig?.exit || [];
 		this.#name = stateConfig?.name || '';
 		this.#onConfig = stateConfig?.on || {};
 	}
@@ -265,6 +267,24 @@ export class BaseState {
 				|| (this.#condition && path === this.#condition.path.join('.'))
 				|| (this.#handler && path === this.#handler.path.join('.')),
 		);
+	}
+	/** @param {import('./types.js').MonitorConfig} config */
+	monitor(config) {
+		if (config.actions) {
+			for (const [name, action] of Object.entries(config.actions)) {
+				this.#actions[name] = action;
+			}
+		}
+		if (config.entry) {
+			for (const handler of config.entry) {
+				this.#entryConfig.push(handler);
+			}
+		}
+		if (config.exit) {
+			for (const handler of config.exit) {
+				this.#exitConfig.push(handler);
+			}
+		}
 	}
 	get name() {
 		return this.#name;

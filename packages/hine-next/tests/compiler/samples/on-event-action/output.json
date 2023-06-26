@@ -1,0 +1,25 @@
+{
+    "html": {
+        "type": "Fragment",
+        "start": 0,
+        "end": 26,
+        "children": [
+            {
+                "type": "Element",
+                "start": 0,
+                "end": 26,
+                "name": "button",
+                "attributes": [
+                    {
+                        "type": "Attribute",
+                        "start": 8,
+                        "end": 16,
+                        "name": "disabled",
+                        "value": true
+                    }
+                ],
+                "children": []
+            }
+        ]
+    }
+}

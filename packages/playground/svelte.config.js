@@ -6,7 +6,7 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		alias: {
-			$tests: '../tests',
+			$tests: '../hine-next/tests',
 		},
 	},
 	preprocess: vitePreprocess(),

@@ -3,8 +3,7 @@
 	"preview": false,
 	"type": "module",
 	"workspaces": [
-		"packages/*",
-		"packages/hine-next/playground"
+		"packages/*"
 	],
 	"scripts": {
 		"dev": "wireit",
@@ -27,7 +26,7 @@
 	"wireit": {
 		"dev": {
 			"dependencies": [
-				"./packages/hine-next/playground:dev"
+				"./packages/playground:dev"
 			]
 		},
 		"format": {

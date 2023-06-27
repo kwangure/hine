@@ -1,0 +1,32 @@
+{
+    "html": {
+        "type": "Fragment",
+        "start": 0,
+        "end": 51,
+        "children": [
+            {
+                "type": "Element",
+                "start": 0,
+                "end": 51,
+                "name": "input",
+                "attributes": [
+                    {
+                        "type": "Attribute",
+                        "start": 7,
+                        "end": 49,
+                        "name": "use:console.log",
+                        "value": [
+                            {
+                                "type": "Mustache",
+                                "start": 23,
+                                "end": 49,
+                                "raw": "{ y: { y1: 10, y2: 20 }}"
+                            }
+                        ]
+                    }
+                ],
+                "children": []
+            }
+        ]
+    }
+}

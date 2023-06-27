@@ -1,5 +1,7 @@
 .wireit
 node_modules
+packages/**/dist
+packages/**/tests/samples
 
 # ESLint CJS doesn't like exports field
 vite.config.js

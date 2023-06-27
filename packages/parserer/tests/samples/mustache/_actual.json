@@ -1,0 +1,15 @@
+{
+    "html": {
+        "type": "Fragment",
+        "start": 0,
+        "end": 10,
+        "children": [
+            {
+                "type": "Mustache",
+                "start": 0,
+                "end": 10,
+                "raw": "location"
+            }
+        ]
+    }
+}

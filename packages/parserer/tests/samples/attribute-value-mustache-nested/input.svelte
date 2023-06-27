@@ -1,0 +1,1 @@
+<input use:console.log={{ y: { y1: 10, y2: 20 }}}/>

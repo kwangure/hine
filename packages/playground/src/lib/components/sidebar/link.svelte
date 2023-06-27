@@ -5,10 +5,16 @@
 	export let href;
 
 	$: active = href === $page.url.pathname;
-	$: ariaCurrent = active ? /** @type {const} */('page') : null;
+	$: ariaCurrent = active ? /** @type {const} */ ('page') : null;
 </script>
 
-<a {href} class='whitespace-nowrap cursor-pointer flex items-center h-8 py-1 px-4 rounded gap-2'
-	class:bg-neutral-700={active} class:hover:bg-neutral-500={active} class:hover:bg-neutral-700={!active} aria-current={ariaCurrent}>
-	<slot/>
+<a
+	{href}
+	class="flex h-8 cursor-pointer items-center gap-2 whitespace-nowrap rounded px-4 py-1"
+	class:bg-neutral-700={active}
+	class:hover:bg-neutral-500={active}
+	class:hover:bg-neutral-700={!active}
+	aria-current={ariaCurrent}
+>
+	<slot />
 </a>

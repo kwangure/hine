@@ -6,3 +6,6 @@ dist
 .env.*
 !.env.example
 package-lock.json
+**/tests/samples/**
+**/tests/**/samples/**
+**/.svelte-kit/**

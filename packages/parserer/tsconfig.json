@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"forceConsistentCasingInFileNames": true,
+		"verbatimModuleSyntax": true,
+		"moduleResolution": "bundler",
+		"noEmit": true,
+		"paths": {
+			"$types": ["./src/types.ts"]
+		},
+		"resolveJsonModule": true,
+		"strict": true,
+		"target": "esnext"
+	},
+	"include": ["src", "tests"]
+}

@@ -1,0 +1,32 @@
+{
+    "html": {
+        "type": "Fragment",
+        "start": 0,
+        "end": 17,
+        "children": [
+            {
+                "type": "Block",
+                "start": 0,
+                "end": 17,
+                "children": [
+                    {
+                        "type": "BlockStatement",
+                        "start": 0,
+                        "end": 12,
+                        "name": "if",
+                        "raw": "window",
+                        "children": []
+                    },
+                    {
+                        "type": "BlockStatement",
+                        "start": 13,
+                        "end": 17,
+                        "name": "if",
+                        "raw": "",
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    }
+}

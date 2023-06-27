@@ -1,0 +1,32 @@
+{
+    "html": {
+        "type": "Fragment",
+        "start": 0,
+        "end": 18,
+        "children": [
+            {
+                "type": "Element",
+                "start": 0,
+                "end": 18,
+                "name": "input",
+                "attributes": [
+                    {
+                        "type": "Attribute",
+                        "start": 7,
+                        "end": 16,
+                        "name": "type",
+                        "value": [
+                            {
+                                "type": "Text",
+                                "start": 12,
+                                "end": 16,
+                                "raw": "text"
+                            }
+                        ]
+                    }
+                ],
+                "children": []
+            }
+        ]
+    }
+}

@@ -2,6 +2,14 @@
 	"useTabs": true,
 	"singleQuote": true,
 	"trailingComma": "all",
-	"printWidth": 100,
-	"pluginSearchDirs": ["."]
+	"plugins": ["prettier-plugin-svelte"],
+	"pluginSearchDirs": ["."],
+	"overrides": [
+		{
+			"files": "*.svelte",
+			"options": {
+				"parser": "svelte"
+			}
+		}
+	]
 }

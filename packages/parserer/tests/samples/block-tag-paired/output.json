@@ -1,0 +1,53 @@
+{
+    "html": {
+        "type": "Fragment",
+        "start": 0,
+        "end": 31,
+        "children": [
+            {
+                "type": "Block",
+                "start": 0,
+                "end": 31,
+                "children": [
+                    {
+                        "type": "BlockStatement",
+                        "start": 0,
+                        "end": 26,
+                        "name": "if",
+                        "raw": "window",
+                        "children": [
+                            {
+                                "type": "Text",
+                                "start": 12,
+                                "end": 14,
+                                "raw": "\n\t"
+                            },
+                            {
+                                "type": "Element",
+                                "start": 14,
+                                "end": 25,
+                                "name": "div",
+                                "attributes": [],
+                                "children": []
+                            },
+                            {
+                                "type": "Text",
+                                "start": 25,
+                                "end": 26,
+                                "raw": "\n"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "BlockStatement",
+                        "start": 27,
+                        "end": 31,
+                        "name": "if",
+                        "raw": "",
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    }
+}

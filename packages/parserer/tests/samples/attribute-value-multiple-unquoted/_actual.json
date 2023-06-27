@@ -1,0 +1,46 @@
+{
+    "html": {
+        "type": "Fragment",
+        "start": 0,
+        "end": 29,
+        "children": [
+            {
+                "type": "Element",
+                "start": 0,
+                "end": 29,
+                "name": "input",
+                "attributes": [
+                    {
+                        "type": "Attribute",
+                        "start": 7,
+                        "end": 16,
+                        "name": "type",
+                        "value": [
+                            {
+                                "type": "Text",
+                                "start": 12,
+                                "end": 16,
+                                "raw": "text"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "Attribute",
+                        "start": 17,
+                        "end": 27,
+                        "name": "value",
+                        "value": [
+                            {
+                                "type": "Text",
+                                "start": 23,
+                                "end": 27,
+                                "raw": "text"
+                            }
+                        ]
+                    }
+                ],
+                "children": []
+            }
+        ]
+    }
+}

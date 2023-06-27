@@ -53,7 +53,9 @@ export class Action {
 	}
 	/** @type {string[]} */
 	get path() {
-		return this.#ownerState ? [...this.#ownerState.path, `(${this.#name})`] : [`(${this.#name})`];
+		return this.#ownerState
+			? [...this.#ownerState.path, `(${this.#name})`]
+			: [`(${this.#name})`];
 	}
 	/**
 	 * @param {any} [value]

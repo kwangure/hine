@@ -1,0 +1,26 @@
+{
+    "html": {
+        "type": "Fragment",
+        "start": 0,
+        "end": 22,
+        "children": [
+            {
+                "type": "Element",
+                "start": 0,
+                "end": 22,
+                "name": "div",
+                "attributes": [],
+                "children": [
+                    {
+                        "type": "Element",
+                        "start": 5,
+                        "end": 16,
+                        "name": "div",
+                        "attributes": [],
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    }
+}

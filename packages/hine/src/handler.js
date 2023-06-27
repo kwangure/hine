@@ -69,7 +69,9 @@ export class Handler {
 	}
 	/** @type {string[]} */
 	get path() {
-		return this.#ownerState ? [...this.#ownerState.path, `[${this.#name}]`] : [`[${this.#name}]`];
+		return this.#ownerState
+			? [...this.#ownerState.path, `[${this.#name}]`]
+			: [`[${this.#name}]`];
 	}
 	/**
 	 * @param {any} value
@@ -131,7 +133,7 @@ export class Handler {
 	/**
 	 * @param {any} value
 	 */
-	* stepActions(value) {
+	*stepActions(value) {
 		this.#notifyBefore();
 		let shouldExecute = false;
 		if (this.condition) {
@@ -149,7 +151,7 @@ export class Handler {
 	/**
 	 * @param {any} value
 	 */
-	* stepTransition(value) {
+	*stepTransition(value) {
 		const from = this.#ownerState;
 		const to = this.#transitionTo;
 		// These should never happen. They're mostly to help TypeScript out

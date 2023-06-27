@@ -4,7 +4,9 @@ import { describe, expect, it } from 'vitest';
 describe('dispatch', () => {
 	it('throws on unresolved dispatch', () => {
 		const machine = new AtomicState();
-		expect(() => machine.dispatch('test')).toThrow('Attempted dispatch before resolving state');
+		expect(() => machine.dispatch('test')).toThrow(
+			'Attempted dispatch before resolving state',
+		);
 	});
 
 	it('transitions on dispatch', () => {

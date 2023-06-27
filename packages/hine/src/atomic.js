@@ -8,7 +8,9 @@ export class AtomicState extends BaseState {
 		fn(this);
 		this[STATE_SUBSCRIBERS].add(/** @type {(arg: BaseState) => any} */ (fn));
 		return () => {
-			this[STATE_SUBSCRIBERS].delete(/** @type {(arg: BaseState) => any} */ (fn));
+			this[STATE_SUBSCRIBERS].delete(
+				/** @type {(arg: BaseState) => any} */ (fn),
+			);
 		};
 	}
 	toJSON() {

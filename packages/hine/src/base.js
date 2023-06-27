@@ -133,7 +133,9 @@ export class BaseState {
 					);
 				} else {
 					throw Error(
-						`State references unknown action '${name}'. Expected one of: ${actions.join(', ')}`,
+						`State references unknown action '${name}'. Expected one of: ${actions.join(
+							', ',
+						)}`,
 					);
 				}
 			}
@@ -160,7 +162,9 @@ export class BaseState {
 				);
 			} else {
 				throw Error(
-					`State references unknown condition '${name}'. Expected one of: ${conditions.join(', ')}`,
+					`State references unknown condition '${name}'. Expected one of: ${conditions.join(
+						', ',
+					)}`,
 				);
 			}
 		}
@@ -319,7 +323,7 @@ export class BaseState {
 	 * @param {string} eventName
 	 * @param {any} [eventValue]
 	 */
-	* step(eventName, eventValue) {
+	*step(eventName, eventValue) {
 		if (!this.#initialized) {
 			throw Error("Attempted to step before calling 'state.start()'.");
 		}
@@ -449,7 +453,9 @@ export class BaseState {
 	get [STATE_ACTION_CONFIGS]() {
 		return {
 			notifyAfter:
-				this.#actionConfig.notifyAfter ?? this.#parent?.[STATE_ACTION_CONFIGS].notifyAfter ?? false,
+				this.#actionConfig.notifyAfter ??
+				this.#parent?.[STATE_ACTION_CONFIGS].notifyAfter ??
+				false,
 			notifyBefore:
 				this.#actionConfig.notifyBefore ??
 				this.#parent?.[STATE_ACTION_CONFIGS].notifyBefore ??
@@ -475,7 +481,8 @@ export class BaseState {
 					action[ACTION_NOTIFY_AFTER] = this[STATE_ACTION_CONFIGS].notifyAfter;
 				}
 				if (typeof action[ACTION_NOTIFY_BEFORE] !== 'boolean') {
-					action[ACTION_NOTIFY_BEFORE] = this[STATE_ACTION_CONFIGS].notifyBefore;
+					action[ACTION_NOTIFY_BEFORE] =
+						this[STATE_ACTION_CONFIGS].notifyBefore;
 				}
 				// @ts-ignore
 				action[ACTION_OWNER] = this;
@@ -521,10 +528,12 @@ export class BaseState {
 					condition[CONDITION_NAME] = name;
 				}
 				if (typeof condition[CONDITION_NOTIFY_AFTER] !== 'boolean') {
-					condition[CONDITION_NOTIFY_AFTER] = this[STATE_CONDITION_CONFIGS].notifyAfter;
+					condition[CONDITION_NOTIFY_AFTER] =
+						this[STATE_CONDITION_CONFIGS].notifyAfter;
 				}
 				if (typeof condition[CONDITION_NOTIFY_BEFORE] !== 'boolean') {
-					condition[CONDITION_NOTIFY_BEFORE] = this[STATE_CONDITION_CONFIGS].notifyBefore;
+					condition[CONDITION_NOTIFY_BEFORE] =
+						this[STATE_CONDITION_CONFIGS].notifyBefore;
 				}
 				// @ts-ignore
 				condition[CONDITION_OWNER] = this;
@@ -559,9 +568,15 @@ export class BaseState {
 		}
 
 		return {
-			always: this.#always.length ? this.#always.map((handler) => handler.toJSON()) : undefined,
-			entry: this.#entry.length ? this.#entry.map((handler) => handler.toJSON()) : undefined,
-			exit: this.#exit.length ? this.#exit.map((handler) => handler.toJSON()) : undefined,
+			always: this.#always.length
+				? this.#always.map((handler) => handler.toJSON())
+				: undefined,
+			entry: this.#entry.length
+				? this.#entry.map((handler) => handler.toJSON())
+				: undefined,
+			exit: this.#exit.length
+				? this.#exit.map((handler) => handler.toJSON())
+				: undefined,
 			name: this.#name,
 			on: onEntries.length ? on : undefined,
 			path: this.path,

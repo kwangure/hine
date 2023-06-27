@@ -34,6 +34,7 @@
 			"files": [
 				"**/*.{css,html,js,json,md,ts,svelte}",
 				"!**/dist/**",
+				"!**/tests/samples/**",
 				".eslintignore",
 				".eslintrc.cjs"
 			],
@@ -44,6 +45,7 @@
 			"files": [
 				"**/*.{js,svelte}",
 				"!**/dist/**",
+				"!**/tests/samples/**",
 				".eslintignore",
 				".eslintrc.cjs"
 			],
@@ -51,11 +53,13 @@
 		},
 		"pack": {
 			"dependencies": [
-				"./packages/hine:pack"
+				"./packages/hine:pack",
+				"./packages/parserer:pack"
 			]
 		},
 		"pre-commit": {
 			"dependencies": [
+				"format",
 				"lint",
 				"./packages/hine:pre-commit"
 			]

@@ -95,7 +95,14 @@ describe('actions', () => {
 			},
 		});
 		state.start();
-		expect(log).toEqual(['entry0', 'entry1', 'entry2', 'always0', 'always1', 'always2']);
+		expect(log).toEqual([
+			'entry0',
+			'entry1',
+			'entry2',
+			'always0',
+			'always1',
+			'always2',
+		]);
 	});
 
 	it('runs entry then always actions on transition', () => {
@@ -206,7 +213,14 @@ describe('actions', () => {
 		});
 		state.start();
 		state.dispatch('event');
-		expect(log).toEqual(['entry0', 'entry1', 'entry2', 'always0', 'always1', 'always2']);
+		expect(log).toEqual([
+			'entry0',
+			'entry1',
+			'entry2',
+			'always0',
+			'always1',
+			'always2',
+		]);
 	});
 
 	it('runs exit actions with leaves first and root last', () => {

@@ -1,5 +1,7 @@
 <script>
-	import { compile, createParser, parseFile } from 'hine-next';
+	import { createParser, parseFile } from 'parserer';
+	import { Code } from '$lib/components';
+	import { compile } from 'hine-next';
 
 	export let data;
 
@@ -16,14 +18,10 @@
 		ast = $parser.context.html.toJSON();
 		astJSON = JSON.stringify(ast, null, 4);
 		js = JSON.stringify(compile(ast), null, 4);
-	};
+	}
 </script>
 
-<div class="flex text-sm gap-2">
-	<code class='px-5 py-4 whitespace-pre border dark:border-gray-700 block rounded'>
-		{data.sample.content}
-	</code>
-	<code class='px-5 py-4 whitespace-pre border dark:border-gray-700 block rounded'>
-		{js}
-	</code>
+<div class="flex gap-2 text-sm">
+	<Code language="svelte" code={data.sample.content} />
+	<Code language="json" code={js} />
 </div>

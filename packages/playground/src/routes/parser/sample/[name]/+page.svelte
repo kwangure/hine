@@ -49,7 +49,7 @@
 		previous={data.previous}
 		{parser}
 	/>
-	<div class="right">
+	<div>
 		<div>
 			<button
 				class:br-button-primary={shownPanel === 'stack'}

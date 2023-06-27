@@ -20,7 +20,7 @@
 
 <code
 	class:br-code-inline={inline}
-	class="block whitespace-pre rounded border border-neutral-300 bg-zinc-100 px-5 py-4 text-sm dark:border-neutral-600 dark:bg-zinc-900"
+	class="block min-w-fit whitespace-pre rounded border border-neutral-300 bg-zinc-100 px-5 py-4 text-sm dark:border-neutral-600 dark:bg-zinc-900"
 >
 	{#if highlighter}
 		{#each highlighter(code) as { segment, color }}

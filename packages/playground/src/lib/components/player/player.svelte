@@ -44,9 +44,9 @@
 	}
 </script>
 
-<div class="player rounded">
+<div class="player min-w-fit rounded">
 	<code
-		class="border-neutral block whitespace-pre rounded border border-neutral-300 bg-zinc-100 px-4 py-3 text-sm dark:border-neutral-600 dark:bg-zinc-900"
+		class="border-neutral block min-w-fit whitespace-pre rounded border border-neutral-300 bg-zinc-100 px-4 py-3 text-sm dark:border-neutral-600 dark:bg-zinc-900"
 	>
 		{#each segments as { color, segment, status }}
 			<span class="br-token-{color} {status}">{segment}</span>

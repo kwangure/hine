@@ -19,7 +19,7 @@
 	export let next;
 	/** @type {string} */
 	export let previous;
-	/** @type {import('parserer').} */
+	/** @type {import('parserer').WritableParserWithContext} */
 	export let parser;
 
 	$: ({ index } = $parser.context);
@@ -46,7 +46,7 @@
 
 <div class="player rounded">
 	<code
-		class="border-neutral block whitespace-pre rounded border border-neutral-300 px-4 py-3 text-sm dark:border-neutral-600"
+		class="border-neutral block whitespace-pre rounded border border-neutral-300 bg-zinc-100 px-4 py-3 text-sm dark:border-neutral-600 dark:bg-zinc-900"
 	>
 		{#each segments as { color, segment, status }}
 			<span class="br-token-{color} {status}">{segment}</span>

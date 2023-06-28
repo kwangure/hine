@@ -77,7 +77,8 @@
 	},
 	"devDependencies": {
 		"@sveltejs/package": "^2.0.2",
-		"publint": "^0.1.11"
+		"publint": "^0.1.11",
+		"vitest": "^0.32.2"
 	},
 	"exports": {
 		".": {

@@ -1,6 +1,6 @@
 <script>
-	import { Link, Section } from '$lib/components/sidebar';
-	import { Layout } from '$lib/components';
+	import { Layout, Link } from '$lib/components';
+	import { Section } from '$lib/components/sidebar';
 
 	export let data;
 </script>

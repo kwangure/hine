@@ -66,7 +66,8 @@
 		},
 		"test": {
 			"dependencies": [
-				"./packages/hine:test"
+				"./packages/hine:test",
+				"./packages/hine-next:test"
 			]
 		},
 		"version": {

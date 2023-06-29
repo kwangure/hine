@@ -1,13 +1,11 @@
 {
-    "on": [
-        {
-            "events": [
-                {
-                    "actions": [
-                        "action"
-                    ]
-                }
-            ]
-        }
-    ]
+    "on": {
+        "event1": [
+            {
+                "actions": [
+                    "action1"
+                ]
+            }
+        ]
+    }
 }

@@ -27,7 +27,7 @@ export function simple(node, visitors, state, override) {
 			console.error(`'${type}' not found in base`);
 		}
 		if (found) found(node, st);
-	}(node, state, override));
+	})(node, state, override);
 }
 
 function Parent(node, state, getChildren) {

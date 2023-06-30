@@ -1,14 +1,22 @@
 import { simple } from './ast.js';
 
+/**
+ * @param {import("parserer").PElementJSON } node
+ * @param {Record<string, any>} onElements
+ */
 function OnElement(node, onElements) {
 	if (node.name === 'on') {
 		simple(node, { Element: EventElement }, onElements);
 	}
 }
 
+/**
+ * @param {import("parserer").PElementJSON } node
+ * @param {Record<string, any>} onElements
+ */
 function EventElement(node, onElements) {
 	if (node.name === 'event') {
-		const handler = {};
+		const handler = /** @type {{ name: string; actions: any[] }} */ ({});
 		simple(node, { Attribute: ActionOrNameAttribute }, handler);
 		let handlers = onElements[handler.name];
 		if (!handlers) {
@@ -19,7 +27,12 @@ function EventElement(node, onElements) {
 	}
 }
 
+/**
+ * @param {import('parserer').PAttributeJSON} node
+ * @param {Record<string, any>} eventElement
+ */
 function ActionOrNameAttribute(node, eventElement) {
+	if (typeof node.value === 'boolean') return;
 	if (node.name === 'name') {
 		eventElement.name = node.value[0].raw;
 	}
@@ -31,6 +44,9 @@ function ActionOrNameAttribute(node, eventElement) {
 	}
 }
 
+/**
+ * @param {import('parserer').PFragmentJSON} ast
+ */
 export function compile(ast) {
 	const onNode = {};
 	simple(ast, { Element: OnElement }, onNode);

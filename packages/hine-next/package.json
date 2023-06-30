@@ -12,11 +12,19 @@
 	},
 	"wireit": {
 		"build": {
-			"command": "tsc"
+			"command": "tsc",
+			"files": [
+				"src/**/*.{js,ts}",
+				"tsconfig.json"
+			],
+			"output": [
+				"types/**"
+			]
 		},
 		"pack": {
 			"command": "npm pack",
 			"dependencies": [
+				"build",
 				"publint"
 			],
 			"files": [
@@ -63,9 +71,13 @@
 		"vitest": "^0.32.2"
 	},
 	"exports": {
-		".": {
-			"types": "./src/compiler/index.d.ts",
+		"./compiler": {
+			"types": "./types/index.d.ts",
 			"default": "./src/compiler/index.js"
 		}
-	}
+	},
+	"files": [
+		"src",
+		"types"
+	]
 }

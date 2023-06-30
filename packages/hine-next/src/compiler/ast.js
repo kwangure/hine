@@ -17,19 +17,28 @@
 // walker, and state can be used to give this walked an initial
 // state.
 
-export function simple(node, visitors, state, override) {
-	(function c(node, st, override) {
-		const type = override || node.type,
-			found = visitors[type];
-		if (type in base) {
-			base[type](node, st, c);
+/**
+ * @param {Exclude<ReturnType<import('parserer').PTemplateNode['toJSON']>, { type: 'AttributeShorthand' | 'Mustache' }>} node
+ * @param {Record<string, any>} visitors
+ * @param {any} state
+ */
+export function simple(node, visitors, state) {
+	(function c(node, st) {
+		const found = visitors[node.type];
+		if (node.type in base) {
+			/** @type {any} */ (base[node.type])(node, st, c);
 		} else {
-			console.error(`'${type}' not found in base`);
+			console.error(`'${node.type}' not found in base`);
 		}
 		if (found) found(node, st);
-	})(node, state, override);
+	})(node, state);
 }
 
+/**
+ * @param {Extract<ReturnType<import('parserer').PTemplateNode['toJSON']>, { children: any }>} node
+ * @param {any} state
+ * @param {(arg0: any, arg1: any) => void} getChildren
+ */
 function Parent(node, state, getChildren) {
 	for (const child of node.children) {
 		getChildren(child, state);
@@ -39,13 +48,24 @@ function Parent(node, state, getChildren) {
 function Ignore() {}
 
 export const base = {
+	/**
+	 * @param {ReturnType<import('parserer').PAttribute['toJSON']>} node
+	 * @param {any} state
+	 * @param {(arg0: any, arg1: any) => void} callback
+	 */
 	Attribute(node, state, callback) {
+		if (typeof node.value === 'boolean') return;
 		for (const child of node.value) {
 			callback(child, state);
 		}
 	},
 	Block: Parent,
 	BlockStatement: Parent,
+	/**
+	 * @param {ReturnType<import('parserer').PElement['toJSON']>} node
+	 * @param {any} state
+	 * @param {(arg0: any, arg1: any) => void} callback
+	 */
 	Element(node, state, callback) {
 		for (const child of node.attributes) {
 			callback(child, state);

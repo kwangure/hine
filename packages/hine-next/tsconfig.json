@@ -5,14 +5,10 @@
 		"declaration": true,
 		"declarationDir": "types",
 		"emitDeclarationOnly": true,
-		"module": "esnext",
 		"moduleResolution": "bundler",
-		"paths": {
-			"$types": ["./src/types.ts"]
-		},
 		"resolveJsonModule": true,
 		"strict": true,
 		"target": "esnext"
 	},
-	"include": ["src", "tests"]
+	"include": ["src"]
 }

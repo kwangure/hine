@@ -1,12 +1,12 @@
 <script>
 	import { createParser, parseFile } from 'parserer';
 	import { Code } from '$lib/components';
-	import { compile } from 'hine-next';
+	import { compile } from 'hine-next/compiler';
 
 	export let data;
 
 	const parser = createParser();
-	/** @type {string} */
+	/** @type {import('parserer').PFragmentJSON} */
 	let ast;
 	/** @type {string} */
 	let astJSON;

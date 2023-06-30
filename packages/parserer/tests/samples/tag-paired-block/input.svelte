@@ -1,0 +1,1 @@
+<div>{#if true}{/if}</div>

@@ -138,6 +138,7 @@ export class PElement {
 			case 'Attribute':
 				this.#attributes.push(node);
 				break;
+			case 'Block':
 			case 'Element':
 			case 'Text': {
 				this.#children.push(node);

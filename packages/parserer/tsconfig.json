@@ -3,9 +3,9 @@
 		"allowJs": true,
 		"checkJs": true,
 		"declaration": true,
+		"declarationDir": "types",
 		"emitDeclarationOnly": true,
 		"moduleResolution": "bundler",
-		"outDir": "types",
 		"resolveJsonModule": true,
 		"strict": true,
 		"target": "esnext"

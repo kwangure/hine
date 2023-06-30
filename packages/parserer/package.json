@@ -17,7 +17,9 @@
 				"src/**/*.{js,ts}",
 				"tsconfig.json"
 			],
-			"output": []
+			"output": [
+				"types/**"
+			]
 		},
 		"pack": {
 			"command": "npm pack",
@@ -29,10 +31,11 @@
 				"src/**",
 				"types/**",
 				"LICENSE",
+				"package.json",
 				"README.md"
 			],
 			"output": [
-				"parserer*.tgz"
+				"*.tgz"
 			]
 		},
 		"publint": {
@@ -41,7 +44,8 @@
 				"build"
 			],
 			"files": [
-				"dist/**",
+				"src/**",
+				"types/**",
 				"package.json"
 			],
 			"output": []

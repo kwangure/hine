@@ -140,6 +140,7 @@ export class PElement {
 				break;
 			case 'Block':
 			case 'Element':
+			case 'Mustache':
 			case 'Text': {
 				this.#children.push(node);
 				break;

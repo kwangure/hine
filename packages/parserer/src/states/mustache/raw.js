@@ -2,7 +2,7 @@ import { h } from 'hine';
 import { PMustache } from '../../nodes.js';
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../types.js').ParserContext} context
  */
 export function createRawState(context) {
 	return h.atomic({
@@ -38,7 +38,7 @@ export function createRawState(context) {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../types.js').ParserContext} context
  */
 export function createRawMonitor(context) {
 	/** @type {PMustache} */

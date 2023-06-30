@@ -6,7 +6,7 @@ import { PBlock, PBlockStatement } from '../../../nodes.js';
 import { h } from 'hine';
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../../types.js').ParserContext} context
  */
 export function createBlockState(context) {
 	return h.compound({
@@ -55,7 +55,7 @@ export function createBlockState(context) {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../../types.js').ParserContext} context
  */
 export function createBlockMonitor(context) {
 	/** @type {PBlock} */

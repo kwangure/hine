@@ -9,7 +9,7 @@ import { createSelfCloseMonitor, createSelfCloseState } from './selfClose.js';
 import { h } from 'hine';
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../types.js').ParserContext} context
  */
 export function createTagState(context) {
 	return h.compound({
@@ -43,10 +43,10 @@ export function createTagState(context) {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../types.js').ParserContext} context
  */
 export function createTagMonitor(context) {
-	/** @type {import('$types').PElement} */
+	/** @type {import('../../types.js').PElement} */
 	let element;
 	return {
 		actions: {

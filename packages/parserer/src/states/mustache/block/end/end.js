@@ -27,7 +27,7 @@ export function createEndState() {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../../../types.js').ParserContext} context
  */
 export function createEndMonitor(context) {
 	return {

@@ -12,7 +12,7 @@ import type { CompoundState } from 'hine';
 import type { PStack } from './stack.js';
 import type { Writable } from 'svelte/store';
 
-export type { PBlockStatement, PElement, PMustache };
+export type * from './nodes.js';
 
 export interface ParserContext {
 	index: number;
@@ -48,13 +48,15 @@ export interface PAttributeJSON {
 		  >[];
 }
 
+export type PElementChild = PAttribute | PBlock | PElement | PMustache | PText;
+
 export interface PElementJSON {
 	type: 'Element';
 	start: number;
 	end: number;
 	name: string;
 	attributes: ReturnType<PAttribute['toJSON']>[];
-	children: ReturnType<PTemplateNode['toJSON']>[];
+	children: ReturnType<PElementChild['toJSON']>[];
 }
 
 export interface PBlockJSON {

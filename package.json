@@ -54,6 +54,7 @@
 		"pack": {
 			"dependencies": [
 				"./packages/hine:pack",
+				"./packages/hine-next:pack",
 				"./packages/parserer:pack"
 			]
 		},

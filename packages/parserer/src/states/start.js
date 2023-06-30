@@ -13,7 +13,7 @@ export function createStartState() {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../types').ParserContext} context
  */
 export function createStartMonitor(context) {
 	return {

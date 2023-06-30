@@ -124,32 +124,23 @@ export class PBlockStatement {
 export class PElement {
 	/** @type {PAttribute[]} */
 	#attributes = [];
-	/** @type {import("./types").PTemplateNode[]} */
+	/** @type {import("./types").PElementChild[]} */
 	#children = [];
 	#type = /** @type {const} */ ('Element');
 	end = 0;
 	name = '';
 	start = 0;
 	/**
-	 * @param {PAttribute | PBlock | PElement | PMustache | PText} node
+	 * @param {import("./types").PElementChild} node
 	 */
 	append(node) {
 		switch (node.type) {
 			case 'Attribute':
 				this.#attributes.push(node);
 				break;
-			case 'Element': {
-				this.#children.push(node);
-				break;
-			}
+			case 'Element':
 			case 'Text': {
-				const lastChild = this.#children.at(-1);
-				if (lastChild?.type === 'Text') {
-					lastChild.end = node.end;
-					lastChild.raw += node.raw;
-				} else {
-					this.#children.push(node);
-				}
+				this.#children.push(node);
 				break;
 			}
 			default:

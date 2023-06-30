@@ -36,7 +36,7 @@ export function createTextState() {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../types.js').ParserContext} context
  */
 export function createTextMonitor(context) {
 	/** @type {PText} */

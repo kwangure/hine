@@ -7,7 +7,7 @@ import { h } from 'hine';
 import { PAttribute } from '../../../nodes.js';
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../../types.js').ParserContext} context
  */
 export function createAttributeState(context) {
 	return h.compound({
@@ -40,7 +40,7 @@ export function createAttributeState(context) {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../../types.js').ParserContext} context
  */
 export function createAttributeMonitor(context) {
 	/** @type {PAttribute} */

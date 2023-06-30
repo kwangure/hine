@@ -8,4 +8,5 @@ dist
 package-lock.json
 **/tests/samples/**
 **/tests/**/samples/**
+**/types/**
 **/.svelte-kit/**

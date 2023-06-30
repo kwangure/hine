@@ -14,7 +14,7 @@ import { PStack } from './stack.js';
 const ALPHA_CHARACTER_RE = /[A-z]/;
 
 export function createParser() {
-	/** @type {import('$types').ParserContext} */
+	/** @type {import('./types.js').ParserContext} */
 	const context = {
 		index: 0,
 		html: new PFragment(),
@@ -66,7 +66,7 @@ export function createParser() {
 
 	parser.start();
 
-	return /** @type {import('./types').WritableParserWithContext} */ (
+	return /** @type {import('./types.js').WritableParserWithContext} */ (
 		Object.assign(parser, { context })
 	);
 }

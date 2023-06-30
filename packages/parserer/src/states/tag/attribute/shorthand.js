@@ -2,7 +2,7 @@ import { h } from 'hine';
 import { PShorthand } from '../../../nodes.js';
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../../types.js').ParserContext} context
  */
 export function createShorthandState(context) {
 	return h.atomic({
@@ -38,7 +38,7 @@ export function createShorthandState(context) {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../../types.js').ParserContext} context
  */
 export function createShortHandMonitor(context) {
 	/** @type {PShorthand} */

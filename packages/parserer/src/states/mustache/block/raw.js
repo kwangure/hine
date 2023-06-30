@@ -1,7 +1,7 @@
 import { h } from 'hine';
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../../types').ParserContext} context
  */
 export function createRawState(context) {
 	return h.atomic({
@@ -37,10 +37,10 @@ export function createRawState(context) {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../../types').ParserContext} context
  */
 export function createRawMonitor(context) {
-	/** @type {import('$types').PBlockStatement} */
+	/** @type {import('../../../types').PBlockStatement} */
 	let blockStatement;
 	return {
 		actions: {

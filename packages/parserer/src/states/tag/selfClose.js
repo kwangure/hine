@@ -15,7 +15,7 @@ export function createSelfCloseState() {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../types').ParserContext} context
  */
 export function createSelfCloseMonitor(context) {
 	return {

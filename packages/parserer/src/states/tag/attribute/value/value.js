@@ -13,7 +13,7 @@ import { h } from 'hine';
 import { PText } from '../../../../nodes.js';
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../../../types.js').ParserContext} context
  */
 export function createValueState(context) {
 	return h.compound({
@@ -42,7 +42,7 @@ export function createValueState(context) {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../../../types.js').ParserContext} context
  */
 export function createValueMonitor(context) {
 	/** @type {PText} */

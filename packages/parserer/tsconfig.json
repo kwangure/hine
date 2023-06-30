@@ -2,16 +2,13 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"checkJs": true,
-		"forceConsistentCasingInFileNames": true,
-		"verbatimModuleSyntax": true,
+		"declaration": true,
+		"emitDeclarationOnly": true,
 		"moduleResolution": "bundler",
-		"noEmit": true,
-		"paths": {
-			"$types": ["./src/types.ts"]
-		},
+		"outDir": "types",
 		"resolveJsonModule": true,
 		"strict": true,
 		"target": "esnext"
 	},
-	"include": ["src", "tests"]
+	"include": ["src"]
 }

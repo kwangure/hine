@@ -5,17 +5,16 @@
 	"type": "module",
 	"license": "MIT",
 	"scripts": {
-		"check": "wireit",
+		"build": "wireit",
 		"pack": "wireit",
 		"pre-commit": "wireit",
 		"test": "wireit"
 	},
 	"wireit": {
-		"check": {
+		"build": {
 			"command": "tsc",
 			"files": [
 				"src/**/*.{js,ts}",
-				"tests/**/*.{js,ts}",
 				"tsconfig.json"
 			],
 			"output": []
@@ -23,12 +22,12 @@
 		"pack": {
 			"command": "npm pack",
 			"dependencies": [
+				"build",
 				"publint"
 			],
 			"files": [
-				"dist/**",
-				"!**/*.test.*",
-				"!**/*.spec.*",
+				"src/**",
+				"types/**",
 				"LICENSE",
 				"README.md"
 			],
@@ -36,19 +35,10 @@
 				"parserer*.tgz"
 			]
 		},
-		"package": {
-			"command": "svelte-package -i ./src",
-			"files": [
-				"src/**/*.{js,ts,svelte}"
-			],
-			"output": [
-				"dist/**"
-			]
-		},
 		"publint": {
 			"command": "publint",
 			"dependencies": [
-				"package"
+				"build"
 			],
 			"files": [
 				"dist/**",
@@ -58,9 +48,8 @@
 		},
 		"pre-commit": {
 			"dependencies": [
-				"check",
-				"test",
-				"package"
+				"build",
+				"test"
 			]
 		},
 		"test": {
@@ -82,13 +71,12 @@
 	},
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"default": "./dist/index.js"
+			"types": "./types/index.d.ts",
+			"default": "./src/index.js"
 		}
 	},
 	"files": [
-		"dist",
-		"!**/*.test.*",
-		"!**/*.spec.*"
+		"src",
+		"types"
 	]
 }

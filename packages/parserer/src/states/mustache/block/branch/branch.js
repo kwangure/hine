@@ -26,7 +26,7 @@ export function createBranchState() {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../../../types.js').ParserContext} context
  */
 export function createBranchMonitor(context) {
 	return {

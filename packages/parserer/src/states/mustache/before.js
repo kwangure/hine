@@ -27,7 +27,7 @@ export function createBeforeState() {
 }
 
 /**
- * @param {import('$types').ParserContext} context
+ * @param {import('../../types').ParserContext} context
  */
 export function createBeforeMonitor(context) {
 	return {

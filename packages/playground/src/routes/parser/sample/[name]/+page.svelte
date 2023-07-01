@@ -1,6 +1,6 @@
 <script>
 	import { activePath, stateEventNames } from 'hine';
-	import { Code, Player } from '$lib/components';
+	import { Button, Code, Player } from '$lib/components';
 	import { createParser, toSvelteAST } from 'parserer';
 	import { beforeNavigate } from '$app/navigation';
 	import { parse } from 'svelte/compiler';
@@ -51,24 +51,24 @@
 	/>
 	<div>
 		<div>
-			<button
-				class:br-button-primary={shownPanel === 'stack'}
+			<Button
+				primary={shownPanel === 'stack'}
 				on:click={() => (shownPanel = 'stack')}
 			>
-				Show Stack
-			</button>
-			<button
-				class:br-button-primary={shownPanel === 'parserer'}
+				Stack
+			</Button>
+			<Button
+				primary={shownPanel === 'parserer'}
 				on:click={() => (shownPanel = 'parserer')}
 			>
-				Show Parserer AST
-			</button>
-			<button
-				class:br-button-primary={shownPanel === 'svelte'}
+				Parserer AST
+			</Button>
+			<Button
+				primary={shownPanel === 'svelte'}
 				on:click={() => (shownPanel = 'svelte')}
 			>
-				Show Svelte AST
-			</button>
+				Svelte AST
+			</Button>
 		</div>
 		{#if shownPanel === 'stack'}
 			<Code language="json" code={stackJSON} />

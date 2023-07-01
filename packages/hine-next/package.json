@@ -24,7 +24,6 @@
 		"pack": {
 			"command": "npm pack",
 			"dependencies": [
-				"build",
 				"publint"
 			],
 			"files": [
@@ -40,6 +39,9 @@
 		},
 		"publint": {
 			"command": "publint",
+			"dependencies": [
+				"build"
+			],
 			"files": [
 				"src/**",
 				"types/**",
@@ -72,8 +74,12 @@
 	},
 	"exports": {
 		"./compiler": {
-			"types": "./types/index.d.ts",
+			"types": "./types/compiler/index.d.ts",
 			"default": "./src/compiler/index.js"
+		},
+		"./codegen": {
+			"types": "./types/codegen/codegen.d.ts",
+			"default": "./src/codegen/codegen.js"
 		}
 	},
 	"files": [

@@ -40,7 +40,7 @@ describe('parse', () => {
 			const expectedCodeOutput = tryToLoadJS(
 				`${__dirname}/samples/${dir}/output.js`,
 			);
-			const expectedSourcemapOutput = tryToLoadJson(
+			const expectedConfigOutput = tryToLoadJson(
 				`${__dirname}/samples/${dir}/output.json`,
 			);
 
@@ -51,19 +51,12 @@ describe('parse', () => {
 			const actualOutput = generate(config);
 
 			fs.writeFileSync(
-				`${__dirname}/samples/${dir}/_actual_config.json`,
+				`${__dirname}/samples/${dir}/_actual.json`,
 				JSON.stringify(config, null, 4),
 			);
-			fs.writeFileSync(
-				`${__dirname}/samples/${dir}/_actual_map.json`,
-				JSON.stringify(actualOutput.map, null, 4),
-			);
-			fs.writeFileSync(
-				`${__dirname}/samples/${dir}/_actual.js`,
-				actualOutput.code,
-			);
-			expect(actualOutput.code).toEqual(expectedCodeOutput);
-			expect(actualOutput.map).toEqual(expectedSourcemapOutput);
+			fs.writeFileSync(`${__dirname}/samples/${dir}/_actual.js`, actualOutput);
+			expect(actualOutput).toEqual(expectedCodeOutput);
+			expect(config).toEqual(expectedConfigOutput);
 		});
 	}
 });

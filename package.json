@@ -62,7 +62,8 @@
 			"dependencies": [
 				"format",
 				"lint",
-				"./packages/hine:pre-commit"
+				"./packages/hine:pre-commit",
+				"./packages/hine-next:pre-commit"
 			]
 		},
 		"test": {

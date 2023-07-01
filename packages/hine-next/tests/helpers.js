@@ -12,3 +12,16 @@ export function tryToLoadJson(file) {
 		return null;
 	}
 }
+
+/**
+ * @param {fs.PathOrFileDescriptor} file
+ */
+export function tryToLoadJS(file) {
+	try {
+		return fs.readFileSync(file, 'utf-8');
+	} catch (err) {
+		// @ts-ignore
+		if (err.code !== 'ENOENT') throw err;
+		return '';
+	}
+}

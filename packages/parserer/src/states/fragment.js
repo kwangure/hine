@@ -1,7 +1,19 @@
 import { h } from 'hine';
 
-export function createFragmentState() {
+/**
+ * @param {import('../types').ParserContext} context
+ */
+export function createFragmentState(context) {
 	return h.atomic({
+		conditions: {
+			isScriptOrStyle: h.condition(() => {
+				const lastElement = context.stack.peek();
+				return (
+					lastElement.type === 'Element' &&
+					(lastElement.name === 'script' || lastElement.name === 'style')
+				);
+			}),
+		},
 		on: {
 			CHARACTER: [
 				{
@@ -11,6 +23,10 @@ export function createFragmentState() {
 				{
 					transitionTo: 'mustache',
 					condition: 'isMustacheOpen',
+				},
+				{
+					transitionTo: 'staticText',
+					condition: 'isScriptOrStyle',
 				},
 				{
 					transitionTo: 'text',

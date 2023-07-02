@@ -1,0 +1,24 @@
+{
+    "html": {
+        "type": "Fragment",
+        "start": 0,
+        "end": 38,
+        "children": [
+            {
+                "type": "Element",
+                "start": 0,
+                "end": 38,
+                "name": "style",
+                "attributes": [],
+                "children": [
+                    {
+                        "type": "Text",
+                        "start": 7,
+                        "end": 30,
+                        "raw": "\n\t* {\n\t\tcolor: red;\n\t}\n"
+                    }
+                ]
+            }
+        ]
+    }
+}

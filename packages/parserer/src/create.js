@@ -3,6 +3,10 @@ import {
 	createMustacheState,
 } from './states/mustache/mustache.js';
 import { createStartMonitor, createStartState } from './states/start.js';
+import {
+	createStaticTextMonitor,
+	createStaticTextState,
+} from './states/static_text.js';
 import { createTagMonitor, createTagState } from './states/tag/tag.js';
 import { createTextMonitor, createTextState } from './states/text.js';
 import { createEOFState } from './states/eof.js';
@@ -45,8 +49,9 @@ export function createParser() {
 		states: {
 			start: createStartState(),
 			eof: createEOFState(),
-			fragment: createFragmentState(),
+			fragment: createFragmentState(context),
 			mustache: createMustacheState(context),
+			staticText: createStaticTextState(),
 			tag: createTagState(context),
 			text: createTextState(),
 		},
@@ -59,6 +64,7 @@ export function createParser() {
 		states: {
 			mustache: createMustacheMonitor(context),
 			start: createStartMonitor(context),
+			staticText: createStaticTextMonitor(context),
 			tag: createTagMonitor(context),
 			text: createTextMonitor(context),
 		},

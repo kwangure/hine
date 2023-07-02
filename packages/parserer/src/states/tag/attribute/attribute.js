@@ -14,13 +14,17 @@ export function createAttributeState(context) {
 		conditions: {
 			isDoubleQuote: h.condition(({ value }) => value === '"'),
 			isEquals: h.condition(({ value }) => value === '='),
+			isForwardSlashDone: h.condition(
+				({ ownerState, value }) =>
+					value === '/' && Boolean(ownerState?.matches('attribute.done')),
+			),
 			isSingleQuote: h.condition(({ value }) => value === "'"),
 		},
 		on: {
 			CHARACTER: [
 				{
 					transitionTo: 'selfClose',
-					condition: 'isForwardSlash',
+					condition: 'isForwardSlashDone',
 				},
 				{
 					transitionTo: 'done',

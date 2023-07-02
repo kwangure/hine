@@ -21,9 +21,17 @@ export function createValueState(context) {
 			isDone: h.condition(({ ownerState }) =>
 				Boolean(ownerState?.matches('value.done')),
 			),
+			isForwardSlashDone: h.condition(
+				({ ownerState, value }) =>
+					value === '/' && Boolean(ownerState?.matches('value.done')),
+			),
 		},
 		on: {
 			CHARACTER: [
+				{
+					transitionTo: 'done',
+					condition: 'isForwardSlashDone',
+				},
 				{
 					transitionTo: 'before',
 					condition: 'isDone',

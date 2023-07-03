@@ -1,0 +1,26 @@
+{
+    "monitor": {
+        "actions": [
+            {
+                "name": "action1",
+                "value": "action1"
+            },
+            {
+                "name": "action2",
+                "value": "action2"
+            }
+        ],
+        "entry": [
+            {
+                "name": "action1"
+            },
+            {
+                "name": "action2"
+            }
+        ],
+        "src": "./input.hine"
+    },
+    "script": {
+        "content": "\n\tfunction action1() {}\n\tfunction action2() {}\n"
+    }
+}

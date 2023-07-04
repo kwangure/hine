@@ -1,8 +1,9 @@
 import { createParser, parseFile } from 'parserer';
 import { describe, expect, test } from 'vitest';
-import { compileSpec } from '../../src/compiler/specification.js';
+import { tryToLoadJS, tryToLoadJson } from '../../helpers.js';
+import { compileMonitor } from '../../../src/compiler/monitor.js';
 import fs from 'node:fs';
-import { tryToLoadJson } from '../helpers.js';
+import { generateMonitor } from '../../../src/codegen/codegen.js';
 
 describe('parse', () => {
 	const samples = fs.readdirSync(`${__dirname}/samples`);
@@ -36,19 +37,26 @@ describe('parse', () => {
 				.readFileSync(`${__dirname}/samples/${dir}/input.hine`, 'utf-8')
 				.replace(/\s+$/, '')
 				.replace(/\r/g, '');
-			const expectedOutput = tryToLoadJson(
+			const expectedCodeOutput = tryToLoadJS(
+				`${__dirname}/samples/${dir}/output.js`,
+			);
+			const expectedConfigOutput = tryToLoadJson(
 				`${__dirname}/samples/${dir}/output.json`,
 			);
 
 			const parser = createParser();
 			parseFile(parser, input);
 			const ast = parser.context.html.toJSON();
-			const actualOutput = compileSpec(ast);
+			const config = compileMonitor(ast);
+			const actualOutput = generateMonitor(config);
+
 			fs.writeFileSync(
 				`${__dirname}/samples/${dir}/_actual.json`,
-				JSON.stringify(actualOutput, null, 4),
+				JSON.stringify(config, null, 4),
 			);
-			expect(actualOutput).toEqual(expectedOutput);
+			fs.writeFileSync(`${__dirname}/samples/${dir}/_actual.js`, actualOutput);
+			expect(actualOutput).toEqual(expectedCodeOutput);
+			expect(config).toEqual(expectedConfigOutput);
 		});
 	}
 });

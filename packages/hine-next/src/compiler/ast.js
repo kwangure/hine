@@ -75,5 +75,8 @@ export const base = {
 		}
 	},
 	Fragment: Parent,
+	Mustache() {
+		// TODO
+	},
 	Text: Ignore,
 };

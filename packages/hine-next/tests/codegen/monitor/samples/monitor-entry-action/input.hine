@@ -1,0 +1,11 @@
+<script>
+	function action1() {}
+	function action2() {}
+</script>
+
+<monitor src="./input.hine">
+	<action name="action1" value={action1}/>
+	<action name="action2" value={action2}/>
+	<entry action={action1}/>
+	<entry action={action2}/>
+</monitor>

@@ -8,6 +8,11 @@ export const CODEGEN_TEST_SAMPLES_PATH = path.join(
 	'./codegen/samples',
 );
 
+export const MONITOR_CODEGEN_TEST_SAMPLES_PATH = path.join(
+	__dirname,
+	'./codegen/monitor/samples',
+);
+
 export const COMPILER_TEST_SAMPLES_PATH = path.join(
 	__dirname,
 	'./compiler/samples',

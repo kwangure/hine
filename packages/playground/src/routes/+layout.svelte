@@ -9,6 +9,7 @@
 			<Link href="/parser">Parser</Link>
 			<Link href="/compiler">Compiler</Link>
 			<Link href="/state-codegen">State Codegen</Link>
+			<Link href="/monitor-codegen">Monitor Codegen</Link>
 		</div>
 	</nav>
 	<slot />

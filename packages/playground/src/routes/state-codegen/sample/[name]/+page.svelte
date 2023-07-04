@@ -2,7 +2,7 @@
 	import { Button, Code } from '$lib/components';
 	import { createParser, parseFile } from 'parserer';
 	import { compile } from 'hine-next/compiler';
-	import { generate } from 'hine-next/codegen';
+	import { generateMachine } from 'hine-next/codegen';
 
 	const json = (/** @type {any} */ value) => JSON.stringify(value, null, 4);
 	export let data;
@@ -22,7 +22,7 @@
 		parseFile($parser, data.sample.content);
 		ast = $parser.context.html.toJSON();
 		cir = compile(ast);
-		js = generate(cir);
+		js = generateMachine(cir);
 	}
 </script>
 

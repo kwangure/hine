@@ -1,9 +1,9 @@
 import { createParser, parseFile } from 'parserer';
 import { describe, expect, test } from 'vitest';
-import { tryToLoadJS, tryToLoadJson } from '../helpers.js';
-import { compile } from '../../src/compiler/compile.js';
+import { tryToLoadJS, tryToLoadJson } from '../../helpers.js';
+import { compile } from '../../../src/compiler/compile.js';
 import fs from 'node:fs';
-import { generateMachine } from '../../src/codegen/codegen.js';
+import { generateMachine } from '../../../src/codegen/codegen.js';
 
 describe('parse', () => {
 	const samples = fs.readdirSync(`${__dirname}/samples`);

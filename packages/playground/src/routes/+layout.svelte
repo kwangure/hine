@@ -8,7 +8,7 @@
 		<div class="inline-flex gap-1">
 			<Link href="/parser">Parser</Link>
 			<Link href="/compiler">Compiler</Link>
-			<Link href="/state-codegen">State Codegen</Link>
+			<Link href="/spec-codegen">Spec Codegen</Link>
 			<Link href="/monitor-codegen">Monitor Codegen</Link>
 		</div>
 	</nav>

@@ -11,7 +11,7 @@
 	>
 		<Section title="test samples">
 			{#each data.testSamples as sample}
-				<Link href="/state-codegen/sample/{sample}">
+				<Link href="/spec-codegen/sample/{sample}">
 					{sample}
 				</Link>
 			{/each}

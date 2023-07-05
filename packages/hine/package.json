@@ -3,9 +3,9 @@
 	"version": "0.0.12",
 	"description": "A state machine library",
 	"scripts": {
+		"build": "wireit",
 		"check": "wireit",
 		"pack": "wireit",
-		"package": "wireit",
 		"pre-commit": "wireit",
 		"publint": "wireit",
 		"release": "release-it",
@@ -40,6 +40,15 @@
 		"vitest": "^0.27.2"
 	},
 	"wireit": {
+		"build": {
+			"command": "svelte-package -i ./src",
+			"files": [
+				"src/**/*.{js,ts,svelte}"
+			],
+			"output": [
+				"dist/**"
+			]
+		},
 		"check": {
 			"command": "tsc",
 			"files": [
@@ -65,19 +74,10 @@
 				"hine*.tgz"
 			]
 		},
-		"package": {
-			"command": "svelte-package -i ./src",
-			"files": [
-				"src/**/*.{js,ts,svelte}"
-			],
-			"output": [
-				"dist/**"
-			]
-		},
 		"publint": {
 			"command": "publint",
 			"dependencies": [
-				"package"
+				"build"
 			],
 			"files": [
 				"dist/**",
@@ -89,7 +89,7 @@
 			"dependencies": [
 				"check",
 				"test",
-				"package"
+				"build"
 			]
 		},
 		"test": {

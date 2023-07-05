@@ -6,6 +6,7 @@
 		"packages/*"
 	],
 	"scripts": {
+		"build": "wireit",
 		"dev": "wireit",
 		"format": "wireit",
 		"lint": "wireit",
@@ -24,6 +25,13 @@
 		"wireit": "^0.9.3"
 	},
 	"wireit": {
+		"build": {
+			"dependencies": [
+				"./packages/hine:build",
+				"./packages/hine-next:build",
+				"./packages/parserer:build"
+			]
+		},
 		"dev": {
 			"dependencies": [
 				"./packages/playground:dev"

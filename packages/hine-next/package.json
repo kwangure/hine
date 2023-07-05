@@ -13,6 +13,10 @@
 	"wireit": {
 		"build": {
 			"command": "tsc",
+			"dependencies": [
+				"../hine:build",
+				"../parserer:build"
+			],
 			"files": [
 				"src/**/*.{js,ts}",
 				"tsconfig.json"

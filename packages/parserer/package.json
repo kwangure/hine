@@ -13,6 +13,9 @@
 	"wireit": {
 		"build": {
 			"command": "tsc",
+			"dependencies": [
+				"../hine:build"
+			],
 			"files": [
 				"src/**/*.{js,ts}",
 				"tsconfig.json"

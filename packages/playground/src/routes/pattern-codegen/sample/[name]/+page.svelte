@@ -1,7 +1,7 @@
 <script>
 	import { Button, Code } from '$lib/components';
 	import { createParser, parseFile } from 'parserer';
-	import { compileSpec } from 'hine-next/compiler';
+	import { compilePattern } from 'hine-next/compiler';
 	import { generateMachine } from 'hine-next/codegen';
 
 	const json = (/** @type {any} */ value) => JSON.stringify(value, null, 4);
@@ -10,7 +10,7 @@
 	const parser = createParser();
 	/** @type {import('parserer').PFragmentJSON} */
 	let ast;
-	/** @type {ReturnType<compileSpec>} */
+	/** @type {ReturnType<compilePattern>} */
 	let cir;
 	/** @type {string} */
 	let js;
@@ -21,7 +21,7 @@
 	$: {
 		parseFile($parser, data.sample.content);
 		ast = $parser.context.html.toJSON();
-		cir = compileSpec(ast);
+		cir = compilePattern(ast);
 		js = generateMachine(cir);
 	}
 </script>

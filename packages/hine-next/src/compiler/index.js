@@ -1,2 +1,2 @@
-export { compileSpec } from './specification.js';
+export { compilePattern } from './pattern.js';
 export { compileMonitor } from './monitor.js';

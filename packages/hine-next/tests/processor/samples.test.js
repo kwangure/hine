@@ -1,7 +1,7 @@
 import { createParser, parseFile } from 'parserer';
 import { describe, expect, test } from 'vitest';
-import { compilePattern } from '../../src/compiler/pattern.js';
 import fs from 'node:fs';
+import { processPattern } from '../../src/processor/pattern.js';
 import { tryToLoadJson } from '../helpers.js';
 
 describe('parse', () => {
@@ -43,7 +43,7 @@ describe('parse', () => {
 			const parser = createParser();
 			parseFile(parser, input);
 			const ast = parser.context.html.toJSON();
-			const actualOutput = compilePattern(ast);
+			const actualOutput = processPattern(ast);
 			fs.writeFileSync(
 				`${__dirname}/samples/${dir}/_actual.json`,
 				JSON.stringify(actualOutput, null, 4),

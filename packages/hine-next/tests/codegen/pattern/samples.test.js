@@ -1,9 +1,9 @@
 import { createParser, parseFile } from 'parserer';
 import { describe, expect, test } from 'vitest';
 import { tryToLoadJS, tryToLoadJson } from '../../helpers.js';
-import { compilePattern } from '../../../src/compiler/pattern.js';
 import fs from 'node:fs';
 import { generateMachine } from '../../../src/codegen/codegen.js';
+import { processPattern } from '../../../src/processor/pattern.js';
 
 describe('parse', () => {
 	const samples = fs.readdirSync(`${__dirname}/samples`);
@@ -47,7 +47,7 @@ describe('parse', () => {
 			const parser = createParser();
 			parseFile(parser, input);
 			const ast = parser.context.html.toJSON();
-			const config = compilePattern(ast);
+			const config = processPattern(ast);
 			const actualOutput = generateMachine(config);
 
 			fs.writeFileSync(

@@ -1,7 +1,7 @@
 <script>
 	import { createParser, parseFile } from 'parserer';
 	import { Code } from '$lib/components';
-	import { compilePattern } from 'hine-next/compiler';
+	import { processPattern } from 'hine-next/processor';
 
 	export let data;
 
@@ -17,7 +17,7 @@
 		parseFile($parser, data.sample.content);
 		ast = $parser.context.html.toJSON();
 		astJSON = JSON.stringify(ast, null, 4);
-		js = JSON.stringify(compilePattern(ast), null, 4);
+		js = JSON.stringify(processPattern(ast), null, 4);
 	}
 </script>
 

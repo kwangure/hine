@@ -1,8 +1,8 @@
 <script>
 	import { Button, Code } from '$lib/components';
 	import { createParser, parseFile } from 'parserer';
-	import { compilePattern } from 'hine-next/compiler';
 	import { generateMachine } from 'hine-next/codegen';
+	import { processPattern } from 'hine-next/processor';
 
 	const json = (/** @type {any} */ value) => JSON.stringify(value, null, 4);
 	export let data;
@@ -10,7 +10,7 @@
 	const parser = createParser();
 	/** @type {import('parserer').PFragmentJSON} */
 	let ast;
-	/** @type {ReturnType<compilePattern>} */
+	/** @type {ReturnType<processPattern>} */
 	let cir;
 	/** @type {string} */
 	let js;
@@ -21,7 +21,7 @@
 	$: {
 		parseFile($parser, data.sample.content);
 		ast = $parser.context.html.toJSON();
-		cir = compilePattern(ast);
+		cir = processPattern(ast);
 		js = generateMachine(cir);
 	}
 </script>

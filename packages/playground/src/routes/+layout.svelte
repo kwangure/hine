@@ -7,7 +7,7 @@
 	<nav class="px-6">
 		<div class="inline-flex gap-1">
 			<Link href="/parser">Parser</Link>
-			<Link href="/compiler">Compiler</Link>
+			<Link href="/processor">Processor</Link>
 			<Link href="/pattern-codegen">Pattern Codegen</Link>
 			<Link href="/monitor-codegen">Monitor Codegen</Link>
 		</div>

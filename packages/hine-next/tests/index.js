@@ -5,7 +5,7 @@ const __dirname = path.dirname(__filename);
 
 export const PATTERN_CODEGEN_TEST_SAMPLES_PATH = path.join(
 	__dirname,
-	'./codegen/spec/samples',
+	'./codegen/pattern/samples',
 );
 
 export const MONITOR_CODEGEN_TEST_SAMPLES_PATH = path.join(
@@ -13,7 +13,7 @@ export const MONITOR_CODEGEN_TEST_SAMPLES_PATH = path.join(
 	'./codegen/monitor/samples',
 );
 
-export const COMPILER_TEST_SAMPLES_PATH = path.join(
+export const PROCESSOR_TEST_SAMPLES_PATH = path.join(
 	__dirname,
-	'./compiler/samples',
+	'./processor/samples',
 );

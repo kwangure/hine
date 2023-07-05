@@ -99,7 +99,7 @@ function SrcAttribute(node, monitorElement) {
 /**
  * @param {import('parserer').PFragmentJSON} ast
  */
-export function compileMonitor(ast) {
+export function processMonitor(ast) {
 	const monitor = {
 		actions: [],
 		entry: [],

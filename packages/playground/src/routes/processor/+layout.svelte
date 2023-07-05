@@ -8,7 +8,7 @@
 <Layout>
 	<Section slot="sidebar" title="test samples">
 		{#each data.testSamples as sample}
-			<Link href="/compiler/sample/{sample}">
+			<Link href="/processor/sample/{sample}">
 				{sample}
 			</Link>
 		{/each}

@@ -47,7 +47,7 @@ function ActionOrNameAttribute(node, eventElement) {
 /**
  * @param {import('parserer').PFragmentJSON} ast
  */
-export function compilePattern(ast) {
+export function processPattern(ast) {
 	const onNode = {};
 	simple(ast, { Element: OnElement }, onNode);
 	return { on: onNode };

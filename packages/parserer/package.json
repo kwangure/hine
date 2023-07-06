@@ -12,6 +12,7 @@
 	},
 	"wireit": {
 		"build": {
+			"clean": "if-file-deleted",
 			"command": "tsc",
 			"dependencies": [
 				"../hine:build"

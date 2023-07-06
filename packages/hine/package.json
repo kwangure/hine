@@ -51,6 +51,7 @@
 			]
 		},
 		"check": {
+			"clean": "if-file-deleted",
 			"command": "tsc",
 			"files": [
 				"src/**/*.{js,ts}",

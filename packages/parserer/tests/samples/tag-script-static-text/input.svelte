@@ -1,3 +1,0 @@
-<script>
-	function noop() {}
-</script>

@@ -1,6 +1,6 @@
 {
 	"name": "playground",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -26,7 +26,7 @@
 	"dependencies": {
 		"@kwangure/strawberry": "^0.61.2",
 		"@mdi/js": "^7.2.96",
-		"hine-next": "^0.0.0",
-		"parserer": "^0.0.3"
+		"hine-next": "^0.0.1",
+		"parserer": "^0.0.4"
 	}
 }

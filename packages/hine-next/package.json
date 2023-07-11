@@ -1,6 +1,6 @@
 {
 	"name": "hine-next",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"private": true,
 	"type": "module",
 	"license": "MIT",
@@ -70,7 +70,7 @@
 		}
 	},
 	"dependencies": {
-		"parserer": "^0.0.3"
+		"parserer": "^0.0.4"
 	},
 	"devDependencies": {
 		"publint": "^0.1.12",

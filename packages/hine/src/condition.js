@@ -53,6 +53,9 @@ export class Condition {
 		return this.#name;
 	}
 	get ownerState() {
+		if (!this.#ownerState) {
+			throw Error('Attempted to read ownerState before calling state.start().');
+		}
 		return this.#ownerState;
 	}
 	/** @type {string[]} */

@@ -30,13 +30,13 @@
 			]
 		},
 		"format": {
-			"command": "prettier --plugin-search-dir . --write .",
+			"command": "prettier . --write --cache",
 			"files": [
 				"**/*.{css,html,js,json,md,ts,svelte}",
 				"!**/dist/**",
 				"!**/tests/samples/**",
-				".eslintignore",
-				".eslintrc.cjs"
+				".prettierignore",
+				".prettierrc"
 			],
 			"output": []
 		},

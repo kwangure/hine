@@ -63,6 +63,7 @@
 		"pack": {
 			"command": "npm pack",
 			"dependencies": [
+				"build",
 				"publint"
 			],
 			"files": [

@@ -2,6 +2,7 @@ import { Action } from './action.js';
 import { AtomicState } from './atomic.js';
 import { CompoundState } from './compound.js';
 import { Condition } from './condition.js';
+import { Context } from './context.js';
 
 /**
  * @typedef {import('./types').AtomicStateConfig} AtomicStateConfig
@@ -48,12 +49,18 @@ export function condition(config) {
 	return new Condition(config);
 }
 
+/** @param {Record<string, any>} data */
+export function context(data) {
+	return new Context(data);
+}
+
 export const h = {
 	action,
 	atomic,
 	compound,
 	condition,
+	context,
 };
 
-export { Action, AtomicState, CompoundState, Condition };
+export { Action, AtomicState, CompoundState, Condition, Context };
 export { activePath, stateEventNames } from './utils/state.js';

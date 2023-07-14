@@ -6,6 +6,7 @@ import type { CompoundState } from './compound';
 import type { Condition } from './condition.js';
 import type { TO_JSON } from './constants.js';
 import type { Simplify } from 'type-fest';
+import type { Context } from './context.js';
 
 export interface ActionConfig {
 	name?: string;
@@ -57,6 +58,7 @@ type StateNodeConfig = {
 	always: AlwaysHandlerConfig[];
 	conditionConfig: Partial<Omit<ConditionConfig, 'run'>>;
 	conditions: Record<string, Condition>;
+	context: Context;
 	name: string;
 	on: Record<string, DispatchHandlerConfig[]>;
 };

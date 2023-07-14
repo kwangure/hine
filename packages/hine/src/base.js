@@ -8,6 +8,7 @@ import {
 	CONDITION_NOTIFY_AFTER,
 	CONDITION_NOTIFY_BEFORE,
 	CONDITION_OWNER,
+	CONTEXT_OWNER,
 	EXECUTE_HANDLERS,
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
@@ -74,6 +75,7 @@ export class BaseState {
 	#conditionConfig;
 	/** Conditions from the user config */
 	#conditions;
+	#context;
 	/** @type {Handler[]} */
 	#entry = [];
 	/** @type {EntryHandlerConfig[]} */
@@ -112,6 +114,7 @@ export class BaseState {
 		this.#alwaysConfig = stateConfig?.always || [];
 		this.#conditions = stateConfig?.conditions || {};
 		this.#conditionConfig = stateConfig?.conditionConfig || {};
+		this.#context = stateConfig?.context;
 		this.#name = stateConfig?.name || '';
 		this.#onConfig = stateConfig?.on || {};
 	}
@@ -231,6 +234,13 @@ export class BaseState {
 	}
 	get conditions() {
 		return this[STATE_CONDITIONS];
+	}
+	/** @type {import('./context.js').Context | null} */
+	get context() {
+		if (!this.#initialized) {
+			throw Error("Attempted to read context before calling 'state.start()'.");
+		}
+		return this.#context ?? this.#parent?.context ?? null;
 	}
 	/**
 	 * @param {string} eventName
@@ -426,6 +436,11 @@ export class BaseState {
 		this.#allActions = this[STATE_ACTIONS];
 		this.#allConditions = this[STATE_CONDITIONS];
 
+		if (this.#context) {
+			// @ts-expect-error
+			this.#context[CONTEXT_OWNER] = this;
+		}
+
 		for (const [index, handler] of this.#alwaysConfig.entries()) {
 			this.#always.push(this.#resolveHandler(handler, String(index)));
 		}
@@ -484,7 +499,7 @@ export class BaseState {
 					action[ACTION_NOTIFY_BEFORE] =
 						this[STATE_ACTION_CONFIGS].notifyBefore;
 				}
-				// @ts-ignore
+				// @ts-expect-error
 				action[ACTION_OWNER] = this;
 				actions[action.name] = action;
 			}

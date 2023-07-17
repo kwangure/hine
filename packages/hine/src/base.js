@@ -52,7 +52,11 @@ import { StateEvent } from './event.js';
 export class BaseState {
 	/** @type {import('./action.js').Action | null} */
 	#action = null;
-	#actionConfig;
+	/**
+	 * Action configuration from the user that is propagated to children
+	 * @type {Omit<import('./types.js').ActionConfig, 'run'>}
+	 */
+	#actionConfig = {};
 	/**
 	 * Actions from the user config
 	 * @type {Record<string, import('./action.js').Action>}
@@ -73,7 +77,11 @@ export class BaseState {
 	#alwaysConfig;
 	/** @type {import('./condition.js').Condition | null} */
 	#condition = null;
-	#conditionConfig;
+	/**
+	 * Condition configuration from the user that is propagated to children
+	 * @type {Omit<import('./types.js').ConditionConfig, 'run'>}
+	 */
+	#conditionConfig = {};
 	/**
 	 * Conditions from the user config
 	 * @type {Record<string, import('./condition.js').Condition>}
@@ -114,9 +122,7 @@ export class BaseState {
 	 * @param {import('./types.js').AtomicStateConfig} [stateConfig]
 	 */
 	constructor(stateConfig) {
-		this.#actionConfig = stateConfig?.actionConfig || {};
 		this.#alwaysConfig = stateConfig?.always || [];
-		this.#conditionConfig = stateConfig?.conditionConfig || {};
 		this.#context = stateConfig?.context || new Context();
 		this.#name = stateConfig?.name || '';
 		this.#onConfig = stateConfig?.on || {};
@@ -286,9 +292,34 @@ export class BaseState {
 	}
 	/** @param {import('./types.js').MonitorConfig} config */
 	monitor(config) {
+		if (config.actionConfig) {
+			if ('name' in config.actionConfig) {
+				this.#actionConfig['name'] = config.actionConfig['name'];
+			}
+			if ('notifyAfter' in config.actionConfig) {
+				this.#actionConfig['notifyAfter'] = config.actionConfig['notifyAfter'];
+			}
+			if ('notifyBefore' in config.actionConfig) {
+				this.#actionConfig['notifyBefore'] =
+					config.actionConfig['notifyBefore'];
+			}
+		}
 		if (config.actions) {
 			for (const [name, action] of Object.entries(config.actions)) {
 				this.#actions[name] = action;
+			}
+		}
+		if (config.conditionConfig) {
+			if ('name' in config.conditionConfig) {
+				this.#conditionConfig['name'] = config.conditionConfig['name'];
+			}
+			if ('notifyAfter' in config.conditionConfig) {
+				this.#conditionConfig['notifyAfter'] =
+					config.conditionConfig['notifyAfter'];
+			}
+			if ('notifyBefore' in config.conditionConfig) {
+				this.#conditionConfig['notifyBefore'] =
+					config.conditionConfig['notifyBefore'];
 			}
 		}
 		if (config.conditions) {

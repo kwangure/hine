@@ -138,9 +138,6 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new AtomicState({
-			conditionConfig: {
-				notifyBefore: true,
-			},
 			on: {
 				event: [
 					{
@@ -153,6 +150,9 @@ describe('conditions', () => {
 		state.monitor({
 			actions: {
 				action: new Action({ run() {} }),
+			},
+			conditionConfig: {
+				notifyBefore: true,
 			},
 			conditions: {
 				condition: new Condition({
@@ -177,9 +177,6 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			conditionConfig: {
-				notifyBefore: true,
-			},
 			states: {
 				s1: new CompoundState({
 					states: {
@@ -198,6 +195,9 @@ describe('conditions', () => {
 			},
 		});
 		state.monitor({
+			conditionConfig: {
+				notifyBefore: true,
+			},
 			states: {
 				s1: {
 					states: {
@@ -234,9 +234,6 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new AtomicState({
-			conditionConfig: {
-				notifyBefore: true,
-			},
 			on: {
 				event: [
 					{
@@ -249,6 +246,9 @@ describe('conditions', () => {
 		state.monitor({
 			actions: {
 				action: new Action({ run() {} }),
+			},
+			conditionConfig: {
+				notifyBefore: true,
 			},
 			conditions: {
 				condition: new Condition({

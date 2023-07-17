@@ -152,9 +152,6 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			conditionConfig: {
-				notifyBefore: true,
-			},
 			on: {
 				event: [
 					{
@@ -179,6 +176,9 @@ describe('conditions', () => {
 					},
 				}),
 			},
+			conditionConfig: {
+				notifyBefore: true,
+			},
 		});
 		state.start();
 		state.subscribe(() => log.push('sub'));
@@ -194,9 +194,6 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			conditionConfig: {
-				notifyBefore: true,
-			},
 			states: {
 				s1: new CompoundState({
 					on: {
@@ -214,6 +211,9 @@ describe('conditions', () => {
 			},
 		});
 		state.monitor({
+			conditionConfig: {
+				notifyBefore: true,
+			},
 			states: {
 				s1: {
 					actions: {
@@ -244,9 +244,6 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			conditionConfig: {
-				notifyBefore: true,
-			},
 			on: {
 				event: [
 					{
@@ -271,6 +268,9 @@ describe('conditions', () => {
 						return true;
 					},
 				}),
+			},
+			conditionConfig: {
+				notifyBefore: true,
 			},
 		});
 		state.start();

@@ -81,6 +81,11 @@ describe('toJSON', () => {
 	});
 	it('serializes entry handlers', () => {
 		const state = new CompoundState({
+			entry: [
+				{
+					actions: ['action'],
+				},
+			],
 			states: {
 				s1: new AtomicState(),
 			},
@@ -92,11 +97,6 @@ describe('toJSON', () => {
 			conditions: {
 				condition: new Condition({ run: () => true }),
 			},
-			entry: [
-				{
-					actions: ['action'],
-				},
-			],
 		});
 		state.start();
 		const json = state.toJSON();
@@ -113,6 +113,11 @@ describe('toJSON', () => {
 	});
 	it('serializes exit handlers', () => {
 		const state = new CompoundState({
+			exit: [
+				{
+					actions: ['action'],
+				},
+			],
 			states: {
 				s1: new AtomicState(),
 			},
@@ -124,11 +129,6 @@ describe('toJSON', () => {
 			conditions: {
 				condition: new Condition({ run: () => true }),
 			},
-			exit: [
-				{
-					actions: ['action'],
-				},
-			],
 		});
 		state.start();
 		const json = state.toJSON();

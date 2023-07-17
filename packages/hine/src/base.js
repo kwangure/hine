@@ -126,6 +126,17 @@ export class BaseState {
 		this.#context = stateConfig?.context || new Context();
 		this.#name = stateConfig?.name || '';
 		this.#onConfig = stateConfig?.on || {};
+
+		if (stateConfig?.entry) {
+			for (const handler of stateConfig.entry) {
+				this.#entryConfig.push(handler);
+			}
+		}
+		if (stateConfig?.exit) {
+			for (const handler of stateConfig.exit) {
+				this.#exitConfig.push(handler);
+			}
+		}
 	}
 	/**
 	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig | EntryHandlerConfig | ExitHandlerConfig>} handler
@@ -325,16 +336,6 @@ export class BaseState {
 		if (config.conditions) {
 			for (const [name, condition] of Object.entries(config.conditions)) {
 				this.#conditions[name] = condition;
-			}
-		}
-		if (config.entry) {
-			for (const handler of config.entry) {
-				this.#entryConfig.push(handler);
-			}
-		}
-		if (config.exit) {
-			for (const handler of config.exit) {
-				this.#exitConfig.push(handler);
 			}
 		}
 	}

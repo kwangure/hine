@@ -6,7 +6,14 @@ describe('conditions', () => {
 		const cond2 = new Condition({
 			run: () => false,
 		});
-		const state = new AtomicState();
+		const state = new AtomicState({
+			entry: [
+				{
+					condition: 'cond1',
+					actions: ['do'],
+				},
+			],
+		});
 		state.monitor({
 			actions: {
 				do: new Action({
@@ -24,12 +31,6 @@ describe('conditions', () => {
 				}),
 				cond2,
 			},
-			entry: [
-				{
-					condition: 'cond1',
-					actions: ['do'],
-				},
-			],
 		});
 		state.start();
 	});
@@ -41,7 +42,14 @@ describe('conditions', () => {
 				return true;
 			},
 		});
-		const state = new AtomicState();
+		const state = new AtomicState({
+			entry: [
+				{
+					condition: 'condition',
+					actions: ['action'],
+				},
+			],
+		});
 		state.monitor({
 			actions: {
 				action: new Action({
@@ -51,12 +59,6 @@ describe('conditions', () => {
 			conditions: {
 				condition,
 			},
-			entry: [
-				{
-					condition: 'condition',
-					actions: ['action'],
-				},
-			],
 		});
 		state.start();
 	});
@@ -324,7 +326,14 @@ describe('conditions', () => {
 				return true;
 			},
 		});
-		const state = new AtomicState();
+		const state = new AtomicState({
+			entry: [
+				{
+					condition: 'condition',
+					actions: ['action'],
+				},
+			],
+		});
 		state.monitor({
 			actions: {
 				action: new Action({ run() {} }),
@@ -332,12 +341,6 @@ describe('conditions', () => {
 			conditions: {
 				condition,
 			},
-			entry: [
-				{
-					condition: 'condition',
-					actions: ['action'],
-				},
-			],
 		});
 		expect(state.condition).toBe(null);
 		state.start();

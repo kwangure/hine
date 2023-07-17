@@ -8,6 +8,11 @@ describe('htstate', () => {
 	describe('missing actions', () => {
 		it('throws on missing entry actions', () => {
 			const state = new CompoundState({
+				entry: [
+					{
+						actions: ['missing'],
+					},
+				],
 				states: {
 					first: new CompoundState({
 						states: {
@@ -15,19 +20,17 @@ describe('htstate', () => {
 						},
 					}),
 				},
-			});
-			state.monitor({
-				entry: [
-					{
-						actions: ['missing'],
-					},
-				],
 			});
 			expect(() => state.start()).toThrow("'missing'");
 		});
 
 		it('throws on missing exit actions', () => {
 			const state = new CompoundState({
+				exit: [
+					{
+						actions: ['missing'],
+					},
+				],
 				states: {
 					first: new CompoundState({
 						states: {
@@ -35,13 +38,6 @@ describe('htstate', () => {
 						},
 					}),
 				},
-			});
-			state.monitor({
-				exit: [
-					{
-						actions: ['missing'],
-					},
-				],
 			});
 			expect(() => state.start()).toThrow("'missing'");
 		});
@@ -83,6 +79,32 @@ describe('htstate', () => {
 							},
 							{
 								actions: ['always'],
+							},
+							{
+								actions: ['ignore'],
+								condition: 'ignore',
+							},
+						],
+						entry: [
+							{
+								actions: ['entry'],
+								condition: 'run',
+							},
+							{
+								actions: ['entry'],
+							},
+							{
+								actions: ['ignore'],
+								condition: 'ignore',
+							},
+						],
+						exit: [
+							{
+								actions: ['exit'],
+								condition: 'run',
+							},
+							{
+								actions: ['exit'],
 							},
 							{
 								actions: ['ignore'],
@@ -150,32 +172,6 @@ describe('htstate', () => {
 								},
 							}),
 						},
-						entry: [
-							{
-								actions: ['entry'],
-								condition: 'run',
-							},
-							{
-								actions: ['entry'],
-							},
-							{
-								actions: ['ignore'],
-								condition: 'ignore',
-							},
-						],
-						exit: [
-							{
-								actions: ['exit'],
-								condition: 'run',
-							},
-							{
-								actions: ['exit'],
-							},
-							{
-								actions: ['ignore'],
-								condition: 'ignore',
-							},
-						],
 					},
 				},
 			});

@@ -56,6 +56,8 @@ export type StateNode = AtomicState | CompoundState;
 type StateNodeConfig = {
 	always: AlwaysHandlerConfig[];
 	context: Context;
+	entry: EntryHandlerConfig[];
+	exit: ExitHandlerConfig[];
 	name: string;
 	on: Record<string, DispatchHandlerConfig[]>;
 };
@@ -91,8 +93,6 @@ export type MonitorConfig = {
 	actionConfig?: Partial<Omit<ActionConfig, 'run'>>;
 	conditions?: Record<string, Condition>;
 	conditionConfig?: Partial<Omit<ConditionConfig, 'run'>>;
-	entry?: EntryHandlerConfig[];
-	exit?: ExitHandlerConfig[];
 };
 
 export type CompoundMonitorConfig = MonitorConfig & {

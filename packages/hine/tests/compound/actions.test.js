@@ -14,6 +14,11 @@ describe('actions', () => {
 					actions: ['always0'],
 				},
 			],
+			entry: [
+				{
+					actions: ['entry0'],
+				},
+			],
 			states: {
 				s1: new CompoundState({
 					always: [
@@ -21,11 +26,21 @@ describe('actions', () => {
 							actions: ['always1'],
 						},
 					],
+					entry: [
+						{
+							actions: ['entry1'],
+						},
+					],
 					states: {
 						s2: new AtomicState({
 							always: [
 								{
 									actions: ['always2'],
+								},
+							],
+							entry: [
+								{
+									actions: ['entry2'],
 								},
 							],
 						}),
@@ -46,11 +61,6 @@ describe('actions', () => {
 					},
 				}),
 			},
-			entry: [
-				{
-					actions: ['entry0'],
-				},
-			],
 			states: {
 				s1: {
 					actions: {
@@ -65,11 +75,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					entry: [
-						{
-							actions: ['entry1'],
-						},
-					],
 					states: {
 						s2: {
 							actions: {
@@ -84,11 +89,6 @@ describe('actions', () => {
 									},
 								}),
 							},
-							entry: [
-								{
-									actions: ['entry2'],
-								},
-							],
 						},
 					},
 				},
@@ -125,6 +125,11 @@ describe('actions', () => {
 							actions: ['always0'],
 						},
 					],
+					entry: [
+						{
+							actions: ['entry0'],
+						},
+					],
 					states: {
 						s1: new CompoundState({
 							always: [
@@ -132,11 +137,21 @@ describe('actions', () => {
 									actions: ['always1'],
 								},
 							],
+							entry: [
+								{
+									actions: ['entry1'],
+								},
+							],
 							states: {
 								s2: new AtomicState({
 									always: [
 										{
 											actions: ['always2'],
+										},
+									],
+									entry: [
+										{
+											actions: ['entry2'],
 										},
 									],
 								}),
@@ -161,11 +176,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					entry: [
-						{
-							actions: ['entry0'],
-						},
-					],
 					states: {
 						s1: {
 							actions: {
@@ -180,11 +190,6 @@ describe('actions', () => {
 									},
 								}),
 							},
-							entry: [
-								{
-									actions: ['entry1'],
-								},
-							],
 							states: {
 								s2: {
 									actions: {
@@ -199,11 +204,6 @@ describe('actions', () => {
 											},
 										}),
 									},
-									entry: [
-										{
-											actions: ['entry2'],
-										},
-									],
 								},
 							},
 						},
@@ -227,8 +227,18 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
+			exit: [
+				{
+					actions: ['exit0'],
+				},
+			],
 			states: {
 				s1: new CompoundState({
+					exit: [
+						{
+							actions: ['exit1'],
+						},
+					],
 					on: {
 						event: [
 							{
@@ -238,8 +248,19 @@ describe('actions', () => {
 					},
 					states: {
 						s11: new CompoundState({
+							exit: [
+								{
+									actions: ['exit11'],
+								},
+							],
 							states: {
-								s111: new AtomicState(),
+								s111: new AtomicState({
+									exit: [
+										{
+											actions: ['exit111'],
+										},
+									],
+								}),
 							},
 						}),
 					},
@@ -255,11 +276,6 @@ describe('actions', () => {
 					},
 				}),
 			},
-			exit: [
-				{
-					actions: ['exit0'],
-				},
-			],
 			states: {
 				s1: {
 					actions: {
@@ -269,11 +285,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					exit: [
-						{
-							actions: ['exit1'],
-						},
-					],
 					states: {
 						s11: {
 							actions: {
@@ -283,11 +294,6 @@ describe('actions', () => {
 									},
 								}),
 							},
-							exit: [
-								{
-									actions: ['exit11'],
-								},
-							],
 							states: {
 								s111: {
 									actions: {
@@ -297,11 +303,6 @@ describe('actions', () => {
 											},
 										}),
 									},
-									exit: [
-										{
-											actions: ['exit111'],
-										},
-									],
 								},
 							},
 						},
@@ -564,8 +565,23 @@ describe('actions', () => {
 					actions: ['always0'],
 				},
 			],
+			entry: [
+				{
+					actions: ['entry0'],
+				},
+			],
+			exit: [
+				{
+					actions: ['exit0'],
+				},
+			],
 			states: {
 				s1: new CompoundState({
+					exit: [
+						{
+							actions: ['exit1'],
+						},
+					],
 					on: {
 						event: [
 							{
@@ -576,6 +592,11 @@ describe('actions', () => {
 					},
 					states: {
 						s11: new CompoundState({
+							exit: [
+								{
+									actions: ['exit11'],
+								},
+							],
 							states: {
 								s111: new AtomicState(),
 							},
@@ -588,11 +609,21 @@ describe('actions', () => {
 							actions: ['always2'],
 						},
 					],
+					entry: [
+						{
+							actions: ['entry2'],
+						},
+					],
 					states: {
 						s21: new CompoundState({
 							always: [
 								{
 									actions: ['always21'],
+								},
+							],
+							entry: [
+								{
+									actions: ['entry21'],
 								},
 							],
 							states: {
@@ -626,16 +657,6 @@ describe('actions', () => {
 					},
 				}),
 			},
-			entry: [
-				{
-					actions: ['entry0'],
-				},
-			],
-			exit: [
-				{
-					actions: ['exit0'],
-				},
-			],
 			states: {
 				s1: {
 					actions: {
@@ -650,11 +671,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					exit: [
-						{
-							actions: ['exit1'],
-						},
-					],
 					states: {
 						s11: {
 							actions: {
@@ -669,11 +685,6 @@ describe('actions', () => {
 									},
 								}),
 							},
-							exit: [
-								{
-									actions: ['exit11'],
-								},
-							],
 						},
 					},
 				},
@@ -695,11 +706,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					entry: [
-						{
-							actions: ['entry2'],
-						},
-					],
 					states: {
 						s21: {
 							actions: {
@@ -719,11 +725,6 @@ describe('actions', () => {
 									},
 								}),
 							},
-							entry: [
-								{
-									actions: ['entry21'],
-								},
-							],
 						},
 					},
 				},
@@ -793,6 +794,16 @@ describe('actions', () => {
 							actions: ['always'],
 						},
 					],
+					entry: [
+						{
+							actions: ['entry'],
+						},
+					],
+					exit: [
+						{
+							actions: ['exit'],
+						},
+					],
 					on: {
 						event: [
 							{
@@ -835,20 +846,6 @@ describe('actions', () => {
 					},
 				}),
 			},
-			states: {
-				s1: {
-					entry: [
-						{
-							actions: ['entry'],
-						},
-					],
-					exit: [
-						{
-							actions: ['exit'],
-						},
-					],
-				},
-			},
 		});
 		state.start();
 
@@ -866,6 +863,16 @@ describe('actions', () => {
 					always: [
 						{
 							actions: ['always'],
+						},
+					],
+					entry: [
+						{
+							actions: ['entry'],
+						},
+					],
+					exit: [
+						{
+							actions: ['exit'],
 						},
 					],
 					on: {
@@ -934,16 +941,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					entry: [
-						{
-							actions: ['entry'],
-						},
-					],
-					exit: [
-						{
-							actions: ['exit'],
-						},
-					],
 				},
 			},
 		});
@@ -958,6 +955,11 @@ describe('actions', () => {
 		const state = new CompoundState({
 			states: {
 				s1: new CompoundState({
+					entry: [
+						{
+							actions: ['entry1'],
+						},
+					],
 					on: {
 						event: [
 							{
@@ -998,11 +1000,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					entry: [
-						{
-							actions: ['entry1'],
-						},
-					],
 				},
 				s2: {
 					actions: {
@@ -1029,6 +1026,11 @@ describe('actions', () => {
 			},
 		});
 		const state = new CompoundState({
+			entry: [
+				{
+					actions: ['action'],
+				},
+			],
 			states: {
 				s1: new AtomicState(),
 			},
@@ -1037,11 +1039,6 @@ describe('actions', () => {
 			actions: {
 				action,
 			},
-			entry: [
-				{
-					actions: ['action'],
-				},
-			],
 		});
 		state.start();
 	});
@@ -1284,6 +1281,11 @@ describe('actions', () => {
 			},
 		});
 		const state = new CompoundState({
+			entry: [
+				{
+					actions: ['action'],
+				},
+			],
 			states: {
 				s1: new AtomicState(),
 			},
@@ -1292,11 +1294,6 @@ describe('actions', () => {
 			actions: {
 				action,
 			},
-			entry: [
-				{
-					actions: ['action'],
-				},
-			],
 		});
 		expect(state.action).toBe(null);
 		state.start();
@@ -1307,6 +1304,11 @@ describe('actions', () => {
 			run: () => 'test',
 		});
 		const state = new CompoundState({
+			entry: [
+				{
+					actions: ['action1'],
+				},
+			],
 			states: {
 				s1: new AtomicState(),
 			},
@@ -1323,11 +1325,6 @@ describe('actions', () => {
 				}),
 				action2,
 			},
-			entry: [
-				{
-					actions: ['action1'],
-				},
-			],
 		});
 		state.start();
 	});

@@ -104,18 +104,6 @@ describe('htstate', () => {
 								},
 							],
 						},
-						conditions: {
-							run: new Condition({
-								run() {
-									return true;
-								},
-							}),
-							ignore: new Condition({
-								run() {
-									return false;
-								},
-							}),
-						},
 					}),
 					other: new AtomicState(),
 				},
@@ -147,6 +135,18 @@ describe('htstate', () => {
 							transition: new Action({
 								run() {
 									actions.push('transition');
+								},
+							}),
+						},
+						conditions: {
+							run: new Condition({
+								run() {
+									return true;
+								},
+							}),
+							ignore: new Condition({
+								run() {
+									return false;
 								},
 							}),
 						},

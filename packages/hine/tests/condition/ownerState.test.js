@@ -4,7 +4,8 @@ import { Condition } from '../../src/condition.js';
 
 describe('ownerState', () => {
 	it('returns parent state', () => {
-		const state = new AtomicState({
+		const state = new AtomicState();
+		state.monitor({
 			conditions: {
 				condition: new Condition({
 					run({ ownerState }) {
@@ -13,8 +14,6 @@ describe('ownerState', () => {
 					},
 				}),
 			},
-		});
-		state.monitor({
 			entry: [{ actions: ['ownerState'] }],
 		});
 	});

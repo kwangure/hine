@@ -54,9 +54,6 @@ describe('toJSON', () => {
 					actions: ['action'],
 				},
 			],
-			conditions: {
-				condition: new Condition({ run: () => true }),
-			},
 			states: {
 				s1: new AtomicState(),
 			},
@@ -64,6 +61,9 @@ describe('toJSON', () => {
 		state.monitor({
 			actions: {
 				action: new Action({ run() {} }),
+			},
+			conditions: {
+				condition: new Condition({ run: () => true }),
 			},
 		});
 		state.start();
@@ -81,9 +81,6 @@ describe('toJSON', () => {
 	});
 	it('serializes entry handlers', () => {
 		const state = new CompoundState({
-			conditions: {
-				condition: new Condition({ run: () => true }),
-			},
 			states: {
 				s1: new AtomicState(),
 			},
@@ -91,6 +88,9 @@ describe('toJSON', () => {
 		state.monitor({
 			actions: {
 				action: new Action({ run() {} }),
+			},
+			conditions: {
+				condition: new Condition({ run: () => true }),
 			},
 			entry: [
 				{
@@ -113,9 +113,6 @@ describe('toJSON', () => {
 	});
 	it('serializes exit handlers', () => {
 		const state = new CompoundState({
-			conditions: {
-				condition: new Condition({ run: () => true }),
-			},
 			states: {
 				s1: new AtomicState(),
 			},
@@ -123,6 +120,9 @@ describe('toJSON', () => {
 		state.monitor({
 			actions: {
 				action: new Action({ run() {} }),
+			},
+			conditions: {
+				condition: new Condition({ run: () => true }),
 			},
 			exit: [
 				{
@@ -152,9 +152,6 @@ describe('toJSON', () => {
 					},
 				],
 			},
-			conditions: {
-				condition: new Condition({ run: () => true }),
-			},
 			states: {
 				s1: new AtomicState(),
 			},
@@ -162,6 +159,9 @@ describe('toJSON', () => {
 		state.monitor({
 			actions: {
 				action: new Action({ run() {} }),
+			},
+			conditions: {
+				condition: new Condition({ run: () => true }),
 			},
 		});
 		state.start();

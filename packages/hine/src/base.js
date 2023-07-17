@@ -73,8 +73,11 @@ export class BaseState {
 	/** @type {import('./condition.js').Condition | null} */
 	#condition = null;
 	#conditionConfig;
-	/** Conditions from the user config */
-	#conditions;
+	/**
+	 * Conditions from the user config
+	 * @type {Record<string, import('./condition.js').Condition>}
+	 */
+	#conditions = {};
 	#context;
 	/** @type {Handler[]} */
 	#entry = [];
@@ -112,7 +115,6 @@ export class BaseState {
 	constructor(stateConfig) {
 		this.#actionConfig = stateConfig?.actionConfig || {};
 		this.#alwaysConfig = stateConfig?.always || [];
-		this.#conditions = stateConfig?.conditions || {};
 		this.#conditionConfig = stateConfig?.conditionConfig || {};
 		this.#context = stateConfig?.context;
 		this.#name = stateConfig?.name || '';
@@ -287,6 +289,11 @@ export class BaseState {
 		if (config.actions) {
 			for (const [name, action] of Object.entries(config.actions)) {
 				this.#actions[name] = action;
+			}
+		}
+		if (config.conditions) {
+			for (const [name, condition] of Object.entries(config.conditions)) {
+				this.#conditions[name] = condition;
 			}
 		}
 		if (config.entry) {

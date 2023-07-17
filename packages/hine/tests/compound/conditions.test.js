@@ -7,6 +7,16 @@ describe('conditions', () => {
 			run: () => false,
 		});
 		const state = new CompoundState({
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		state.monitor({
+			actions: {
+				do: new Action({
+					run() {},
+				}),
+			},
 			conditions: {
 				cond1: new Condition({
 					run({ ownerState }) {
@@ -17,16 +27,6 @@ describe('conditions', () => {
 					},
 				}),
 				cond2,
-			},
-			states: {
-				s1: new AtomicState(),
-			},
-		});
-		state.monitor({
-			actions: {
-				do: new Action({
-					run() {},
-				}),
 			},
 			entry: [
 				{
@@ -46,9 +46,6 @@ describe('conditions', () => {
 			},
 		});
 		const state = new CompoundState({
-			conditions: {
-				condition,
-			},
 			states: {
 				s1: new AtomicState(),
 			},
@@ -58,6 +55,9 @@ describe('conditions', () => {
 				action: new Action({
 					run() {},
 				}),
+			},
+			conditions: {
+				condition,
 			},
 			entry: [
 				{
@@ -72,15 +72,6 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			conditions: {
-				condition: new Condition({
-					notifyBefore: true,
-					run() {
-						log.push('condition');
-						return true;
-					},
-				}),
-			},
 			on: {
 				event: [
 					{
@@ -96,6 +87,15 @@ describe('conditions', () => {
 		state.monitor({
 			actions: {
 				action: new Action({ run() {} }),
+			},
+			conditions: {
+				condition: new Condition({
+					notifyBefore: true,
+					run() {
+						log.push('condition');
+						return true;
+					},
+				}),
 			},
 		});
 		state.start();
@@ -112,15 +112,6 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			conditions: {
-				condition: new Condition({
-					notifyAfter: true,
-					run() {
-						log.push('condition');
-						return true;
-					},
-				}),
-			},
 			on: {
 				event: [
 					{
@@ -136,6 +127,15 @@ describe('conditions', () => {
 		state.monitor({
 			actions: {
 				action: new Action({ run() {} }),
+			},
+			conditions: {
+				condition: new Condition({
+					notifyAfter: true,
+					run() {
+						log.push('condition');
+						return true;
+					},
+				}),
 			},
 		});
 		state.start();
@@ -155,14 +155,6 @@ describe('conditions', () => {
 			conditionConfig: {
 				notifyBefore: true,
 			},
-			conditions: {
-				condition: new Condition({
-					run() {
-						log.push('condition');
-						return true;
-					},
-				}),
-			},
 			on: {
 				event: [
 					{
@@ -178,6 +170,14 @@ describe('conditions', () => {
 		state.monitor({
 			actions: {
 				action: new Action({ run() {} }),
+			},
+			conditions: {
+				condition: new Condition({
+					run() {
+						log.push('condition');
+						return true;
+					},
+				}),
 			},
 		});
 		state.start();
@@ -199,14 +199,6 @@ describe('conditions', () => {
 			},
 			states: {
 				s1: new CompoundState({
-					conditions: {
-						condition: new Condition({
-							run() {
-								log.push('condition');
-								return true;
-							},
-						}),
-					},
 					on: {
 						event: [
 							{
@@ -226,6 +218,14 @@ describe('conditions', () => {
 				s1: {
 					actions: {
 						action: new Action({ run() {} }),
+					},
+					conditions: {
+						condition: new Condition({
+							run() {
+								log.push('condition');
+								return true;
+							},
+						}),
 					},
 				},
 			},
@@ -247,15 +247,6 @@ describe('conditions', () => {
 			conditionConfig: {
 				notifyBefore: true,
 			},
-			conditions: {
-				condition: new Condition({
-					notifyBefore: false,
-					run() {
-						log.push('condition');
-						return true;
-					},
-				}),
-			},
 			on: {
 				event: [
 					{
@@ -272,6 +263,15 @@ describe('conditions', () => {
 			actions: {
 				action: new Action({ run() {} }),
 			},
+			conditions: {
+				condition: new Condition({
+					notifyBefore: false,
+					run() {
+						log.push('condition');
+						return true;
+					},
+				}),
+			},
 		});
 		state.start();
 		state.subscribe(() => log.push('sub'));
@@ -281,14 +281,6 @@ describe('conditions', () => {
 	});
 	it('resolves condition using most specific configured name', () => {
 		const state1 = new CompoundState({
-			conditions: {
-				condition: new Condition({
-					name: 'other-condition',
-					run() {
-						return true;
-					},
-				}),
-			},
 			on: {
 				event: [
 					{
@@ -305,9 +297,6 @@ describe('conditions', () => {
 			actions: {
 				action: new Action({ run() {} }),
 			},
-		});
-		expect(() => state1.start()).toThrow(/unknown condition/);
-		const state2 = new CompoundState({
 			conditions: {
 				condition: new Condition({
 					name: 'other-condition',
@@ -316,6 +305,9 @@ describe('conditions', () => {
 					},
 				}),
 			},
+		});
+		expect(() => state1.start()).toThrow(/unknown condition/);
+		const state2 = new CompoundState({
 			on: {
 				event: [
 					{
@@ -332,6 +324,14 @@ describe('conditions', () => {
 			actions: {
 				action: new Action({ run() {} }),
 			},
+			conditions: {
+				condition: new Condition({
+					name: 'other-condition',
+					run() {
+						return true;
+					},
+				}),
+			},
 		});
 		expect(() => state2.start()).not.toThrow();
 	});
@@ -344,9 +344,6 @@ describe('conditions', () => {
 			},
 		});
 		const state = new CompoundState({
-			conditions: {
-				condition,
-			},
 			states: {
 				s1: new AtomicState(),
 			},
@@ -354,6 +351,9 @@ describe('conditions', () => {
 		state.monitor({
 			actions: {
 				action: new Action({ run() {} }),
+			},
+			conditions: {
+				condition,
 			},
 			entry: [
 				{

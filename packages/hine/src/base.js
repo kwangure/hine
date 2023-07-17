@@ -34,6 +34,7 @@ import {
 	STATE_SUBSCRIBERS,
 	TO_JSON,
 } from './constants.js';
+import { Context } from './context.js';
 import { Handler } from './handler.js';
 import { StateEvent } from './event.js';
 
@@ -116,7 +117,7 @@ export class BaseState {
 		this.#actionConfig = stateConfig?.actionConfig || {};
 		this.#alwaysConfig = stateConfig?.always || [];
 		this.#conditionConfig = stateConfig?.conditionConfig || {};
-		this.#context = stateConfig?.context;
+		this.#context = stateConfig?.context || new Context();
 		this.#name = stateConfig?.name || '';
 		this.#onConfig = stateConfig?.on || {};
 	}
@@ -237,12 +238,11 @@ export class BaseState {
 	get conditions() {
 		return this[STATE_CONDITIONS];
 	}
-	/** @type {import('./context.js').Context | null} */
 	get context() {
 		if (!this.#initialized) {
 			throw Error("Attempted to read context before calling 'state.start()'.");
 		}
-		return this.#context ?? this.#parent?.context ?? null;
+		return this.#context;
 	}
 	/**
 	 * @param {string} eventName

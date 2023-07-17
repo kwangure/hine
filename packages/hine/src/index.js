@@ -7,6 +7,8 @@ import { Context } from './context.js';
 /**
  * @typedef {import('./types').AtomicStateConfig} AtomicStateConfig
  * @typedef {import('./types').CompoundStateConfig} CompoundStateConfig
+ * @typedef {import('./types').MonitorConfig} AtomicMonitorConfig
+ * @typedef {import('./types').CompoundMonitorConfig} CompoundMonitorConfig
  * @typedef {import('./types').AtomicStateJSON} AtomicStateJSON
  * @typedef {import('./types').CompoundStateJSON} CompoundStateJSON
  * @typedef {import('./types').StateNode} StateNode

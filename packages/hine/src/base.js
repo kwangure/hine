@@ -29,6 +29,7 @@ import {
 	STATE_CONDITIONS,
 	STATE_HANDLER,
 	STATE_NAME,
+	STATE_NEXT_EVENTS,
 	STATE_PARENT,
 	STATE_STATES,
 	STATE_SUBSCRIBERS,
@@ -248,6 +249,11 @@ export class BaseState {
 	}
 	get actions() {
 		return this[STATE_ACTIONS];
+	}
+	get activeEvents() {
+		const activeEventsNames = new Set();
+		this[STATE_NEXT_EVENTS](activeEventsNames);
+		return [...activeEventsNames];
 	}
 	get condition() {
 		return this.#condition;
@@ -606,6 +612,16 @@ export class BaseState {
 	/** @param {string} value */
 	set [STATE_NAME](value) {
 		this.#name = value;
+	}
+	/**
+	 * @param {Set<string>} stateTreeEvents
+	 */
+	[STATE_NEXT_EVENTS](stateTreeEvents) {
+		for (const [name, handlers] of Object.entries(this[ON_HANDLER])) {
+			if (handlers.length) {
+				stateTreeEvents.add(name);
+			}
+		}
 	}
 	get [STATE_PARENT]() {
 		return this.#parent;

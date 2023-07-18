@@ -2,6 +2,7 @@ import {
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
 	INITIALIZE,
+	ON_HANDLER,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
 	QUEUE_EXIT_HANDLERS,
@@ -9,6 +10,7 @@ import {
 	RESOLVE_CONFIG,
 	STATE_ACTIVE,
 	STATE_NAME,
+	STATE_NEXT_EVENTS,
 	STATE_PARENT,
 	STATE_STATES,
 	STATE_SUBSCRIBERS,
@@ -165,6 +167,21 @@ export class CompoundState extends BaseState {
 	/** @param {StateNode} value */
 	set [STATE_ACTIVE](value) {
 		this.#state = value;
+	}
+	/**
+	 * @param {Set<string>} stateTreeEvents
+	 */
+	[STATE_NEXT_EVENTS](stateTreeEvents) {
+		// No state, implies the machine is not intialized, return zero events
+		if (!this.#state) return;
+
+		for (const [name, handlers] of Object.entries(this[ON_HANDLER])) {
+			if (handlers.length) {
+				stateTreeEvents.add(name);
+			}
+		}
+
+		this.#state[STATE_NEXT_EVENTS](stateTreeEvents);
 	}
 	get [STATE_STATES]() {
 		return this.#states;

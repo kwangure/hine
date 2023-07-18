@@ -9,7 +9,16 @@ describe('isActiveEvent', () => {
 			states: {
 				s1: new AtomicState({
 					on: {
-						EVENT: [
+						EVENT1: [
+							{
+								actions: ['action'],
+							},
+						],
+					},
+				}),
+				s2: new AtomicState({
+					on: {
+						EVENT2: [
 							{
 								actions: ['action'],
 							},
@@ -24,7 +33,8 @@ describe('isActiveEvent', () => {
 			},
 		});
 		state.start();
-		expect(state.isActiveEvent('EVENT')).toEqual(true);
+		expect(state.isActiveEvent('EVENT1')).toEqual(true);
+		expect(state.isActiveEvent('EVENT2')).toEqual(false);
 		expect(state.isActiveEvent('RANDOM-EVENT')).toEqual(false);
 	});
 	it('throws when not initialized', () => {

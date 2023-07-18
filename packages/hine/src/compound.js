@@ -60,9 +60,7 @@ export class CompoundState extends BaseState {
 			);
 		}
 		if (name in this[ON_HANDLER] && this[ON_HANDLER][name].length) return true;
-		for (const state of this.#states.values()) {
-			if (state.isActiveEvent(name)) return true;
-		}
+		if (this.#state.isActiveEvent(name)) return true;
 		return false;
 	}
 	/**

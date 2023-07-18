@@ -14,13 +14,16 @@ describe('activeEvents', () => {
 				],
 			},
 			states: {
-				s1: new AtomicState({
+				s1: new CompoundState({
 					on: {
 						EVENT2: [
 							{
 								actions: ['action'],
 							},
 						],
+					},
+					states: {
+						s11: new AtomicState(),
 					},
 				}),
 			},

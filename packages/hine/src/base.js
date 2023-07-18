@@ -294,6 +294,15 @@ export class BaseState {
 	get handler() {
 		return this.#handler;
 	}
+	/** @param {string} name */
+	isActiveEvent(name) {
+		if (!this.#initialized) {
+			throw Error(
+				"Attempted to call 'state.isActiveEvent()' before calling 'state.start()'",
+			);
+		}
+		return name in this[ON_HANDLER] && Boolean(this[ON_HANDLER][name].length);
+	}
 	/**
 	 * @param {string} path
 	 * @return {boolean}

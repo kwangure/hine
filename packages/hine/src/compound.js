@@ -51,6 +51,20 @@ export class CompoundState extends BaseState {
 			state[STATE_PARENT] = this;
 		}
 	}
+	/** @param {string} name */
+	isActiveEvent(name) {
+		// No active child state implies state is not initialized
+		if (!this.#state) {
+			throw Error(
+				"Attempted to call 'state.isActiveEvent()' before calling 'state.start()'",
+			);
+		}
+		if (name in this[ON_HANDLER] && this[ON_HANDLER][name].length) return true;
+		for (const state of this.#states.values()) {
+			if (state.isActiveEvent(name)) return true;
+		}
+		return false;
+	}
 	/**
 	 * @param {string} path
 	 * @return {boolean}

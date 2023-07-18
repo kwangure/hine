@@ -255,6 +255,15 @@ export class BaseState {
 		this[STATE_NEXT_EVENTS](activeEventsNames);
 		return [...activeEventsNames];
 	}
+	/** @param {string} path */
+	canTransitionTo(path) {
+		for (const handlers of Object.values(this[ON_HANDLER])) {
+			for (const handler of handlers) {
+				if (handler.transitionTo?.name === path) return true;
+			}
+		}
+		return false;
+	}
 	get condition() {
 		return this.#condition;
 	}

@@ -51,6 +51,17 @@ export class CompoundState extends BaseState {
 			state[STATE_PARENT] = this;
 		}
 	}
+	/**
+	 * @param {string} path
+	 * @returns {boolean}
+	 */
+	canTransitionTo(path) {
+		return (
+			super.canTransitionTo(path) ||
+			(path.startsWith(`${this.name}.`) &&
+				Boolean(this.#state?.canTransitionTo(path.slice(this.name.length + 1))))
+		);
+	}
 	/** @param {string} name */
 	isActiveEvent(name) {
 		// No active child state implies state is not initialized

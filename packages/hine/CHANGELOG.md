@@ -1,5 +1,78 @@
 # hine
 
+## 0.0.16
+
+### Patch Changes
+
+- 2c1f481: Add `isActiveEvent` to check single events
+
+  ```javascript
+  const state = new AtomicState({
+  	on: {
+  		EVENT: [
+  			{
+  				actions: ['action'],
+  			},
+  		],
+  	},
+  });
+  state.monitor({
+  	actions: {
+  		action: new Action({ run() {} }),
+  	},
+  });
+  state.start();
+
+  console.log(state.isActiveEvent('EVENT')); // true
+  ```
+
+  This is faster than `state.activeEvents.includes("EVENT")` which walks the entire tree
+  first even when it doesn't need to.
+
+- 2c1f481: Expose list of active handled events via `state.activeEvents`
+
+  ```javascript
+  const state = new AtomicState({
+  	on: {
+  		EVENT: [
+  			{
+  				actions: ['action'],
+  			},
+  		],
+  	},
+  });
+  state.monitor({
+  	actions: {
+  		action: new Action({ run() {} }),
+  	},
+  });
+  state.start();
+  console.log(state.activeEvents); // ["EVENT"];
+  ```
+
+- 2c1f481: Add a `canTransitioTo` to check possible transitions
+
+  ```javascript
+  const state = new CompoundState({
+  	name: 's0',
+  	states: {
+  		s1: new AtomicState({
+  			on: {
+  				EVENT: [
+  					{
+  						transitionTo: 's2',
+  					},
+  				],
+  			},
+  		}),
+  		s2: new AtomicState(),
+  	},
+  });
+  state.start();
+
+  console.log(state.canTransitionTo('s0.s2')); // true
+  ```
+
 ## 0.0.15
 
 ### Patch Changes

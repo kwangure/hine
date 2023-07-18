@@ -4,7 +4,6 @@
 	"description": "A state machine library",
 	"scripts": {
 		"build": "wireit",
-		"check": "wireit",
 		"pack": "wireit",
 		"pre-commit": "wireit",
 		"publint": "wireit",
@@ -20,19 +19,19 @@
 	],
 	"license": "MIT",
 	"files": [
-		"dist",
+		"src",
+		"types",
 		"!**/*.test.*",
 		"!**/*.spec.*"
 	],
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"default": "./dist/index.js"
+			"types": "./types/index.d.ts",
+			"default": "./src/index.js"
 		}
 	},
 	"devDependencies": {
-		"@sveltejs/package": "^2.0.2",
 		"publint": "^0.1.11",
 		"release-it": "^15.6.0",
 		"type-fest": "^3.6.1",
@@ -41,24 +40,15 @@
 	},
 	"wireit": {
 		"build": {
-			"command": "svelte-package -i ./src",
-			"files": [
-				"src/**/*.{js,ts,svelte}",
-				"tsconfig.json"
-			],
-			"output": [
-				"dist/**"
-			]
-		},
-		"check": {
 			"clean": "if-file-deleted",
 			"command": "tsc",
 			"files": [
 				"src/**/*.{js,ts}",
-				"tests/**/*.{js,ts}",
 				"tsconfig.json"
 			],
-			"output": []
+			"output": [
+				"types"
+			]
 		},
 		"pack": {
 			"command": "npm pack",
@@ -67,7 +57,8 @@
 				"publint"
 			],
 			"files": [
-				"dist/**",
+				"src/**",
+				"types/**",
 				"!**/*.test.*",
 				"!**/*.spec.*",
 				"LICENSE",
@@ -83,14 +74,14 @@
 				"build"
 			],
 			"files": [
-				"dist/**",
+				"src/**",
+				"types/**",
 				"package.json"
 			],
 			"output": []
 		},
 		"pre-commit": {
 			"dependencies": [
-				"check",
 				"test",
 				"build"
 			]

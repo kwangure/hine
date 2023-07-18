@@ -7,5 +7,5 @@ node_modules
 .eslintcache
 dist
 **/*.tgz
-_actual*.*
 types
+*.tsbuildinfo

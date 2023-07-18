@@ -14,6 +14,11 @@ describe('actions', () => {
 					actions: ['always0'],
 				},
 			],
+			entry: [
+				{
+					actions: ['entry0'],
+				},
+			],
 		});
 		state.monitor({
 			actions: {
@@ -28,11 +33,6 @@ describe('actions', () => {
 					},
 				}),
 			},
-			entry: [
-				{
-					actions: ['entry0'],
-				},
-			],
 		});
 		state.start();
 		expect(log).toEqual(['entry0', 'always0']);
@@ -58,6 +58,11 @@ describe('actions', () => {
 							actions: ['always0'],
 						},
 					],
+					entry: [
+						{
+							actions: ['entry0'],
+						},
+					],
 				}),
 			},
 		});
@@ -76,11 +81,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					entry: [
-						{
-							actions: ['entry0'],
-						},
-					],
 				},
 			},
 		});
@@ -93,8 +93,18 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
+			exit: [
+				{
+					actions: ['exit0'],
+				},
+			],
 			states: {
 				s1: new AtomicState({
+					exit: [
+						{
+							actions: ['exit1'],
+						},
+					],
 					on: {
 						event: [
 							{
@@ -114,11 +124,6 @@ describe('actions', () => {
 					},
 				}),
 			},
-			exit: [
-				{
-					actions: ['exit0'],
-				},
-			],
 			states: {
 				s1: {
 					actions: {
@@ -128,11 +133,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					exit: [
-						{
-							actions: ['exit1'],
-						},
-					],
 				},
 			},
 		});
@@ -215,6 +215,11 @@ describe('actions', () => {
 		const machine = new CompoundState({
 			states: {
 				s1: new AtomicState({
+					exit: [
+						{
+							actions: ['exit1'],
+						},
+					],
 					on: {
 						event: [
 							{
@@ -228,6 +233,11 @@ describe('actions', () => {
 					always: [
 						{
 							actions: ['always2'],
+						},
+					],
+					entry: [
+						{
+							actions: ['entry2'],
 						},
 					],
 				}),
@@ -248,11 +258,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					exit: [
-						{
-							actions: ['exit1'],
-						},
-					],
 				},
 				s2: {
 					actions: {
@@ -272,11 +277,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					entry: [
-						{
-							actions: ['entry2'],
-						},
-					],
 				},
 			},
 		});
@@ -326,6 +326,16 @@ describe('actions', () => {
 									actions: ['always'],
 								},
 							],
+							entry: [
+								{
+									actions: ['entry'],
+								},
+							],
+							exit: [
+								{
+									actions: ['exit'],
+								},
+							],
 							on: {
 								event: [
 									{
@@ -363,24 +373,6 @@ describe('actions', () => {
 					},
 				}),
 			},
-			states: {
-				s1: {
-					states: {
-						s11: {
-							entry: [
-								{
-									actions: ['entry'],
-								},
-							],
-							exit: [
-								{
-									actions: ['exit'],
-								},
-							],
-						},
-					},
-				},
-			},
 		});
 		state.start();
 
@@ -398,6 +390,16 @@ describe('actions', () => {
 					always: [
 						{
 							actions: ['always'],
+						},
+					],
+					entry: [
+						{
+							actions: ['entry'],
+						},
+					],
+					exit: [
+						{
+							actions: ['exit'],
 						},
 					],
 					on: {
@@ -459,16 +461,6 @@ describe('actions', () => {
 							},
 						}),
 					},
-					entry: [
-						{
-							actions: ['entry'],
-						},
-					],
-					exit: [
-						{
-							actions: ['exit'],
-						},
-					],
 				},
 			},
 		});
@@ -484,16 +476,17 @@ describe('actions', () => {
 				expect(value).toBe(action);
 			},
 		});
-		const state = new AtomicState();
-		state.monitor({
-			actions: {
-				action,
-			},
+		const state = new AtomicState({
 			entry: [
 				{
 					actions: ['action'],
 				},
 			],
+		});
+		state.monitor({
+			actions: {
+				action,
+			},
 		});
 		state.start();
 	});
@@ -565,9 +558,6 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new AtomicState({
-			actionConfig: {
-				notifyBefore: true,
-			},
 			on: {
 				event: [
 					{
@@ -577,6 +567,9 @@ describe('actions', () => {
 			},
 		});
 		state.monitor({
+			actionConfig: {
+				notifyBefore: true,
+			},
 			actions: {
 				action: new Action({
 					run() {
@@ -599,9 +592,6 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new AtomicState({
-			actionConfig: {
-				notifyBefore: true,
-			},
 			on: {
 				event: [
 					{
@@ -611,6 +601,9 @@ describe('actions', () => {
 			},
 		});
 		state.monitor({
+			actionConfig: {
+				notifyBefore: true,
+			},
 			actions: {
 				action: new Action({
 					notifyBefore: false,
@@ -630,9 +623,6 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			actionConfig: {
-				notifyBefore: true,
-			},
 			states: {
 				s1: new CompoundState({
 					states: {
@@ -650,6 +640,9 @@ describe('actions', () => {
 			},
 		});
 		state.monitor({
+			actionConfig: {
+				notifyBefore: true,
+			},
 			states: {
 				s1: {
 					states: {
@@ -723,16 +716,17 @@ describe('actions', () => {
 				expect(state.action).toBe(action);
 			},
 		});
-		const state = new AtomicState();
-		state.monitor({
-			actions: {
-				action,
-			},
+		const state = new AtomicState({
 			entry: [
 				{
 					actions: ['action'],
 				},
 			],
+		});
+		state.monitor({
+			actions: {
+				action,
+			},
 		});
 		expect(state.action).toBe(null);
 		state.start();
@@ -742,7 +736,13 @@ describe('actions', () => {
 		const action2 = new Action({
 			run: () => 'test',
 		});
-		const state = new AtomicState();
+		const state = new AtomicState({
+			entry: [
+				{
+					actions: ['action1'],
+				},
+			],
+		});
 		state.monitor({
 			actions: {
 				action1: new Action({
@@ -755,11 +755,6 @@ describe('actions', () => {
 				}),
 				action2,
 			},
-			entry: [
-				{
-					actions: ['action1'],
-				},
-			],
 		});
 		state.start();
 	});

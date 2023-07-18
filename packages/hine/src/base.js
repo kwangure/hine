@@ -34,6 +34,7 @@ import {
 	STATE_SUBSCRIBERS,
 	TO_JSON,
 } from './constants.js';
+import { Context } from './context.js';
 import { Handler } from './handler.js';
 import { StateEvent } from './event.js';
 
@@ -51,7 +52,11 @@ import { StateEvent } from './event.js';
 export class BaseState {
 	/** @type {import('./action.js').Action | null} */
 	#action = null;
-	#actionConfig;
+	/**
+	 * Action configuration from the user that is propagated to children
+	 * @type {Omit<import('./types.js').ActionConfig, 'run'>}
+	 */
+	#actionConfig = {};
 	/**
 	 * Actions from the user config
 	 * @type {Record<string, import('./action.js').Action>}
@@ -72,9 +77,16 @@ export class BaseState {
 	#alwaysConfig;
 	/** @type {import('./condition.js').Condition | null} */
 	#condition = null;
-	#conditionConfig;
-	/** Conditions from the user config */
-	#conditions;
+	/**
+	 * Condition configuration from the user that is propagated to children
+	 * @type {Omit<import('./types.js').ConditionConfig, 'run'>}
+	 */
+	#conditionConfig = {};
+	/**
+	 * Conditions from the user config
+	 * @type {Record<string, import('./condition.js').Condition>}
+	 */
+	#conditions = {};
 	#context;
 	/** @type {Handler[]} */
 	#entry = [];
@@ -110,13 +122,21 @@ export class BaseState {
 	 * @param {import('./types.js').AtomicStateConfig} [stateConfig]
 	 */
 	constructor(stateConfig) {
-		this.#actionConfig = stateConfig?.actionConfig || {};
 		this.#alwaysConfig = stateConfig?.always || [];
-		this.#conditions = stateConfig?.conditions || {};
-		this.#conditionConfig = stateConfig?.conditionConfig || {};
-		this.#context = stateConfig?.context;
+		this.#context = stateConfig?.context || new Context();
 		this.#name = stateConfig?.name || '';
 		this.#onConfig = stateConfig?.on || {};
+
+		if (stateConfig?.entry) {
+			for (const handler of stateConfig.entry) {
+				this.#entryConfig.push(handler);
+			}
+		}
+		if (stateConfig?.exit) {
+			for (const handler of stateConfig.exit) {
+				this.#exitConfig.push(handler);
+			}
+		}
 	}
 	/**
 	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig | EntryHandlerConfig | ExitHandlerConfig>} handler
@@ -235,12 +255,11 @@ export class BaseState {
 	get conditions() {
 		return this[STATE_CONDITIONS];
 	}
-	/** @type {import('./context.js').Context | null} */
 	get context() {
 		if (!this.#initialized) {
 			throw Error("Attempted to read context before calling 'state.start()'.");
 		}
-		return this.#context ?? this.#parent?.context ?? null;
+		return this.#context;
 	}
 	/**
 	 * @param {string} eventName
@@ -284,19 +303,39 @@ export class BaseState {
 	}
 	/** @param {import('./types.js').MonitorConfig} config */
 	monitor(config) {
+		if (config.actionConfig) {
+			if ('name' in config.actionConfig) {
+				this.#actionConfig['name'] = config.actionConfig['name'];
+			}
+			if ('notifyAfter' in config.actionConfig) {
+				this.#actionConfig['notifyAfter'] = config.actionConfig['notifyAfter'];
+			}
+			if ('notifyBefore' in config.actionConfig) {
+				this.#actionConfig['notifyBefore'] =
+					config.actionConfig['notifyBefore'];
+			}
+		}
 		if (config.actions) {
 			for (const [name, action] of Object.entries(config.actions)) {
 				this.#actions[name] = action;
 			}
 		}
-		if (config.entry) {
-			for (const handler of config.entry) {
-				this.#entryConfig.push(handler);
+		if (config.conditionConfig) {
+			if ('name' in config.conditionConfig) {
+				this.#conditionConfig['name'] = config.conditionConfig['name'];
+			}
+			if ('notifyAfter' in config.conditionConfig) {
+				this.#conditionConfig['notifyAfter'] =
+					config.conditionConfig['notifyAfter'];
+			}
+			if ('notifyBefore' in config.conditionConfig) {
+				this.#conditionConfig['notifyBefore'] =
+					config.conditionConfig['notifyBefore'];
 			}
 		}
-		if (config.exit) {
-			for (const handler of config.exit) {
-				this.#exitConfig.push(handler);
+		if (config.conditions) {
+			for (const [name, condition] of Object.entries(config.conditions)) {
+				this.#conditions[name] = condition;
 			}
 		}
 	}

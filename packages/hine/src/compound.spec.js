@@ -8,6 +8,11 @@ describe('htstate', () => {
 	describe('missing actions', () => {
 		it('throws on missing entry actions', () => {
 			const state = new CompoundState({
+				entry: [
+					{
+						actions: ['missing'],
+					},
+				],
 				states: {
 					first: new CompoundState({
 						states: {
@@ -15,19 +20,17 @@ describe('htstate', () => {
 						},
 					}),
 				},
-			});
-			state.monitor({
-				entry: [
-					{
-						actions: ['missing'],
-					},
-				],
 			});
 			expect(() => state.start()).toThrow("'missing'");
 		});
 
 		it('throws on missing exit actions', () => {
 			const state = new CompoundState({
+				exit: [
+					{
+						actions: ['missing'],
+					},
+				],
 				states: {
 					first: new CompoundState({
 						states: {
@@ -35,13 +38,6 @@ describe('htstate', () => {
 						},
 					}),
 				},
-			});
-			state.monitor({
-				exit: [
-					{
-						actions: ['missing'],
-					},
-				],
 			});
 			expect(() => state.start()).toThrow("'missing'");
 		});
@@ -89,6 +85,32 @@ describe('htstate', () => {
 								condition: 'ignore',
 							},
 						],
+						entry: [
+							{
+								actions: ['entry'],
+								condition: 'run',
+							},
+							{
+								actions: ['entry'],
+							},
+							{
+								actions: ['ignore'],
+								condition: 'ignore',
+							},
+						],
+						exit: [
+							{
+								actions: ['exit'],
+								condition: 'run',
+							},
+							{
+								actions: ['exit'],
+							},
+							{
+								actions: ['ignore'],
+								condition: 'ignore',
+							},
+						],
 						on: {
 							ignored: [
 								{
@@ -103,18 +125,6 @@ describe('htstate', () => {
 									actions: ['transition'],
 								},
 							],
-						},
-						conditions: {
-							run: new Condition({
-								run() {
-									return true;
-								},
-							}),
-							ignore: new Condition({
-								run() {
-									return false;
-								},
-							}),
 						},
 					}),
 					other: new AtomicState(),
@@ -150,32 +160,18 @@ describe('htstate', () => {
 								},
 							}),
 						},
-						entry: [
-							{
-								actions: ['entry'],
-								condition: 'run',
-							},
-							{
-								actions: ['entry'],
-							},
-							{
-								actions: ['ignore'],
-								condition: 'ignore',
-							},
-						],
-						exit: [
-							{
-								actions: ['exit'],
-								condition: 'run',
-							},
-							{
-								actions: ['exit'],
-							},
-							{
-								actions: ['ignore'],
-								condition: 'ignore',
-							},
-						],
+						conditions: {
+							run: new Condition({
+								run() {
+									return true;
+								},
+							}),
+							ignore: new Condition({
+								run() {
+									return false;
+								},
+							}),
+						},
 					},
 				},
 			});

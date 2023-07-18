@@ -5,6 +5,9 @@ import { Condition } from '../../src/condition.js';
 describe('ownerState', () => {
 	it('returns parent state', () => {
 		const state = new AtomicState({
+			entry: [{ actions: ['ownerState'] }],
+		});
+		state.monitor({
 			conditions: {
 				condition: new Condition({
 					run({ ownerState }) {
@@ -13,9 +16,6 @@ describe('ownerState', () => {
 					},
 				}),
 			},
-		});
-		state.monitor({
-			entry: [{ actions: ['ownerState'] }],
 		});
 	});
 	it('throws when accessed before initialisation', () => {

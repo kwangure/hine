@@ -54,11 +54,10 @@ export type ExitHandlerConfig = {
 export type StateNode = AtomicState | CompoundState;
 
 type StateNodeConfig = {
-	actionConfig: Partial<Omit<ActionConfig, 'run'>>;
 	always: AlwaysHandlerConfig[];
-	conditionConfig: Partial<Omit<ConditionConfig, 'run'>>;
-	conditions: Record<string, Condition>;
 	context: Context;
+	entry: EntryHandlerConfig[];
+	exit: ExitHandlerConfig[];
 	name: string;
 	on: Record<string, DispatchHandlerConfig[]>;
 };
@@ -91,8 +90,9 @@ export type HandlerJSON = ReturnType<Handler['toJSON']>;
 
 export type MonitorConfig = {
 	actions?: Record<string, Action>;
-	entry?: EntryHandlerConfig[];
-	exit?: ExitHandlerConfig[];
+	actionConfig?: Partial<Omit<ActionConfig, 'run'>>;
+	conditions?: Record<string, Condition>;
+	conditionConfig?: Partial<Omit<ConditionConfig, 'run'>>;
 };
 
 export type CompoundMonitorConfig = MonitorConfig & {

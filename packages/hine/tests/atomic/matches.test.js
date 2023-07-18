@@ -56,12 +56,6 @@ describe('matches', () => {
 					actions: ['action'],
 				},
 			],
-			conditions: {
-				condition: new Condition({
-					notifyBefore: true,
-					run: () => true,
-				}),
-			},
 		});
 		let count = 1;
 		state.subscribe(() => {
@@ -75,6 +69,12 @@ describe('matches', () => {
 		state.monitor({
 			actions: {
 				action: new Action({ run() {} }),
+			},
+			conditions: {
+				condition: new Condition({
+					notifyBefore: true,
+					run: () => true,
+				}),
 			},
 		});
 		state.start();

@@ -4,7 +4,9 @@ import { AtomicState } from '../../src/atomic.js';
 
 describe('ownerState', () => {
 	it('returns parent state', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({
+			entry: [{ actions: ['ownerState'] }],
+		});
 		state.monitor({
 			actions: {
 				action: new Action({
@@ -13,7 +15,6 @@ describe('ownerState', () => {
 					},
 				}),
 			},
-			entry: [{ actions: ['ownerState'] }],
 		});
 	});
 	it('throws when accessed before initialisation', () => {

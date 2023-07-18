@@ -144,7 +144,9 @@ export class CompoundState extends BaseState {
 	}
 	[INITIALIZE]() {
 		this.#state = this.#initial;
-		this.#state?.[INITIALIZE]();
+		for (const state of this.#states.values()) {
+			state[INITIALIZE]();
+		}
 		super[INITIALIZE]();
 	}
 	[QUEUE_ALWAYS_HANDLERS]() {

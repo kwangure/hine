@@ -2,6 +2,7 @@ import {
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
 	INITIALIZE,
+	ON_HANDLER,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
 	QUEUE_EXIT_HANDLERS,
@@ -9,6 +10,7 @@ import {
 	RESOLVE_CONFIG,
 	STATE_ACTIVE,
 	STATE_NAME,
+	STATE_NEXT_EVENTS,
 	STATE_PARENT,
 	STATE_STATES,
 	STATE_SUBSCRIBERS,
@@ -48,6 +50,29 @@ export class CompoundState extends BaseState {
 			this.#states.set(state.name, state);
 			state[STATE_PARENT] = this;
 		}
+	}
+	/**
+	 * @param {string} path
+	 * @returns {boolean}
+	 */
+	canTransitionTo(path) {
+		return (
+			super.canTransitionTo(path) ||
+			(path.startsWith(`${this.name}.`) &&
+				Boolean(this.#state?.canTransitionTo(path.slice(this.name.length + 1))))
+		);
+	}
+	/** @param {string} name */
+	isActiveEvent(name) {
+		// No active child state implies state is not initialized
+		if (!this.#state) {
+			throw Error(
+				"Attempted to call 'state.isActiveEvent()' before calling 'state.start()'",
+			);
+		}
+		if (name in this[ON_HANDLER] && this[ON_HANDLER][name].length) return true;
+		if (this.#state.isActiveEvent(name)) return true;
+		return false;
 	}
 	/**
 	 * @param {string} path
@@ -128,7 +153,9 @@ export class CompoundState extends BaseState {
 	}
 	[INITIALIZE]() {
 		this.#state = this.#initial;
-		this.#state?.[INITIALIZE]();
+		for (const state of this.#states.values()) {
+			state[INITIALIZE]();
+		}
 		super[INITIALIZE]();
 	}
 	[QUEUE_ALWAYS_HANDLERS]() {
@@ -165,6 +192,21 @@ export class CompoundState extends BaseState {
 	/** @param {StateNode} value */
 	set [STATE_ACTIVE](value) {
 		this.#state = value;
+	}
+	/**
+	 * @param {Set<string>} stateTreeEvents
+	 */
+	[STATE_NEXT_EVENTS](stateTreeEvents) {
+		// No state, implies the machine is not intialized, return zero events
+		if (!this.#state) return;
+
+		for (const [name, handlers] of Object.entries(this[ON_HANDLER])) {
+			if (handlers.length) {
+				stateTreeEvents.add(name);
+			}
+		}
+
+		this.#state[STATE_NEXT_EVENTS](stateTreeEvents);
 	}
 	get [STATE_STATES]() {
 		return this.#states;

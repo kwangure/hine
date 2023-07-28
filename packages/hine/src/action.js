@@ -1,5 +1,3 @@
-import { STATE_ACTION } from './constants.js';
-
 /**
  * @typedef {import('./types').StateNode} StateNode
  */
@@ -74,11 +72,13 @@ export class Action {
 	}
 	run() {
 		if (!this.__ownerState) return;
-		this.__ownerState[STATE_ACTION] = this;
+		// @ts-expect-error
+		this.__ownerState.__action = this;
 		this.#notifyBefore();
 		const result = this.#run.call(undefined, this);
 		this.#notifyAfter();
-		this.__ownerState[STATE_ACTION] = null;
+		// @ts-expect-error
+		this.__ownerState.__action = null;
 		return result;
 	}
 	toJSON() {

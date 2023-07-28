@@ -9,7 +9,6 @@ import {
 	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
-	STATE_ACTION,
 	STATE_ACTION_CONFIGS,
 	STATE_CONDITION,
 	STATE_CONDITION_CONFIGS,
@@ -34,8 +33,6 @@ import { StateEvent } from './event.js';
  */
 
 export class BaseState {
-	/** @type {import('./action.js').Action | null} */
-	#action = null;
 	/**
 	 * Action configuration from the user that is propagated to children
 	 * @type {Omit<import('./types.js').ActionConfig, 'run'>}
@@ -93,6 +90,11 @@ export class BaseState {
 	#onConfig;
 	/** @type {CompoundState | null} */
 	#parent = null;
+	/**
+	 * @private
+	 * @type {import('./action.js').Action | null}
+	 */
+	__action = null;
 	/** @private */
 	__name = '';
 	/**
@@ -326,7 +328,7 @@ export class BaseState {
 		};
 	}
 	get action() {
-		return this.#action;
+		return this.__action;
 	}
 	get actions() {
 		return this.__actions;
@@ -402,7 +404,7 @@ export class BaseState {
 		if (!this.#initialized) return false;
 		return Boolean(
 			path === this.__name ||
-				(this.#action && path === this.#action.path.join('.')) ||
+				(this.__action && path === this.__action.path.join('.')) ||
 				(this.#condition && path === this.#condition.path.join('.')) ||
 				(this.#handler && path === this.#handler.path.join('.')),
 		);
@@ -604,11 +606,6 @@ export class BaseState {
 				false,
 		};
 	}
-	/** @param {import('./action.js').Action | null} value */
-	set [STATE_ACTION](value) {
-		this.#action = value;
-	}
-
 	/**
 	 * @returns {{
 	 *     notifyBefore: boolean;

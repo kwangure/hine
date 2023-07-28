@@ -1,8 +1,6 @@
 import {
-	ACTION_NAME,
 	ACTION_NOTIFY_AFTER,
 	ACTION_NOTIFY_BEFORE,
-	ACTION_OWNER,
 	STATE_ACTION,
 } from './constants.js';
 
@@ -13,12 +11,15 @@ import {
 function noop() {}
 
 export class Action {
-	#name = '';
-	/** @type {StateNode | null} */
-	#ownerState = null;
 	/** @type {(arg: any) => any} */
 	#run = noop;
 	#type = /** @type {const} */ ('action');
+	/** @type {StateNode | null} */
+	__ownerState = null;
+
+	/** @private */
+	__name = '';
+
 	/** @type {boolean | undefined} */
 	[ACTION_NOTIFY_AFTER] = undefined;
 	/** @type {boolean | undefined} */
@@ -27,7 +28,7 @@ export class Action {
 	 * @param {import('./types').ActionConfig} options
 	 */
 	constructor(options) {
-		this.#name = options.name || '';
+		this.__name = options.name || '';
 		if (typeof options.notifyAfter === 'boolean') {
 			this[ACTION_NOTIFY_AFTER] = options.notifyAfter;
 		}
@@ -38,61 +39,53 @@ export class Action {
 	}
 	#notifyAfter() {
 		if (!this[ACTION_NOTIFY_AFTER]) return;
-		this.#ownerState?.__callSubscribers();
+		this.__ownerState?.__callSubscribers();
 	}
 	#notifyBefore() {
 		if (!this[ACTION_NOTIFY_BEFORE]) return;
-		this.#ownerState?.__callSubscribers();
+		this.__ownerState?.__callSubscribers();
 	}
 	get event() {
-		if (!this.#ownerState) {
+		if (!this.__ownerState) {
 			const path = this.path.join('.');
 			throw Error(
 				`Attempted to read 'action.event' at '${path}' before calling 'state.start()'.`,
 			);
 		}
-		return this.#ownerState?.event;
+		return this.__ownerState?.event;
 	}
 	get name() {
-		return this.#name;
+		return this.__name;
 	}
 	get ownerState() {
-		if (!this.#ownerState) {
+		if (!this.__ownerState) {
 			throw Error('Attempted to read ownerState before calling state.start().');
 		}
-		return this.#ownerState;
+		return this.__ownerState;
 	}
 	/** @type {string[]} */
 	get path() {
-		return this.#ownerState
-			? [...this.#ownerState.path, `(${this.#name})`]
-			: [`(${this.#name})`];
+		return this.__ownerState
+			? [...this.__ownerState.path, `(${this.__name})`]
+			: [`(${this.__name})`];
 	}
 	run() {
-		if (!this.#ownerState) return;
-		this.#ownerState[STATE_ACTION] = this;
+		if (!this.__ownerState) return;
+		this.__ownerState[STATE_ACTION] = this;
 		this.#notifyBefore();
 		const result = this.#run.call(undefined, this);
 		this.#notifyAfter();
-		this.#ownerState[STATE_ACTION] = null;
+		this.__ownerState[STATE_ACTION] = null;
 		return result;
 	}
 	toJSON() {
 		return {
-			name: this.#name,
+			name: this.__name,
 			path: this.path,
 			type: this.#type,
 		};
 	}
 	get type() {
 		return this.#type;
-	}
-	/** @param {string} value */
-	set [ACTION_NAME](value) {
-		this.#name = value;
-	}
-	/** @param {StateNode} owner */
-	set [ACTION_OWNER](owner) {
-		this.#ownerState = owner;
 	}
 }

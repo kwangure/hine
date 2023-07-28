@@ -1,8 +1,6 @@
 import {
-	ACTION_NAME,
 	ACTION_NOTIFY_AFTER,
 	ACTION_NOTIFY_BEFORE,
-	ACTION_OWNER,
 	CONTEXT_OWNER,
 	EXECUTE_HANDLERS,
 	EXECUTE_HANDLERS_LEAF_FIRST,
@@ -539,7 +537,8 @@ export class BaseState {
 			if (Object.hasOwn(this.#actions, name)) {
 				const action = this.#actions[name];
 				if (!action.name) {
-					action[ACTION_NAME] = name;
+					// @ts-expect-error
+					action.__name = name;
 				}
 				if (typeof action[ACTION_NOTIFY_AFTER] !== 'boolean') {
 					action[ACTION_NOTIFY_AFTER] = this[STATE_ACTION_CONFIGS].notifyAfter;
@@ -549,7 +548,7 @@ export class BaseState {
 						this[STATE_ACTION_CONFIGS].notifyBefore;
 				}
 				// @ts-expect-error
-				action[ACTION_OWNER] = this;
+				action.__ownerState = this;
 				actions[action.name] = action;
 			}
 		}

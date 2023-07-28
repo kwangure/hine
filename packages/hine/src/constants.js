@@ -1,7 +1,5 @@
-export const ACTION_NAME = Symbol('action-name');
 export const ACTION_NOTIFY_AFTER = Symbol('action-notify-after');
 export const ACTION_NOTIFY_BEFORE = Symbol('action-notify-before');
-export const ACTION_OWNER = Symbol('action-owner');
 
 export const CONTEXT_OWNER = Symbol('context-owner');
 

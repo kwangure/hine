@@ -1,7 +1,3 @@
-export const HANDLER_NOTIFY_AFTER = Symbol('handler-notify-after');
-export const HANDLER_NOTIFY_BEFORE = Symbol('handler-notify-before');
-export const HANDLER_OWNER = Symbol('handler-owner');
-
 export const STATE_ACTIONS = Symbol('state-actions');
 export const STATE_ACTION = Symbol('state-action');
 export const STATE_ACTION_CONFIGS = Symbol('state-action-configs');

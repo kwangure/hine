@@ -1,8 +1,6 @@
 import {
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
-	HANDLER_NOTIFY_AFTER,
-	HANDLER_NOTIFY_BEFORE,
 	HANDLER_QUEUE,
 	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
@@ -28,37 +26,46 @@ export class Handler {
 	#condition = null;
 	#name;
 	/** @type {StateNode | null} */
-	#ownerState = null;
-	/** @type {StateNode | null} */
 	#transitionTo = null;
 	#type = /** @type {const} */ ('handler');
-	/** @type {boolean | undefined} */
-	[HANDLER_NOTIFY_AFTER] = undefined;
-	/** @type {boolean | undefined} */
-	[HANDLER_NOTIFY_BEFORE] = undefined;
+	/**
+	 * @private
+	 * @type {StateNode | null}
+	 */
+	__ownerState = null;
+	/**
+	 * @private
+	 * @type {boolean | undefined}
+	 */
+	__notifyBefore = undefined;
+	/**
+	 * @private
+	 * @type {boolean | undefined}
+	 */
+	__notifyAfter = undefined;
 	/**
 	 * @param {import('./types').HandlerConfig<T>} options
 	 */
 	constructor(options) {
 		if (typeof options.notifyAfter === 'boolean') {
-			this[HANDLER_NOTIFY_AFTER] = options.notifyAfter;
+			this.__notifyAfter = options.notifyAfter;
 		}
 		if (typeof options.notifyBefore === 'boolean') {
-			this[HANDLER_NOTIFY_BEFORE] = options.notifyBefore;
+			this.__notifyBefore = options.notifyBefore;
 		}
 		this.#actions = options.actions || [];
 		this.#condition = options.condition || null;
 		this.#name = options.name || '';
-		this.#ownerState = /** @type {StateNode} */ (options.ownerState);
+		this.__ownerState = /** @type {StateNode} */ (options.ownerState);
 		this.#transitionTo = options.transitionTo || null;
 	}
 	#notifyAfter() {
-		if (!this[HANDLER_NOTIFY_AFTER]) return;
-		this.#ownerState?.__callSubscribers();
+		if (!this.__notifyAfter) return;
+		this.__ownerState?.__callSubscribers();
 	}
 	#notifyBefore() {
-		if (!this[HANDLER_NOTIFY_BEFORE]) return;
-		this.#ownerState?.__callSubscribers();
+		if (!this.__notifyBefore) return;
+		this.__ownerState?.__callSubscribers();
 	}
 	get condition() {
 		return this.#condition;
@@ -68,15 +75,15 @@ export class Handler {
 	}
 	/** @type {string[]} */
 	get path() {
-		return this.#ownerState
-			? [...this.#ownerState.path, `[${this.#name}]`]
+		return this.__ownerState
+			? [...this.__ownerState.path, `[${this.#name}]`]
 			: [`[${this.#name}]`];
 	}
 	runActions() {
 		// This should never happen. Its mostly to help TypeScript out
-		if (!this.#ownerState) throw Error('Missing handler ownerState');
+		if (!this.__ownerState) throw Error('Missing handler ownerState');
 
-		this.#ownerState[STATE_HANDLER] = this;
+		this.__ownerState[STATE_HANDLER] = this;
 		this.#notifyBefore();
 		if (!this.condition || this.condition.run()) {
 			for (const action of this.#actions) {
@@ -84,10 +91,10 @@ export class Handler {
 			}
 		}
 		this.#notifyAfter();
-		this.#ownerState[STATE_HANDLER] = null;
+		this.__ownerState[STATE_HANDLER] = null;
 	}
 	runTransition() {
-		const from = this.#ownerState;
+		const from = this.__ownerState;
 		const to = this.#transitionTo;
 		// These should never happen. They're mostly to help TypeScript out
 		if (!from) throw Error('Missing handler ownerState');
@@ -139,7 +146,7 @@ export class Handler {
 		this.#notifyAfter();
 	}
 	*stepTransition() {
-		const from = this.#ownerState;
+		const from = this.__ownerState;
 		const to = this.#transitionTo;
 		// These should never happen. They're mostly to help TypeScript out
 		if (!from) throw Error('Missing handler ownerState');

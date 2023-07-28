@@ -9,9 +9,6 @@ import {
 	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
-	STATE_ACTION_CONFIGS,
-	STATE_CONDITION,
-	STATE_CONDITION_CONFIGS,
 	STATE_HANDLER,
 	STATE_NEXT_EVENTS,
 	STATE_PARENT,
@@ -56,8 +53,6 @@ export class BaseState {
 	/** @type {Handler[]} */
 	#always = [];
 	#alwaysConfig;
-	/** @type {import('./condition.js').Condition | null} */
-	#condition = null;
 	/**
 	 * Condition configuration from the user that is propagated to children
 	 * @type {Omit<import('./types.js').ConditionConfig, 'run'>}
@@ -90,6 +85,12 @@ export class BaseState {
 	#onConfig;
 	/** @type {CompoundState | null} */
 	#parent = null;
+	/**
+	 * @private
+	 * @type {import('./condition.js').Condition | null}
+	 */
+	__condition = null;
+
 	/**
 	 * @private
 	 * @type {import('./action.js').Action | null}
@@ -239,6 +240,25 @@ export class BaseState {
 		});
 	}
 	/**
+	 * @private
+	 * @returns {{
+	 *     notifyBefore: boolean;
+	 *     notifyAfter: boolean;
+	 * }}
+	 */
+	get __actionConfig() {
+		return {
+			notifyAfter:
+				this.#actionConfig.notifyAfter ??
+				this.#parent?.__actionConfig.notifyAfter ??
+				false,
+			notifyBefore:
+				this.#actionConfig.notifyBefore ??
+				this.#parent?.__actionConfig.notifyBefore ??
+				false,
+		};
+	}
+	/**
 	 * @returns {Record<string, import('./action.js').Action>}
 	 */
 	get __actions() {
@@ -253,12 +273,12 @@ export class BaseState {
 				// @ts-expect-error
 				if (typeof action.__notifyAfter !== 'boolean') {
 					// @ts-expect-error
-					action.__notifyAfter = this[STATE_ACTION_CONFIGS].notifyAfter;
+					action.__notifyAfter = this.__actionConfig.notifyAfter;
 				}
 				// @ts-expect-error
 				if (typeof action.__notifyBefore !== 'boolean') {
 					// @ts-expect-error
-					action.__notifyBefore = this[STATE_ACTION_CONFIGS].notifyBefore;
+					action.__notifyBefore = this.__actionConfig.notifyBefore;
 				}
 				// @ts-expect-error
 				action.__ownerState = this;
@@ -275,6 +295,24 @@ export class BaseState {
 		this.#parent?.__callSubscribers();
 	}
 	/**
+	 * @returns {{
+	 *     notifyBefore: boolean;
+	 *     notifyAfter: boolean;
+	 * }}
+	 */
+	get __conditionConfig() {
+		return {
+			notifyAfter:
+				this.#conditionConfig.notifyAfter ??
+				this.#parent?.__conditionConfig.notifyAfter ??
+				false,
+			notifyBefore:
+				this.#conditionConfig.notifyBefore ??
+				this.#parent?.__conditionConfig.notifyBefore ??
+				false,
+		};
+	}
+	/**
 	 * @returns {Record<string, import('./condition').Condition>}
 	 */
 	get __conditions() {
@@ -289,12 +327,12 @@ export class BaseState {
 				// @ts-expect-error
 				if (typeof condition.__notifyAfter !== 'boolean') {
 					// @ts-expect-error
-					condition.__notifyAfter = this[STATE_CONDITION_CONFIGS].notifyAfter;
+					condition.__notifyAfter = this.__conditionConfig.notifyAfter;
 				}
 				// @ts-expect-error
 				if (typeof condition.__notifyBefore !== 'boolean') {
 					// @ts-expect-error
-					condition.__notifyBefore = this[STATE_CONDITION_CONFIGS].notifyBefore;
+					condition.__notifyBefore = this.__conditionConfig.notifyBefore;
 				}
 				// @ts-expect-error
 				condition.__ownerState = this;
@@ -348,7 +386,7 @@ export class BaseState {
 		return false;
 	}
 	get condition() {
-		return this.#condition;
+		return this.__condition;
 	}
 	get conditions() {
 		return this.__conditions;
@@ -405,7 +443,7 @@ export class BaseState {
 		return Boolean(
 			path === this.__name ||
 				(this.__action && path === this.__action.path.join('.')) ||
-				(this.#condition && path === this.#condition.path.join('.')) ||
+				(this.__condition && path === this.__condition.path.join('.')) ||
 				(this.#handler && path === this.#handler.path.join('.')),
 		);
 	}
@@ -588,49 +626,6 @@ export class BaseState {
 			this.#exit.push(this.#resolveHandler(handler, String(index)));
 		}
 	}
-	/**
-	 * @returns {{
-	 *     notifyBefore: boolean;
-	 *     notifyAfter: boolean;
-	 * }}
-	 */
-	get [STATE_ACTION_CONFIGS]() {
-		return {
-			notifyAfter:
-				this.#actionConfig.notifyAfter ??
-				this.#parent?.[STATE_ACTION_CONFIGS].notifyAfter ??
-				false,
-			notifyBefore:
-				this.#actionConfig.notifyBefore ??
-				this.#parent?.[STATE_ACTION_CONFIGS].notifyBefore ??
-				false,
-		};
-	}
-	/**
-	 * @returns {{
-	 *     notifyBefore: boolean;
-	 *     notifyAfter: boolean;
-	 * }}
-	 */
-	get [STATE_CONDITION_CONFIGS]() {
-		return {
-			notifyAfter:
-				this.#conditionConfig.notifyAfter ??
-				this.#parent?.[STATE_CONDITION_CONFIGS].notifyAfter ??
-				false,
-			notifyBefore:
-				this.#conditionConfig.notifyBefore ??
-				this.#parent?.[STATE_CONDITION_CONFIGS].notifyBefore ??
-				false,
-		};
-	}
-	/**
-	 * @param {import('./condition.js').Condition | null} value
-	 */
-	set [STATE_CONDITION](value) {
-		this.#condition = value;
-	}
-
 	/**
 	 * @param {import('./handler').Handler | null} value
 	 */

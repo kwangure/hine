@@ -1,5 +1,3 @@
-import { STATE_CONDITION } from './constants.js';
-
 /**
  * @typedef {import('./types').StateNode} StateNode
  */
@@ -77,11 +75,13 @@ export class Condition {
 	}
 	run() {
 		if (!this.__ownerState) return false;
-		this.__ownerState[STATE_CONDITION] = this;
+		// @ts-expect-error
+		this.__ownerState.__condition = this;
 		this.#notifyBefore();
 		const result = this.#run.call(undefined, this);
 		this.#notifyAfter();
-		this.__ownerState[STATE_CONDITION] = null;
+		// @ts-expect-error
+		this.__ownerState.__condition = null;
 		return result;
 	}
 	toJSON() {

@@ -1,7 +1,3 @@
-export const STATE_ACTION_CONFIGS = Symbol('state-action-configs');
-export const STATE_ACTIVE = Symbol('state-active');
-export const STATE_CONDITION = Symbol('state-condition');
-export const STATE_CONDITION_CONFIGS = Symbol('state-condition-configs');
 export const STATE_HANDLER = Symbol('state-handler');
 export const STATE_NEXT_EVENTS = Symbol('state-next-events');
 export const STATE_PARENT = Symbol('state-parent');

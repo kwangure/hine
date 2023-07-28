@@ -5,7 +5,6 @@ import {
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
 	QUEUE_EXIT_HANDLERS,
-	STATE_ACTIVE,
 	STATE_HANDLER,
 } from './constants.js';
 
@@ -115,8 +114,9 @@ export class Handler {
 			}
 			// This should never happen. They're mostly to help TypeScript out
 			if (!from.parent) throw Error('Missing state parent');
+			// @ts-expect-error
 			// change the active nested state for parent state
-			from.parent[STATE_ACTIVE] = to;
+			from.parent.__state = to;
 			// set initial state from transitionTo to leaves
 			to[INITIALIZE]();
 
@@ -173,8 +173,9 @@ export class Handler {
 			}
 			// This should never happen. They're mostly to help TypeScript out
 			if (!from.parent) throw Error('Missing state parent');
+			// @ts-expect-error
 			// change the active nested state for parent state
-			from.parent[STATE_ACTIVE] = to;
+			from.parent.__state = to;
 			// set initial state from transitionTo to leaves
 			to[INITIALIZE]();
 

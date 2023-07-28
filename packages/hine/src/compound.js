@@ -7,7 +7,6 @@ import {
 	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
-	STATE_ACTIVE,
 	STATE_NEXT_EVENTS,
 	STATE_PARENT,
 	STATE_STATES,
@@ -21,12 +20,14 @@ import { BaseState } from './base.js';
 export class CompoundState extends BaseState {
 	/** @type {StateNode | null} */
 	#initial = null;
-	/** @type {StateNode | null} */
-	#state = null;
 	/** @type {Map<string, StateNode>} */
 	#states = new Map();
 	#type = /** @type {const} */ ('compound');
-
+	/**
+	 * @private
+	 * @type {StateNode | null}
+	 */
+	__state = null;
 	/**
 	 * @param {import('./types').CompoundStateConfig} stateConfig
 	 */
@@ -56,20 +57,22 @@ export class CompoundState extends BaseState {
 		return (
 			super.canTransitionTo(path) ||
 			(path.startsWith(`${this.name}.`) &&
-				Boolean(this.#state?.canTransitionTo(path.slice(this.name.length + 1))))
+				Boolean(
+					this.__state?.canTransitionTo(path.slice(this.name.length + 1)),
+				))
 		);
 	}
 	/** @param {string} name */
 	isActiveEvent(name) {
 		// No active child state implies state is not initialized
-		if (!this.#state) {
+		if (!this.__state) {
 			throw Error(
 				"Attempted to call 'state.isActiveEvent()' before calling 'state.start()'",
 			);
 		}
 		// @ts-expect-error
 		if (name in this.__onHandler && this.__onHandler[name].length) return true;
-		if (this.#state.isActiveEvent(name)) return true;
+		if (this.__state.isActiveEvent(name)) return true;
 		return false;
 	}
 	/**
@@ -77,12 +80,12 @@ export class CompoundState extends BaseState {
 	 * @return {boolean}
 	 */
 	matches(path) {
-		if (!this.#state) return false;
+		if (!this.__state) return false;
 
 		return (
 			super.matches(path) ||
 			(path.startsWith(`${this.name}.`) &&
-				this.#state.matches(path.slice(this.name.length + 1)))
+				this.__state.matches(path.slice(this.name.length + 1)))
 		);
 	}
 	/** @param {import('./types.js').CompoundMonitorConfig} config */
@@ -106,7 +109,7 @@ export class CompoundState extends BaseState {
 		}
 	}
 	get state() {
-		return this.#state;
+		return this.__state;
 	}
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
@@ -143,29 +146,29 @@ export class CompoundState extends BaseState {
 		this.state?.[EXECUTE_HANDLERS_ROOT_FIRST]();
 	}
 	[INITIALIZE]() {
-		this.#state = this.#initial;
+		this.__state = this.#initial;
 		for (const state of this.#states.values()) {
 			state[INITIALIZE]();
 		}
 		super[INITIALIZE]();
 	}
 	[QUEUE_ALWAYS_HANDLERS]() {
-		this.#state?.[QUEUE_ALWAYS_HANDLERS]();
+		this.__state?.[QUEUE_ALWAYS_HANDLERS]();
 		super[QUEUE_ALWAYS_HANDLERS]();
 	}
 	[QUEUE_ENTRY_HANDLERS]() {
 		super[QUEUE_ENTRY_HANDLERS]();
-		this.#state?.[QUEUE_ENTRY_HANDLERS]();
+		this.__state?.[QUEUE_ENTRY_HANDLERS]();
 	}
 	[QUEUE_EXIT_HANDLERS]() {
-		this.#state?.[QUEUE_EXIT_HANDLERS]();
+		this.__state?.[QUEUE_EXIT_HANDLERS]();
 		super[QUEUE_EXIT_HANDLERS]();
 	}
 	/**
 	 * @param {string} eventName
 	 */
 	[QUEUE_ON_HANDLERS](eventName) {
-		this.#state?.[QUEUE_ON_HANDLERS](eventName);
+		this.__state?.[QUEUE_ON_HANDLERS](eventName);
 		super[QUEUE_ON_HANDLERS](eventName);
 	}
 	[RESOLVE_CONFIG]() {
@@ -180,16 +183,12 @@ export class CompoundState extends BaseState {
 			state[RESOLVE_CONFIG]();
 		}
 	}
-	/** @param {StateNode} value */
-	set [STATE_ACTIVE](value) {
-		this.#state = value;
-	}
 	/**
 	 * @param {Set<string>} stateTreeEvents
 	 */
 	[STATE_NEXT_EVENTS](stateTreeEvents) {
 		// No state, implies the machine is not intialized, return zero events
-		if (!this.#state) return;
+		if (!this.__state) return;
 
 		// @ts-expect-error
 		for (const [name, handlers] of Object.entries(this.__onHandler)) {
@@ -198,7 +197,7 @@ export class CompoundState extends BaseState {
 			}
 		}
 
-		this.#state[STATE_NEXT_EVENTS](stateTreeEvents);
+		this.__state[STATE_NEXT_EVENTS](stateTreeEvents);
 	}
 	get [STATE_STATES]() {
 		return this.#states;

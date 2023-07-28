@@ -1340,8 +1340,8 @@ describe('actions', () => {
 		state.monitor({
 			actions: {
 				action: new Action({
-					run({ value }) {
-						expect(value).toBe('my-value');
+					run({ event }) {
+						expect(event?.value).toBe('my-value');
 					},
 				}),
 			},

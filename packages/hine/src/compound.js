@@ -137,19 +137,13 @@ export class CompoundState extends BaseState {
 	get type() {
 		return this.#type;
 	}
-	/**
-	 * @param {any} value
-	 */
-	[EXECUTE_HANDLERS_LEAF_FIRST](value) {
-		this.state?.[EXECUTE_HANDLERS_LEAF_FIRST](value);
-		super[EXECUTE_HANDLERS_LEAF_FIRST](value);
+	[EXECUTE_HANDLERS_LEAF_FIRST]() {
+		this.state?.[EXECUTE_HANDLERS_LEAF_FIRST]();
+		super[EXECUTE_HANDLERS_LEAF_FIRST]();
 	}
-	/**
-	 * @param {any} value
-	 */
-	[EXECUTE_HANDLERS_ROOT_FIRST](value) {
-		super[EXECUTE_HANDLERS_ROOT_FIRST](value);
-		this.state?.[EXECUTE_HANDLERS_ROOT_FIRST](value);
+	[EXECUTE_HANDLERS_ROOT_FIRST]() {
+		super[EXECUTE_HANDLERS_ROOT_FIRST]();
+		this.state?.[EXECUTE_HANDLERS_ROOT_FIRST]();
 	}
 	[INITIALIZE]() {
 		this.#state = this.#initial;

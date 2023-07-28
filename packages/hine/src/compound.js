@@ -2,7 +2,6 @@ import {
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
 	INITIALIZE,
-	ON_HANDLER,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
 	QUEUE_EXIT_HANDLERS,
@@ -70,7 +69,8 @@ export class CompoundState extends BaseState {
 				"Attempted to call 'state.isActiveEvent()' before calling 'state.start()'",
 			);
 		}
-		if (name in this[ON_HANDLER] && this[ON_HANDLER][name].length) return true;
+		// @ts-expect-error
+		if (name in this.__onHandler && this.__onHandler[name].length) return true;
 		if (this.#state.isActiveEvent(name)) return true;
 		return false;
 	}
@@ -194,7 +194,8 @@ export class CompoundState extends BaseState {
 		// No state, implies the machine is not intialized, return zero events
 		if (!this.#state) return;
 
-		for (const [name, handlers] of Object.entries(this[ON_HANDLER])) {
+		// @ts-expect-error
+		for (const [name, handlers] of Object.entries(this.__onHandler)) {
 			if (handlers.length) {
 				stateTreeEvents.add(name);
 			}

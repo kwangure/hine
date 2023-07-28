@@ -15,7 +15,6 @@ import {
 	FILTER_HANDLERS,
 	HANDLER_QUEUE,
 	INITIALIZE,
-	ON_HANDLER,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
 	QUEUE_EXIT_HANDLERS,
@@ -114,8 +113,11 @@ export class BaseState {
 
 	/** @type {Handler[]} */
 	[HANDLER_QUEUE] = [];
-	/** @type {Record<string, Handler[]>} */
-	[ON_HANDLER] = {};
+	/**
+	 * @private
+	 * @type {Record<string, Handler[]>}
+	 */
+	__onHandler = {};
 	/** @type {Set<(arg: BaseState) => any>} */
 	[STATE_SUBSCRIBERS] = new Set();
 
@@ -257,7 +259,7 @@ export class BaseState {
 	}
 	/** @param {string} path */
 	canTransitionTo(path) {
-		for (const handlers of Object.values(this[ON_HANDLER])) {
+		for (const handlers of Object.values(this.__onHandler)) {
 			for (const handler of handlers) {
 				if (handler.transitionTo?.name === path) return true;
 			}
@@ -311,7 +313,7 @@ export class BaseState {
 				"Attempted to call 'state.isActiveEvent()' before calling 'state.start()'",
 			);
 		}
-		return name in this[ON_HANDLER] && Boolean(this[ON_HANDLER][name].length);
+		return name in this.__onHandler && Boolean(this.__onHandler[name].length);
 	}
 	/**
 	 * @param {string} path
@@ -480,8 +482,8 @@ export class BaseState {
 	 * @param {string} eventName
 	 */
 	[QUEUE_ON_HANDLERS](eventName) {
-		if (Object.hasOwn(this[ON_HANDLER], eventName)) {
-			this[HANDLER_QUEUE].push(...this[ON_HANDLER][eventName]);
+		if (Object.hasOwn(this.__onHandler, eventName)) {
+			this[HANDLER_QUEUE].push(...this.__onHandler[eventName]);
 		}
 	}
 	[RESOLVE_CONFIG]() {
@@ -498,7 +500,7 @@ export class BaseState {
 		}
 
 		for (const [event, handlers] of Object.entries(this.#onConfig)) {
-			this[ON_HANDLER][event] = handlers.map((handler, i) =>
+			this.__onHandler[event] = handlers.map((handler, i) =>
 				this.#resolveHandler(handler, String(i)),
 			);
 		}
@@ -624,7 +626,7 @@ export class BaseState {
 	 * @param {Set<string>} stateTreeEvents
 	 */
 	[STATE_NEXT_EVENTS](stateTreeEvents) {
-		for (const [name, handlers] of Object.entries(this[ON_HANDLER])) {
+		for (const [name, handlers] of Object.entries(this.__onHandler)) {
 			if (handlers.length) {
 				stateTreeEvents.add(name);
 			}
@@ -637,7 +639,7 @@ export class BaseState {
 		this.#parent = value;
 	}
 	[TO_JSON]() {
-		const onEntries = Object.entries(this[ON_HANDLER]);
+		const onEntries = Object.entries(this.__onHandler);
 		/** @type {Record<string, import('./types.js').HandlerJSON[]>} */
 		const on = {};
 		for (const [event, handlers] of onEntries) {

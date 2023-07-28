@@ -1,4 +1,3 @@
-export const FILTER_HANDLERS = Symbol('filter-handlers');
 export const INITIALIZE = Symbol('initialize');
 export const RESOLVE_CONFIG = Symbol('resolve-config');
 

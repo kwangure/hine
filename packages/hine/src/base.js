@@ -1,5 +1,4 @@
 import {
-	FILTER_HANDLERS,
 	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
@@ -576,22 +575,6 @@ export class BaseState {
 		this.#isStepping = false;
 		this.__callSubscribers();
 		this.#event = null;
-	}
-
-	[FILTER_HANDLERS]() {
-		const queue = [];
-		for (const handler of this.__handlerQueue) {
-			if (handler.condition && !handler.condition.run()) continue;
-			if (handler.transitionTo) {
-				queue.push(/** @type {const} */ ([handler, 'stepTransition']));
-				// Handlers after the first transition are ignored
-				break;
-			} else {
-				queue.push(/** @type {const} */ ([handler, 'stepActions']));
-			}
-		}
-		this.__handlerQueue.length = 0;
-		return queue;
 	}
 	[INITIALIZE]() {
 		this.#initialized = true;

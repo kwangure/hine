@@ -12,10 +12,8 @@ import {
 	RESOLVE_CONFIG,
 	STATE_ACTION,
 	STATE_ACTION_CONFIGS,
-	STATE_ACTIONS,
 	STATE_CONDITION,
 	STATE_CONDITION_CONFIGS,
-	STATE_CONDITIONS,
 	STATE_HANDLER,
 	STATE_NEXT_EVENTS,
 	STATE_PARENT,
@@ -236,17 +234,77 @@ export class BaseState {
 			transitionTo: to,
 		});
 	}
+	/**
+	 * @returns {Record<string, import('./action.js').Action>}
+	 */
+	get __actions() {
+		const actions = this.#parent?.__actions || {};
+		for (const name in this.#actions) {
+			if (Object.hasOwn(this.#actions, name)) {
+				const action = this.#actions[name];
+				if (!action.name) {
+					// @ts-expect-error
+					action.__name = name;
+				}
+				// @ts-expect-error
+				if (typeof action.__notifyAfter !== 'boolean') {
+					// @ts-expect-error
+					action.__notifyAfter = this[STATE_ACTION_CONFIGS].notifyAfter;
+				}
+				// @ts-expect-error
+				if (typeof action.__notifyBefore !== 'boolean') {
+					// @ts-expect-error
+					action.__notifyBefore = this[STATE_ACTION_CONFIGS].notifyBefore;
+				}
+				// @ts-expect-error
+				action.__ownerState = this;
+				actions[action.name] = action;
+			}
+		}
+
+		return actions;
+	}
 	__callSubscribers() {
 		for (const subscriber of this[STATE_SUBSCRIBERS]) {
 			subscriber(this);
 		}
 		this.#parent?.__callSubscribers();
 	}
+	/**
+	 * @returns {Record<string, import('./condition').Condition>}
+	 */
+	get __conditions() {
+		const conditions = this.#parent?.__conditions || {};
+		for (const name in this.#conditions) {
+			if (Object.hasOwn(this.#conditions, name)) {
+				const condition = this.#conditions[name];
+				if (!condition.name) {
+					// @ts-expect-error
+					condition.__name = name;
+				}
+				// @ts-expect-error
+				if (typeof condition.__notifyAfter !== 'boolean') {
+					// @ts-expect-error
+					condition.__notifyAfter = this[STATE_CONDITION_CONFIGS].notifyAfter;
+				}
+				// @ts-expect-error
+				if (typeof condition.__notifyBefore !== 'boolean') {
+					// @ts-expect-error
+					condition.__notifyBefore = this[STATE_CONDITION_CONFIGS].notifyBefore;
+				}
+				// @ts-expect-error
+				condition.__ownerState = this;
+				conditions[condition.name] = condition;
+			}
+		}
+
+		return conditions;
+	}
 	get action() {
 		return this.#action;
 	}
 	get actions() {
-		return this[STATE_ACTIONS];
+		return this.__actions;
 	}
 	get activeEvents() {
 		const activeEventsNames = new Set();
@@ -266,7 +324,7 @@ export class BaseState {
 		return this.#condition;
 	}
 	get conditions() {
-		return this[STATE_CONDITIONS];
+		return this.__conditions;
 	}
 	get context() {
 		if (!this.#initialized) {
@@ -477,8 +535,8 @@ export class BaseState {
 		}
 	}
 	[RESOLVE_CONFIG]() {
-		this.#allActions = this[STATE_ACTIONS];
-		this.#allConditions = this[STATE_CONDITIONS];
+		this.#allActions = this.__actions;
+		this.#allConditions = this.__conditions;
 
 		if (this.#context) {
 			// @ts-expect-error
@@ -525,36 +583,7 @@ export class BaseState {
 	set [STATE_ACTION](value) {
 		this.#action = value;
 	}
-	/**
-	 * @returns {Record<string, import('./action.js').Action>}
-	 */
-	get [STATE_ACTIONS]() {
-		const actions = this.#parent?.[STATE_ACTIONS] || {};
-		for (const name in this.#actions) {
-			if (Object.hasOwn(this.#actions, name)) {
-				const action = this.#actions[name];
-				if (!action.name) {
-					// @ts-expect-error
-					action.__name = name;
-				}
-				// @ts-expect-error
-				if (typeof action.__notifyAfter !== 'boolean') {
-					// @ts-expect-error
-					action.__notifyAfter = this[STATE_ACTION_CONFIGS].notifyAfter;
-				}
-				// @ts-expect-error
-				if (typeof action.__notifyBefore !== 'boolean') {
-					// @ts-expect-error
-					action.__notifyBefore = this[STATE_ACTION_CONFIGS].notifyBefore;
-				}
-				// @ts-expect-error
-				action.__ownerState = this;
-				actions[action.name] = action;
-			}
-		}
 
-		return actions;
-	}
 	/**
 	 * @returns {{
 	 *     notifyBefore: boolean;
@@ -579,36 +608,7 @@ export class BaseState {
 	set [STATE_CONDITION](value) {
 		this.#condition = value;
 	}
-	/**
-	 * @returns {Record<string, import('./condition').Condition>}
-	 */
-	get [STATE_CONDITIONS]() {
-		const conditions = this.#parent?.[STATE_CONDITIONS] || {};
-		for (const name in this.#conditions) {
-			if (Object.hasOwn(this.#conditions, name)) {
-				const condition = this.#conditions[name];
-				if (!condition.name) {
-					// @ts-expect-error
-					condition.__name = name;
-				}
-				// @ts-expect-error
-				if (typeof condition.__notifyAfter !== 'boolean') {
-					// @ts-expect-error
-					condition.__notifyAfter = this[STATE_CONDITION_CONFIGS].notifyAfter;
-				}
-				// @ts-expect-error
-				if (typeof condition.__notifyBefore !== 'boolean') {
-					// @ts-expect-error
-					condition.__notifyBefore = this[STATE_CONDITION_CONFIGS].notifyBefore;
-				}
-				// @ts-expect-error
-				condition.__ownerState = this;
-				conditions[condition.name] = condition;
-			}
-		}
 
-		return conditions;
-	}
 	/**
 	 * @param {import('./handler').Handler | null} value
 	 */

@@ -1,5 +1,4 @@
 import {
-	CALL_SUBSCRIBERS,
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
 	HANDLER_NOTIFY_AFTER,
@@ -55,11 +54,11 @@ export class Handler {
 	}
 	#notifyAfter() {
 		if (!this[HANDLER_NOTIFY_AFTER]) return;
-		this.#ownerState?.[CALL_SUBSCRIBERS]();
+		this.#ownerState?.__callSubscribers();
 	}
 	#notifyBefore() {
 		if (!this[HANDLER_NOTIFY_BEFORE]) return;
-		this.#ownerState?.[CALL_SUBSCRIBERS]();
+		this.#ownerState?.__callSubscribers();
 	}
 	get condition() {
 		return this.#condition;

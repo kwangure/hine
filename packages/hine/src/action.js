@@ -3,7 +3,6 @@ import {
 	ACTION_NOTIFY_AFTER,
 	ACTION_NOTIFY_BEFORE,
 	ACTION_OWNER,
-	CALL_SUBSCRIBERS,
 	STATE_ACTION,
 } from './constants.js';
 
@@ -39,11 +38,11 @@ export class Action {
 	}
 	#notifyAfter() {
 		if (!this[ACTION_NOTIFY_AFTER]) return;
-		this.#ownerState?.[CALL_SUBSCRIBERS]();
+		this.#ownerState?.__callSubscribers();
 	}
 	#notifyBefore() {
 		if (!this[ACTION_NOTIFY_BEFORE]) return;
-		this.#ownerState?.[CALL_SUBSCRIBERS]();
+		this.#ownerState?.__callSubscribers();
 	}
 	get event() {
 		if (!this.#ownerState) {

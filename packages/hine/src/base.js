@@ -3,7 +3,6 @@ import {
 	ACTION_NOTIFY_AFTER,
 	ACTION_NOTIFY_BEFORE,
 	ACTION_OWNER,
-	CALL_SUBSCRIBERS,
 	CONTEXT_OWNER,
 	EXECUTE_HANDLERS,
 	EXECUTE_HANDLERS_LEAF_FIRST,
@@ -242,6 +241,12 @@ export class BaseState {
 			transitionTo: to,
 		});
 	}
+	__callSubscribers() {
+		for (const subscriber of this[STATE_SUBSCRIBERS]) {
+			subscriber(this);
+		}
+		this.#parent?.__callSubscribers();
+	}
 	get action() {
 		return this.#action;
 	}
@@ -292,7 +297,7 @@ export class BaseState {
 		this[QUEUE_ALWAYS_HANDLERS]();
 		this[EXECUTE_HANDLERS_LEAF_FIRST]();
 
-		this[CALL_SUBSCRIBERS]();
+		this.__callSubscribers();
 		this.#event = null;
 	}
 	/** @returns {StateEvent | null} */
@@ -386,7 +391,7 @@ export class BaseState {
 		this[EXECUTE_HANDLERS_ROOT_FIRST]();
 		this[QUEUE_ALWAYS_HANDLERS]();
 		this[EXECUTE_HANDLERS_ROOT_FIRST]();
-		this[CALL_SUBSCRIBERS]();
+		this.__callSubscribers();
 		this.#event = null;
 
 		return this;
@@ -421,14 +426,8 @@ export class BaseState {
 
 		this[HANDLER_QUEUE].length = 0;
 		this.#isStepping = false;
-		this[CALL_SUBSCRIBERS]();
+		this.__callSubscribers();
 		this.#event = null;
-	}
-	[CALL_SUBSCRIBERS]() {
-		for (const subscriber of this[STATE_SUBSCRIBERS]) {
-			subscriber(this);
-		}
-		this.#parent?.[CALL_SUBSCRIBERS]();
 	}
 	[EXECUTE_HANDLERS_LEAF_FIRST]() {
 		this[EXECUTE_HANDLERS]();

@@ -1,4 +1,4 @@
-import { CALL_SUBSCRIBERS, STATE_CONDITION } from './constants.js';
+import { STATE_CONDITION } from './constants.js';
 
 /**
  * @typedef {import('./types').StateNode} StateNode
@@ -42,11 +42,11 @@ export class Condition {
 	}
 	#notifyAfter() {
 		if (!this.__notifyAfter) return;
-		this.__ownerState?.[CALL_SUBSCRIBERS]();
+		this.__ownerState?.__callSubscribers();
 	}
 	#notifyBefore() {
 		if (!this.__notifyBefore) return;
-		this.__ownerState?.[CALL_SUBSCRIBERS]();
+		this.__ownerState?.__callSubscribers();
 	}
 	get event() {
 		if (!this.__ownerState) {

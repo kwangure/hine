@@ -51,10 +51,9 @@ export class Condition {
 	}
 	get event() {
 		if (!this.#ownerState) {
+			const path = this.path.join('.');
 			throw Error(
-				`Attempted to read condition.event in '${
-					this.#name
-				}' before calling state.start().`,
+				`Attempted to read 'condition.event' at '${path}' before calling 'state.start()'.`,
 			);
 		}
 		return this.#ownerState?.event;

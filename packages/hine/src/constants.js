@@ -7,7 +7,6 @@ export const STATE_HANDLER = Symbol('state-handler');
 export const STATE_NEXT_EVENTS = Symbol('state-next-events');
 export const STATE_PARENT = Symbol('state-parent');
 export const STATE_STATES = Symbol('state-states');
-export const STATE_SUBSCRIBERS = Symbol('state-subscribers');
 
 export const EXECUTE_HANDLERS = Symbol('execute-handlers');
 export const EXECUTE_HANDLERS_LEAF_FIRST = Symbol('execute-handlers-leaf');

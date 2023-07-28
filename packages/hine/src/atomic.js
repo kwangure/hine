@@ -1,16 +1,16 @@
-import { STATE_SUBSCRIBERS, TO_JSON } from './constants.js';
 import { BaseState } from './base.js';
+import { TO_JSON } from './constants.js';
 
 export class AtomicState extends BaseState {
 	#type = /** @type {const} */ ('atomic');
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
 		fn(this);
-		this[STATE_SUBSCRIBERS].add(/** @type {(arg: BaseState) => any} */ (fn));
+		// @ts-expect-error
+		this.__subscribers.add(/** @type {(arg: BaseState) => any} */ (fn));
 		return () => {
-			this[STATE_SUBSCRIBERS].delete(
-				/** @type {(arg: BaseState) => any} */ (fn),
-			);
+			// @ts-expect-error
+			this.__subscribers.delete(/** @type {(arg: BaseState) => any} */ (fn));
 		};
 	}
 	toJSON() {

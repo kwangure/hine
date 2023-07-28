@@ -17,7 +17,6 @@ import {
 	STATE_NEXT_EVENTS,
 	STATE_PARENT,
 	STATE_STATES,
-	STATE_SUBSCRIBERS,
 	TO_JSON,
 } from './constants.js';
 import { Context } from './context.js';
@@ -107,8 +106,11 @@ export class BaseState {
 	 * @type {Record<string, Handler[]>}
 	 */
 	__onHandler = {};
-	/** @type {Set<(arg: BaseState) => any>} */
-	[STATE_SUBSCRIBERS] = new Set();
+	/**
+	 * @private
+	 * @type {Set<(arg: BaseState) => any>}
+	 */
+	__subscribers = new Set();
 
 	/**
 	 * @param {import('./types.js').AtomicStateConfig} [stateConfig]
@@ -266,7 +268,7 @@ export class BaseState {
 		return actions;
 	}
 	__callSubscribers() {
-		for (const subscriber of this[STATE_SUBSCRIBERS]) {
+		for (const subscriber of this.__subscribers) {
 			subscriber(this);
 		}
 		this.#parent?.__callSubscribers();

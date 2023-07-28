@@ -11,7 +11,6 @@ import {
 	STATE_NEXT_EVENTS,
 	STATE_PARENT,
 	STATE_STATES,
-	STATE_SUBSCRIBERS,
 	TO_JSON,
 } from './constants.js';
 import { BaseState } from './base.js';
@@ -113,11 +112,11 @@ export class CompoundState extends BaseState {
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
 		fn(this);
-		this[STATE_SUBSCRIBERS].add(/** @type {(arg: BaseState) => any} */ (fn));
+		// @ts-expect-error
+		this.__subscribers.add(/** @type {(arg: BaseState) => any} */ (fn));
 		return () => {
-			this[STATE_SUBSCRIBERS].delete(
-				/** @type {(arg: BaseState) => any} */ (fn),
-			);
+			// @ts-expect-error
+			this.__subscribers.delete(/** @type {(arg: BaseState) => any} */ (fn));
 		};
 	}
 	toJSON() {

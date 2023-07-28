@@ -11,9 +11,6 @@ export const HANDLER_OWNER = Symbol('handler-owner');
 
 export const CALL_SUBSCRIBERS = Symbol('call-subscribers');
 
-export const CONDITION_NAME = Symbol('condition-name');
-export const CONDITION_OWNER = Symbol('condition-owner');
-
 export const STATE_ACTIONS = Symbol('state-actions');
 export const STATE_ACTION = Symbol('state-action');
 export const STATE_ACTION_CONFIGS = Symbol('state-action-configs');

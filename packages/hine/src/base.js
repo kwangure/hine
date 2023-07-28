@@ -4,8 +4,6 @@ import {
 	ACTION_NOTIFY_BEFORE,
 	ACTION_OWNER,
 	CALL_SUBSCRIBERS,
-	CONDITION_NAME,
-	CONDITION_OWNER,
 	CONTEXT_OWNER,
 	EXECUTE_HANDLERS,
 	EXECUTE_HANDLERS_LEAF_FIRST,
@@ -592,7 +590,8 @@ export class BaseState {
 			if (Object.hasOwn(this.#conditions, name)) {
 				const condition = this.#conditions[name];
 				if (!condition.name) {
-					condition[CONDITION_NAME] = name;
+					// @ts-expect-error
+					condition.__name = name;
 				}
 				// @ts-expect-error
 				if (typeof condition.__notifyAfter !== 'boolean') {
@@ -604,8 +603,8 @@ export class BaseState {
 					// @ts-expect-error
 					condition.__notifyBefore = this[STATE_CONDITION_CONFIGS].notifyBefore;
 				}
-				// @ts-ignore
-				condition[CONDITION_OWNER] = this;
+				// @ts-expect-error
+				condition.__ownerState = this;
 				conditions[condition.name] = condition;
 			}
 		}

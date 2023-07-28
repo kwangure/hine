@@ -1,5 +1,4 @@
 import {
-	CONTEXT_OWNER,
 	EXECUTE_HANDLERS,
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
@@ -483,7 +482,7 @@ export class BaseState {
 
 		if (this.#context) {
 			// @ts-expect-error
-			this.#context[CONTEXT_OWNER] = this;
+			this.#context.__ownerState = this;
 		}
 
 		for (const [index, handler] of this.#alwaysConfig.entries()) {

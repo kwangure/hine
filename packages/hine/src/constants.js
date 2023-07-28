@@ -1,4 +1,3 @@
-export const STATE_HANDLER = Symbol('state-handler');
 export const STATE_NEXT_EVENTS = Symbol('state-next-events');
 export const STATE_PARENT = Symbol('state-parent');
 export const STATE_STATES = Symbol('state-states');

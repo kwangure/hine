@@ -9,7 +9,6 @@ import {
 	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
-	STATE_HANDLER,
 	STATE_NEXT_EVENTS,
 	STATE_PARENT,
 	STATE_STATES,
@@ -74,17 +73,17 @@ export class BaseState {
 	#exit = [];
 	/** @type {ExitHandlerConfig[]} */
 	#exitConfig = [];
-	/**
-	 * The active handler that is currently executing
-	 *
-	 * @type {import('./handler').Handler | null}
-	 */
-	#handler = null;
 	#initialized = false;
 	#isStepping = false;
 	#onConfig;
 	/** @type {CompoundState | null} */
 	#parent = null;
+	/**
+	 * The active handler that is currently executing
+	 * @private
+	 * @type {import('./handler').Handler | null}
+	 */
+	__handler = null;
 	/**
 	 * @private
 	 * @type {import('./condition.js').Condition | null}
@@ -423,7 +422,7 @@ export class BaseState {
 		return this.#event ?? this.#parent?.event ?? null;
 	}
 	get handler() {
-		return this.#handler;
+		return this.__handler;
 	}
 	/** @param {string} name */
 	isActiveEvent(name) {
@@ -444,7 +443,7 @@ export class BaseState {
 			path === this.__name ||
 				(this.__action && path === this.__action.path.join('.')) ||
 				(this.__condition && path === this.__condition.path.join('.')) ||
-				(this.#handler && path === this.#handler.path.join('.')),
+				(this.__handler && path === this.__handler.path.join('.')),
 		);
 	}
 	/** @param {import('./types.js').MonitorConfig} config */
@@ -625,12 +624,6 @@ export class BaseState {
 		for (const [index, handler] of this.#exitConfig.entries()) {
 			this.#exit.push(this.#resolveHandler(handler, String(index)));
 		}
-	}
-	/**
-	 * @param {import('./handler').Handler | null} value
-	 */
-	set [STATE_HANDLER](value) {
-		this.#handler = value;
 	}
 	/**
 	 * @param {Set<string>} stateTreeEvents

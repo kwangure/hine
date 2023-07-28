@@ -5,7 +5,6 @@ import {
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
 	QUEUE_EXIT_HANDLERS,
-	STATE_HANDLER,
 } from './constants.js';
 
 /**
@@ -81,7 +80,8 @@ export class Handler {
 		// This should never happen. Its mostly to help TypeScript out
 		if (!this.__ownerState) throw Error('Missing handler ownerState');
 
-		this.__ownerState[STATE_HANDLER] = this;
+		// @ts-expect-error
+		this.__ownerState.__handler = this;
 		this.#notifyBefore();
 		if (!this.condition || this.condition.run()) {
 			for (const action of this.#actions) {
@@ -89,7 +89,8 @@ export class Handler {
 			}
 		}
 		this.#notifyAfter();
-		this.__ownerState[STATE_HANDLER] = null;
+		// @ts-expect-error
+		this.__ownerState.__handler = null;
 	}
 	runTransition() {
 		const from = this.__ownerState;
@@ -98,7 +99,8 @@ export class Handler {
 		if (!from) throw Error('Missing handler ownerState');
 		if (!to) throw Error('Missing handler transitionTo');
 
-		from[STATE_HANDLER] = this;
+		// @ts-expect-error
+		from.__handler = this;
 		this.#notifyBefore();
 		const shouldExecute = !this.condition || this.condition.run();
 		if (shouldExecute) {
@@ -127,7 +129,8 @@ export class Handler {
 			to[EXECUTE_HANDLERS_ROOT_FIRST]();
 		}
 		this.#notifyAfter();
-		from[STATE_HANDLER] = null;
+		// @ts-expect-error
+		from.__handler = null;
 		return shouldExecute;
 	}
 	*stepActions() {
@@ -152,7 +155,8 @@ export class Handler {
 		if (!from) throw Error('Missing handler ownerState');
 		if (!to) throw Error('Missing handler transitionTo');
 
-		from[STATE_HANDLER] = this;
+		// @ts-expect-error
+		from.__handler = this;
 		this.#notifyBefore();
 		let shouldExecute = false;
 		if (this.condition) {
@@ -186,7 +190,8 @@ export class Handler {
 			to[EXECUTE_HANDLERS_ROOT_FIRST]();
 		}
 		this.#notifyAfter();
-		from[STATE_HANDLER] = null;
+		// @ts-expect-error
+		from.__handler = null;
 		return shouldExecute;
 	}
 	toJSON() {

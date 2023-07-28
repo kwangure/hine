@@ -8,7 +8,6 @@ import {
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
 	STATE_ACTIVE,
-	STATE_NAME,
 	STATE_NEXT_EVENTS,
 	STATE_PARENT,
 	STATE_STATES,
@@ -44,7 +43,8 @@ export class CompoundState extends BaseState {
 
 		for (const [name, state] of states) {
 			if (!state.name) {
-				state[STATE_NAME] = name;
+				// @ts-expect-error
+				state.__name = name;
 			}
 			this.#states.set(state.name, state);
 			state[STATE_PARENT] = this;

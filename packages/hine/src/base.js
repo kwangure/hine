@@ -27,7 +27,6 @@ import {
 	STATE_CONDITION_CONFIGS,
 	STATE_CONDITIONS,
 	STATE_HANDLER,
-	STATE_NAME,
 	STATE_NEXT_EVENTS,
 	STATE_PARENT,
 	STATE_STATES,
@@ -106,10 +105,11 @@ export class BaseState {
 	#handler = null;
 	#initialized = false;
 	#isStepping = false;
-	#name = '';
 	#onConfig;
 	/** @type {CompoundState | null} */
 	#parent = null;
+	/** @private */
+	__name = '';
 
 	/** @type {Handler[]} */
 	[HANDLER_QUEUE] = [];
@@ -127,7 +127,7 @@ export class BaseState {
 	constructor(stateConfig) {
 		this.#alwaysConfig = stateConfig?.always || [];
 		this.#context = stateConfig?.context || new Context();
-		this.#name = stateConfig?.name || '';
+		this.__name = stateConfig?.name || '';
 		this.#onConfig = stateConfig?.on || {};
 
 		if (stateConfig?.entry) {
@@ -322,7 +322,7 @@ export class BaseState {
 	matches(path) {
 		if (!this.#initialized) return false;
 		return Boolean(
-			path === this.#name ||
+			path === this.__name ||
 				(this.#action && path === this.#action.path.join('.')) ||
 				(this.#condition && path === this.#condition.path.join('.')) ||
 				(this.#handler && path === this.#handler.path.join('.')),
@@ -367,14 +367,14 @@ export class BaseState {
 		}
 	}
 	get name() {
-		return this.#name;
+		return this.__name;
 	}
 	get parent() {
 		return this.#parent;
 	}
 	/** @type {string[]} */
 	get path() {
-		return this.#parent ? [...this.#parent.path, this.#name] : [this.#name];
+		return this.#parent ? [...this.#parent.path, this.__name] : [this.__name];
 	}
 	// Type return as derived class instead of `BaseState`
 	/** @returns {this} */
@@ -618,10 +618,6 @@ export class BaseState {
 	set [STATE_HANDLER](value) {
 		this.#handler = value;
 	}
-	/** @param {string} value */
-	set [STATE_NAME](value) {
-		this.#name = value;
-	}
 	/**
 	 * @param {Set<string>} stateTreeEvents
 	 */
@@ -656,7 +652,7 @@ export class BaseState {
 			exit: this.#exit.length
 				? this.#exit.map((handler) => handler.toJSON())
 				: undefined,
-			name: this.#name,
+			name: this.__name,
 			on: onEntries.length ? on : undefined,
 			path: this.path,
 		};

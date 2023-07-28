@@ -3,7 +3,6 @@ import {
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
 	FILTER_HANDLERS,
-	HANDLER_QUEUE,
 	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
@@ -98,9 +97,11 @@ export class BaseState {
 	#parent = null;
 	/** @private */
 	__name = '';
-
-	/** @type {Handler[]} */
-	[HANDLER_QUEUE] = [];
+	/**
+	 * @private
+	 * @type {Handler[]}
+	 */
+	__handlerQueue = [];
 	/**
 	 * @private
 	 * @type {Record<string, Handler[]>}
@@ -467,7 +468,7 @@ export class BaseState {
 		this[QUEUE_ON_HANDLERS](eventName);
 		this[QUEUE_ALWAYS_HANDLERS]();
 
-		for (const handler of this[HANDLER_QUEUE]) {
+		for (const handler of this.__handlerQueue) {
 			yield handler;
 			if (handler.transitionTo) {
 				const executed = yield* handler.stepTransition();
@@ -477,7 +478,7 @@ export class BaseState {
 			}
 		}
 
-		this[HANDLER_QUEUE].length = 0;
+		this.__handlerQueue.length = 0;
 		this.#isStepping = false;
 		this.__callSubscribers();
 		this.#event = null;
@@ -489,7 +490,7 @@ export class BaseState {
 		this[EXECUTE_HANDLERS]();
 	}
 	[EXECUTE_HANDLERS]() {
-		for (const handler of this[HANDLER_QUEUE]) {
+		for (const handler of this.__handlerQueue) {
 			if (handler.transitionTo) {
 				const executed = handler.runTransition();
 				if (executed) break;
@@ -497,11 +498,11 @@ export class BaseState {
 				handler.runActions();
 			}
 		}
-		this[HANDLER_QUEUE].length = 0;
+		this.__handlerQueue.length = 0;
 	}
 	[FILTER_HANDLERS]() {
 		const queue = [];
-		for (const handler of this[HANDLER_QUEUE]) {
+		for (const handler of this.__handlerQueue) {
 			if (handler.condition && !handler.condition.run()) continue;
 			if (handler.transitionTo) {
 				queue.push(/** @type {const} */ ([handler, 'stepTransition']));
@@ -511,27 +512,27 @@ export class BaseState {
 				queue.push(/** @type {const} */ ([handler, 'stepActions']));
 			}
 		}
-		this[HANDLER_QUEUE].length = 0;
+		this.__handlerQueue.length = 0;
 		return queue;
 	}
 	[INITIALIZE]() {
 		this.#initialized = true;
 	}
 	[QUEUE_ALWAYS_HANDLERS]() {
-		this[HANDLER_QUEUE].push(...this.#always);
+		this.__handlerQueue.push(...this.#always);
 	}
 	[QUEUE_ENTRY_HANDLERS]() {
-		this[HANDLER_QUEUE].push(...this.#entry);
+		this.__handlerQueue.push(...this.#entry);
 	}
 	[QUEUE_EXIT_HANDLERS]() {
-		this[HANDLER_QUEUE].push(...this.#exit);
+		this.__handlerQueue.push(...this.#exit);
 	}
 	/**
 	 * @param {string} eventName
 	 */
 	[QUEUE_ON_HANDLERS](eventName) {
 		if (Object.hasOwn(this.__onHandler, eventName)) {
-			this[HANDLER_QUEUE].push(...this.__onHandler[eventName]);
+			this.__handlerQueue.push(...this.__onHandler[eventName]);
 		}
 	}
 	[RESOLVE_CONFIG]() {

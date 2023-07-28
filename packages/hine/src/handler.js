@@ -1,7 +1,6 @@
 import {
 	EXECUTE_HANDLERS_LEAF_FIRST,
 	EXECUTE_HANDLERS_ROOT_FIRST,
-	HANDLER_QUEUE,
 	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
@@ -104,7 +103,8 @@ export class Handler {
 		this.#notifyBefore();
 		const shouldExecute = !this.condition || this.condition.run();
 		if (shouldExecute) {
-			from[HANDLER_QUEUE].length = 0;
+			// @ts-expect-error
+			from.__handlerQueue.length = 0;
 			// exit actions for the current state
 			from[QUEUE_EXIT_HANDLERS]();
 			from[EXECUTE_HANDLERS_LEAF_FIRST]();
@@ -160,7 +160,8 @@ export class Handler {
 			shouldExecute = this.condition.run();
 		}
 		if (shouldExecute) {
-			from[HANDLER_QUEUE].length = 0;
+			// @ts-expect-error
+			from.__handlerQueue.length = 0;
 			// exit actions for the current state
 			from[QUEUE_EXIT_HANDLERS]();
 			from[EXECUTE_HANDLERS_LEAF_FIRST]();

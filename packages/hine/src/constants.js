@@ -13,7 +13,6 @@ export const EXECUTE_HANDLERS = Symbol('execute-handlers');
 export const EXECUTE_HANDLERS_LEAF_FIRST = Symbol('execute-handlers-leaf');
 export const EXECUTE_HANDLERS_ROOT_FIRST = Symbol('execute-handlers-root');
 export const FILTER_HANDLERS = Symbol('filter-handlers');
-export const HANDLER_QUEUE = Symbol('handler-queue');
 export const INITIALIZE = Symbol('initialize');
 export const RESOLVE_CONFIG = Symbol('resolve-config');
 export const TO_JSON = Symbol('to-json');

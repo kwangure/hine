@@ -297,8 +297,9 @@ export class BaseState {
 		this[CALL_SUBSCRIBERS]();
 		this.#event = null;
 	}
+	/** @returns {StateEvent | null} */
 	get event() {
-		return this.#event;
+		return this.#event ?? this.#parent?.event ?? null;
 	}
 	get handler() {
 		return this.#handler;

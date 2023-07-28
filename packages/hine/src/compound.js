@@ -11,7 +11,6 @@ import {
 	STATE_NEXT_EVENTS,
 	STATE_PARENT,
 	STATE_STATES,
-	TO_JSON,
 } from './constants.js';
 import { BaseState } from './base.js';
 
@@ -125,11 +124,10 @@ export class CompoundState extends BaseState {
 		for (const [name, state] of this.#states) {
 			states[name] = state.toJSON();
 		}
-		const baseJSON = super[TO_JSON]();
 
 		return {
 			type: this.#type,
-			...baseJSON,
+			...super.__toJSON(),
 			states,
 		};
 	}

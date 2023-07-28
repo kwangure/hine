@@ -1,5 +1,4 @@
 import { BaseState } from './base.js';
-import { TO_JSON } from './constants.js';
 
 export class AtomicState extends BaseState {
 	#type = /** @type {const} */ ('atomic');
@@ -14,10 +13,9 @@ export class AtomicState extends BaseState {
 		};
 	}
 	toJSON() {
-		const baseJSON = super[TO_JSON]();
 		return {
 			type: this.#type,
-			...baseJSON,
+			...super.__toJSON(),
 		};
 	}
 	get type() {

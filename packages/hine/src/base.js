@@ -17,7 +17,6 @@ import {
 	STATE_NEXT_EVENTS,
 	STATE_PARENT,
 	STATE_STATES,
-	TO_JSON,
 } from './constants.js';
 import { Context } from './context.js';
 import { Handler } from './handler.js';
@@ -302,6 +301,29 @@ export class BaseState {
 		}
 
 		return conditions;
+	}
+	__toJSON() {
+		const onEntries = Object.entries(this.__onHandler);
+		/** @type {Record<string, import('./types.js').HandlerJSON[]>} */
+		const on = {};
+		for (const [event, handlers] of onEntries) {
+			on[event] = handlers.map((handler) => handler.toJSON());
+		}
+
+		return {
+			always: this.#always.length
+				? this.#always.map((handler) => handler.toJSON())
+				: undefined,
+			entry: this.#entry.length
+				? this.#entry.map((handler) => handler.toJSON())
+				: undefined,
+			exit: this.#exit.length
+				? this.#exit.map((handler) => handler.toJSON())
+				: undefined,
+			name: this.__name,
+			on: onEntries.length ? on : undefined,
+			path: this.path,
+		};
 	}
 	get action() {
 		return this.#action;
@@ -633,28 +655,5 @@ export class BaseState {
 	}
 	set [STATE_PARENT](value) {
 		this.#parent = value;
-	}
-	[TO_JSON]() {
-		const onEntries = Object.entries(this.__onHandler);
-		/** @type {Record<string, import('./types.js').HandlerJSON[]>} */
-		const on = {};
-		for (const [event, handlers] of onEntries) {
-			on[event] = handlers.map((handler) => handler.toJSON());
-		}
-
-		return {
-			always: this.#always.length
-				? this.#always.map((handler) => handler.toJSON())
-				: undefined,
-			entry: this.#entry.length
-				? this.#entry.map((handler) => handler.toJSON())
-				: undefined,
-			exit: this.#exit.length
-				? this.#exit.map((handler) => handler.toJSON())
-				: undefined,
-			name: this.__name,
-			on: onEntries.length ? on : undefined,
-			path: this.path,
-		};
 	}
 }

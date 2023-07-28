@@ -12,7 +12,10 @@ export class Condition {
 	/** @type {(arg: any) => boolean} */
 	#run = noop;
 	#type = /** @type {const} */ ('condition');
-	/** @type {StateNode | null} */
+	/**
+	 * @private
+	 * @type {StateNode | null}
+	 */
 	__ownerState = null;
 	/** @private */
 	__name = '';

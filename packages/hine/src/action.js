@@ -10,12 +10,13 @@ export class Action {
 	/** @type {(arg: any) => any} */
 	#run = noop;
 	#type = /** @type {const} */ ('action');
-	/** @type {StateNode | null} */
+	/**
+	 * @private
+	 * @type {StateNode | null}
+	 */
 	__ownerState = null;
-
 	/** @private */
 	__name = '';
-
 	/**
 	 * @private
 	 * @type {boolean | undefined}

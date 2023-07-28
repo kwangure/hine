@@ -5,8 +5,6 @@ import {
 	ACTION_OWNER,
 	CALL_SUBSCRIBERS,
 	CONDITION_NAME,
-	CONDITION_NOTIFY_AFTER,
-	CONDITION_NOTIFY_BEFORE,
 	CONDITION_OWNER,
 	CONTEXT_OWNER,
 	EXECUTE_HANDLERS,
@@ -596,13 +594,15 @@ export class BaseState {
 				if (!condition.name) {
 					condition[CONDITION_NAME] = name;
 				}
-				if (typeof condition[CONDITION_NOTIFY_AFTER] !== 'boolean') {
-					condition[CONDITION_NOTIFY_AFTER] =
-						this[STATE_CONDITION_CONFIGS].notifyAfter;
+				// @ts-expect-error
+				if (typeof condition.__notifyAfter !== 'boolean') {
+					// @ts-expect-error
+					condition.__notifyAfter = this[STATE_CONDITION_CONFIGS].notifyAfter;
 				}
-				if (typeof condition[CONDITION_NOTIFY_BEFORE] !== 'boolean') {
-					condition[CONDITION_NOTIFY_BEFORE] =
-						this[STATE_CONDITION_CONFIGS].notifyBefore;
+				// @ts-expect-error
+				if (typeof condition.__notifyBefore !== 'boolean') {
+					// @ts-expect-error
+					condition.__notifyBefore = this[STATE_CONDITION_CONFIGS].notifyBefore;
 				}
 				// @ts-ignore
 				condition[CONDITION_OWNER] = this;

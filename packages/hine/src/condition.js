@@ -1,8 +1,6 @@
 import {
 	CALL_SUBSCRIBERS,
 	CONDITION_NAME,
-	CONDITION_NOTIFY_AFTER,
-	CONDITION_NOTIFY_BEFORE,
 	CONDITION_OWNER,
 	STATE_CONDITION,
 } from './constants.js';
@@ -23,10 +21,16 @@ export class Condition {
 	#run = noop;
 	#type = /** @type {const} */ ('condition');
 
-	/** @type {boolean | undefined} */
-	[CONDITION_NOTIFY_AFTER] = undefined;
-	/** @type {boolean | undefined} */
-	[CONDITION_NOTIFY_BEFORE] = undefined;
+	/**
+	 * @private
+	 * @type {boolean | undefined}
+	 */
+	__notifyAfter = undefined;
+	/**
+	 * @private
+	 * @type {boolean | undefined}
+	 */
+	__notifyBefore = undefined;
 
 	/**
 	 * @param {import('./types').ConditionConfig} options
@@ -34,19 +38,19 @@ export class Condition {
 	constructor(options) {
 		this.#name = options.name || '';
 		if (typeof options.notifyAfter === 'boolean') {
-			this[CONDITION_NOTIFY_AFTER] = options.notifyAfter;
+			this.__notifyAfter = options.notifyAfter;
 		}
 		if (typeof options.notifyBefore === 'boolean') {
-			this[CONDITION_NOTIFY_BEFORE] = options.notifyBefore;
+			this.__notifyBefore = options.notifyBefore;
 		}
 		this.#run = options.run || noop;
 	}
 	#notifyAfter() {
-		if (!this[CONDITION_NOTIFY_AFTER]) return;
+		if (!this.__notifyAfter) return;
 		this.#ownerState?.[CALL_SUBSCRIBERS]();
 	}
 	#notifyBefore() {
-		if (!this[CONDITION_NOTIFY_BEFORE]) return;
+		if (!this.__notifyBefore) return;
 		this.#ownerState?.[CALL_SUBSCRIBERS]();
 	}
 	get event() {

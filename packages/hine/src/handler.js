@@ -1,6 +1,4 @@
 import {
-	EXECUTE_HANDLERS_LEAF_FIRST,
-	EXECUTE_HANDLERS_ROOT_FIRST,
 	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
@@ -108,7 +106,8 @@ export class Handler {
 			from.__handlerQueue.length = 0;
 			// exit actions for the current state
 			from[QUEUE_EXIT_HANDLERS]();
-			from[EXECUTE_HANDLERS_LEAF_FIRST]();
+			// @ts-expect-error
+			from.__executeHandlersLeafFirst();
 
 			// transition actions for the handler
 			for (const action of this.#actions) {
@@ -123,10 +122,12 @@ export class Handler {
 			to[INITIALIZE]();
 
 			to[QUEUE_ENTRY_HANDLERS]();
-			to[EXECUTE_HANDLERS_ROOT_FIRST]();
+			// @ts-expect-error
+			to.__executeHandlersRootFirst();
 
 			to[QUEUE_ALWAYS_HANDLERS]();
-			to[EXECUTE_HANDLERS_ROOT_FIRST]();
+			// @ts-expect-error
+			to.__executeHandlersRootFirst();
 		}
 		this.#notifyAfter();
 		// @ts-expect-error
@@ -168,7 +169,8 @@ export class Handler {
 			from.__handlerQueue.length = 0;
 			// exit actions for the current state
 			from[QUEUE_EXIT_HANDLERS]();
-			from[EXECUTE_HANDLERS_LEAF_FIRST]();
+			// @ts-expect-error
+			from.__executeHandlersLeafFirst();
 
 			// transition actions for the handler
 			for (const action of this.#actions) {
@@ -184,10 +186,12 @@ export class Handler {
 			to[INITIALIZE]();
 
 			to[QUEUE_ENTRY_HANDLERS]();
-			to[EXECUTE_HANDLERS_ROOT_FIRST]();
+			// @ts-expect-error
+			to.__executeHandlersRootFirst();
 
 			to[QUEUE_ALWAYS_HANDLERS]();
-			to[EXECUTE_HANDLERS_ROOT_FIRST]();
+			// @ts-expect-error
+			to.__executeHandlersRootFirst();
 		}
 		this.#notifyAfter();
 		// @ts-expect-error

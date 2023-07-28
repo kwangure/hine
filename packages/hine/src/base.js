@@ -1,7 +1,4 @@
 import {
-	EXECUTE_HANDLERS,
-	EXECUTE_HANDLERS_LEAF_FIRST,
-	EXECUTE_HANDLERS_ROOT_FIRST,
 	FILTER_HANDLERS,
 	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
@@ -344,6 +341,26 @@ export class BaseState {
 
 		return conditions;
 	}
+	/** @private */
+	__executeHandlers() {
+		for (const handler of this.__handlerQueue) {
+			if (handler.transitionTo) {
+				const executed = handler.runTransition();
+				if (executed) break;
+			} else {
+				handler.runActions();
+			}
+		}
+		this.__handlerQueue.length = 0;
+	}
+	/** @private */
+	__executeHandlersLeafFirst() {
+		this.__executeHandlers();
+	}
+	/** @private */
+	__executeHandlersRootFirst() {
+		this.__executeHandlers();
+	}
 	/**
 	 * @private
 	 * @param {Set<string>} stateTreeEvents
@@ -426,7 +443,7 @@ export class BaseState {
 		this.#event = event;
 		this[QUEUE_ON_HANDLERS](eventName);
 		this[QUEUE_ALWAYS_HANDLERS]();
-		this[EXECUTE_HANDLERS_LEAF_FIRST]();
+		this.__executeHandlersLeafFirst();
 
 		this.__callSubscribers();
 		this.#event = null;
@@ -519,9 +536,9 @@ export class BaseState {
 		const event = new StateEvent({ name: '_start' });
 		this.#event = event;
 		this[QUEUE_ENTRY_HANDLERS]();
-		this[EXECUTE_HANDLERS_ROOT_FIRST]();
+		this.__executeHandlersRootFirst();
 		this[QUEUE_ALWAYS_HANDLERS]();
-		this[EXECUTE_HANDLERS_ROOT_FIRST]();
+		this.__executeHandlersRootFirst();
 		this.__callSubscribers();
 		this.#event = null;
 
@@ -560,23 +577,7 @@ export class BaseState {
 		this.__callSubscribers();
 		this.#event = null;
 	}
-	[EXECUTE_HANDLERS_LEAF_FIRST]() {
-		this[EXECUTE_HANDLERS]();
-	}
-	[EXECUTE_HANDLERS_ROOT_FIRST]() {
-		this[EXECUTE_HANDLERS]();
-	}
-	[EXECUTE_HANDLERS]() {
-		for (const handler of this.__handlerQueue) {
-			if (handler.transitionTo) {
-				const executed = handler.runTransition();
-				if (executed) break;
-			} else {
-				handler.runActions();
-			}
-		}
-		this.__handlerQueue.length = 0;
-	}
+
 	[FILTER_HANDLERS]() {
 		const queue = [];
 		for (const handler of this.__handlerQueue) {

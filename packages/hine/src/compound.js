@@ -1,6 +1,4 @@
 import {
-	EXECUTE_HANDLERS_LEAF_FIRST,
-	EXECUTE_HANDLERS_ROOT_FIRST,
 	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
@@ -50,6 +48,20 @@ export class CompoundState extends BaseState {
 			// @ts-expect-error
 			state.__parent = this;
 		}
+	}
+	/** @private */
+	__executeHandlersLeafFirst() {
+		// @ts-expect-error
+		this.state?.__executeHandlersLeafFirst();
+		// @ts-expect-error
+		super.__executeHandlersLeafFirst();
+	}
+	/** @private */
+	__executeHandlersRootFirst() {
+		// @ts-expect-error
+		super.__executeHandlersRootFirst();
+		// @ts-expect-error
+		this.state?.__executeHandlersRootFirst();
 	}
 	/**
 	 * @private
@@ -157,14 +169,7 @@ export class CompoundState extends BaseState {
 	get type() {
 		return this.#type;
 	}
-	[EXECUTE_HANDLERS_LEAF_FIRST]() {
-		this.state?.[EXECUTE_HANDLERS_LEAF_FIRST]();
-		super[EXECUTE_HANDLERS_LEAF_FIRST]();
-	}
-	[EXECUTE_HANDLERS_ROOT_FIRST]() {
-		super[EXECUTE_HANDLERS_ROOT_FIRST]();
-		this.state?.[EXECUTE_HANDLERS_ROOT_FIRST]();
-	}
+
 	[INITIALIZE]() {
 		this.__state = this.#initial;
 		for (const state of this.__states.values()) {

@@ -45,6 +45,16 @@ export class Action {
 		if (!this[ACTION_NOTIFY_BEFORE]) return;
 		this.#ownerState?.[CALL_SUBSCRIBERS]();
 	}
+	get event() {
+		if (!this.#ownerState) {
+			throw Error(
+				`Attempted to read action.event in '${
+					this.#name
+				}' before calling state.start().`,
+			);
+		}
+		return this.#ownerState?.event;
+	}
 	get name() {
 		return this.#name;
 	}
@@ -60,16 +70,11 @@ export class Action {
 			? [...this.#ownerState.path, `(${this.#name})`]
 			: [`(${this.#name})`];
 	}
-	/**
-	 * @param {any} [value]
-	 */
-	run(value) {
+	run() {
 		if (!this.#ownerState) return;
 		this.#ownerState[STATE_ACTION] = this;
 		this.#notifyBefore();
-		this.value = value;
 		const result = this.#run.call(undefined, this);
-		this.value = undefined;
 		this.#notifyAfter();
 		this.#ownerState[STATE_ACTION] = null;
 		return result;

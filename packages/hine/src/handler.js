@@ -73,27 +73,21 @@ export class Handler {
 			? [...this.#ownerState.path, `[${this.#name}]`]
 			: [`[${this.#name}]`];
 	}
-	/**
-	 * @param {any} value
-	 */
-	runActions(value) {
+	runActions() {
 		// This should never happen. Its mostly to help TypeScript out
 		if (!this.#ownerState) throw Error('Missing handler ownerState');
 
 		this.#ownerState[STATE_HANDLER] = this;
 		this.#notifyBefore();
-		if (!this.condition || this.condition.run(value)) {
+		if (!this.condition || this.condition.run()) {
 			for (const action of this.#actions) {
-				action.run(value);
+				action.run();
 			}
 		}
 		this.#notifyAfter();
 		this.#ownerState[STATE_HANDLER] = null;
 	}
-	/**
-	 * @param {any} value
-	 */
-	runTransition(value) {
+	runTransition() {
 		const from = this.#ownerState;
 		const to = this.#transitionTo;
 		// These should never happen. They're mostly to help TypeScript out
@@ -102,16 +96,16 @@ export class Handler {
 
 		from[STATE_HANDLER] = this;
 		this.#notifyBefore();
-		const shouldExecute = !this.condition || this.condition.run(value);
+		const shouldExecute = !this.condition || this.condition.run();
 		if (shouldExecute) {
 			from[HANDLER_QUEUE].length = 0;
 			// exit actions for the current state
 			from[QUEUE_EXIT_HANDLERS]();
-			from[EXECUTE_HANDLERS_LEAF_FIRST](value);
+			from[EXECUTE_HANDLERS_LEAF_FIRST]();
 
 			// transition actions for the handler
 			for (const action of this.#actions) {
-				action.run(value);
+				action.run();
 			}
 			// This should never happen. They're mostly to help TypeScript out
 			if (!from.parent) throw Error('Missing state parent');
@@ -121,37 +115,31 @@ export class Handler {
 			to[INITIALIZE]();
 
 			to[QUEUE_ENTRY_HANDLERS]();
-			to[EXECUTE_HANDLERS_ROOT_FIRST](value);
+			to[EXECUTE_HANDLERS_ROOT_FIRST]();
 
 			to[QUEUE_ALWAYS_HANDLERS]();
-			to[EXECUTE_HANDLERS_ROOT_FIRST](value);
+			to[EXECUTE_HANDLERS_ROOT_FIRST]();
 		}
 		this.#notifyAfter();
 		from[STATE_HANDLER] = null;
 		return shouldExecute;
 	}
-	/**
-	 * @param {any} value
-	 */
-	*stepActions(value) {
+	*stepActions() {
 		this.#notifyBefore();
 		let shouldExecute = false;
 		if (this.condition) {
 			yield this.condition;
-			shouldExecute = this.condition.run(value);
+			shouldExecute = this.condition.run();
 		}
 		if (shouldExecute) {
 			for (const action of this.#actions) {
 				yield action;
-				action.run(value);
+				action.run();
 			}
 		}
 		this.#notifyAfter();
 	}
-	/**
-	 * @param {any} value
-	 */
-	*stepTransition(value) {
+	*stepTransition() {
 		const from = this.#ownerState;
 		const to = this.#transitionTo;
 		// These should never happen. They're mostly to help TypeScript out
@@ -163,18 +151,18 @@ export class Handler {
 		let shouldExecute = false;
 		if (this.condition) {
 			yield this.condition;
-			shouldExecute = this.condition.run(value);
+			shouldExecute = this.condition.run();
 		}
 		if (shouldExecute) {
 			from[HANDLER_QUEUE].length = 0;
 			// exit actions for the current state
 			from[QUEUE_EXIT_HANDLERS]();
-			from[EXECUTE_HANDLERS_LEAF_FIRST](value);
+			from[EXECUTE_HANDLERS_LEAF_FIRST]();
 
 			// transition actions for the handler
 			for (const action of this.#actions) {
 				yield action;
-				action.run(value);
+				action.run();
 			}
 			// This should never happen. They're mostly to help TypeScript out
 			if (!from.parent) throw Error('Missing state parent');
@@ -184,10 +172,10 @@ export class Handler {
 			to[INITIALIZE]();
 
 			to[QUEUE_ENTRY_HANDLERS]();
-			to[EXECUTE_HANDLERS_ROOT_FIRST](value);
+			to[EXECUTE_HANDLERS_ROOT_FIRST]();
 
 			to[QUEUE_ALWAYS_HANDLERS]();
-			to[EXECUTE_HANDLERS_ROOT_FIRST](value);
+			to[EXECUTE_HANDLERS_ROOT_FIRST]();
 		}
 		this.#notifyAfter();
 		from[STATE_HANDLER] = null;

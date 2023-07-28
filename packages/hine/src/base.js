@@ -288,11 +288,11 @@ export class BaseState {
 			throw Error('Attempted to dispatch while stepping is in progress.');
 		}
 
-		const event = new StateEvent(eventName);
+		const event = new StateEvent({ name: eventName, value });
 		this.#event = event;
 		this[QUEUE_ON_HANDLERS](eventName);
 		this[QUEUE_ALWAYS_HANDLERS]();
-		this[EXECUTE_HANDLERS_LEAF_FIRST](value);
+		this[EXECUTE_HANDLERS_LEAF_FIRST]();
 
 		this[CALL_SUBSCRIBERS]();
 		this.#event = null;
@@ -381,7 +381,7 @@ export class BaseState {
 		}
 		this[INITIALIZE]();
 
-		const event = new StateEvent('_start');
+		const event = new StateEvent({ name: '_start' });
 		this.#event = event;
 		this[QUEUE_ENTRY_HANDLERS]();
 		this[EXECUTE_HANDLERS_ROOT_FIRST]();
@@ -405,7 +405,7 @@ export class BaseState {
 		}
 
 		this.#isStepping = true;
-		const event = new StateEvent(eventName);
+		const event = new StateEvent({ name: eventName, value: eventValue });
 		this.#event = event;
 		this[QUEUE_ON_HANDLERS](eventName);
 		this[QUEUE_ALWAYS_HANDLERS]();
@@ -413,10 +413,10 @@ export class BaseState {
 		for (const handler of this[HANDLER_QUEUE]) {
 			yield handler;
 			if (handler.transitionTo) {
-				const executed = yield* handler.stepTransition(eventValue);
+				const executed = yield* handler.stepTransition();
 				if (executed) break;
 			} else {
-				yield* handler.stepActions(eventValue);
+				yield* handler.stepActions();
 			}
 		}
 
@@ -431,39 +431,27 @@ export class BaseState {
 		}
 		this.#parent?.[CALL_SUBSCRIBERS]();
 	}
-	/**
-	 * @param {any} [value]
-	 */
-	[EXECUTE_HANDLERS_LEAF_FIRST](value) {
-		this[EXECUTE_HANDLERS](value);
+	[EXECUTE_HANDLERS_LEAF_FIRST]() {
+		this[EXECUTE_HANDLERS]();
 	}
-	/**
-	 * @param {any} [value]
-	 */
-	[EXECUTE_HANDLERS_ROOT_FIRST](value) {
-		this[EXECUTE_HANDLERS](value);
+	[EXECUTE_HANDLERS_ROOT_FIRST]() {
+		this[EXECUTE_HANDLERS]();
 	}
-	/**
-	 * @param {any} [value]
-	 */
-	[EXECUTE_HANDLERS](value) {
+	[EXECUTE_HANDLERS]() {
 		for (const handler of this[HANDLER_QUEUE]) {
 			if (handler.transitionTo) {
-				const executed = handler.runTransition(value);
+				const executed = handler.runTransition();
 				if (executed) break;
 			} else {
-				handler.runActions(value);
+				handler.runActions();
 			}
 		}
 		this[HANDLER_QUEUE].length = 0;
 	}
-	/**
-	 * @param {any} [value]
-	 */
-	[FILTER_HANDLERS](value) {
+	[FILTER_HANDLERS]() {
 		const queue = [];
 		for (const handler of this[HANDLER_QUEUE]) {
-			if (handler.condition && !handler.condition.run(value)) continue;
+			if (handler.condition && !handler.condition.run()) continue;
 			if (handler.transitionTo) {
 				queue.push(/** @type {const} */ ([handler, 'stepTransition']));
 				// Handlers after the first transition are ignored

@@ -49,6 +49,16 @@ export class Condition {
 		if (!this[CONDITION_NOTIFY_BEFORE]) return;
 		this.#ownerState?.[CALL_SUBSCRIBERS]();
 	}
+	get event() {
+		if (!this.#ownerState) {
+			throw Error(
+				`Attempted to read condition.event in '${
+					this.#name
+				}' before calling state.start().`,
+			);
+		}
+		return this.#ownerState?.event;
+	}
 	get name() {
 		return this.#name;
 	}
@@ -64,16 +74,11 @@ export class Condition {
 			? [...this.#ownerState.path, `?${this.#name}`]
 			: [`?${this.#name}`];
 	}
-	/**
-	 * @param {any} [value]
-	 */
-	run(value) {
+	run() {
 		if (!this.#ownerState) return false;
 		this.#ownerState[STATE_CONDITION] = this;
 		this.#notifyBefore();
-		this.value = value;
 		const result = this.#run.call(undefined, this);
-		this.value = undefined;
 		this.#notifyAfter();
 		this.#ownerState[STATE_CONDITION] = null;
 		return result;

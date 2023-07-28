@@ -99,4 +99,9 @@ export type CompoundMonitorConfig = MonitorConfig & {
 	states?: Record<string, MonitorConfig | CompoundMonitorConfig>;
 };
 
+export type EventOptions = {
+	name: string;
+	value?: string;
+};
+
 export {};

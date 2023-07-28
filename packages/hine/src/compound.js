@@ -7,9 +7,6 @@ import {
 	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
-	STATE_NEXT_EVENTS,
-	STATE_PARENT,
-	STATE_STATES,
 } from './constants.js';
 import { BaseState } from './base.js';
 
@@ -17,12 +14,16 @@ import { BaseState } from './base.js';
  * @typedef {import('./types').StateNode} StateNode
  */
 
+// @ts-expect-error
 export class CompoundState extends BaseState {
 	/** @type {StateNode | null} */
 	#initial = null;
-	/** @type {Map<string, StateNode>} */
-	#states = new Map();
 	#type = /** @type {const} */ ('compound');
+	/**
+	 * @private
+	 * @type {Map<string, StateNode>}
+	 */
+	__states = new Map();
 	/**
 	 * @private
 	 * @type {StateNode | null}
@@ -45,9 +46,28 @@ export class CompoundState extends BaseState {
 				// @ts-expect-error
 				state.__name = name;
 			}
-			this.#states.set(state.name, state);
-			state[STATE_PARENT] = this;
+			this.__states.set(state.name, state);
+			// @ts-expect-error
+			state.__parent = this;
 		}
+	}
+	/**
+	 * @private
+	 * @param {Set<string>} stateTreeEvents
+	 */
+	__nextEvents(stateTreeEvents) {
+		// No state, implies the machine is not intialized, return zero events
+		if (!this.__state) return;
+
+		// @ts-expect-error
+		for (const [name, handlers] of Object.entries(this.__onHandler)) {
+			if (handlers.length) {
+				stateTreeEvents.add(name);
+			}
+		}
+
+		// @ts-expect-error
+		this.__state.__nextEvents(stateTreeEvents);
 	}
 	/**
 	 * @param {string} path
@@ -93,7 +113,7 @@ export class CompoundState extends BaseState {
 		super.monitor(config);
 		if (!config?.states) return;
 		for (const [name, monitorConfig] of Object.entries(config.states)) {
-			const state = this.#states.get(name);
+			const state = this.__states.get(name);
 			if (!state) {
 				const parentPath = this.parent?.path || [];
 				const pathString = parentPath.length
@@ -101,7 +121,7 @@ export class CompoundState extends BaseState {
 					: name;
 				throw Error(
 					`State '${pathString}' defined on monitor does not exist in state tree. Expected one of: ${[
-						...this.#states.keys(),
+						...this.__states.keys(),
 					].join(', ')}`,
 				);
 			}
@@ -124,7 +144,7 @@ export class CompoundState extends BaseState {
 	toJSON() {
 		/** @type {Record<string, import('./types').StateNodeJSON>} */
 		const states = {};
-		for (const [name, state] of this.#states) {
+		for (const [name, state] of this.__states) {
 			states[name] = state.toJSON();
 		}
 
@@ -147,7 +167,7 @@ export class CompoundState extends BaseState {
 	}
 	[INITIALIZE]() {
 		this.__state = this.#initial;
-		for (const state of this.#states.values()) {
+		for (const state of this.__states.values()) {
 			state[INITIALIZE]();
 		}
 		super[INITIALIZE]();
@@ -173,33 +193,14 @@ export class CompoundState extends BaseState {
 	}
 	[RESOLVE_CONFIG]() {
 		super[RESOLVE_CONFIG]();
-		const iterator = this.#states.values();
+		const iterator = this.__states.values();
 		const first = iterator.next();
 		// We know `first` is not empty but TypeScript doesn't. Help it.
 		if (first.done) throw Error('Impossible!');
 		this.#initial = first.value;
 
-		for (const state of this.#states.values()) {
+		for (const state of this.__states.values()) {
 			state[RESOLVE_CONFIG]();
 		}
-	}
-	/**
-	 * @param {Set<string>} stateTreeEvents
-	 */
-	[STATE_NEXT_EVENTS](stateTreeEvents) {
-		// No state, implies the machine is not intialized, return zero events
-		if (!this.__state) return;
-
-		// @ts-expect-error
-		for (const [name, handlers] of Object.entries(this.__onHandler)) {
-			if (handlers.length) {
-				stateTreeEvents.add(name);
-			}
-		}
-
-		this.__state[STATE_NEXT_EVENTS](stateTreeEvents);
-	}
-	get [STATE_STATES]() {
-		return this.#states;
 	}
 }

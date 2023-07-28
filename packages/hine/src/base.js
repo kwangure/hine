@@ -9,9 +9,6 @@ import {
 	QUEUE_EXIT_HANDLERS,
 	QUEUE_ON_HANDLERS,
 	RESOLVE_CONFIG,
-	STATE_NEXT_EVENTS,
-	STATE_PARENT,
-	STATE_STATES,
 } from './constants.js';
 import { Context } from './context.js';
 import { Handler } from './handler.js';
@@ -76,8 +73,11 @@ export class BaseState {
 	#initialized = false;
 	#isStepping = false;
 	#onConfig;
-	/** @type {CompoundState | null} */
-	#parent = null;
+	/**
+	 * @private
+	 * @type {CompoundState | null}
+	 */
+	__parent = null;
 	/**
 	 * The active handler that is currently executing
 	 * @private
@@ -198,7 +198,7 @@ export class BaseState {
 		const actions = this.#resolveActions(handler);
 		let to;
 		if (transitionTo) {
-			const parent = this.#parent;
+			const parent = this.__parent;
 			if (!parent) {
 				if (this.path.some((segment) => Boolean(segment))) {
 					const path = this.path.join('.');
@@ -211,19 +211,22 @@ export class BaseState {
 					);
 				}
 			}
-			to = parent[STATE_STATES].get(transitionTo);
+			// @ts-expect-error
+			to = parent.__states.get(transitionTo);
 			if (!to) {
 				if (this.path.some((segment) => Boolean(segment))) {
 					const path = this.path.join('.');
 					throw Error(
 						`State '${path}' references unknown transition target target '${transitionTo}'. Expected one of: ${[
-							...parent[STATE_STATES].keys(),
+							// @ts-expect-error
+							...parent.__states.keys(),
 						].join(', ')}.`,
 					);
 				} else {
 					throw Error(
 						`State references unknown transition target '${transitionTo}'. Expected one of: ${[
-							...parent[STATE_STATES].keys(),
+							// @ts-expect-error
+							...parent.__states.keys(),
 						].join(', ')}.`,
 					);
 				}
@@ -249,11 +252,11 @@ export class BaseState {
 		return {
 			notifyAfter:
 				this.#actionConfig.notifyAfter ??
-				this.#parent?.__actionConfig.notifyAfter ??
+				this.__parent?.__actionConfig.notifyAfter ??
 				false,
 			notifyBefore:
 				this.#actionConfig.notifyBefore ??
-				this.#parent?.__actionConfig.notifyBefore ??
+				this.__parent?.__actionConfig.notifyBefore ??
 				false,
 		};
 	}
@@ -261,7 +264,7 @@ export class BaseState {
 	 * @returns {Record<string, import('./action.js').Action>}
 	 */
 	get __actions() {
-		const actions = this.#parent?.__actions || {};
+		const actions = this.__parent?.__actions || {};
 		for (const name in this.#actions) {
 			if (Object.hasOwn(this.#actions, name)) {
 				const action = this.#actions[name];
@@ -291,7 +294,7 @@ export class BaseState {
 		for (const subscriber of this.__subscribers) {
 			subscriber(this);
 		}
-		this.#parent?.__callSubscribers();
+		this.__parent?.__callSubscribers();
 	}
 	/**
 	 * @returns {{
@@ -303,11 +306,11 @@ export class BaseState {
 		return {
 			notifyAfter:
 				this.#conditionConfig.notifyAfter ??
-				this.#parent?.__conditionConfig.notifyAfter ??
+				this.__parent?.__conditionConfig.notifyAfter ??
 				false,
 			notifyBefore:
 				this.#conditionConfig.notifyBefore ??
-				this.#parent?.__conditionConfig.notifyBefore ??
+				this.__parent?.__conditionConfig.notifyBefore ??
 				false,
 		};
 	}
@@ -315,7 +318,7 @@ export class BaseState {
 	 * @returns {Record<string, import('./condition').Condition>}
 	 */
 	get __conditions() {
-		const conditions = this.#parent?.__conditions || {};
+		const conditions = this.__parent?.__conditions || {};
 		for (const name in this.#conditions) {
 			if (Object.hasOwn(this.#conditions, name)) {
 				const condition = this.#conditions[name];
@@ -340,6 +343,17 @@ export class BaseState {
 		}
 
 		return conditions;
+	}
+	/**
+	 * @private
+	 * @param {Set<string>} stateTreeEvents
+	 */
+	__nextEvents(stateTreeEvents) {
+		for (const [name, handlers] of Object.entries(this.__onHandler)) {
+			if (handlers.length) {
+				stateTreeEvents.add(name);
+			}
+		}
 	}
 	__toJSON() {
 		const onEntries = Object.entries(this.__onHandler);
@@ -372,7 +386,7 @@ export class BaseState {
 	}
 	get activeEvents() {
 		const activeEventsNames = new Set();
-		this[STATE_NEXT_EVENTS](activeEventsNames);
+		this.__nextEvents(activeEventsNames);
 		return [...activeEventsNames];
 	}
 	/** @param {string} path */
@@ -419,7 +433,7 @@ export class BaseState {
 	}
 	/** @returns {StateEvent | null} */
 	get event() {
-		return this.#event ?? this.#parent?.event ?? null;
+		return this.#event ?? this.__parent?.event ?? null;
 	}
 	get handler() {
 		return this.__handler;
@@ -488,11 +502,11 @@ export class BaseState {
 		return this.__name;
 	}
 	get parent() {
-		return this.#parent;
+		return this.__parent;
 	}
 	/** @type {string[]} */
 	get path() {
-		return this.#parent ? [...this.#parent.path, this.__name] : [this.__name];
+		return this.__parent ? [...this.__parent.path, this.__name] : [this.__name];
 	}
 	// Type return as derived class instead of `BaseState`
 	/** @returns {this} */
@@ -624,21 +638,5 @@ export class BaseState {
 		for (const [index, handler] of this.#exitConfig.entries()) {
 			this.#exit.push(this.#resolveHandler(handler, String(index)));
 		}
-	}
-	/**
-	 * @param {Set<string>} stateTreeEvents
-	 */
-	[STATE_NEXT_EVENTS](stateTreeEvents) {
-		for (const [name, handlers] of Object.entries(this.__onHandler)) {
-			if (handlers.length) {
-				stateTreeEvents.add(name);
-			}
-		}
-	}
-	get [STATE_PARENT]() {
-		return this.#parent;
-	}
-	set [STATE_PARENT](value) {
-		this.#parent = value;
 	}
 }

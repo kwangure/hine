@@ -1,8 +1,4 @@
-import {
-	ACTION_NOTIFY_AFTER,
-	ACTION_NOTIFY_BEFORE,
-	STATE_ACTION,
-} from './constants.js';
+import { STATE_ACTION } from './constants.js';
 
 /**
  * @typedef {import('./types').StateNode} StateNode
@@ -20,29 +16,35 @@ export class Action {
 	/** @private */
 	__name = '';
 
-	/** @type {boolean | undefined} */
-	[ACTION_NOTIFY_AFTER] = undefined;
-	/** @type {boolean | undefined} */
-	[ACTION_NOTIFY_BEFORE] = undefined;
+	/**
+	 * @private
+	 * @type {boolean | undefined}
+	 */
+	__notifyAfter = undefined;
+	/**
+	 * @private
+	 * @type {boolean | undefined}
+	 */
+	__notifyBefore = undefined;
 	/**
 	 * @param {import('./types').ActionConfig} options
 	 */
 	constructor(options) {
 		this.__name = options.name || '';
 		if (typeof options.notifyAfter === 'boolean') {
-			this[ACTION_NOTIFY_AFTER] = options.notifyAfter;
+			this.__notifyAfter = options.notifyAfter;
 		}
 		if (typeof options.notifyBefore === 'boolean') {
-			this[ACTION_NOTIFY_BEFORE] = options.notifyBefore;
+			this.__notifyBefore = options.notifyBefore;
 		}
 		this.#run = options.run;
 	}
 	#notifyAfter() {
-		if (!this[ACTION_NOTIFY_AFTER]) return;
+		if (!this.__notifyAfter) return;
 		this.__ownerState?.__callSubscribers();
 	}
 	#notifyBefore() {
-		if (!this[ACTION_NOTIFY_BEFORE]) return;
+		if (!this.__notifyBefore) return;
 		this.__ownerState?.__callSubscribers();
 	}
 	get event() {

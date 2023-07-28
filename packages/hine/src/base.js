@@ -1,6 +1,4 @@
 import {
-	ACTION_NOTIFY_AFTER,
-	ACTION_NOTIFY_BEFORE,
 	CONTEXT_OWNER,
 	EXECUTE_HANDLERS,
 	EXECUTE_HANDLERS_LEAF_FIRST,
@@ -540,12 +538,15 @@ export class BaseState {
 					// @ts-expect-error
 					action.__name = name;
 				}
-				if (typeof action[ACTION_NOTIFY_AFTER] !== 'boolean') {
-					action[ACTION_NOTIFY_AFTER] = this[STATE_ACTION_CONFIGS].notifyAfter;
+				// @ts-expect-error
+				if (typeof action.__notifyAfter !== 'boolean') {
+					// @ts-expect-error
+					action.__notifyAfter = this[STATE_ACTION_CONFIGS].notifyAfter;
 				}
-				if (typeof action[ACTION_NOTIFY_BEFORE] !== 'boolean') {
-					action[ACTION_NOTIFY_BEFORE] =
-						this[STATE_ACTION_CONFIGS].notifyBefore;
+				// @ts-expect-error
+				if (typeof action.__notifyBefore !== 'boolean') {
+					// @ts-expect-error
+					action.__notifyBefore = this[STATE_ACTION_CONFIGS].notifyBefore;
 				}
 				// @ts-expect-error
 				action.__ownerState = this;

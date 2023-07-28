@@ -1,6 +1,3 @@
-export const ACTION_NOTIFY_AFTER = Symbol('action-notify-after');
-export const ACTION_NOTIFY_BEFORE = Symbol('action-notify-before');
-
 export const CONTEXT_OWNER = Symbol('context-owner');
 
 export const HANDLER_NOTIFY_AFTER = Symbol('handler-notify-after');

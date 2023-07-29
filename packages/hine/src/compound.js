@@ -1,5 +1,4 @@
 import { BaseState } from './base.js';
-import { RESOLVE_CONFIG } from './constants.js';
 
 /**
  * @typedef {import('./types').StateNode} StateNode
@@ -102,6 +101,21 @@ export class CompoundState extends BaseState {
 		this.__state?.__queueOnHandlers(eventName);
 		super.__queueOnHandlers(eventName);
 	}
+	/** @protected */
+	__resolveConfig() {
+		// @ts-expect-error
+		super.__resolveConfig();
+		const iterator = this.__states.values();
+		const first = iterator.next();
+		// We know `first` is not empty but TypeScript doesn't. Help it.
+		if (first.done) throw Error('Impossible!');
+		this.#initial = first.value;
+
+		for (const state of this.__states.values()) {
+			// @ts-expect-error
+			state.__resolveConfig();
+		}
+	}
 	/**
 	 * @param {string} path
 	 * @returns {boolean}
@@ -189,17 +203,5 @@ export class CompoundState extends BaseState {
 	}
 	get type() {
 		return this.#type;
-	}
-	[RESOLVE_CONFIG]() {
-		super[RESOLVE_CONFIG]();
-		const iterator = this.__states.values();
-		const first = iterator.next();
-		// We know `first` is not empty but TypeScript doesn't. Help it.
-		if (first.done) throw Error('Impossible!');
-		this.#initial = first.value;
-
-		for (const state of this.__states.values()) {
-			state[RESOLVE_CONFIG]();
-		}
 	}
 }

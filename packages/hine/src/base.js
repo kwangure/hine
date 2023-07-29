@@ -1,6 +1,5 @@
 import { Context } from './context.js';
 import { Handler } from './handler.js';
-import { RESOLVE_CONFIG } from './constants.js';
 import { StateEvent } from './event.js';
 
 /**
@@ -385,6 +384,34 @@ export class BaseState {
 			this.__handlerQueue.push(...this.__onHandler[eventName]);
 		}
 	}
+	/** @private */
+	__resolveConfig() {
+		this.#allActions = this.__actions;
+		this.#allConditions = this.__conditions;
+
+		if (this.#context) {
+			// @ts-expect-error
+			this.#context.__ownerState = this;
+		}
+
+		for (const [index, handler] of this.#alwaysConfig.entries()) {
+			this.#always.push(this.#resolveHandler(handler, String(index)));
+		}
+
+		for (const [event, handlers] of Object.entries(this.#onConfig)) {
+			this.__onHandler[event] = handlers.map((handler, i) =>
+				this.#resolveHandler(handler, String(i)),
+			);
+		}
+
+		for (const [index, handler] of this.#entryConfig.entries()) {
+			this.#entry.push(this.#resolveHandler(handler, String(index)));
+		}
+
+		for (const [index, handler] of this.#exitConfig.entries()) {
+			this.#exit.push(this.#resolveHandler(handler, String(index)));
+		}
+	}
 	__toJSON() {
 		const onEntries = Object.entries(this.__onHandler);
 		/** @type {Record<string, import('./types.js').HandlerJSON[]>} */
@@ -542,7 +569,7 @@ export class BaseState {
 	/** @returns {this} */
 	start() {
 		if (!this.#initialized) {
-			this[RESOLVE_CONFIG]();
+			this.__resolveConfig();
 		}
 		this.__initialize();
 
@@ -589,33 +616,5 @@ export class BaseState {
 		this.#isStepping = false;
 		this.__callSubscribers();
 		this.#event = null;
-	}
-
-	[RESOLVE_CONFIG]() {
-		this.#allActions = this.__actions;
-		this.#allConditions = this.__conditions;
-
-		if (this.#context) {
-			// @ts-expect-error
-			this.#context.__ownerState = this;
-		}
-
-		for (const [index, handler] of this.#alwaysConfig.entries()) {
-			this.#always.push(this.#resolveHandler(handler, String(index)));
-		}
-
-		for (const [event, handlers] of Object.entries(this.#onConfig)) {
-			this.__onHandler[event] = handlers.map((handler, i) =>
-				this.#resolveHandler(handler, String(i)),
-			);
-		}
-
-		for (const [index, handler] of this.#entryConfig.entries()) {
-			this.#entry.push(this.#resolveHandler(handler, String(index)));
-		}
-
-		for (const [index, handler] of this.#exitConfig.entries()) {
-			this.#exit.push(this.#resolveHandler(handler, String(index)));
-		}
 	}
 }

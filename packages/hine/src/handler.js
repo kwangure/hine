@@ -1,5 +1,4 @@
 import {
-	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
 	QUEUE_EXIT_HANDLERS,
@@ -118,8 +117,9 @@ export class Handler {
 			// @ts-expect-error
 			// change the active nested state for parent state
 			from.parent.__state = to;
+			// @ts-expect-error
 			// set initial state from transitionTo to leaves
-			to[INITIALIZE]();
+			to.__initialize();
 
 			to[QUEUE_ENTRY_HANDLERS]();
 			// @ts-expect-error
@@ -182,8 +182,9 @@ export class Handler {
 			// @ts-expect-error
 			// change the active nested state for parent state
 			from.parent.__state = to;
+			// @ts-expect-error
 			// set initial state from transitionTo to leaves
-			to[INITIALIZE]();
+			to.__initialize();
 
 			to[QUEUE_ENTRY_HANDLERS]();
 			// @ts-expect-error

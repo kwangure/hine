@@ -1,5 +1,4 @@
 import {
-	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
 	QUEUE_EXIT_HANDLERS,
@@ -62,6 +61,15 @@ export class CompoundState extends BaseState {
 		super.__executeHandlersRootFirst();
 		// @ts-expect-error
 		this.state?.__executeHandlersRootFirst();
+	}
+	__initialize() {
+		this.__state = this.#initial;
+		for (const state of this.__states.values()) {
+			// @ts-expect-error
+			state.__initialize();
+		}
+		// @ts-expect-error
+		super.__initialize();
 	}
 	/**
 	 * @private
@@ -168,14 +176,6 @@ export class CompoundState extends BaseState {
 	}
 	get type() {
 		return this.#type;
-	}
-
-	[INITIALIZE]() {
-		this.__state = this.#initial;
-		for (const state of this.__states.values()) {
-			state[INITIALIZE]();
-		}
-		super[INITIALIZE]();
 	}
 	[QUEUE_ALWAYS_HANDLERS]() {
 		this.__state?.[QUEUE_ALWAYS_HANDLERS]();

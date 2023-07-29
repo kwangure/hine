@@ -1,5 +1,4 @@
 import {
-	INITIALIZE,
 	QUEUE_ALWAYS_HANDLERS,
 	QUEUE_ENTRY_HANDLERS,
 	QUEUE_EXIT_HANDLERS,
@@ -360,6 +359,10 @@ export class BaseState {
 	__executeHandlersRootFirst() {
 		this.__executeHandlers();
 	}
+	/** @private */
+	__initialize() {
+		this.#initialized = true;
+	}
 	/**
 	 * @private
 	 * @param {Set<string>} stateTreeEvents
@@ -530,7 +533,7 @@ export class BaseState {
 		if (!this.#initialized) {
 			this[RESOLVE_CONFIG]();
 		}
-		this[INITIALIZE]();
+		this.__initialize();
 
 		const event = new StateEvent({ name: '_start' });
 		this.#event = event;
@@ -575,9 +578,6 @@ export class BaseState {
 		this.#isStepping = false;
 		this.__callSubscribers();
 		this.#event = null;
-	}
-	[INITIALIZE]() {
-		this.#initialized = true;
 	}
 	[QUEUE_ALWAYS_HANDLERS]() {
 		this.__handlerQueue.push(...this.#always);

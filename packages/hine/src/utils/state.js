@@ -18,7 +18,6 @@ export function activePath(state) {
  * @param {string[]} [stateTreeEvents]
  */
 export function stateEventNames(state, stateTreeEvents = []) {
-	// @ts-expect-error
 	for (const name of Object.keys(state.__onHandler)) {
 		if (!stateTreeEvents.includes(name)) {
 			stateTreeEvents.push(name);

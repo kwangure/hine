@@ -8,22 +8,12 @@ export class Action {
 	/** @type {(arg: any) => any} */
 	#run = noop;
 	#type = /** @type {const} */ ('action');
-	/**
-	 * @private
-	 * @type {StateNode | null}
-	 */
+	/** @type {StateNode | null} */
 	__ownerState = null;
-	/** @private */
 	__name = '';
-	/**
-	 * @private
-	 * @type {boolean | undefined}
-	 */
+	/** @type {boolean | undefined} */
 	__notifyAfter = undefined;
-	/**
-	 * @private
-	 * @type {boolean | undefined}
-	 */
+	/** @type {boolean | undefined} */
 	__notifyBefore = undefined;
 	/**
 	 * @param {import('./types').ActionConfig} options
@@ -72,12 +62,10 @@ export class Action {
 	}
 	run() {
 		if (!this.__ownerState) return;
-		// @ts-expect-error
 		this.__ownerState.__action = this;
 		this.#notifyBefore();
 		const result = this.#run.call(undefined, this);
 		this.#notifyAfter();
-		// @ts-expect-error
 		this.__ownerState.__action = null;
 		return result;
 	}

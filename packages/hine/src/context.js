@@ -5,10 +5,7 @@
 export class Context {
 	/** @type {Map<string, unknown>} */
 	#data = new Map();
-	/**
-	 * @private
-	 * @type {StateNode | null}
-	 */
+	/** @type {StateNode | null} */
 	__ownerState = null;
 	/** @param {Record<string, unknown>} [data] */
 	constructor(data) {

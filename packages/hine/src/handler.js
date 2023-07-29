@@ -16,20 +16,11 @@ export class Handler {
 	/** @type {StateNode | null} */
 	#transitionTo = null;
 	#type = /** @type {const} */ ('handler');
-	/**
-	 * @private
-	 * @type {StateNode | null}
-	 */
+	/** @type {StateNode | null} */
 	__ownerState = null;
-	/**
-	 * @private
-	 * @type {boolean | undefined}
-	 */
+	/** @type {boolean | undefined} */
 	__notifyBefore = undefined;
-	/**
-	 * @private
-	 * @type {boolean | undefined}
-	 */
+	/** @type {boolean | undefined} */
 	__notifyAfter = undefined;
 	/**
 	 * @param {import('./types').HandlerConfig<T>} options
@@ -71,7 +62,6 @@ export class Handler {
 		// This should never happen. Its mostly to help TypeScript out
 		if (!this.__ownerState) throw Error('Missing handler ownerState');
 
-		// @ts-expect-error
 		this.__ownerState.__handler = this;
 		this.#notifyBefore();
 		if (!this.condition || this.condition.run()) {
@@ -80,7 +70,6 @@ export class Handler {
 			}
 		}
 		this.#notifyAfter();
-		// @ts-expect-error
 		this.__ownerState.__handler = null;
 	}
 	runTransition() {
@@ -90,16 +79,13 @@ export class Handler {
 		if (!from) throw Error('Missing handler ownerState');
 		if (!to) throw Error('Missing handler transitionTo');
 
-		// @ts-expect-error
 		from.__handler = this;
 		this.#notifyBefore();
 		const shouldExecute = !this.condition || this.condition.run();
 		if (shouldExecute) {
-			// @ts-expect-error
 			from.__handlerQueue.length = 0;
 			// exit actions for the current state
 			from.__queueExitHandlers();
-			// @ts-expect-error
 			from.__executeHandlersLeafFirst();
 
 			// transition actions for the handler
@@ -108,23 +94,17 @@ export class Handler {
 			}
 			// This should never happen. They're mostly to help TypeScript out
 			if (!from.parent) throw Error('Missing state parent');
-			// @ts-expect-error
 			// change the active nested state for parent state
 			from.parent.__state = to;
-			// @ts-expect-error
 			// set initial state from transitionTo to leaves
 			to.__initialize();
 
 			to.__queueEntryHandlers();
-			// @ts-expect-error
 			to.__executeHandlersRootFirst();
-
 			to.__queueAlwaysHandlers();
-			// @ts-expect-error
 			to.__executeHandlersRootFirst();
 		}
 		this.#notifyAfter();
-		// @ts-expect-error
 		from.__handler = null;
 		return shouldExecute;
 	}
@@ -150,7 +130,6 @@ export class Handler {
 		if (!from) throw Error('Missing handler ownerState');
 		if (!to) throw Error('Missing handler transitionTo');
 
-		// @ts-expect-error
 		from.__handler = this;
 		this.#notifyBefore();
 		let shouldExecute = false;
@@ -159,11 +138,9 @@ export class Handler {
 			shouldExecute = this.condition.run();
 		}
 		if (shouldExecute) {
-			// @ts-expect-error
 			from.__handlerQueue.length = 0;
 			// exit actions for the current state
 			from.__queueExitHandlers();
-			// @ts-expect-error
 			from.__executeHandlersLeafFirst();
 
 			// transition actions for the handler
@@ -173,23 +150,18 @@ export class Handler {
 			}
 			// This should never happen. They're mostly to help TypeScript out
 			if (!from.parent) throw Error('Missing state parent');
-			// @ts-expect-error
 			// change the active nested state for parent state
 			from.parent.__state = to;
-			// @ts-expect-error
 			// set initial state from transitionTo to leaves
 			to.__initialize();
 
 			to.__queueEntryHandlers();
-			// @ts-expect-error
 			to.__executeHandlersRootFirst();
 
 			to.__queueAlwaysHandlers();
-			// @ts-expect-error
 			to.__executeHandlersRootFirst();
 		}
 		this.#notifyAfter();
-		// @ts-expect-error
 		from.__handler = null;
 		return shouldExecute;
 	}

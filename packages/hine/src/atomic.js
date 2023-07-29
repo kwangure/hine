@@ -5,10 +5,8 @@ export class AtomicState extends BaseState {
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
 		fn(this);
-		// @ts-expect-error
 		this.__subscribers.add(/** @type {(arg: BaseState) => any} */ (fn));
 		return () => {
-			// @ts-expect-error
 			this.__subscribers.delete(/** @type {(arg: BaseState) => any} */ (fn));
 		};
 	}

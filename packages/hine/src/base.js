@@ -61,44 +61,25 @@ export class BaseState {
 	#initialized = false;
 	#isStepping = false;
 	#onConfig;
-	/**
-	 * @private
-	 * @type {CompoundState | null}
-	 */
-	__parent = null;
+
+	/** @type {import('./action.js').Action | null} */
+	__action = null;
+	/** @type {import('./condition.js').Condition | null} */
+	__condition = null;
 	/**
 	 * The active handler that is currently executing
-	 * @private
+	 *
 	 * @type {import('./handler').Handler | null}
 	 */
 	__handler = null;
-	/**
-	 * @private
-	 * @type {import('./condition.js').Condition | null}
-	 */
-	__condition = null;
-
-	/**
-	 * @private
-	 * @type {import('./action.js').Action | null}
-	 */
-	__action = null;
-	/** @private */
-	__name = '';
-	/**
-	 * @private
-	 * @type {Handler[]}
-	 */
+	/** @type {Handler[]} */
 	__handlerQueue = [];
-	/**
-	 * @private
-	 * @type {Record<string, Handler[]>}
-	 */
+	__name = '';
+	/** @type {CompoundState | null} */
+	__parent = null;
+	/** @type {Record<string, Handler[]>} */
 	__onHandler = {};
-	/**
-	 * @private
-	 * @type {Set<(arg: BaseState) => any>}
-	 */
+	/** @type {Set<(arg: BaseState) => any>} */
 	__subscribers = new Set();
 
 	/**
@@ -199,21 +180,18 @@ export class BaseState {
 					);
 				}
 			}
-			// @ts-expect-error
 			to = parent.__states.get(transitionTo);
 			if (!to) {
 				if (this.path.some((segment) => Boolean(segment))) {
 					const path = this.path.join('.');
 					throw Error(
 						`State '${path}' references unknown transition target target '${transitionTo}'. Expected one of: ${[
-							// @ts-expect-error
 							...parent.__states.keys(),
 						].join(', ')}.`,
 					);
 				} else {
 					throw Error(
 						`State references unknown transition target '${transitionTo}'. Expected one of: ${[
-							// @ts-expect-error
 							...parent.__states.keys(),
 						].join(', ')}.`,
 					);
@@ -230,7 +208,6 @@ export class BaseState {
 		});
 	}
 	/**
-	 * @private
 	 * @returns {{
 	 *     notifyBefore: boolean;
 	 *     notifyAfter: boolean;
@@ -257,17 +234,12 @@ export class BaseState {
 			if (Object.hasOwn(this.#actions, name)) {
 				const action = this.#actions[name];
 				if (!action.name) {
-					// @ts-expect-error
 					action.__name = name;
 				}
-				// @ts-expect-error
 				if (typeof action.__notifyAfter !== 'boolean') {
-					// @ts-expect-error
 					action.__notifyAfter = this.__actionConfig.notifyAfter;
 				}
-				// @ts-expect-error
 				if (typeof action.__notifyBefore !== 'boolean') {
-					// @ts-expect-error
 					action.__notifyBefore = this.__actionConfig.notifyBefore;
 				}
 				// @ts-expect-error
@@ -311,17 +283,12 @@ export class BaseState {
 			if (Object.hasOwn(this.#conditions, name)) {
 				const condition = this.#conditions[name];
 				if (!condition.name) {
-					// @ts-expect-error
 					condition.__name = name;
 				}
-				// @ts-expect-error
 				if (typeof condition.__notifyAfter !== 'boolean') {
-					// @ts-expect-error
 					condition.__notifyAfter = this.__conditionConfig.notifyAfter;
 				}
-				// @ts-expect-error
 				if (typeof condition.__notifyBefore !== 'boolean') {
-					// @ts-expect-error
 					condition.__notifyBefore = this.__conditionConfig.notifyBefore;
 				}
 				// @ts-expect-error
@@ -332,7 +299,6 @@ export class BaseState {
 
 		return conditions;
 	}
-	/** @private */
 	__executeHandlers() {
 		for (const handler of this.__handlerQueue) {
 			if (handler.transitionTo) {
@@ -344,20 +310,16 @@ export class BaseState {
 		}
 		this.__handlerQueue.length = 0;
 	}
-	/** @private */
 	__executeHandlersLeafFirst() {
 		this.__executeHandlers();
 	}
-	/** @private */
 	__executeHandlersRootFirst() {
 		this.__executeHandlers();
 	}
-	/** @private */
 	__initialize() {
 		this.#initialized = true;
 	}
 	/**
-	 * @private
 	 * @param {Set<string>} stateTreeEvents
 	 */
 	__nextEvents(stateTreeEvents) {
@@ -384,15 +346,11 @@ export class BaseState {
 			this.__handlerQueue.push(...this.__onHandler[eventName]);
 		}
 	}
-	/** @private */
 	__resolveConfig() {
 		this.#allActions = this.__actions;
 		this.#allConditions = this.__conditions;
-
-		if (this.#context) {
-			// @ts-expect-error
-			this.#context.__ownerState = this;
-		}
+		// @ts-expect-error
+		this.#context.__ownerState = this;
 
 		for (const [index, handler] of this.#alwaysConfig.entries()) {
 			this.#always.push(this.#resolveHandler(handler, String(index)));

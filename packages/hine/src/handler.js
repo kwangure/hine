@@ -1,9 +1,3 @@
-import {
-	QUEUE_ALWAYS_HANDLERS,
-	QUEUE_ENTRY_HANDLERS,
-	QUEUE_EXIT_HANDLERS,
-} from './constants.js';
-
 /**
  * @typedef {import('./action').Action} Action
  * @typedef {import('./types').StateNode} StateNode
@@ -104,7 +98,7 @@ export class Handler {
 			// @ts-expect-error
 			from.__handlerQueue.length = 0;
 			// exit actions for the current state
-			from[QUEUE_EXIT_HANDLERS]();
+			from.__queueExitHandlers();
 			// @ts-expect-error
 			from.__executeHandlersLeafFirst();
 
@@ -121,11 +115,11 @@ export class Handler {
 			// set initial state from transitionTo to leaves
 			to.__initialize();
 
-			to[QUEUE_ENTRY_HANDLERS]();
+			to.__queueEntryHandlers();
 			// @ts-expect-error
 			to.__executeHandlersRootFirst();
 
-			to[QUEUE_ALWAYS_HANDLERS]();
+			to.__queueAlwaysHandlers();
 			// @ts-expect-error
 			to.__executeHandlersRootFirst();
 		}
@@ -168,7 +162,7 @@ export class Handler {
 			// @ts-expect-error
 			from.__handlerQueue.length = 0;
 			// exit actions for the current state
-			from[QUEUE_EXIT_HANDLERS]();
+			from.__queueExitHandlers();
 			// @ts-expect-error
 			from.__executeHandlersLeafFirst();
 
@@ -186,11 +180,11 @@ export class Handler {
 			// set initial state from transitionTo to leaves
 			to.__initialize();
 
-			to[QUEUE_ENTRY_HANDLERS]();
+			to.__queueEntryHandlers();
 			// @ts-expect-error
 			to.__executeHandlersRootFirst();
 
-			to[QUEUE_ALWAYS_HANDLERS]();
+			to.__queueAlwaysHandlers();
 			// @ts-expect-error
 			to.__executeHandlersRootFirst();
 		}

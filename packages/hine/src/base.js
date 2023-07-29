@@ -1,12 +1,6 @@
-import {
-	QUEUE_ALWAYS_HANDLERS,
-	QUEUE_ENTRY_HANDLERS,
-	QUEUE_EXIT_HANDLERS,
-	QUEUE_ON_HANDLERS,
-	RESOLVE_CONFIG,
-} from './constants.js';
 import { Context } from './context.js';
 import { Handler } from './handler.js';
+import { RESOLVE_CONFIG } from './constants.js';
 import { StateEvent } from './event.js';
 
 /**
@@ -374,6 +368,23 @@ export class BaseState {
 			}
 		}
 	}
+	__queueAlwaysHandlers() {
+		this.__handlerQueue.push(...this.#always);
+	}
+	__queueEntryHandlers() {
+		this.__handlerQueue.push(...this.#entry);
+	}
+	__queueExitHandlers() {
+		this.__handlerQueue.push(...this.#exit);
+	}
+	/**
+	 * @param {string} eventName
+	 */
+	__queueOnHandlers(eventName) {
+		if (Object.hasOwn(this.__onHandler, eventName)) {
+			this.__handlerQueue.push(...this.__onHandler[eventName]);
+		}
+	}
 	__toJSON() {
 		const onEntries = Object.entries(this.__onHandler);
 		/** @type {Record<string, import('./types.js').HandlerJSON[]>} */
@@ -443,8 +454,8 @@ export class BaseState {
 
 		const event = new StateEvent({ name: eventName, value });
 		this.#event = event;
-		this[QUEUE_ON_HANDLERS](eventName);
-		this[QUEUE_ALWAYS_HANDLERS]();
+		this.__queueOnHandlers(eventName);
+		this.__queueAlwaysHandlers();
 		this.__executeHandlersLeafFirst();
 
 		this.__callSubscribers();
@@ -537,9 +548,9 @@ export class BaseState {
 
 		const event = new StateEvent({ name: '_start' });
 		this.#event = event;
-		this[QUEUE_ENTRY_HANDLERS]();
+		this.__queueEntryHandlers();
 		this.__executeHandlersRootFirst();
-		this[QUEUE_ALWAYS_HANDLERS]();
+		this.__queueAlwaysHandlers();
 		this.__executeHandlersRootFirst();
 		this.__callSubscribers();
 		this.#event = null;
@@ -561,8 +572,8 @@ export class BaseState {
 		this.#isStepping = true;
 		const event = new StateEvent({ name: eventName, value: eventValue });
 		this.#event = event;
-		this[QUEUE_ON_HANDLERS](eventName);
-		this[QUEUE_ALWAYS_HANDLERS]();
+		this.__queueOnHandlers(eventName);
+		this.__queueAlwaysHandlers();
 
 		for (const handler of this.__handlerQueue) {
 			yield handler;
@@ -579,23 +590,7 @@ export class BaseState {
 		this.__callSubscribers();
 		this.#event = null;
 	}
-	[QUEUE_ALWAYS_HANDLERS]() {
-		this.__handlerQueue.push(...this.#always);
-	}
-	[QUEUE_ENTRY_HANDLERS]() {
-		this.__handlerQueue.push(...this.#entry);
-	}
-	[QUEUE_EXIT_HANDLERS]() {
-		this.__handlerQueue.push(...this.#exit);
-	}
-	/**
-	 * @param {string} eventName
-	 */
-	[QUEUE_ON_HANDLERS](eventName) {
-		if (Object.hasOwn(this.__onHandler, eventName)) {
-			this.__handlerQueue.push(...this.__onHandler[eventName]);
-		}
-	}
+
 	[RESOLVE_CONFIG]() {
 		this.#allActions = this.__actions;
 		this.#allConditions = this.__conditions;

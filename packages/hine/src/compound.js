@@ -1,11 +1,5 @@
-import {
-	QUEUE_ALWAYS_HANDLERS,
-	QUEUE_ENTRY_HANDLERS,
-	QUEUE_EXIT_HANDLERS,
-	QUEUE_ON_HANDLERS,
-	RESOLVE_CONFIG,
-} from './constants.js';
 import { BaseState } from './base.js';
+import { RESOLVE_CONFIG } from './constants.js';
 
 /**
  * @typedef {import('./types').StateNode} StateNode
@@ -88,6 +82,25 @@ export class CompoundState extends BaseState {
 
 		// @ts-expect-error
 		this.__state.__nextEvents(stateTreeEvents);
+	}
+	__queueAlwaysHandlers() {
+		this.__state?.__queueAlwaysHandlers();
+		super.__queueAlwaysHandlers();
+	}
+	__queueEntryHandlers() {
+		super.__queueEntryHandlers();
+		this.__state?.__queueEntryHandlers();
+	}
+	__queueExitHandlers() {
+		this.__state?.__queueExitHandlers();
+		super.__queueExitHandlers();
+	}
+	/**
+	 * @param {string} eventName
+	 */
+	__queueOnHandlers(eventName) {
+		this.__state?.__queueOnHandlers(eventName);
+		super.__queueOnHandlers(eventName);
 	}
 	/**
 	 * @param {string} path
@@ -176,25 +189,6 @@ export class CompoundState extends BaseState {
 	}
 	get type() {
 		return this.#type;
-	}
-	[QUEUE_ALWAYS_HANDLERS]() {
-		this.__state?.[QUEUE_ALWAYS_HANDLERS]();
-		super[QUEUE_ALWAYS_HANDLERS]();
-	}
-	[QUEUE_ENTRY_HANDLERS]() {
-		super[QUEUE_ENTRY_HANDLERS]();
-		this.__state?.[QUEUE_ENTRY_HANDLERS]();
-	}
-	[QUEUE_EXIT_HANDLERS]() {
-		this.__state?.[QUEUE_EXIT_HANDLERS]();
-		super[QUEUE_EXIT_HANDLERS]();
-	}
-	/**
-	 * @param {string} eventName
-	 */
-	[QUEUE_ON_HANDLERS](eventName) {
-		this.__state?.[QUEUE_ON_HANDLERS](eventName);
-		super[QUEUE_ON_HANDLERS](eventName);
 	}
 	[RESOLVE_CONFIG]() {
 		super[RESOLVE_CONFIG]();

@@ -8,9 +8,6 @@ import { StateEvent } from './event.js';
  * @typedef {import('./types.js').EntryHandlerConfig} EntryHandlerConfig
  * @typedef {import('./types.js').ExitHandlerConfig} ExitHandlerConfig
  *
- * @typedef {import('./compound.js').CompoundState} CompoundState
- *
- * @typedef {import('./types.js').StateNode} StateNode
  */
 
 export class BaseState {
@@ -75,7 +72,7 @@ export class BaseState {
 	/** @type {Handler[]} */
 	__handlerQueue = [];
 	__name = '';
-	/** @type {CompoundState | null} */
+	/** @type {import('./compound.js').CompoundState | null} */
 	__parent = null;
 	/** @type {Record<string, Handler[]>} */
 	__onHandler = {};

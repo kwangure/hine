@@ -242,7 +242,6 @@ export class BaseState {
 				if (typeof action.__notifyBefore !== 'boolean') {
 					action.__notifyBefore = this.__actionConfig.notifyBefore;
 				}
-				// @ts-expect-error
 				action.__ownerState = this;
 				actions[action.name] = action;
 			}
@@ -291,7 +290,6 @@ export class BaseState {
 				if (typeof condition.__notifyBefore !== 'boolean') {
 					condition.__notifyBefore = this.__conditionConfig.notifyBefore;
 				}
-				// @ts-expect-error
 				condition.__ownerState = this;
 				conditions[condition.name] = condition;
 			}
@@ -349,7 +347,6 @@ export class BaseState {
 	__resolveConfig() {
 		this.#allActions = this.__actions;
 		this.#allConditions = this.__conditions;
-		// @ts-expect-error
 		this.#context.__ownerState = this;
 
 		for (const [index, handler] of this.#alwaysConfig.entries()) {

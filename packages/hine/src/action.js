@@ -1,14 +1,10 @@
-/**
- * @typedef {import('./types').StateNode} StateNode
- */
-
 function noop() {}
 
 export class Action {
 	/** @type {(arg: any) => any} */
 	#run = noop;
 	#type = /** @type {const} */ ('action');
-	/** @type {StateNode | null} */
+	/** @type {import('./base.js').BaseState | null} */
 	__ownerState = null;
 	__name = '';
 	/** @type {boolean | undefined} */
@@ -52,7 +48,7 @@ export class Action {
 		if (!this.__ownerState) {
 			throw Error('Attempted to read ownerState before calling state.start().');
 		}
-		return this.__ownerState;
+		return /** @type {import('./types').StateNode} */ (this.__ownerState);
 	}
 	/** @type {string[]} */
 	get path() {

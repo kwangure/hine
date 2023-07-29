@@ -1,11 +1,7 @@
-/**
- * @typedef {import('./types').StateNode} StateNode
- */
-
 export class Context {
 	/** @type {Map<string, unknown>} */
 	#data = new Map();
-	/** @type {StateNode | null} */
+	/** @type {import('./base.js').BaseState | null} */
 	__ownerState = null;
 	/** @param {Record<string, unknown>} [data] */
 	constructor(data) {

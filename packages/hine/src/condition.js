@@ -1,16 +1,8 @@
-/**
- * @typedef {import('./types').StateNode} StateNode
- */
-
-function noop() {
-	return true;
-}
-
 export class Condition {
 	/** @type {(arg: any) => boolean} */
-	#run = noop;
+	#run;
 	#type = /** @type {const} */ ('condition');
-	/** @type {StateNode | null} */
+	/** @type {import('./base.js').BaseState | null} */
 	__ownerState = null;
 	__name = '';
 	/** @type {boolean | undefined} */
@@ -29,7 +21,7 @@ export class Condition {
 		if (typeof options.notifyBefore === 'boolean') {
 			this.__notifyBefore = options.notifyBefore;
 		}
-		this.#run = options.run || noop;
+		this.#run = options.run || (() => true);
 	}
 	#notifyAfter() {
 		if (!this.__notifyAfter) return;
@@ -55,7 +47,7 @@ export class Condition {
 		if (!this.__ownerState) {
 			throw Error('Attempted to read ownerState before calling state.start().');
 		}
-		return this.__ownerState;
+		return /** @type {import('./types').StateNode} */ (this.__ownerState);
 	}
 	/** @type {string[]} */
 	get path() {

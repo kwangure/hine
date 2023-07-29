@@ -366,4 +366,306 @@ describe('conditions', () => {
 		state.start();
 		expect(state.condition).toBe(null);
 	});
+	it('ignores falsy handlers on entry', () => {
+		/** @type {string[]} */
+		const actions = [];
+		const state = new CompoundState({
+			entry: [
+				{
+					actions: ['action'],
+					condition: 'isFalsy',
+				},
+			],
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					run() {
+						actions.push('action');
+					},
+				}),
+			},
+			conditions: {
+				isFalsy: new Condition({
+					run() {
+						return false;
+					},
+				}),
+			},
+		});
+		state.start();
+		expect(actions).toEqual([]);
+	});
+	it('runs truthy handlers on entry', () => {
+		/** @type {string[]} */
+		const actions = [];
+		const state = new CompoundState({
+			entry: [
+				{
+					actions: ['action'],
+					condition: 'run',
+				},
+			],
+			states: {
+				s1: new AtomicState(),
+			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					run() {
+						actions.push('action');
+					},
+				}),
+			},
+			conditions: {
+				run: new Condition({
+					run() {
+						return true;
+					},
+				}),
+			},
+		});
+		state.start();
+		expect(actions).toEqual(['action']);
+	});
+	it('ignores falsy handlers on exit', () => {
+		/** @type {string[]} */
+		const actions = [];
+		const state = new CompoundState({
+			states: {
+				s1: new CompoundState({
+					always: [
+						{
+							transitionTo: 's2',
+						},
+					],
+					exit: [
+						{
+							actions: ['action'],
+							condition: 'isFalsy',
+						},
+					],
+					states: {
+						s11: new AtomicState(),
+					},
+				}),
+				s2: new CompoundState({
+					states: {
+						s21: new AtomicState(),
+					},
+				}),
+			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					run() {
+						actions.push('action');
+					},
+				}),
+			},
+			conditions: {
+				isFalsy: new Condition({
+					run() {
+						return false;
+					},
+				}),
+			},
+		});
+		state.start();
+		expect(actions).toEqual([]);
+	});
+	it('runs truthy handlers on exit', () => {
+		/** @type {string[]} */
+		const actions = [];
+		const state = new CompoundState({
+			states: {
+				s1: new CompoundState({
+					always: [
+						{
+							transitionTo: 's2',
+						},
+					],
+					exit: [
+						{
+							actions: ['action'],
+							condition: 'isTruthy',
+						},
+					],
+					states: {
+						s11: new AtomicState(),
+					},
+				}),
+				s2: new CompoundState({
+					states: {
+						s21: new AtomicState(),
+					},
+				}),
+			},
+		});
+		state.monitor({
+			states: {
+				s1: {
+					actions: {
+						action: new Action({
+							run() {
+								actions.push('action');
+							},
+						}),
+					},
+					conditions: {
+						isTruthy: new Condition({
+							run() {
+								return true;
+							},
+						}),
+					},
+				},
+			},
+		});
+		state.start();
+		expect(actions).toEqual(['action']);
+	});
+	it('ignores falsy handlers on dispatch', () => {
+		/** @type {string[]} */
+		const actions = [];
+		const state = new CompoundState({
+			on: {
+				myEvent: [
+					{
+						actions: ['action'],
+						condition: 'isFalsy',
+					},
+				],
+			},
+			states: {
+				s11: new AtomicState(),
+			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					run() {
+						actions.push('action');
+					},
+				}),
+			},
+			conditions: {
+				isFalsy: new Condition({
+					run() {
+						return false;
+					},
+				}),
+			},
+		});
+		state.start();
+		state.dispatch('myEvent');
+		expect(actions).toEqual([]);
+	});
+	it('runs truthy handlers on dispatch', () => {
+		/** @type {string[]} */
+		const actions = [];
+		const state = new CompoundState({
+			on: {
+				myEvent: [
+					{
+						actions: ['action'],
+						condition: 'isTruthy',
+					},
+				],
+			},
+			states: {
+				s11: new AtomicState(),
+			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					run() {
+						actions.push('action');
+					},
+				}),
+			},
+			conditions: {
+				isTruthy: new Condition({
+					run() {
+						return true;
+					},
+				}),
+			},
+		});
+		state.start();
+		state.dispatch('myEvent');
+		expect(actions).toEqual(['action']);
+	});
+	it('ignores falsy handlers on always', () => {
+		/** @type {string[]} */
+		const actions = [];
+		const state = new CompoundState({
+			always: [
+				{
+					actions: ['action'],
+					condition: 'isFalsy',
+				},
+			],
+			states: {
+				s11: new AtomicState(),
+			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					run() {
+						actions.push('action');
+					},
+				}),
+			},
+			conditions: {
+				isFalsy: new Condition({
+					run() {
+						return false;
+					},
+				}),
+			},
+		});
+		state.start();
+		expect(actions).toEqual([]);
+	});
+	it('runs truthy handlers on always', () => {
+		/** @type {string[]} */
+		const actions = [];
+		const state = new CompoundState({
+			always: [
+				{
+					actions: ['action'],
+					condition: 'isTruthy',
+				},
+			],
+			states: {
+				s11: new AtomicState(),
+			},
+		});
+		state.monitor({
+			actions: {
+				action: new Action({
+					run() {
+						actions.push('action');
+					},
+				}),
+			},
+			conditions: {
+				isTruthy: new Condition({
+					run() {
+						return true;
+					},
+				}),
+			},
+		});
+		state.start();
+		expect(actions).toEqual(['action']);
+	});
 });

@@ -777,4 +777,34 @@ describe('actions', () => {
 
 		state.dispatch('event', 'my-value');
 	});
+	it('throws on missing entry actions', () => {
+		const state = new AtomicState({
+			entry: [
+				{
+					actions: ['missing'],
+				},
+			],
+		});
+		expect(() => state.start()).toThrow("'missing'");
+	});
+	it('throws on missing exit actions', () => {
+		const state = new AtomicState({
+			exit: [
+				{
+					actions: ['missing'],
+				},
+			],
+		});
+		expect(() => state.start()).toThrow("'missing'");
+	});
+	it('throws on missing always actions', () => {
+		const state = new AtomicState({
+			always: [
+				{
+					actions: ['missing'],
+				},
+			],
+		});
+		expect(() => state.start()).toThrow("'missing'");
+	});
 });

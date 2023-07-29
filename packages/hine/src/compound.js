@@ -1,21 +1,3 @@
-import {
-	EXECUTE_HANDLERS_LEAF_FIRST,
-	EXECUTE_HANDLERS_ROOT_FIRST,
-	INITIALIZE,
-	ON_HANDLER,
-	QUEUE_ALWAYS_HANDLERS,
-	QUEUE_ENTRY_HANDLERS,
-	QUEUE_EXIT_HANDLERS,
-	QUEUE_ON_HANDLERS,
-	RESOLVE_CONFIG,
-	STATE_ACTIVE,
-	STATE_NAME,
-	STATE_NEXT_EVENTS,
-	STATE_PARENT,
-	STATE_STATES,
-	STATE_SUBSCRIBERS,
-	TO_JSON,
-} from './constants.js';
 import { BaseState } from './base.js';
 
 /**
@@ -25,12 +7,11 @@ import { BaseState } from './base.js';
 export class CompoundState extends BaseState {
 	/** @type {StateNode | null} */
 	#initial = null;
-	/** @type {StateNode | null} */
-	#state = null;
-	/** @type {Map<string, StateNode>} */
-	#states = new Map();
 	#type = /** @type {const} */ ('compound');
-
+	/** @type {Map<string, StateNode>} */
+	__states = new Map();
+	/** @type {StateNode | null} */
+	__state = null;
 	/**
 	 * @param {import('./types').CompoundStateConfig} stateConfig
 	 */
@@ -45,10 +26,69 @@ export class CompoundState extends BaseState {
 
 		for (const [name, state] of states) {
 			if (!state.name) {
-				state[STATE_NAME] = name;
+				state.__name = name;
 			}
-			this.#states.set(state.name, state);
-			state[STATE_PARENT] = this;
+			this.__states.set(state.name, state);
+			state.__parent = this;
+		}
+	}
+	__executeHandlersLeafFirst() {
+		this.state?.__executeHandlersLeafFirst();
+		super.__executeHandlersLeafFirst();
+	}
+	__executeHandlersRootFirst() {
+		super.__executeHandlersRootFirst();
+		this.state?.__executeHandlersRootFirst();
+	}
+	__initialize() {
+		this.__state = this.#initial;
+		for (const state of this.__states.values()) {
+			state.__initialize();
+		}
+		super.__initialize();
+	}
+	/** @param {Set<string>} stateTreeEvents */
+	__nextEvents(stateTreeEvents) {
+		// No state, implies the machine is not intialized, return zero events
+		if (!this.__state) return;
+
+		for (const [name, handlers] of Object.entries(this.__onHandler)) {
+			if (handlers.length) {
+				stateTreeEvents.add(name);
+			}
+		}
+
+		this.__state.__nextEvents(stateTreeEvents);
+	}
+	__queueAlwaysHandlers() {
+		this.__state?.__queueAlwaysHandlers();
+		super.__queueAlwaysHandlers();
+	}
+	__queueEntryHandlers() {
+		super.__queueEntryHandlers();
+		this.__state?.__queueEntryHandlers();
+	}
+	__queueExitHandlers() {
+		this.__state?.__queueExitHandlers();
+		super.__queueExitHandlers();
+	}
+	/**
+	 * @param {string} eventName
+	 */
+	__queueOnHandlers(eventName) {
+		this.__state?.__queueOnHandlers(eventName);
+		super.__queueOnHandlers(eventName);
+	}
+	__resolveConfig() {
+		super.__resolveConfig();
+		const iterator = this.__states.values();
+		const first = iterator.next();
+		// We know `first` is not empty but TypeScript doesn't. Help it.
+		if (first.done) throw Error('Impossible!');
+		this.#initial = first.value;
+
+		for (const state of this.__states.values()) {
+			state.__resolveConfig();
 		}
 	}
 	/**
@@ -59,19 +99,21 @@ export class CompoundState extends BaseState {
 		return (
 			super.canTransitionTo(path) ||
 			(path.startsWith(`${this.name}.`) &&
-				Boolean(this.#state?.canTransitionTo(path.slice(this.name.length + 1))))
+				Boolean(
+					this.__state?.canTransitionTo(path.slice(this.name.length + 1)),
+				))
 		);
 	}
 	/** @param {string} name */
 	isActiveEvent(name) {
 		// No active child state implies state is not initialized
-		if (!this.#state) {
+		if (!this.__state) {
 			throw Error(
 				"Attempted to call 'state.isActiveEvent()' before calling 'state.start()'",
 			);
 		}
-		if (name in this[ON_HANDLER] && this[ON_HANDLER][name].length) return true;
-		if (this.#state.isActiveEvent(name)) return true;
+		if (name in this.__onHandler && this.__onHandler[name].length) return true;
+		if (this.__state.isActiveEvent(name)) return true;
 		return false;
 	}
 	/**
@@ -79,12 +121,12 @@ export class CompoundState extends BaseState {
 	 * @return {boolean}
 	 */
 	matches(path) {
-		if (!this.#state) return false;
+		if (!this.__state) return false;
 
 		return (
 			super.matches(path) ||
 			(path.startsWith(`${this.name}.`) &&
-				this.#state.matches(path.slice(this.name.length + 1)))
+				this.__state.matches(path.slice(this.name.length + 1)))
 		);
 	}
 	/** @param {import('./types.js').CompoundMonitorConfig} config */
@@ -92,7 +134,7 @@ export class CompoundState extends BaseState {
 		super.monitor(config);
 		if (!config?.states) return;
 		for (const [name, monitorConfig] of Object.entries(config.states)) {
-			const state = this.#states.get(name);
+			const state = this.__states.get(name);
 			if (!state) {
 				const parentPath = this.parent?.path || [];
 				const pathString = parentPath.length
@@ -100,7 +142,7 @@ export class CompoundState extends BaseState {
 					: name;
 				throw Error(
 					`State '${pathString}' defined on monitor does not exist in state tree. Expected one of: ${[
-						...this.#states.keys(),
+						...this.__states.keys(),
 					].join(', ')}`,
 				);
 			}
@@ -108,101 +150,30 @@ export class CompoundState extends BaseState {
 		}
 	}
 	get state() {
-		return this.#state;
+		return this.__state;
 	}
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
 		fn(this);
-		this[STATE_SUBSCRIBERS].add(/** @type {(arg: BaseState) => any} */ (fn));
+		this.__subscribers.add(/** @type {(arg: BaseState) => any} */ (fn));
 		return () => {
-			this[STATE_SUBSCRIBERS].delete(
-				/** @type {(arg: BaseState) => any} */ (fn),
-			);
+			this.__subscribers.delete(/** @type {(arg: BaseState) => any} */ (fn));
 		};
 	}
 	toJSON() {
 		/** @type {Record<string, import('./types').StateNodeJSON>} */
 		const states = {};
-		for (const [name, state] of this.#states) {
+		for (const [name, state] of this.__states) {
 			states[name] = state.toJSON();
 		}
-		const baseJSON = super[TO_JSON]();
 
 		return {
 			type: this.#type,
-			...baseJSON,
+			...super.__toJSON(),
 			states,
 		};
 	}
 	get type() {
 		return this.#type;
-	}
-	[EXECUTE_HANDLERS_LEAF_FIRST]() {
-		this.state?.[EXECUTE_HANDLERS_LEAF_FIRST]();
-		super[EXECUTE_HANDLERS_LEAF_FIRST]();
-	}
-	[EXECUTE_HANDLERS_ROOT_FIRST]() {
-		super[EXECUTE_HANDLERS_ROOT_FIRST]();
-		this.state?.[EXECUTE_HANDLERS_ROOT_FIRST]();
-	}
-	[INITIALIZE]() {
-		this.#state = this.#initial;
-		for (const state of this.#states.values()) {
-			state[INITIALIZE]();
-		}
-		super[INITIALIZE]();
-	}
-	[QUEUE_ALWAYS_HANDLERS]() {
-		this.#state?.[QUEUE_ALWAYS_HANDLERS]();
-		super[QUEUE_ALWAYS_HANDLERS]();
-	}
-	[QUEUE_ENTRY_HANDLERS]() {
-		super[QUEUE_ENTRY_HANDLERS]();
-		this.#state?.[QUEUE_ENTRY_HANDLERS]();
-	}
-	[QUEUE_EXIT_HANDLERS]() {
-		this.#state?.[QUEUE_EXIT_HANDLERS]();
-		super[QUEUE_EXIT_HANDLERS]();
-	}
-	/**
-	 * @param {string} eventName
-	 */
-	[QUEUE_ON_HANDLERS](eventName) {
-		this.#state?.[QUEUE_ON_HANDLERS](eventName);
-		super[QUEUE_ON_HANDLERS](eventName);
-	}
-	[RESOLVE_CONFIG]() {
-		super[RESOLVE_CONFIG]();
-		const iterator = this.#states.values();
-		const first = iterator.next();
-		// We know `first` is not empty but TypeScript doesn't. Help it.
-		if (first.done) throw Error('Impossible!');
-		this.#initial = first.value;
-
-		for (const state of this.#states.values()) {
-			state[RESOLVE_CONFIG]();
-		}
-	}
-	/** @param {StateNode} value */
-	set [STATE_ACTIVE](value) {
-		this.#state = value;
-	}
-	/**
-	 * @param {Set<string>} stateTreeEvents
-	 */
-	[STATE_NEXT_EVENTS](stateTreeEvents) {
-		// No state, implies the machine is not intialized, return zero events
-		if (!this.#state) return;
-
-		for (const [name, handlers] of Object.entries(this[ON_HANDLER])) {
-			if (handlers.length) {
-				stateTreeEvents.add(name);
-			}
-		}
-
-		this.#state[STATE_NEXT_EVENTS](stateTreeEvents);
-	}
-	get [STATE_STATES]() {
-		return this.#states;
 	}
 }

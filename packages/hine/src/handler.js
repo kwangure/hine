@@ -1,18 +1,3 @@
-import {
-	CALL_SUBSCRIBERS,
-	EXECUTE_HANDLERS_LEAF_FIRST,
-	EXECUTE_HANDLERS_ROOT_FIRST,
-	HANDLER_NOTIFY_AFTER,
-	HANDLER_NOTIFY_BEFORE,
-	HANDLER_QUEUE,
-	INITIALIZE,
-	QUEUE_ALWAYS_HANDLERS,
-	QUEUE_ENTRY_HANDLERS,
-	QUEUE_EXIT_HANDLERS,
-	STATE_ACTIVE,
-	STATE_HANDLER,
-} from './constants.js';
-
 /**
  * @typedef {import('./action').Action} Action
  * @typedef {import('./types').StateNode} StateNode
@@ -29,37 +14,37 @@ export class Handler {
 	#condition = null;
 	#name;
 	/** @type {StateNode | null} */
-	#ownerState = null;
-	/** @type {StateNode | null} */
 	#transitionTo = null;
 	#type = /** @type {const} */ ('handler');
+	/** @type {StateNode | null} */
+	__ownerState = null;
 	/** @type {boolean | undefined} */
-	[HANDLER_NOTIFY_AFTER] = undefined;
+	__notifyBefore = undefined;
 	/** @type {boolean | undefined} */
-	[HANDLER_NOTIFY_BEFORE] = undefined;
+	__notifyAfter = undefined;
 	/**
 	 * @param {import('./types').HandlerConfig<T>} options
 	 */
 	constructor(options) {
 		if (typeof options.notifyAfter === 'boolean') {
-			this[HANDLER_NOTIFY_AFTER] = options.notifyAfter;
+			this.__notifyAfter = options.notifyAfter;
 		}
 		if (typeof options.notifyBefore === 'boolean') {
-			this[HANDLER_NOTIFY_BEFORE] = options.notifyBefore;
+			this.__notifyBefore = options.notifyBefore;
 		}
 		this.#actions = options.actions || [];
 		this.#condition = options.condition || null;
 		this.#name = options.name || '';
-		this.#ownerState = /** @type {StateNode} */ (options.ownerState);
+		this.__ownerState = /** @type {StateNode} */ (options.ownerState);
 		this.#transitionTo = options.transitionTo || null;
 	}
 	#notifyAfter() {
-		if (!this[HANDLER_NOTIFY_AFTER]) return;
-		this.#ownerState?.[CALL_SUBSCRIBERS]();
+		if (!this.__notifyAfter) return;
+		this.__ownerState?.__callSubscribers();
 	}
 	#notifyBefore() {
-		if (!this[HANDLER_NOTIFY_BEFORE]) return;
-		this.#ownerState?.[CALL_SUBSCRIBERS]();
+		if (!this.__notifyBefore) return;
+		this.__ownerState?.__callSubscribers();
 	}
 	get condition() {
 		return this.#condition;
@@ -69,15 +54,15 @@ export class Handler {
 	}
 	/** @type {string[]} */
 	get path() {
-		return this.#ownerState
-			? [...this.#ownerState.path, `[${this.#name}]`]
+		return this.__ownerState
+			? [...this.__ownerState.path, `[${this.#name}]`]
 			: [`[${this.#name}]`];
 	}
 	runActions() {
 		// This should never happen. Its mostly to help TypeScript out
-		if (!this.#ownerState) throw Error('Missing handler ownerState');
+		if (!this.__ownerState) throw Error('Missing handler ownerState');
 
-		this.#ownerState[STATE_HANDLER] = this;
+		this.__ownerState.__handler = this;
 		this.#notifyBefore();
 		if (!this.condition || this.condition.run()) {
 			for (const action of this.#actions) {
@@ -85,23 +70,23 @@ export class Handler {
 			}
 		}
 		this.#notifyAfter();
-		this.#ownerState[STATE_HANDLER] = null;
+		this.__ownerState.__handler = null;
 	}
 	runTransition() {
-		const from = this.#ownerState;
+		const from = this.__ownerState;
 		const to = this.#transitionTo;
 		// These should never happen. They're mostly to help TypeScript out
 		if (!from) throw Error('Missing handler ownerState');
 		if (!to) throw Error('Missing handler transitionTo');
 
-		from[STATE_HANDLER] = this;
+		from.__handler = this;
 		this.#notifyBefore();
 		const shouldExecute = !this.condition || this.condition.run();
 		if (shouldExecute) {
-			from[HANDLER_QUEUE].length = 0;
+			from.__handlerQueue.length = 0;
 			// exit actions for the current state
-			from[QUEUE_EXIT_HANDLERS]();
-			from[EXECUTE_HANDLERS_LEAF_FIRST]();
+			from.__queueExitHandlers();
+			from.__executeHandlersLeafFirst();
 
 			// transition actions for the handler
 			for (const action of this.#actions) {
@@ -110,18 +95,17 @@ export class Handler {
 			// This should never happen. They're mostly to help TypeScript out
 			if (!from.parent) throw Error('Missing state parent');
 			// change the active nested state for parent state
-			from.parent[STATE_ACTIVE] = to;
+			from.parent.__state = to;
 			// set initial state from transitionTo to leaves
-			to[INITIALIZE]();
+			to.__initialize();
 
-			to[QUEUE_ENTRY_HANDLERS]();
-			to[EXECUTE_HANDLERS_ROOT_FIRST]();
-
-			to[QUEUE_ALWAYS_HANDLERS]();
-			to[EXECUTE_HANDLERS_ROOT_FIRST]();
+			to.__queueEntryHandlers();
+			to.__executeHandlersRootFirst();
+			to.__queueAlwaysHandlers();
+			to.__executeHandlersRootFirst();
 		}
 		this.#notifyAfter();
-		from[STATE_HANDLER] = null;
+		from.__handler = null;
 		return shouldExecute;
 	}
 	*stepActions() {
@@ -140,13 +124,13 @@ export class Handler {
 		this.#notifyAfter();
 	}
 	*stepTransition() {
-		const from = this.#ownerState;
+		const from = this.__ownerState;
 		const to = this.#transitionTo;
 		// These should never happen. They're mostly to help TypeScript out
 		if (!from) throw Error('Missing handler ownerState');
 		if (!to) throw Error('Missing handler transitionTo');
 
-		from[STATE_HANDLER] = this;
+		from.__handler = this;
 		this.#notifyBefore();
 		let shouldExecute = false;
 		if (this.condition) {
@@ -154,10 +138,10 @@ export class Handler {
 			shouldExecute = this.condition.run();
 		}
 		if (shouldExecute) {
-			from[HANDLER_QUEUE].length = 0;
+			from.__handlerQueue.length = 0;
 			// exit actions for the current state
-			from[QUEUE_EXIT_HANDLERS]();
-			from[EXECUTE_HANDLERS_LEAF_FIRST]();
+			from.__queueExitHandlers();
+			from.__executeHandlersLeafFirst();
 
 			// transition actions for the handler
 			for (const action of this.#actions) {
@@ -167,18 +151,18 @@ export class Handler {
 			// This should never happen. They're mostly to help TypeScript out
 			if (!from.parent) throw Error('Missing state parent');
 			// change the active nested state for parent state
-			from.parent[STATE_ACTIVE] = to;
+			from.parent.__state = to;
 			// set initial state from transitionTo to leaves
-			to[INITIALIZE]();
+			to.__initialize();
 
-			to[QUEUE_ENTRY_HANDLERS]();
-			to[EXECUTE_HANDLERS_ROOT_FIRST]();
+			to.__queueEntryHandlers();
+			to.__executeHandlersRootFirst();
 
-			to[QUEUE_ALWAYS_HANDLERS]();
-			to[EXECUTE_HANDLERS_ROOT_FIRST]();
+			to.__queueAlwaysHandlers();
+			to.__executeHandlersRootFirst();
 		}
 		this.#notifyAfter();
-		from[STATE_HANDLER] = null;
+		from.__handler = null;
 		return shouldExecute;
 	}
 	toJSON() {

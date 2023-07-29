@@ -4,7 +4,6 @@ import type { AtomicState } from './atomic';
 import type { BaseState } from './handler.js';
 import type { CompoundState } from './compound';
 import type { Condition } from './condition.js';
-import type { TO_JSON } from './constants.js';
 import type { Simplify } from 'type-fest';
 import type { Context } from './context.js';
 
@@ -67,7 +66,7 @@ export type CompoundStateConfig = Partial<StateNodeConfig> & {
 	states: Record<string, StateNode>;
 };
 
-type BaseJSON = ReturnType<BaseState[typeof TO_JSON]>;
+type BaseJSON = ReturnType<BaseState['__toJSON']>;
 
 export type AtomicStateJSON = Simplify<
 	BaseJSON & {

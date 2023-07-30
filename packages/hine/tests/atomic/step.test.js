@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { Condition } from '../../src/condition.js';
-import { Handler } from '../../src/handler.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 import { zip } from '../../src/utils/iterator.js';
 
 describe('step', () => {
@@ -73,7 +73,7 @@ describe('step', () => {
 		});
 		state.start();
 
-		const expected = [Handler, condition, action, Handler, action];
+		const expected = [EffectHandler, condition, action, EffectHandler, action];
 		const expectedIterator = expected[Symbol.iterator]();
 		const eventIterator = state.step('event');
 		for (const [expected, actual] of zip(expectedIterator, eventIterator)) {

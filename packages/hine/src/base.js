@@ -1,6 +1,7 @@
 import { Context } from './context.js';
-import { Handler } from './handler.js';
+import { EffectHandler } from './handler/effect.js';
 import { StateEvent } from './event.js';
+import { TransitionHandler } from './handler/transition.js';
 
 /**
  * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
@@ -31,7 +32,7 @@ export class BaseState {
 	 * @type {Record<string, import('./condition').Condition>}
 	 */
 	#allConditions = {};
-	/** @type {Handler[]} */
+	/** @type {(EffectHandler | TransitionHandler)[]} */
 	#always = [];
 	#alwaysConfig;
 	/**
@@ -45,13 +46,13 @@ export class BaseState {
 	 */
 	#conditions = {};
 	#context;
-	/** @type {Handler[]} */
+	/** @type {(EffectHandler | TransitionHandler)[]} */
 	#entry = [];
 	/** @type {EntryHandlerConfig[]} */
 	#entryConfig = [];
 	/** @type {StateEvent | null} */
 	#event = null;
-	/** @type {Handler[]} */
+	/** @type {(EffectHandler | TransitionHandler)[]} */
 	#exit = [];
 	/** @type {ExitHandlerConfig[]} */
 	#exitConfig = [];
@@ -66,15 +67,15 @@ export class BaseState {
 	/**
 	 * The active handler that is currently executing
 	 *
-	 * @type {import('./handler').Handler | null}
+	 * @type {(EffectHandler | TransitionHandler) | null}
 	 */
 	__handler = null;
-	/** @type {Handler[]} */
+	/** @type {(EffectHandler | TransitionHandler)[]} */
 	__handlerQueue = [];
 	__name = '';
 	/** @type {import('./compound.js').CompoundState | null} */
 	__parent = null;
-	/** @type {Record<string, Handler[]>} */
+	/** @type {Record<string, (EffectHandler | TransitionHandler)[]>} */
 	__onHandler = {};
 	/** @type {Set<(arg: BaseState) => any>} */
 	__subscribers = new Set();
@@ -162,7 +163,6 @@ export class BaseState {
 	#resolveHandler(handler, name) {
 		const { transitionTo } = handler;
 		const actions = this.#resolveActions(handler);
-		let to;
 		if (transitionTo) {
 			const parent = this.__parent;
 			if (!parent) {
@@ -177,7 +177,7 @@ export class BaseState {
 					);
 				}
 			}
-			to = parent.__states.get(transitionTo);
+			const to = parent.__states.get(transitionTo);
 			if (!to) {
 				if (this.path.some((segment) => Boolean(segment))) {
 					const path = this.path.join('.');
@@ -194,14 +194,20 @@ export class BaseState {
 					);
 				}
 			}
+			return new TransitionHandler({
+				actions,
+				name,
+				condition: this.#resolveCondition(handler),
+				ownerState: this,
+				transitionTo: to,
+			});
 		}
 
-		return new Handler({
+		return new EffectHandler({
 			actions,
 			name,
 			condition: this.#resolveCondition(handler),
 			ownerState: this,
-			transitionTo: to,
 		});
 	}
 	/**
@@ -296,12 +302,9 @@ export class BaseState {
 	}
 	__executeHandlers() {
 		for (const handler of this.__handlerQueue) {
-			if (handler.transitionTo) {
-				const executed = handler.runTransition();
-				if (executed) break;
-			} else {
-				handler.runActions();
-			}
+			const wasExecuted = handler.run();
+			// transitions short-circuit handler execution
+			if (wasExecuted && handler instanceof TransitionHandler) break;
 		}
 		this.__handlerQueue.length = 0;
 	}
@@ -402,7 +405,11 @@ export class BaseState {
 	canTransitionTo(path) {
 		for (const handlers of Object.values(this.__onHandler)) {
 			for (const handler of handlers) {
-				if (handler.transitionTo?.name === path) return true;
+				if (
+					handler instanceof TransitionHandler &&
+					handler.transitionTo?.name === path
+				)
+					return true;
 			}
 		}
 		return false;
@@ -556,11 +563,11 @@ export class BaseState {
 
 		for (const handler of this.__handlerQueue) {
 			yield handler;
-			if (handler.transitionTo) {
-				const executed = yield* handler.stepTransition();
+			if (handler instanceof TransitionHandler) {
+				const executed = yield* handler.step();
 				if (executed) break;
 			} else {
-				yield* handler.stepActions();
+				yield* handler.step();
 			}
 		}
 

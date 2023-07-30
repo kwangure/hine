@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src';
-import { Handler } from '../../src/handler';
+import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('path', () => {
 	it('returns path with name', () => {
-		const handler = new Handler({
+		const handler = new TransitionHandler({
 			name: 'handler',
 		});
 		expect(handler.path).toEqual(['[handler]']);
@@ -12,7 +12,7 @@ describe('path', () => {
 	it('returns path with empty string when missing name', () => {
 		// Warn against doing this via TypeScript but allow it in practice
 		// @ts-ignore
-		const handler = new Handler({});
+		const handler = new TransitionHandler({});
 		expect(handler.path).toEqual(['[]']);
 	});
 	it('includes ownerState path', () => {

@@ -1,29 +1,29 @@
 import { Action, Condition } from '../../src';
 import { describe, expect, it } from 'vitest';
-import { Handler } from '../../src/handler.js';
+import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('toJSON', () => {
 	it('includes name', () => {
 		const name = 'handler';
-		const handler = new Handler({ name });
+		const handler = new TransitionHandler({ name });
 		const json = handler.toJSON();
 		expect(json.name).toBe(name);
 	});
 	it('includes type', () => {
 		const name = 'handler';
-		const handler = new Handler({ name });
+		const handler = new TransitionHandler({ name });
 		const json = handler.toJSON();
-		expect(json.type).toEqual('handler');
+		expect(json.type).toEqual('transition');
 	});
 	it('includes path', () => {
 		const name = 'handler';
-		const handler = new Handler({ name });
+		const handler = new TransitionHandler({ name });
 		const json = handler.toJSON();
 		expect(json.path).toEqual(['[handler]']);
 	});
 	it('serializes nested actions', () => {
 		const name = 'handler';
-		const state = new Handler({
+		const state = new TransitionHandler({
 			name,
 			actions: [
 				new Action({
@@ -37,7 +37,7 @@ describe('toJSON', () => {
 	});
 	it('serializes nested condition', () => {
 		const name = 'handler';
-		const state = new Handler({
+		const state = new TransitionHandler({
 			name,
 			condition: new Condition({
 				name: 'condition',

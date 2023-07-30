@@ -74,7 +74,7 @@ describe('toJSON', () => {
 				condition: undefined,
 				name: '0',
 				transitionTo: undefined,
-				type: 'handler',
+				type: 'effect',
 				path: ['', '[0]'],
 			},
 		]);
@@ -106,7 +106,7 @@ describe('toJSON', () => {
 				condition: undefined,
 				name: '0',
 				transitionTo: undefined,
-				type: 'handler',
+				type: 'effect',
 				path: ['', '[0]'],
 			},
 		]);
@@ -138,7 +138,7 @@ describe('toJSON', () => {
 				condition: undefined,
 				name: '0',
 				transitionTo: undefined,
-				type: 'handler',
+				type: 'effect',
 				path: ['', '[0]'],
 			},
 		]);
@@ -173,7 +173,7 @@ describe('toJSON', () => {
 					condition: undefined,
 					name: '0',
 					transitionTo: undefined,
-					type: 'handler',
+					type: 'effect',
 					path: ['', '[0]'],
 				},
 			],

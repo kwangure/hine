@@ -1,11 +1,12 @@
 import type { Action } from './action.js';
-import type { Handler } from './handler.js';
 import type { AtomicState } from './atomic';
-import type { BaseState } from './handler.js';
+import type { BaseState } from './base.js';
 import type { CompoundState } from './compound';
 import type { Condition } from './condition.js';
-import type { Simplify } from 'type-fest';
 import type { Context } from './context.js';
+import type { EffectHandler } from './handler/effect.js';
+import type { Simplify } from 'type-fest';
+import type { TransitionHandler } from './handler/transition.js';
 
 export interface ActionConfig {
 	name?: string;
@@ -21,14 +22,23 @@ export interface ConditionConfig {
 	run: (this: undefined, arg: Condition) => boolean;
 }
 
-export type HandlerConfig<T extends StateNode> = {
+export type EffectHandlerConfig = {
 	actions?: Action[];
 	condition?: Condition;
 	name: string;
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
-	ownerState?: T | BaseState;
-	transitionTo?: T;
+	ownerState?: BaseState;
+};
+
+export type TransitionHandlerConfig = {
+	actions?: Action[];
+	condition?: Condition;
+	name: string;
+	notifyAfter?: boolean;
+	notifyBefore?: boolean;
+	ownerState?: BaseState;
+	transitionTo?: StateNode;
 };
 
 export type AlwaysHandlerConfig = {
@@ -85,7 +95,9 @@ export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
 
 export type ActionJSON = ReturnType<Action['toJSON']>;
 export type ConditionJSON = ReturnType<Condition['toJSON']>;
-export type HandlerJSON = ReturnType<Handler['toJSON']>;
+export type HandlerJSON = ReturnType<
+	(EffectHandler | TransitionHandler)['toJSON']
+>;
 
 export type MonitorConfig = {
 	actions?: Record<string, Action>;

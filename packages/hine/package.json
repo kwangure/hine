@@ -7,7 +7,7 @@
 		"pack": "wireit",
 		"pre-commit": "wireit",
 		"publint": "wireit",
-		"release": "release-it",
+		"release": "wireit",
 		"test": "wireit"
 	},
 	"keywords": [
@@ -33,7 +33,6 @@
 	},
 	"devDependencies": {
 		"publint": "^0.1.11",
-		"release-it": "^15.6.0",
 		"type-fest": "^3.6.1",
 		"typescript": "^5.0.3",
 		"vitest": "^0.27.2"
@@ -93,6 +92,13 @@
 		"pre-commit": {
 			"dependencies": [
 				"check",
+				"test"
+			]
+		},
+		"release": {
+			"dependencies": [
+				"build",
+				"publint",
 				"test"
 			]
 		},

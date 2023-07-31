@@ -4,7 +4,7 @@ import type { BaseState } from './base.js';
 import type { CompoundState } from './compound';
 import type { Condition } from './condition.js';
 import type { Context } from './context.js';
-import type { EffectHandler } from './handler/effect.js';
+import type { EffectHandler2 } from './handler/effect.js';
 import type { Simplify } from 'type-fest';
 import type { TransitionHandler } from './handler/transition.js';
 
@@ -23,22 +23,18 @@ export interface ConditionConfig {
 }
 
 export type EffectHandlerConfig = {
-	actions?: Action[];
-	condition?: Condition;
-	name: string;
+	run?: string[];
+	if?: string;
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
-	ownerState?: BaseState;
 };
 
 export type TransitionHandlerConfig = {
-	actions?: Action[];
-	condition?: Condition;
-	name: string;
+	run?: string[];
+	if?: string;
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
-	ownerState?: BaseState;
-	transitionTo?: StateNode;
+	goto: string;
 };
 
 export type AlwaysHandlerConfig = {
@@ -63,12 +59,12 @@ export type ExitHandlerConfig = {
 export type StateNode = AtomicState | CompoundState;
 
 type StateNodeConfig = {
-	always: AlwaysHandlerConfig[];
+	always: (EffectHandler2 | TransitionHandler)[];
 	context: Context;
-	entry: EntryHandlerConfig[];
-	exit: ExitHandlerConfig[];
+	entry: EffectHandler2[];
+	exit: EffectHandler2[];
 	name: string;
-	on: Record<string, DispatchHandlerConfig[]>;
+	on: Record<string, (EffectHandler2 | TransitionHandler)[]>;
 };
 
 export type AtomicStateConfig = Partial<StateNodeConfig>;
@@ -96,7 +92,7 @@ export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
 export type ActionJSON = ReturnType<Action['toJSON']>;
 export type ConditionJSON = ReturnType<Condition['toJSON']>;
 export type HandlerJSON = ReturnType<
-	(EffectHandler | TransitionHandler)['toJSON']
+	(EffectHandler2 | TransitionHandler)['toJSON']
 >;
 
 export type MonitorConfig = {

@@ -1,5 +1,6 @@
 import { AtomicState, CompoundState } from '../../src';
 import { describe, expect, it } from 'vitest';
+import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('dispatch', () => {
 	it('throws on unresolved dispatch', () => {
@@ -13,18 +14,18 @@ describe('dispatch', () => {
 		const s1 = new AtomicState({
 			on: {
 				event: [
-					{
-						transitionTo: 's2',
-					},
+					new TransitionHandler({
+						goto: 's2',
+					}),
 				],
 			},
 		});
 		const s2 = new AtomicState({
 			on: {
 				event: [
-					{
-						transitionTo: 's1',
-					},
+					new TransitionHandler({
+						goto: 's1',
+					}),
 				],
 			},
 		});

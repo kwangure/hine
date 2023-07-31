@@ -1,5 +1,7 @@
 import { Action, AtomicState, CompoundState, Condition } from '../../src';
 import { describe, expect, it } from 'vitest';
+import { EffectHandler2 } from '../../src/handler/effect.js';
+import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('conditions', () => {
 	it('exposes conditions inside conditions', () => {
@@ -8,10 +10,10 @@ describe('conditions', () => {
 		});
 		const state = new CompoundState({
 			entry: [
-				{
-					condition: 'cond1',
-					actions: ['do'],
-				},
+				new EffectHandler2({
+					if: 'cond1',
+					run: ['do'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -47,10 +49,10 @@ describe('conditions', () => {
 		});
 		const state = new CompoundState({
 			entry: [
-				{
-					condition: 'condition',
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					if: 'condition',
+					run: ['action'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -74,10 +76,10 @@ describe('conditions', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					{
-						condition: 'condition',
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						if: 'condition',
+						run: ['action'],
+					}),
 				],
 			},
 			states: {
@@ -114,10 +116,10 @@ describe('conditions', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					{
-						condition: 'condition',
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						if: 'condition',
+						run: ['action'],
+					}),
 				],
 			},
 			states: {
@@ -154,10 +156,10 @@ describe('conditions', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					{
-						condition: 'condition',
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						if: 'condition',
+						run: ['action'],
+					}),
 				],
 			},
 			states: {
@@ -198,10 +200,10 @@ describe('conditions', () => {
 				s1: new CompoundState({
 					on: {
 						event: [
-							{
-								condition: 'condition',
-								actions: ['action'],
-							},
+							new EffectHandler2({
+								if: 'condition',
+								run: ['action'],
+							}),
 						],
 					},
 					states: {
@@ -246,10 +248,10 @@ describe('conditions', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					{
-						condition: 'condition',
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						if: 'condition',
+						run: ['action'],
+					}),
 				],
 			},
 			states: {
@@ -283,10 +285,10 @@ describe('conditions', () => {
 		const state1 = new CompoundState({
 			on: {
 				event: [
-					{
-						condition: 'condition',
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						if: 'condition',
+						run: ['action'],
+					}),
 				],
 			},
 			states: {
@@ -310,10 +312,10 @@ describe('conditions', () => {
 		const state2 = new CompoundState({
 			on: {
 				event: [
-					{
-						condition: 'other-condition',
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						if: 'other-condition',
+						run: ['action'],
+					}),
 				],
 			},
 			states: {
@@ -345,10 +347,10 @@ describe('conditions', () => {
 		});
 		const state = new CompoundState({
 			entry: [
-				{
-					condition: 'condition',
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					if: 'condition',
+					run: ['action'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -371,10 +373,10 @@ describe('conditions', () => {
 		const actions = [];
 		const state = new CompoundState({
 			entry: [
-				{
-					actions: ['action'],
-					condition: 'isFalsy',
-				},
+				new EffectHandler2({
+					run: ['action'],
+					if: 'isFalsy',
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -404,10 +406,10 @@ describe('conditions', () => {
 		const actions = [];
 		const state = new CompoundState({
 			entry: [
-				{
-					actions: ['action'],
-					condition: 'run',
-				},
+				new EffectHandler2({
+					run: ['action'],
+					if: 'run',
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -439,15 +441,15 @@ describe('conditions', () => {
 			states: {
 				s1: new CompoundState({
 					always: [
-						{
-							transitionTo: 's2',
-						},
+						new TransitionHandler({
+							goto: 's2',
+						}),
 					],
 					exit: [
-						{
-							actions: ['action'],
-							condition: 'isFalsy',
-						},
+						new EffectHandler2({
+							run: ['action'],
+							if: 'isFalsy',
+						}),
 					],
 					states: {
 						s11: new AtomicState(),
@@ -486,15 +488,15 @@ describe('conditions', () => {
 			states: {
 				s1: new CompoundState({
 					always: [
-						{
-							transitionTo: 's2',
-						},
+						new TransitionHandler({
+							goto: 's2',
+						}),
 					],
 					exit: [
-						{
-							actions: ['action'],
-							condition: 'isTruthy',
-						},
+						new EffectHandler2({
+							run: ['action'],
+							if: 'isTruthy',
+						}),
 					],
 					states: {
 						s11: new AtomicState(),
@@ -536,10 +538,10 @@ describe('conditions', () => {
 		const state = new CompoundState({
 			on: {
 				myEvent: [
-					{
-						actions: ['action'],
-						condition: 'isFalsy',
-					},
+					new EffectHandler2({
+						run: ['action'],
+						if: 'isFalsy',
+					}),
 				],
 			},
 			states: {
@@ -572,10 +574,10 @@ describe('conditions', () => {
 		const state = new CompoundState({
 			on: {
 				myEvent: [
-					{
-						actions: ['action'],
-						condition: 'isTruthy',
-					},
+					new EffectHandler2({
+						run: ['action'],
+						if: 'isTruthy',
+					}),
 				],
 			},
 			states: {
@@ -607,10 +609,10 @@ describe('conditions', () => {
 		const actions = [];
 		const state = new CompoundState({
 			always: [
-				{
-					actions: ['action'],
-					condition: 'isFalsy',
-				},
+				new EffectHandler2({
+					run: ['action'],
+					if: 'isFalsy',
+				}),
 			],
 			states: {
 				s11: new AtomicState(),
@@ -640,10 +642,10 @@ describe('conditions', () => {
 		const actions = [];
 		const state = new CompoundState({
 			always: [
-				{
-					actions: ['action'],
-					condition: 'isTruthy',
-				},
+				new EffectHandler2({
+					run: ['action'],
+					if: 'isTruthy',
+				}),
 			],
 			states: {
 				s11: new AtomicState(),

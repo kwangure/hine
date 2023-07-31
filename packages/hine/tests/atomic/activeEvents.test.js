@@ -1,15 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
+import { EffectHandler2 } from '../../src/handler/effect.js';
 
 describe('activeEvents', () => {
 	it('returns handlable events', () => {
 		const state = new AtomicState({
 			on: {
 				EVENT: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 		});
@@ -25,9 +26,9 @@ describe('activeEvents', () => {
 		const state = new AtomicState({
 			on: {
 				EVENT: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 		});

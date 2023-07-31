@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { CompoundState } from '../../src/compound.js';
+import { EffectHandler2 } from '../../src/handler/effect.js';
+import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('actions', () => {
 	it('runs initial entry then transient actions', () => {
@@ -10,38 +12,38 @@ describe('actions', () => {
 		const state = new CompoundState({
 			name: 's0',
 			always: [
-				{
-					actions: ['always0'],
-				},
+				new EffectHandler2({
+					run: ['always0'],
+				}),
 			],
 			entry: [
-				{
-					actions: ['entry0'],
-				},
+				new EffectHandler2({
+					run: ['entry0'],
+				}),
 			],
 			states: {
 				s1: new CompoundState({
 					always: [
-						{
-							actions: ['always1'],
-						},
+						new EffectHandler2({
+							run: ['always1'],
+						}),
 					],
 					entry: [
-						{
-							actions: ['entry1'],
-						},
+						new EffectHandler2({
+							run: ['entry1'],
+						}),
 					],
 					states: {
 						s2: new AtomicState({
 							always: [
-								{
-									actions: ['always2'],
-								},
+								new EffectHandler2({
+									run: ['always2'],
+								}),
 							],
 							entry: [
-								{
-									actions: ['entry2'],
-								},
+								new EffectHandler2({
+									run: ['entry2'],
+								}),
 							],
 						}),
 					},
@@ -113,46 +115,46 @@ describe('actions', () => {
 				a: new AtomicState({
 					on: {
 						event: [
-							{
-								transitionTo: 'b',
-							},
+							new TransitionHandler({
+								goto: 'b',
+							}),
 						],
 					},
 				}),
 				b: new CompoundState({
 					always: [
-						{
-							actions: ['always0'],
-						},
+						new EffectHandler2({
+							run: ['always0'],
+						}),
 					],
 					entry: [
-						{
-							actions: ['entry0'],
-						},
+						new EffectHandler2({
+							run: ['entry0'],
+						}),
 					],
 					states: {
 						s1: new CompoundState({
 							always: [
-								{
-									actions: ['always1'],
-								},
+								new EffectHandler2({
+									run: ['always1'],
+								}),
 							],
 							entry: [
-								{
-									actions: ['entry1'],
-								},
+								new EffectHandler2({
+									run: ['entry1'],
+								}),
 							],
 							states: {
 								s2: new AtomicState({
 									always: [
-										{
-											actions: ['always2'],
-										},
+										new EffectHandler2({
+											run: ['always2'],
+										}),
 									],
 									entry: [
-										{
-											actions: ['entry2'],
-										},
+										new EffectHandler2({
+											run: ['entry2'],
+										}),
 									],
 								}),
 							},
@@ -228,37 +230,37 @@ describe('actions', () => {
 		const log = [];
 		const state = new CompoundState({
 			exit: [
-				{
-					actions: ['exit0'],
-				},
+				new EffectHandler2({
+					run: ['exit0'],
+				}),
 			],
 			states: {
 				s1: new CompoundState({
 					exit: [
-						{
-							actions: ['exit1'],
-						},
+						new EffectHandler2({
+							run: ['exit1'],
+						}),
 					],
 					on: {
 						event: [
-							{
-								transitionTo: 's2',
-							},
+							new TransitionHandler({
+								goto: 's2',
+							}),
 						],
 					},
 					states: {
 						s11: new CompoundState({
 							exit: [
-								{
-									actions: ['exit11'],
-								},
+								new EffectHandler2({
+									run: ['exit11'],
+								}),
 							],
 							states: {
 								s111: new AtomicState({
 									exit: [
-										{
-											actions: ['exit111'],
-										},
+										new EffectHandler2({
+											run: ['exit111'],
+										}),
 									],
 								}),
 							},
@@ -323,36 +325,36 @@ describe('actions', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					{
-						actions: ['on0'],
-					},
+					new EffectHandler2({
+						run: ['on0'],
+					}),
 				],
 			},
 			states: {
 				s1: new CompoundState({
 					on: {
 						event: [
-							{
-								actions: ['on1'],
-							},
+							new EffectHandler2({
+								run: ['on1'],
+							}),
 						],
 					},
 					states: {
 						s11: new CompoundState({
 							on: {
 								event: [
-									{
-										actions: ['on11'],
-									},
+									new EffectHandler2({
+										run: ['on11'],
+									}),
 								],
 							},
 							states: {
 								s111: new AtomicState({
 									on: {
 										event: [
-											{
-												actions: ['on111'],
-											},
+											new EffectHandler2({
+												run: ['on111'],
+											}),
 										],
 									},
 								}),
@@ -417,57 +419,57 @@ describe('actions', () => {
 		const log = [];
 		const state = new CompoundState({
 			always: [
-				{
-					actions: ['always0'],
-				},
+				new EffectHandler2({
+					run: ['always0'],
+				}),
 			],
 			on: {
 				event: [
-					{
-						actions: ['on0'],
-					},
+					new EffectHandler2({
+						run: ['on0'],
+					}),
 				],
 			},
 			states: {
 				s1: new CompoundState({
 					always: [
-						{
-							actions: ['always1'],
-						},
+						new EffectHandler2({
+							run: ['always1'],
+						}),
 					],
 					on: {
 						event: [
-							{
-								actions: ['on1'],
-							},
+							new EffectHandler2({
+								run: ['on1'],
+							}),
 						],
 					},
 					states: {
 						s11: new CompoundState({
 							always: [
-								{
-									actions: ['always11'],
-								},
+								new EffectHandler2({
+									run: ['always11'],
+								}),
 							],
 							on: {
 								event: [
-									{
-										actions: ['on11'],
-									},
+									new EffectHandler2({
+										run: ['on11'],
+									}),
 								],
 							},
 							states: {
 								s111: new AtomicState({
 									always: [
-										{
-											actions: ['always111'],
-										},
+										new EffectHandler2({
+											run: ['always111'],
+										}),
 									],
 									on: {
 										event: [
-											{
-												actions: ['on111'],
-											},
+											new EffectHandler2({
+												run: ['on111'],
+											}),
 										],
 									},
 								}),
@@ -561,41 +563,41 @@ describe('actions', () => {
 		const log = [];
 		const state = new CompoundState({
 			always: [
-				{
-					actions: ['always0'],
-				},
+				new EffectHandler2({
+					run: ['always0'],
+				}),
 			],
 			entry: [
-				{
-					actions: ['entry0'],
-				},
+				new EffectHandler2({
+					run: ['entry0'],
+				}),
 			],
 			exit: [
-				{
-					actions: ['exit0'],
-				},
+				new EffectHandler2({
+					run: ['exit0'],
+				}),
 			],
 			states: {
 				s1: new CompoundState({
 					exit: [
-						{
-							actions: ['exit1'],
-						},
+						new EffectHandler2({
+							run: ['exit1'],
+						}),
 					],
 					on: {
 						event: [
-							{
-								transitionTo: 's2',
-								actions: ['on1'],
-							},
+							new TransitionHandler({
+								goto: 's2',
+								run: ['on1'],
+							}),
 						],
 					},
 					states: {
 						s11: new CompoundState({
 							exit: [
-								{
-									actions: ['exit11'],
-								},
+								new EffectHandler2({
+									run: ['exit11'],
+								}),
 							],
 							states: {
 								s111: new AtomicState(),
@@ -605,26 +607,26 @@ describe('actions', () => {
 				}),
 				s2: new CompoundState({
 					always: [
-						{
-							actions: ['always2'],
-						},
+						new EffectHandler2({
+							run: ['always2'],
+						}),
 					],
 					entry: [
-						{
-							actions: ['entry2'],
-						},
+						new EffectHandler2({
+							run: ['entry2'],
+						}),
 					],
 					states: {
 						s21: new CompoundState({
 							always: [
-								{
-									actions: ['always21'],
-								},
+								new EffectHandler2({
+									run: ['always21'],
+								}),
 							],
 							entry: [
-								{
-									actions: ['entry21'],
-								},
+								new EffectHandler2({
+									run: ['entry21'],
+								}),
 							],
 							states: {
 								s211: new AtomicState(),
@@ -752,9 +754,9 @@ describe('actions', () => {
 			states: {
 				current: new CompoundState({
 					always: [
-						{
-							actions: ['always'],
-						},
+						new EffectHandler2({
+							run: ['always'],
+						}),
 					],
 					states: {
 						s: new AtomicState(),
@@ -790,26 +792,26 @@ describe('actions', () => {
 			states: {
 				s1: new CompoundState({
 					always: [
-						{
-							actions: ['always'],
-						},
+						new EffectHandler2({
+							run: ['always'],
+						}),
 					],
 					entry: [
-						{
-							actions: ['entry'],
-						},
+						new EffectHandler2({
+							run: ['entry'],
+						}),
 					],
 					exit: [
-						{
-							actions: ['exit'],
-						},
+						new EffectHandler2({
+							run: ['exit'],
+						}),
 					],
 					on: {
 						event: [
-							{
-								transitionTo: 's2',
-								actions: ['on'],
-							},
+							new TransitionHandler({
+								goto: 's2',
+								run: ['on'],
+							}),
 						],
 					},
 					states: {
@@ -861,26 +863,26 @@ describe('actions', () => {
 			states: {
 				s1: new CompoundState({
 					always: [
-						{
-							actions: ['always'],
-						},
+						new EffectHandler2({
+							run: ['always'],
+						}),
 					],
 					entry: [
-						{
-							actions: ['entry'],
-						},
+						new EffectHandler2({
+							run: ['entry'],
+						}),
 					],
 					exit: [
-						{
-							actions: ['exit'],
-						},
+						new EffectHandler2({
+							run: ['exit'],
+						}),
 					],
 					on: {
 						event: [
-							{
-								transitionTo: 's2',
-								actions: ['on'],
-							},
+							new TransitionHandler({
+								goto: 's2',
+								run: ['on'],
+							}),
 						],
 					},
 					states: {
@@ -956,16 +958,16 @@ describe('actions', () => {
 			states: {
 				s1: new CompoundState({
 					entry: [
-						{
-							actions: ['entry1'],
-						},
+						new EffectHandler2({
+							run: ['entry1'],
+						}),
 					],
 					on: {
 						event: [
-							{
-								transitionTo: 's2',
-								actions: ['transition1'],
-							},
+							new TransitionHandler({
+								goto: 's2',
+								run: ['transition1'],
+							}),
 						],
 					},
 					states: {
@@ -974,10 +976,10 @@ describe('actions', () => {
 				}),
 				s2: new CompoundState({
 					always: [
-						{
-							transitionTo: 's1',
-							actions: ['always2'],
-						},
+						new TransitionHandler({
+							goto: 's1',
+							run: ['always2'],
+						}),
 					],
 					states: {
 						s21: new AtomicState(),
@@ -1027,9 +1029,9 @@ describe('actions', () => {
 		});
 		const state = new CompoundState({
 			entry: [
-				{
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					run: ['action'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -1048,9 +1050,9 @@ describe('actions', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 			states: {
@@ -1083,9 +1085,9 @@ describe('actions', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 			states: {
@@ -1118,9 +1120,9 @@ describe('actions', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 			states: {
@@ -1155,9 +1157,9 @@ describe('actions', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 			states: {
@@ -1191,9 +1193,9 @@ describe('actions', () => {
 				s1: new CompoundState({
 					on: {
 						event: [
-							{
-								actions: ['action'],
-							},
+							new EffectHandler2({
+								run: ['action'],
+							}),
 						],
 					},
 					states: {
@@ -1233,9 +1235,9 @@ describe('actions', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 			states: {
@@ -1254,9 +1256,9 @@ describe('actions', () => {
 		const state2 = new CompoundState({
 			on: {
 				event: [
-					{
-						actions: ['other-action'],
-					},
+					new EffectHandler2({
+						run: ['other-action'],
+					}),
 				],
 			},
 			states: {
@@ -1282,9 +1284,9 @@ describe('actions', () => {
 		});
 		const state = new CompoundState({
 			entry: [
-				{
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					run: ['action'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -1305,9 +1307,9 @@ describe('actions', () => {
 		});
 		const state = new CompoundState({
 			entry: [
-				{
-					actions: ['action1'],
-				},
+				new EffectHandler2({
+					run: ['action1'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -1331,7 +1333,7 @@ describe('actions', () => {
 	it('calls actions with value', () => {
 		const state = new CompoundState({
 			on: {
-				event: [{ actions: ['action'] }],
+				event: [new EffectHandler2({ run: ['action'] })],
 			},
 			states: {
 				s1: new AtomicState(),
@@ -1353,9 +1355,9 @@ describe('actions', () => {
 	it('throws on missing entry actions', () => {
 		const state = new CompoundState({
 			entry: [
-				{
-					actions: ['missing'],
-				},
+				new EffectHandler2({
+					run: ['missing'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -1366,9 +1368,9 @@ describe('actions', () => {
 	it('throws on missing exit actions', () => {
 		const state = new CompoundState({
 			exit: [
-				{
-					actions: ['missing'],
-				},
+				new EffectHandler2({
+					run: ['missing'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -1379,9 +1381,9 @@ describe('actions', () => {
 	it('throws on missing always actions', () => {
 		const state = new CompoundState({
 			always: [
-				{
-					actions: ['missing'],
-				},
+				new EffectHandler2({
+					run: ['missing'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),

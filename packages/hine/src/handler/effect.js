@@ -1,8 +1,7 @@
 import { BaseHandler } from './base.js';
 
-export class EffectHandler extends BaseHandler {
+export class EffectHandler2 extends BaseHandler {
 	#type = /** @type {const} */ ('effect');
-
 	run() {
 		// This should never happen. Its mostly to help TypeScript out
 		if (!this.__ownerState) throw Error('Missing handler ownerState');
@@ -38,8 +37,8 @@ export class EffectHandler extends BaseHandler {
 		return {
 			type: this.#type,
 			name: this.__name,
-			condition: this.__condition?.name,
-			actions: this.__actions.map((action) => action.name),
+			if: this.__condition?.name,
+			run: this.__actions.map((action) => action.name),
 			path: this.path,
 		};
 	}

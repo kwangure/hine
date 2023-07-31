@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/atomic.js';
 import { CompoundState } from '../../src/compound.js';
 import { stateEventNames } from '../../src/utils/state.js';
+import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('stateEventNames', () => {
 	it('returns events for current state', () => {
@@ -21,9 +22,9 @@ describe('stateEventNames', () => {
 					},
 					on: {
 						event11: [
-							{
-								transitionTo: 's2',
-							},
+							new TransitionHandler({
+								goto: 's2',
+							}),
 						],
 						event12: [],
 					},

@@ -1,5 +1,4 @@
 import { Context } from './context.js';
-import { EffectHandler } from './handler/effect.js';
 import { StateEvent } from './event.js';
 import { TransitionHandler } from './handler/transition.js';
 
@@ -22,17 +21,7 @@ export class BaseState {
 	 * @type {Record<string, import('./action.js').Action>}
 	 */
 	#actions = {};
-	/**
-	 * Actions from all ancestor states and the config
-	 * @type {Record<string, import('./action').Action>}
-	 */
-	#allActions = {};
-	/**
-	 * Conditions from all ancestor states and the config
-	 * @type {Record<string, import('./condition').Condition>}
-	 */
-	#allConditions = {};
-	/** @type {(EffectHandler | TransitionHandler)[]} */
+	/** @type {(import('./handler/effect.js').EffectHandler2 | import('./handler/transition.js').TransitionHandler)[]} */
 	#always = [];
 	#alwaysConfig;
 	/**
@@ -46,19 +35,29 @@ export class BaseState {
 	 */
 	#conditions = {};
 	#context;
-	/** @type {(EffectHandler | TransitionHandler)[]} */
+	/** @type {(import('./handler/effect.js').EffectHandler2 | import('./handler/transition.js').TransitionHandler)[]} */
 	#entry = [];
-	/** @type {EntryHandlerConfig[]} */
+	/** @type {(import('./handler/effect.js').EffectHandler2 | import('./handler/transition.js').TransitionHandler)[]} */
 	#entryConfig = [];
 	/** @type {StateEvent | null} */
 	#event = null;
-	/** @type {(EffectHandler | TransitionHandler)[]} */
+	/** @type {(import('./handler/effect.js').EffectHandler2 | import('./handler/transition.js').TransitionHandler)[]} */
 	#exit = [];
-	/** @type {ExitHandlerConfig[]} */
+	/** @type {(import('./handler/effect.js').EffectHandler2 | import('./handler/transition.js').TransitionHandler)[]} */
 	#exitConfig = [];
 	#initialized = false;
 	#isStepping = false;
 	#onConfig;
+	/**
+	 * Actions from all ancestor states and the config
+	 * @type {Record<string, import('./action').Action>}
+	 */
+	__allActions = {};
+	/**
+	 * Conditions from all ancestor states and the config
+	 * @type {Record<string, import('./condition').Condition>}
+	 */
+	__allConditions = {};
 
 	/** @type {import('./action.js').Action | null} */
 	__action = null;
@@ -67,15 +66,15 @@ export class BaseState {
 	/**
 	 * The active handler that is currently executing
 	 *
-	 * @type {(EffectHandler | TransitionHandler) | null}
+	 * @type {(import('./handler/effect.js').EffectHandler2 | import('./handler/transition.js').TransitionHandler) | null}
 	 */
 	__handler = null;
-	/** @type {(EffectHandler | TransitionHandler)[]} */
+	/** @type {(import('./handler/effect.js').EffectHandler2 | import('./handler/transition.js').TransitionHandler)[]} */
 	__handlerQueue = [];
 	__name = '';
 	/** @type {import('./compound.js').CompoundState | null} */
 	__parent = null;
-	/** @type {Record<string, (EffectHandler | TransitionHandler)[]>} */
+	/** @type {Record<string, (import('./handler/effect.js').EffectHandler2 | import('./handler/transition.js').TransitionHandler)[]>} */
 	__onHandler = {};
 	/** @type {Set<(arg: BaseState) => any>} */
 	__subscribers = new Set();
@@ -99,116 +98,6 @@ export class BaseState {
 				this.#exitConfig.push(handler);
 			}
 		}
-	}
-	/**
-	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig | EntryHandlerConfig | ExitHandlerConfig>} handler
-	 */
-	#resolveActions(handler) {
-		const actions = [];
-		for (const name of handler.actions || []) {
-			const action = this.#allActions[name];
-			if (!action) {
-				const actions = Object.keys(this.#allActions);
-				if (this.path.some((segment) => Boolean(segment))) {
-					const path = this.path.join('.');
-					throw Error(
-						`State '${path}' references unknown action '${name}'. Expected one of: ${actions.join(
-							', ',
-						)}`,
-					);
-				} else {
-					throw Error(
-						`State references unknown action '${name}'. Expected one of: ${actions.join(
-							', ',
-						)}`,
-					);
-				}
-			}
-			actions.push(action);
-		}
-		return actions;
-	}
-	/**
-	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig | EntryHandlerConfig | ExitHandlerConfig>} handler
-	 */
-	#resolveCondition(handler) {
-		const { condition: name } = handler;
-		if (name === undefined) return;
-
-		const condition = this.#allConditions[name];
-		if (!condition) {
-			const conditions = Object.keys(this.#allConditions);
-			if (this.path.some((segment) => Boolean(segment))) {
-				const path = this.path.join('.');
-				throw Error(
-					`State '${path}' references unknown condition '${name}'. Expected one of: ${conditions.join(
-						', ',
-					)}`,
-				);
-			} else {
-				throw Error(
-					`State references unknown condition '${name}'. Expected one of: ${conditions.join(
-						', ',
-					)}`,
-				);
-			}
-		}
-
-		return condition;
-	}
-	/**
-	 * @param {Partial<AlwaysHandlerConfig | DispatchHandlerConfig>} handler
-	 * @param {string} name
-	 */
-	#resolveHandler(handler, name) {
-		const { transitionTo } = handler;
-		const actions = this.#resolveActions(handler);
-		if (transitionTo) {
-			const parent = this.__parent;
-			if (!parent) {
-				if (this.path.some((segment) => Boolean(segment))) {
-					const path = this.path.join('.');
-					throw Error(
-						`State '${path}' references unknown transition target '${transitionTo}'. '${path}' does not have siblings.`,
-					);
-				} else {
-					throw Error(
-						`State references unknown transition target '${transitionTo}'. It does not have sibling states.`,
-					);
-				}
-			}
-			const to = parent.__states.get(transitionTo);
-			if (!to) {
-				if (this.path.some((segment) => Boolean(segment))) {
-					const path = this.path.join('.');
-					throw Error(
-						`State '${path}' references unknown transition target target '${transitionTo}'. Expected one of: ${[
-							...parent.__states.keys(),
-						].join(', ')}.`,
-					);
-				} else {
-					throw Error(
-						`State references unknown transition target '${transitionTo}'. Expected one of: ${[
-							...parent.__states.keys(),
-						].join(', ')}.`,
-					);
-				}
-			}
-			return new TransitionHandler({
-				actions,
-				name,
-				condition: this.#resolveCondition(handler),
-				ownerState: this,
-				transitionTo: to,
-			});
-		}
-
-		return new EffectHandler({
-			actions,
-			name,
-			condition: this.#resolveCondition(handler),
-			ownerState: this,
-		});
 	}
 	/**
 	 * @returns {{
@@ -345,26 +234,30 @@ export class BaseState {
 		}
 	}
 	__resolveConfig() {
-		this.#allActions = this.__actions;
-		this.#allConditions = this.__conditions;
+		this.__allActions = this.__actions;
+		this.__allConditions = this.__conditions;
 		this.#context.__ownerState = this;
 
 		for (const [index, handler] of this.#alwaysConfig.entries()) {
-			this.#always.push(this.#resolveHandler(handler, String(index)));
+			handler.__resolve({ name: String(index), ownerState: this });
+			this.#always.push(handler);
 		}
 
 		for (const [event, handlers] of Object.entries(this.#onConfig)) {
-			this.__onHandler[event] = handlers.map((handler, i) =>
-				this.#resolveHandler(handler, String(i)),
-			);
+			this.__onHandler[event] = handlers.map((handler, i) => {
+				handler.__resolve({ name: String(i), ownerState: this });
+				return handler;
+			});
 		}
 
 		for (const [index, handler] of this.#entryConfig.entries()) {
-			this.#entry.push(this.#resolveHandler(handler, String(index)));
+			handler.__resolve({ name: String(index), ownerState: this });
+			this.#entry.push(handler);
 		}
 
 		for (const [index, handler] of this.#exitConfig.entries()) {
-			this.#exit.push(this.#resolveHandler(handler, String(index)));
+			handler.__resolve({ name: String(index), ownerState: this });
+			this.#exit.push(handler);
 		}
 	}
 	__toJSON() {

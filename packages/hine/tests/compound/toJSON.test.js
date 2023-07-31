@@ -1,5 +1,6 @@
 import { Action, AtomicState, CompoundState, Condition } from '../../src';
 import { describe, expect, it } from 'vitest';
+import { EffectHandler2 } from '../../src/handler/effect.js';
 
 describe('toJSON', () => {
 	it('includes name', () => {
@@ -50,9 +51,9 @@ describe('toJSON', () => {
 	it('serializes always handlers', () => {
 		const state = new CompoundState({
 			always: [
-				{
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					run: ['action'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -70,7 +71,7 @@ describe('toJSON', () => {
 		const json = state.toJSON();
 		expect(json.always).toEqual([
 			{
-				actions: ['action'],
+				run: ['action'],
 				condition: undefined,
 				name: '0',
 				transitionTo: undefined,
@@ -82,9 +83,9 @@ describe('toJSON', () => {
 	it('serializes entry handlers', () => {
 		const state = new CompoundState({
 			entry: [
-				{
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					run: ['action'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -102,7 +103,7 @@ describe('toJSON', () => {
 		const json = state.toJSON();
 		expect(json.entry).toEqual([
 			{
-				actions: ['action'],
+				run: ['action'],
 				condition: undefined,
 				name: '0',
 				transitionTo: undefined,
@@ -114,9 +115,9 @@ describe('toJSON', () => {
 	it('serializes exit handlers', () => {
 		const state = new CompoundState({
 			exit: [
-				{
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					run: ['action'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -134,7 +135,7 @@ describe('toJSON', () => {
 		const json = state.toJSON();
 		expect(json.exit).toEqual([
 			{
-				actions: ['action'],
+				run: ['action'],
 				condition: undefined,
 				name: '0',
 				transitionTo: undefined,
@@ -147,9 +148,9 @@ describe('toJSON', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 			states: {
@@ -169,7 +170,7 @@ describe('toJSON', () => {
 		expect(json.on).toEqual({
 			event: [
 				{
-					actions: ['action'],
+					run: ['action'],
 					condition: undefined,
 					name: '0',
 					transitionTo: undefined,

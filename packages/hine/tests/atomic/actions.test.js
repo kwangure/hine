@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { CompoundState } from '../../src/compound.js';
+import { EffectHandler2 } from '../../src/handler/effect.js';
+import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('actions', () => {
 	it('runs initial entry then transient actions', () => {
@@ -10,14 +12,14 @@ describe('actions', () => {
 		const state = new AtomicState({
 			name: 's0',
 			always: [
-				{
-					actions: ['always0'],
-				},
+				new EffectHandler2({
+					run: ['always0'],
+				}),
 			],
 			entry: [
-				{
-					actions: ['entry0'],
-				},
+				new EffectHandler2({
+					run: ['entry0'],
+				}),
 			],
 		});
 		state.monitor({
@@ -46,22 +48,22 @@ describe('actions', () => {
 				a: new AtomicState({
 					on: {
 						event: [
-							{
-								transitionTo: 'b',
-							},
+							new TransitionHandler({
+								goto: 'b',
+							}),
 						],
 					},
 				}),
 				b: new AtomicState({
 					always: [
-						{
-							actions: ['always0'],
-						},
+						new EffectHandler2({
+							run: ['always0'],
+						}),
 					],
 					entry: [
-						{
-							actions: ['entry0'],
-						},
+						new EffectHandler2({
+							run: ['entry0'],
+						}),
 					],
 				}),
 			},
@@ -94,22 +96,22 @@ describe('actions', () => {
 		const log = [];
 		const state = new CompoundState({
 			exit: [
-				{
-					actions: ['exit0'],
-				},
+				new EffectHandler2({
+					run: ['exit0'],
+				}),
 			],
 			states: {
 				s1: new AtomicState({
 					exit: [
-						{
-							actions: ['exit1'],
-						},
+						new EffectHandler2({
+							run: ['exit1'],
+						}),
 					],
 					on: {
 						event: [
-							{
-								transitionTo: 's2',
-							},
+							new TransitionHandler({
+								goto: 's2',
+							}),
 						],
 					},
 				}),
@@ -149,9 +151,9 @@ describe('actions', () => {
 		const machine = new AtomicState({
 			on: {
 				event: [
-					{
-						actions: ['on0'],
-					},
+					new EffectHandler2({
+						run: ['on0'],
+					}),
 				],
 			},
 		});
@@ -176,15 +178,15 @@ describe('actions', () => {
 		const log = [];
 		const machine = new AtomicState({
 			always: [
-				{
-					actions: ['always0'],
-				},
+				new EffectHandler2({
+					run: ['always0'],
+				}),
 			],
 			on: {
 				event: [
-					{
-						actions: ['on0'],
-					},
+					new EffectHandler2({
+						run: ['on0'],
+					}),
 				],
 			},
 		});
@@ -216,29 +218,29 @@ describe('actions', () => {
 			states: {
 				s1: new AtomicState({
 					exit: [
-						{
-							actions: ['exit1'],
-						},
+						new EffectHandler2({
+							run: ['exit1'],
+						}),
 					],
 					on: {
 						event: [
-							{
-								transitionTo: 's2',
-								actions: ['on1'],
-							},
+							new TransitionHandler({
+								goto: 's2',
+								run: ['on1'],
+							}),
 						],
 					},
 				}),
 				s2: new AtomicState({
 					always: [
-						{
-							actions: ['always2'],
-						},
+						new EffectHandler2({
+							run: ['always2'],
+						}),
 					],
 					entry: [
-						{
-							actions: ['entry2'],
-						},
+						new EffectHandler2({
+							run: ['entry2'],
+						}),
 					],
 				}),
 			},
@@ -291,9 +293,9 @@ describe('actions', () => {
 		let alwaysCount = 0;
 		const state = new AtomicState({
 			always: [
-				{
-					actions: ['always'],
-				},
+				new EffectHandler2({
+					run: ['always'],
+				}),
 			],
 		});
 		state.monitor({
@@ -322,26 +324,26 @@ describe('actions', () => {
 					states: {
 						s11: new AtomicState({
 							always: [
-								{
-									actions: ['always'],
-								},
+								new EffectHandler2({
+									run: ['always'],
+								}),
 							],
 							entry: [
-								{
-									actions: ['entry'],
-								},
+								new EffectHandler2({
+									run: ['entry'],
+								}),
 							],
 							exit: [
-								{
-									actions: ['exit'],
-								},
+								new EffectHandler2({
+									run: ['exit'],
+								}),
 							],
 							on: {
 								event: [
-									{
-										transitionTo: 's12',
-										actions: ['on'],
-									},
+									new TransitionHandler({
+										goto: 's12',
+										run: ['on'],
+									}),
 								],
 							},
 						}),
@@ -388,26 +390,26 @@ describe('actions', () => {
 			states: {
 				s1: new AtomicState({
 					always: [
-						{
-							actions: ['always'],
-						},
+						new EffectHandler2({
+							run: ['always'],
+						}),
 					],
 					entry: [
-						{
-							actions: ['entry'],
-						},
+						new EffectHandler2({
+							run: ['entry'],
+						}),
 					],
 					exit: [
-						{
-							actions: ['exit'],
-						},
+						new EffectHandler2({
+							run: ['exit'],
+						}),
 					],
 					on: {
 						event: [
-							{
-								transitionTo: 's2',
-								actions: ['on'],
-							},
+							new TransitionHandler({
+								goto: 's2',
+								run: ['on'],
+							}),
 						],
 					},
 				}),
@@ -478,9 +480,9 @@ describe('actions', () => {
 		});
 		const state = new AtomicState({
 			entry: [
-				{
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					run: ['action'],
+				}),
 			],
 		});
 		state.monitor({
@@ -496,9 +498,9 @@ describe('actions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 		});
@@ -528,9 +530,9 @@ describe('actions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 		});
@@ -560,9 +562,9 @@ describe('actions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 		});
@@ -594,9 +596,9 @@ describe('actions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 		});
@@ -629,9 +631,9 @@ describe('actions', () => {
 						s11: new AtomicState({
 							on: {
 								event: [
-									{
-										actions: ['action'],
-									},
+									new EffectHandler2({
+										run: ['action'],
+									}),
 								],
 							},
 						}),
@@ -675,9 +677,9 @@ describe('actions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 		});
@@ -693,9 +695,9 @@ describe('actions', () => {
 		const state2 = new AtomicState({
 			on: {
 				event: [
-					{
-						actions: ['other-action'],
-					},
+					new EffectHandler2({
+						run: ['other-action'],
+					}),
 				],
 			},
 		});
@@ -718,9 +720,9 @@ describe('actions', () => {
 		});
 		const state = new AtomicState({
 			entry: [
-				{
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					run: ['action'],
+				}),
 			],
 		});
 		state.monitor({
@@ -738,9 +740,9 @@ describe('actions', () => {
 		});
 		const state = new AtomicState({
 			entry: [
-				{
-					actions: ['action1'],
-				},
+				new EffectHandler2({
+					run: ['action1'],
+				}),
 			],
 		});
 		state.monitor({
@@ -761,7 +763,7 @@ describe('actions', () => {
 	it('calls actions with value', () => {
 		const state = new AtomicState({
 			on: {
-				event: [{ actions: ['action'] }],
+				event: [new EffectHandler2({ run: ['action'] })],
 			},
 		});
 		state.monitor({
@@ -780,9 +782,9 @@ describe('actions', () => {
 	it('throws on missing entry actions', () => {
 		const state = new AtomicState({
 			entry: [
-				{
-					actions: ['missing'],
-				},
+				new EffectHandler2({
+					run: ['missing'],
+				}),
 			],
 		});
 		expect(() => state.start()).toThrow("'missing'");
@@ -790,9 +792,9 @@ describe('actions', () => {
 	it('throws on missing exit actions', () => {
 		const state = new AtomicState({
 			exit: [
-				{
-					actions: ['missing'],
-				},
+				new EffectHandler2({
+					run: ['missing'],
+				}),
 			],
 		});
 		expect(() => state.start()).toThrow("'missing'");
@@ -800,9 +802,9 @@ describe('actions', () => {
 	it('throws on missing always actions', () => {
 		const state = new AtomicState({
 			always: [
-				{
-					actions: ['missing'],
-				},
+				new EffectHandler2({
+					run: ['missing'],
+				}),
 			],
 		});
 		expect(() => state.start()).toThrow("'missing'");

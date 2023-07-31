@@ -2,19 +2,61 @@ import { BaseHandler } from './base.js';
 
 export class TransitionHandler extends BaseHandler {
 	/** @type {import('../types.js').StateNode | null} */
-	#transitionTo = null;
+	#goto = null;
 	#type = /** @type {const} */ ('transition');
+	__gotoName;
 
 	/**
-	 * @param {import('../types').TransitionHandlerConfig} options
+	 * @param {import('../types.js').TransitionHandlerConfig} options
 	 */
 	constructor(options) {
 		super(options);
-		this.#transitionTo = options.transitionTo || null;
+		this.__gotoName = options.goto;
+	}
+	/**
+	 * @param {{
+	 *   name: string;
+	 *   ownerState: import("../base.js").BaseState;
+	 * }} options
+	 */
+	__resolve(options) {
+		super.__resolve(options);
+		this.__resolveTransition();
+	}
+	__resolveTransition() {
+		const parent = this.__ownerState?.__parent;
+		if (!parent) {
+			let message = '';
+			if (this.path.some((segment) => Boolean(segment))) {
+				const path = this.path.join('.');
+				message += `State '${path}' references unknown transition target '${this.__gotoName}'.`;
+				message += ` '${path}' does not have sibling states.`;
+			} else {
+				message += `State references unknown transition target '${this.__gotoName}'.`;
+				message += ` It does not have sibling states.`;
+			}
+			throw Error(message);
+		}
+		const to = parent.__states.get(this.__gotoName);
+		if (!to) {
+			let message = '';
+			if (this.path.some((segment) => Boolean(segment))) {
+				const path = this.path.join('.');
+				message += `State '${path}' references unknown transition target '${this.__gotoName}'.`;
+			} else {
+				message += `State references unknown transition target '${this.__gotoName}'.`;
+			}
+			const siblings = Array.from(parent.__states.keys());
+			if (siblings.length) {
+				message += `Expected one of: ${siblings.join(', ')}.`;
+			}
+			throw Error(message);
+		}
+		this.#goto = to;
 	}
 	run() {
 		const from = this.__ownerState;
-		const to = this.#transitionTo;
+		const to = this.#goto;
 		// These should never happen. They're mostly to help TypeScript out
 		if (!from) throw Error('Missing handler ownerState');
 		if (!to) throw Error('Missing handler transitionTo');
@@ -50,7 +92,7 @@ export class TransitionHandler extends BaseHandler {
 	}
 	*step() {
 		const from = this.__ownerState;
-		const to = this.#transitionTo;
+		const to = this.#goto;
 		// These should never happen. They're mostly to help TypeScript out
 		if (!from) throw Error('Missing handler ownerState');
 		if (!to) throw Error('Missing handler transitionTo');
@@ -94,14 +136,14 @@ export class TransitionHandler extends BaseHandler {
 		return {
 			type: this.#type,
 			name: this.__name,
-			transitionTo: this.#transitionTo?.name,
-			condition: this.__condition?.name,
-			actions: this.__actions.map((action) => action.name),
+			goto: this.#goto?.name,
+			if: this.__condition?.name,
+			run: this.__actions.map((action) => action.name),
 			path: this.path,
 		};
 	}
 	get transitionTo() {
-		return this.#transitionTo;
+		return this.#goto;
 	}
 	get type() {
 		return this.#type;

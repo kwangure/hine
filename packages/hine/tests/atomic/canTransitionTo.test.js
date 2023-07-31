@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/atomic.js';
 import { CompoundState } from '../../src/compound.js';
+import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('canTransitionTo', () => {
 	it('returns booleans for transition', () => {
@@ -10,9 +11,9 @@ describe('canTransitionTo', () => {
 				s1: new AtomicState({
 					on: {
 						EVENT: [
-							{
-								transitionTo: 's2',
-							},
+							new TransitionHandler({
+								goto: 's2',
+							}),
 						],
 					},
 				}),

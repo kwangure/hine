@@ -4,9 +4,9 @@ import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('path', () => {
 	it('returns path with name', () => {
-		const handler = new TransitionHandler({
-			name: 'handler',
-		});
+		// @ts-expect-error
+		const handler = new TransitionHandler({});
+		handler.__name = 'handler';
 		expect(handler.path).toEqual(['[handler]']);
 	});
 	it('returns path with empty string when missing name', () => {
@@ -18,11 +18,11 @@ describe('path', () => {
 	it('includes ownerState path', () => {
 		const state = new AtomicState({
 			name: 'state',
-			always: [{}],
 		});
 		state.monitor({});
 		state.start();
-		// Currently the only way the end user ever reaches a Handler object
+		// TODO: Update now that handlers are user accessible
+		// Previously the only way the end user ever reached a handler object was `step`
 		const eventIterator = state.step('event');
 		const { value: handler, done } = eventIterator.next();
 

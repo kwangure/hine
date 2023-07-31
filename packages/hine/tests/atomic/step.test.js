@@ -2,22 +2,22 @@ import { describe, expect, it } from 'vitest';
 import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { Condition } from '../../src/condition.js';
-import { EffectHandler } from '../../src/handler/effect.js';
+import { EffectHandler2 } from '../../src/handler/effect.js';
 import { zip } from '../../src/utils/iterator.js';
 
 describe('step', () => {
 	it('call subscribers at the end', () => {
 		const state = new AtomicState({
 			always: [
-				{
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					run: ['action'],
+				}),
 			],
 			on: {
 				event: [
-					{
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						run: ['action'],
+					}),
 				],
 			},
 		});
@@ -54,16 +54,16 @@ describe('step', () => {
 		});
 		const state = new AtomicState({
 			always: [
-				{
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					run: ['action'],
+				}),
 			],
 			on: {
 				event: [
-					{
-						condition: 'condition',
-						actions: ['action'],
-					},
+					new EffectHandler2({
+						if: 'condition',
+						run: ['action'],
+					}),
 				],
 			},
 		});
@@ -73,7 +73,13 @@ describe('step', () => {
 		});
 		state.start();
 
-		const expected = [EffectHandler, condition, action, EffectHandler, action];
+		const expected = [
+			EffectHandler2,
+			condition,
+			action,
+			EffectHandler2,
+			action,
+		];
 		const expectedIterator = expected[Symbol.iterator]();
 		const eventIterator = state.step('event');
 		for (const [expected, actual] of zip(expectedIterator, eventIterator)) {
@@ -92,9 +98,9 @@ describe('step', () => {
 	it('throws if state is not initialized', () => {
 		const state = new AtomicState({
 			always: [
-				{
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					run: ['action'],
+				}),
 			],
 		});
 		state.monitor({
@@ -110,9 +116,9 @@ describe('step', () => {
 	it('throws if step is already in progress', () => {
 		const state = new AtomicState({
 			always: [
-				{
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					run: ['action'],
+				}),
 			],
 		});
 		state.monitor({

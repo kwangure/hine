@@ -1,20 +1,3 @@
-<!--
-    This README is generated from ./README_TEMPLATE.md. Do not edit it directly.
--->
-
-# Hine
-
-A JavaScript state machine library.
-
-### Install
-
-```bash
-npm install hine
-```
-
-### Getting started
-
-```javascript
 import { h } from 'hine';
 
 // Compound states can have child states
@@ -43,4 +26,3 @@ toggle.matches('inactive'); // true
 toggle.dispatch('toggle');
 
 toggle.matches('active'); // true
-```

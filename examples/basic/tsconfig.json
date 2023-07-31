@@ -2,12 +2,12 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"checkJs": true,
-		"noEmit": true,
+		"incremental": true,
 		"moduleResolution": "bundler",
+		"noEmit": true,
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"strict": true,
 		"target": "esnext"
-	},
-	"include": ["src", "tests"]
+	}
 }

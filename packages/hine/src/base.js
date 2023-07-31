@@ -417,8 +417,6 @@ export class BaseState {
 	get path() {
 		return this.__parent ? [...this.__parent.path, this.__name] : [this.__name];
 	}
-	// Type return as derived class instead of `BaseState`
-	/** @returns {this} */
 	start() {
 		if (!this.#initialized) {
 			this.__resolveConfig();
@@ -433,8 +431,6 @@ export class BaseState {
 		this.__executeHandlersRootFirst();
 		this.__callSubscribers();
 		this.#event = null;
-
-		return this;
 	}
 	/**
 	 * @param {string} eventName

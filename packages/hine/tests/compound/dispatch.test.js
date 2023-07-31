@@ -15,54 +15,55 @@ describe('dispatch', () => {
 	});
 
 	it('transitions on dispatch', () => {
-		const s1 = new CompoundState({
-			on: {
-				event: [
-					new TransitionHandler({
-						goto: 's2',
-					}),
-				],
-			},
-			states: {
-				s11: new AtomicState(),
-			},
-		});
-		const s2 = new CompoundState({
-			on: {
-				event: [
-					new TransitionHandler({
-						goto: 's1',
-					}),
-				],
-			},
-			states: {
-				s21: new AtomicState(),
-			},
-		});
 		const state = new CompoundState({
-			states: { s1, s2 },
+			states: {
+				s1: new CompoundState({
+					on: {
+						event: [
+							new TransitionHandler({
+								goto: 's2',
+							}),
+						],
+					},
+					states: {
+						s11: new AtomicState(),
+					},
+				}),
+				s2: new CompoundState({
+					on: {
+						event: [
+							new TransitionHandler({
+								goto: 's1',
+							}),
+						],
+					},
+					states: {
+						s21: new AtomicState(),
+					},
+				}),
+			},
 		});
 		state.monitor({});
 		state.start();
 		state.dispatch('event');
-		expect(state.state).toBe(s2);
+		expect(state.matches('.s2')).toBe(true);
 		state.dispatch('event');
-		expect(state.state).toBe(s1);
+		expect(state.matches('.s1')).toBe(true);
 		state.dispatch('event');
-		expect(state.state).toBe(s2);
+		expect(state.matches('.s2')).toBe(true);
 	});
 
 	it('ignores invalid events', () => {
-		const s1 = new AtomicState();
 		const state = new CompoundState({
 			states: {
-				s1,
+				s1: new AtomicState(),
 				s2: new AtomicState(),
 			},
-		}).start();
+		});
+		state.start();
 		expect(() => {
 			state.dispatch('random');
 		}).not.toThrow();
-		expect(state.state).toBe(s1);
+		expect(state.matches('.s1')).toBe(true);
 	});
 });

@@ -6,8 +6,8 @@ import { CompoundState } from '../compound.js';
  * @returns {string}
  */
 export function activePath(state) {
-	if (state instanceof CompoundState && state.state) {
-		return `${state.name}.${activePath(state.state)}`;
+	if (state instanceof CompoundState && state.__state) {
+		return `${state.name}.${activePath(state.__state)}`;
 	}
 
 	return state.name;
@@ -24,8 +24,8 @@ export function stateEventNames(state, stateTreeEvents = []) {
 		}
 	}
 
-	if (state instanceof CompoundState && state.state) {
-		stateEventNames(state.state, stateTreeEvents);
+	if (state instanceof CompoundState && state.__state) {
+		stateEventNames(state.__state, stateTreeEvents);
 	}
 
 	return stateTreeEvents;

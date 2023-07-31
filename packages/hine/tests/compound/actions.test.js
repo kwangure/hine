@@ -1017,7 +1017,7 @@ describe('actions', () => {
 		state.start();
 
 		state.dispatch('event');
-		expect(state.state?.name).toEqual('s1');
+		expect(state.matches('.s1')).toBe(true);
 		expect(log).toEqual(['entry1', 'transition1', 'always2', 'entry1']);
 	});
 	it('calls actions with self reference', () => {

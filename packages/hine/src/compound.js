@@ -33,12 +33,12 @@ export class CompoundState extends BaseState {
 		}
 	}
 	__executeHandlersLeafFirst() {
-		this.state?.__executeHandlersLeafFirst();
+		this.__state?.__executeHandlersLeafFirst();
 		super.__executeHandlersLeafFirst();
 	}
 	__executeHandlersRootFirst() {
 		super.__executeHandlersRootFirst();
-		this.state?.__executeHandlersRootFirst();
+		this.__state?.__executeHandlersRootFirst();
 	}
 	__initialize() {
 		this.__state = this.#initial;
@@ -148,9 +148,6 @@ export class CompoundState extends BaseState {
 			}
 			state.monitor(monitorConfig);
 		}
-	}
-	get state() {
-		return this.__state;
 	}
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {

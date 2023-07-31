@@ -32,15 +32,14 @@ describe('start', () => {
 		expect(log).toEqual(['always', 'always']);
 	});
 	it('sets initial state', () => {
-		const state = new AtomicState();
 		const machine = new CompoundState({
 			states: {
-				s1: state,
+				s1: new AtomicState(),
 			},
 		});
-		expect(machine.state).toBe(null);
+		expect(machine.matches('.s1')).toBe(false);
 		machine.start();
-		expect(machine.state).toBe(state);
+		expect(machine.matches('.s1')).toBe(true);
 	});
 	it('is resets to initial state', () => {
 		const state = new CompoundState({
@@ -54,10 +53,10 @@ describe('start', () => {
 			},
 		});
 		state.start();
-		expect(state.state?.name).toEqual('s1');
+		expect(state.matches('.s1')).toBe(true);
 		state.dispatch('event');
-		expect(state.state?.name).toEqual('s2');
+		expect(state.matches('.s2')).toBe(true);
 		state.start();
-		expect(state.state?.name).toEqual('s1');
+		expect(state.matches('.s1')).toBe(true);
 	});
 });

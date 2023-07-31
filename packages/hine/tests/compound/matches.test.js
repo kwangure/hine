@@ -53,7 +53,8 @@ describe('matches', () => {
 					},
 				}),
 			},
-		}).start();
+		});
+		state.start();
 		expect(state.matches('.s1')).toBe(true);
 		expect(state.matches('.s1.s11')).toBe(true);
 	});

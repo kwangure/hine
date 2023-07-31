@@ -133,17 +133,18 @@ describe('step', () => {
 		expect(() => state.step('event').next()).toThrow(/in progress/);
 	});
 	it('displays emitted event', () => {
-		const machine = new AtomicState().start();
-		expect(machine.event).toBe(null);
+		const state = new AtomicState();
+		state.start();
+		expect(state.event).toBe(null);
 		const event = 'my-event';
 		let initial = true;
-		machine.subscribe((machine) => {
+		state.subscribe((machine) => {
 			if (initial) {
 				initial = false;
 				return;
 			}
 			expect(machine.event?.name).toBe(event);
 		});
-		machine.step(event).next();
+		state.step(event).next();
 	});
 });

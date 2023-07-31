@@ -1,5 +1,6 @@
 import { Action, AtomicState } from '../../src';
 import { describe, expect, it } from 'vitest';
+import { EffectHandler2 } from '../../src/handler/effect.js';
 
 describe('start', () => {
 	it('is resolves config idempotently', () => {
@@ -7,9 +8,9 @@ describe('start', () => {
 		const log = [];
 		const state = new AtomicState({
 			always: [
-				{
-					actions: ['always'],
-				},
+				new EffectHandler2({
+					run: ['always'],
+				}),
 			],
 		});
 		state.monitor({

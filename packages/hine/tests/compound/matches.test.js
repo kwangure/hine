@@ -1,5 +1,6 @@
 import { Action, AtomicState, CompoundState, Condition } from '../../src';
 import { describe, expect, it } from 'vitest';
+import { EffectHandler2 } from '../../src/handler/effect.js';
 
 describe('matches', () => {
 	it('does not match when not started', () => {
@@ -60,9 +61,9 @@ describe('matches', () => {
 		const state = new CompoundState({
 			name: 'state',
 			always: [
-				{
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					run: ['action'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -91,10 +92,10 @@ describe('matches', () => {
 		const state = new CompoundState({
 			name: 'state',
 			always: [
-				{
-					condition: 'condition',
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					if: 'condition',
+					run: ['action'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -126,10 +127,10 @@ describe('matches', () => {
 		const state = new CompoundState({
 			name: 'state',
 			always: [
-				{
-					condition: 'condition',
-					actions: ['action'],
-				},
+				new EffectHandler2({
+					if: 'condition',
+					run: ['action'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),

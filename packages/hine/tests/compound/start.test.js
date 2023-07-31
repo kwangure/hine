@@ -1,5 +1,7 @@
 import { Action, AtomicState, CompoundState } from '../../src';
 import { describe, expect, it } from 'vitest';
+import { EffectHandler2 } from '../../src/handler/effect.js';
+import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('start', () => {
 	it('is resolves config idempotently', () => {
@@ -7,9 +9,9 @@ describe('start', () => {
 		const log = [];
 		const state = new CompoundState({
 			always: [
-				{
-					actions: ['always'],
-				},
+				new EffectHandler2({
+					run: ['always'],
+				}),
 			],
 			states: {
 				s1: new AtomicState(),
@@ -45,7 +47,7 @@ describe('start', () => {
 			states: {
 				s1: new AtomicState({
 					on: {
-						event: [{ transitionTo: 's2' }],
+						event: [new TransitionHandler({ goto: 's2' })],
 					},
 				}),
 				s2: new AtomicState(),

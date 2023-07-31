@@ -1,11 +1,12 @@
 import type { Action } from './action.js';
-import type { Handler } from './handler.js';
 import type { AtomicState } from './atomic';
-import type { BaseState } from './handler.js';
+import type { BaseState } from './base.js';
 import type { CompoundState } from './compound';
 import type { Condition } from './condition.js';
-import type { Simplify } from 'type-fest';
 import type { Context } from './context.js';
+import type { EffectHandler2 } from './handler/effect.js';
+import type { Simplify } from 'type-fest';
+import type { TransitionHandler } from './handler/transition.js';
 
 export interface ActionConfig {
 	name?: string;
@@ -21,14 +22,19 @@ export interface ConditionConfig {
 	run: (this: undefined, arg: Condition) => boolean;
 }
 
-export type HandlerConfig<T extends StateNode> = {
-	actions?: Action[];
-	condition?: Condition;
-	name: string;
+export type EffectHandlerConfig = {
+	run?: string[];
+	if?: string;
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
-	ownerState?: T | BaseState;
-	transitionTo?: T;
+};
+
+export type TransitionHandlerConfig = {
+	run?: string[];
+	if?: string;
+	notifyAfter?: boolean;
+	notifyBefore?: boolean;
+	goto: string;
 };
 
 export type AlwaysHandlerConfig = {
@@ -53,12 +59,12 @@ export type ExitHandlerConfig = {
 export type StateNode = AtomicState | CompoundState;
 
 type StateNodeConfig = {
-	always: AlwaysHandlerConfig[];
+	always: (EffectHandler2 | TransitionHandler)[];
 	context: Context;
-	entry: EntryHandlerConfig[];
-	exit: ExitHandlerConfig[];
+	entry: EffectHandler2[];
+	exit: EffectHandler2[];
 	name: string;
-	on: Record<string, DispatchHandlerConfig[]>;
+	on: Record<string, (EffectHandler2 | TransitionHandler)[]>;
 };
 
 export type AtomicStateConfig = Partial<StateNodeConfig>;
@@ -85,7 +91,9 @@ export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
 
 export type ActionJSON = ReturnType<Action['toJSON']>;
 export type ConditionJSON = ReturnType<Condition['toJSON']>;
-export type HandlerJSON = ReturnType<Handler['toJSON']>;
+export type HandlerJSON = ReturnType<
+	(EffectHandler2 | TransitionHandler)['toJSON']
+>;
 
 export type MonitorConfig = {
 	actions?: Record<string, Action>;

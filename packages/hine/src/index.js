@@ -3,6 +3,8 @@ import { AtomicState } from './atomic.js';
 import { CompoundState } from './compound.js';
 import { Condition } from './condition.js';
 import { Context } from './context.js';
+import { EffectHandler2 } from './handler/effect.js';
+import { TransitionHandler } from './handler/transition.js';
 
 /**
  * @typedef {import('./types').AtomicStateConfig} AtomicStateConfig
@@ -56,12 +58,28 @@ export function context(data) {
 	return new Context(data);
 }
 
+/**
+ * @param {import("./types").EffectHandlerConfig} options
+ */
+export function effect(options) {
+	return new EffectHandler2(options);
+}
+
+/**
+ * @param {import("./types").TransitionHandlerConfig} options
+ */
+export function transition(options) {
+	return new TransitionHandler(options);
+}
+
 export const h = {
 	action,
 	atomic,
 	compound,
 	condition,
 	context,
+	effect,
+	transition,
 };
 
 export { Action, AtomicState, CompoundState, Condition, Context };

@@ -3,10 +3,12 @@
 	"preview": false,
 	"type": "module",
 	"workspaces": [
-		"packages/*"
+		"packages/*",
+		"examples/*"
 	],
 	"scripts": {
 		"build": "wireit",
+		"check": "wireit",
 		"format": "wireit",
 		"lint": "wireit",
 		"pack": "wireit",
@@ -21,12 +23,32 @@
 		"eslint": "^8.32.0",
 		"husky": "^8.0.3",
 		"prettier": "^2.8.8",
+		"unified": "^14.0.3",
+		"remark-parse": "^10.0.2",
+		"remark-stringify": "^10.0.3",
 		"wireit": "^0.9.3"
 	},
 	"wireit": {
 		"build": {
 			"dependencies": [
-				"./packages/hine:build"
+				"./packages/hine:build",
+				"build:readme"
+			]
+		},
+		"build:readme": {
+			"command": "node ./scripts/build-readme.js",
+			"files": [
+				"README_TEMPLATE.md",
+				"examples/**/*.js"
+			],
+			"output": [
+				"README.md"
+			]
+		},
+		"check": {
+			"dependencies": [
+				"./packages/hine:build",
+				"./examples/basic:check"
 			]
 		},
 		"format": {
@@ -60,7 +82,9 @@
 			"dependencies": [
 				"format",
 				"lint",
-				"./packages/hine:pre-commit"
+				"build:readme",
+				"./packages/hine:pre-commit",
+				"./examples/basic:pre-commit"
 			]
 		},
 		"test": {

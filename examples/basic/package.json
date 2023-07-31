@@ -1,0 +1,27 @@
+{
+	"name": "@hine-examples/basic",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"check": "wireit",
+		"pre-commit": "wireit"
+	},
+	"wireit": {
+		"check": {
+			"command": "tsc",
+			"files": [
+				"**/*.{js,ts}",
+				"tsconfig.json"
+			],
+			"output": []
+		},
+		"pre-commit": {
+			"dependencies": [
+				"check"
+			]
+		}
+	},
+	"dependencies": {
+		"hine": "^0.0.16"
+	}
+}

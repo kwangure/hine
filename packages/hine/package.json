@@ -41,14 +41,24 @@
 	"wireit": {
 		"build": {
 			"clean": "if-file-deleted",
-			"command": "tsc",
+			"command": "tsc --project tsconfig.build.json",
 			"files": [
 				"src/**/*.{js,ts}",
+				"tsconfig.build.json",
 				"tsconfig.json"
 			],
 			"output": [
 				"types"
 			]
+		},
+		"check": {
+			"command": "tsc",
+			"files": [
+				"src/**/*.{js,ts}",
+				"tests/**/*.{js,ts}",
+				"tsconfig.json"
+			],
+			"output": []
 		},
 		"pack": {
 			"command": "npm pack",
@@ -82,8 +92,8 @@
 		},
 		"pre-commit": {
 			"dependencies": [
-				"test",
-				"build"
+				"check",
+				"test"
 			]
 		},
 		"test": {

@@ -2,15 +2,12 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"checkJs": true,
-		"declaration": true,
-		"declarationDir": "types",
-		"emitDeclarationOnly": true,
-		"incremental": true,
+		"noEmit": true,
 		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"strict": true,
 		"target": "esnext"
 	},
-	"include": ["src"]
+	"include": ["src", "tests"]
 }

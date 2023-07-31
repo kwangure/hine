@@ -27,9 +27,9 @@ describe.skip('toJSON', () => {
 	it('serializes nested actions', () => {
 		const name = 'handler';
 		const state = new TransitionHandler({
+			// @ts-expect-error
 			name,
 			actions: [
-				// @ts-expect-error
 				new Action({
 					name: 'action',
 					run() {},
@@ -37,19 +37,21 @@ describe.skip('toJSON', () => {
 			],
 		});
 		const json = state.toJSON();
+		// @ts-expect-error
 		expect(json.actions).toEqual(['action']);
 	});
 	it('serializes nested condition', () => {
 		const name = 'handler';
 		const state = new TransitionHandler({
-			name,
 			// @ts-expect-error
+			name,
 			condition: new Condition({
 				name: 'condition',
 				run: () => true,
 			}),
 		});
 		const json = state.toJSON();
+		// @ts-expect-error
 		expect(json.condition).toEqual('condition');
 	});
 });

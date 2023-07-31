@@ -47,7 +47,7 @@
 		},
 		"check": {
 			"dependencies": [
-				"./packages/hine:build",
+				"./packages/hine:check",
 				"./examples/basic:check"
 			]
 		},

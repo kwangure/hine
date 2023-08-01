@@ -9,3 +9,10 @@ dist
 **/*.tgz
 types
 *.tsbuildinfo
+
+# Sites
+.svelte-kit
+sites/*/build
+sites/*/package
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*

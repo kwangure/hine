@@ -2,7 +2,7 @@
 	"useTabs": true,
 	"singleQuote": true,
 	"trailingComma": "all",
-	"pluginSearchDirs": ["."],
+	"plugins": ["prettier-plugin-svelte"],
 	"overrides": [
 		{
 			"files": "*.svelte",

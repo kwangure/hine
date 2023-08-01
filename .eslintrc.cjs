@@ -1,4 +1,14 @@
 module.exports = {
 	root: true,
-	extends: ['@kwangure/eslint-config-svelte'],
+	extends: ['eslint:recommended', 'plugin:svelte/recommended', 'prettier'],
+	parserOptions: {
+		sourceType: 'module',
+		ecmaVersion: 'latest',
+		extraFileExtensions: ['.svelte'],
+	},
+	env: {
+		browser: true,
+		es2022: true,
+		node: true,
+	},
 };

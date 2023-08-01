@@ -4,11 +4,13 @@
 	"type": "module",
 	"workspaces": [
 		"packages/*",
-		"examples/*"
+		"examples/*",
+		"sites/*"
 	],
 	"scripts": {
 		"build": "wireit",
 		"check": "wireit",
+		"dev": "wireit",
 		"format": "wireit",
 		"lint": "wireit",
 		"pack": "wireit",
@@ -22,8 +24,11 @@
 		"@changesets/cli": "^2.26.1",
 		"@kwangure/eslint-config-svelte": "^0.3.6",
 		"eslint": "^8.32.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-svelte": "^2.30.0",
 		"husky": "^8.0.3",
 		"prettier": "^2.8.8",
+		"prettier-plugin-svelte": "^2.10.1",
 		"remark-parse": "^10.0.2",
 		"remark-stringify": "^10.0.3",
 		"unified": "^10.1.2",
@@ -38,6 +43,7 @@
 			]
 		},
 		"build:readme": {
+			"clean": false,
 			"command": "node ./scripts/build-readme.js",
 			"files": [
 				"README_TEMPLATE.md",
@@ -51,6 +57,11 @@
 			"dependencies": [
 				"./packages/hine:check",
 				"./examples/basic:check"
+			]
+		},
+		"dev": {
+			"dependencies": [
+				"./sites/hine.dev:dev"
 			]
 		},
 		"format": {

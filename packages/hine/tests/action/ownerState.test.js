@@ -19,9 +19,7 @@ describe('ownerState', () => {
 		});
 	});
 	it('throws when accessed before initialisation', () => {
-		const action = new Action({
-			run({ ownerState: _ownerState }) {},
-		});
+		const action = new Action({ run() {} });
 		expect(() => action.ownerState).toThrow('Attempted to read ownerState');
 	});
 });

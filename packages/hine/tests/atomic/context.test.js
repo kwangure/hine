@@ -7,7 +7,8 @@ describe('context', () => {
 	it('should return the context value for a given key', () => {
 		const state = new AtomicState({
 			context: new Context({ key: 'value' }),
-		}).start();
+		});
+		state.start();
 		expect(state.context?.get('key')).toBe('value');
 	});
 

@@ -8,7 +8,8 @@ describe('context', () => {
 		const state = new CompoundState({
 			context: new Context({ key: 'value' }),
 			states: { s1: new AtomicState() },
-		}).start();
+		});
+		state.start();
 		expect(state.context?.get('key')).toBe('value');
 	});
 

@@ -1,5 +1,6 @@
 {
 	"name": "@hine-examples/basic",
+	"version": "0.0.1",
 	"private": true,
 	"type": "module",
 	"scripts": {
@@ -22,6 +23,6 @@
 		}
 	},
 	"dependencies": {
-		"hine": "^0.0.16"
+		"hine": "^0.0.17"
 	}
 }

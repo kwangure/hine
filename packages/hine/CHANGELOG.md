@@ -1,5 +1,75 @@
 # hine
 
+## 0.0.17
+
+### Patch Changes
+
+- 7e622cc: Pass event values through `StateEvent{}` on states instead of drilling them
+  down through function call args
+
+  Before:
+
+  ```javascript
+  const state = new AtomicState({
+  	on: {
+  		myEvent: [{ actions: ['action'] }],
+  	},
+  });
+  state.monitor({
+  	actions: {
+  		action: new Action({
+  			run({ ownerState, value }) {
+  				console.log(value); // 'myValue';
+  			},
+  		}),
+  	},
+  });
+  state.start();
+  state.dispatch('myEvent', 'myValue');
+  ```
+
+  After:
+
+  ```javascript
+  const state = new AtomicState({
+  	on: {
+  		myEvent: [{ actions: ['action'] }],
+  	},
+  });
+  state.monitor({
+  	actions: {
+  		action: new Action({
+  			run({ ownerState, event }) {
+  				console.log(ownerState.event === event); // true
+  				console.log(event.name); // 'myEvent';
+  				console.log(event.value); // 'myValue';
+  			},
+  		}),
+  	},
+  });
+  state.start();
+  state.dispatch('myEvent', 'myValue');
+  ```
+
+- e626638: Return nothing from calling `state.start()` and remove `stateEventNames` helper.
+- 809f89d: Require passing handler instances as event listeners
+
+  Before:
+
+  ```javascript
+  const state = h.atomic({
+  	entry: [{ actions: ['action'] }],
+  });
+  ```
+
+  After:
+
+  ```javascript
+  const state = h.atomic({
+  	entry: [h.effect({ run: ['action'] })],
+  });
+  ```
+
 ## 0.0.16
 
 ### Patch Changes

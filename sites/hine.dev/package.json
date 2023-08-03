@@ -1,6 +1,6 @@
 {
 	"name": "hine.dev",
-	"version": "0.0.1",
+	"version": "0.0.0",
 	"private": true,
 	"scripts": {
 		"build": "wireit",
@@ -29,6 +29,11 @@
 			],
 			"output": []
 		},
+		"pre-commit": {
+			"dependencies": [
+				"check"
+			]
+		},
 		"test": {
 			"command": "vitest run",
 			"files": [
@@ -52,5 +57,8 @@
 		"vite": "^4.4.2",
 		"vitest": "^0.33.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@hinejs/svelte-ui": "^0.0.0"
+	}
 }

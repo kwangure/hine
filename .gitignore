@@ -12,7 +12,7 @@ types
 
 # Sites
 .svelte-kit
-sites/*/build
-sites/*/package
+build
+package
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*

@@ -1,1 +1,1 @@
-hine.dev
+<a href='./docs'>docs</a>

@@ -4,8 +4,10 @@
 </script>
 
 <li>
-	<h5 class='pt-2 pb-1 px-2 sticky top-0 uppercase whitespace-nowrap text-xs font-semibold text-neutral-900 dark:text-neutral-400 bg-white dark:bg-neutral-800'>
+	<h5
+		class="sticky top-0 whitespace-nowrap bg-white px-2 pb-1 pt-2 text-xs font-semibold uppercase text-neutral-900 dark:bg-neutral-800 dark:text-neutral-400"
+	>
 		{title}
 	</h5>
-	<slot/>
+	<slot />
 </li>

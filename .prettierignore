@@ -7,8 +7,9 @@ node_modules
 package-lock.json
 # Packages
 packages/*/types/
+dist
 
 # Sites
-sites/*/.svelte-kit
+.svelte-kit
 sites/*/build
 sites/*/package

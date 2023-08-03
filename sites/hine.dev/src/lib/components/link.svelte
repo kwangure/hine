@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 
 	/** @type {string} */
-	export let lang = "en";
+	export let lang = 'en';
 	/** @type {string} */
 	export let href;
 
@@ -20,7 +20,7 @@
 		if (userAriaCurrent !== undefined) return userAriaCurrent;
 		if (href[0] !== '/') return null;
 
-		if (href.endsWith('/')) href =  href.slice(0, href.length - 1);
+		if (href.endsWith('/')) href = href.slice(0, href.length - 1);
 		if (pathname === href) return 'page';
 		if (pathname.startsWith(`${href}/`)) return 'location';
 

@@ -1,1 +1,1 @@
-<a href='./docs'>docs</a>
+<a href="./docs">docs</a>

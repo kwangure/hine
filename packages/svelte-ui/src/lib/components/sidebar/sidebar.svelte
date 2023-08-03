@@ -1,5 +1,5 @@
-<nav class='flex flex-col px-2 overflow-y-auto overflow-contain'>
+<nav class="overflow-contain flex flex-col overflow-y-auto px-2">
 	<ul>
-		<slot/>
+		<slot />
 	</ul>
 </nav>

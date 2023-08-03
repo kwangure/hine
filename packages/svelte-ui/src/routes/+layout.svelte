@@ -4,11 +4,11 @@
 </script>
 
 <Shell.Root>
-	<Sidebar.Root slot='sidebar'>
-		<Sidebar.Section title='layout'>
-			<Sidebar.Link href='#test'>Shell</Sidebar.Link>
-			<Sidebar.Link href='#test'>Sidebar</Sidebar.Link>
+	<Sidebar.Root slot="sidebar">
+		<Sidebar.Section title="layout">
+			<Sidebar.Link href="#test">Shell</Sidebar.Link>
+			<Sidebar.Link href="#test">Sidebar</Sidebar.Link>
 		</Sidebar.Section>
 	</Sidebar.Root>
-	<slot/>
+	<slot />
 </Shell.Root>

@@ -1,9 +1,9 @@
-<div class="h-full grid grid-rows-1 grid-cols-[min-content_[content]_1fr]">
+<div class="grid h-full grid-cols-[min-content_[content]_1fr] grid-rows-1">
 	<aside>
-		<slot name='sidebar'></slot>
+		<slot name="sidebar" />
 	</aside>
 	<main>
-		<slot/>
+		<slot />
 	</main>
 </div>
 
@@ -13,9 +13,9 @@
 			Overlay the sidebar over main content on small screens then toggle
 			visibility of sidebar using JS
 		 */
-		aside, main {
+		aside,
+		main {
 			grid-area: content;
 		}
 	}
 </style>
-

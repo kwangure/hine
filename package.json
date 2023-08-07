@@ -61,6 +61,7 @@
 			"dependencies": [
 				"./examples/basic:check",
 				"./packages/hine:check",
+				"./packages/vite-plugin-markdown:check",
 				"./packages/svelte-ui:check",
 				"./sites/hine.dev:check"
 			]
@@ -101,7 +102,8 @@
 		"package": {
 			"dependencies": [
 				"./packages/hine:package",
-				"./packages/svelte-ui:package"
+				"./packages/svelte-ui:package",
+				"./packages/vite-plugin-markdown:package"
 			]
 		},
 		"pre-commit": {

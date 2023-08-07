@@ -9,20 +9,8 @@ import { unified } from 'unified';
 import { EXIT, visit } from 'unist-util-visit';
 import yaml from 'js-yaml';
 
-/**
- * @typedef {import('mdast').Code & { properties?: { file?: string, lang?: string } & Record<string, any>}} Code
- * @typedef {import('mdast').Heading} Heading
- * @typedef {import('mdast').InlineCode & { properties?: { lang?: string }}} InlineCode
- * @typedef {import('mdast').List} List
- * @typedef {import('mdast').Literal} Literal
- * @typedef {import('mdast').Paragraph} Paragraph
- * @typedef {import('mdast').Parent} Parent
- * @typedef {import('mdast').Root} Root
- * @typedef {import('mdast').Text} Text
- * @typedef {import('mdast').YAML & { data: any }} FrontMatter
- */
-
 const ATTRIBUTE_BLOCK_RE = /^\s*(\{.*?\})(\s+|$)/;
+
 /**
  * @param {{} | null} value
  */
@@ -60,22 +48,17 @@ export function markdown() {
 				.use(frontmatter)
 				.use(remarkParseYaml)
 				.use(remarkAttributes)
-				.use(() => async (/** @type {Root} */ tree) => {
-					/**
-					 * @typedef {import('type-fest').SetRequired<Code, "properties">} CodeWithProperties
-					 */
-
-					/** @type {CodeWithProperties[]} */
+				.use(remarkSlugs)
+				.use(() => async (tree) => {
+					/** @type {import('mdast').Code[]} */
 					const codeBlocks = [];
 					visit(tree, 'code', (node) => {
-						if ('properties' in /** @type {Code} */ (node)) {
-							codeBlocks.push(/** @type {CodeWithProperties} */ (node));
-						}
+						codeBlocks.push(node);
 					});
 
 					const promises = [];
 					for (const node of codeBlocks) {
-						const { file } = node.properties;
+						const file = node.data?.file;
 						if (!file) continue;
 
 						const { filepath, start, end } = parseFileMeta(file);
@@ -115,6 +98,51 @@ export function markdown() {
 	};
 }
 
+const LEADING_DASH_RE = /^-+/;
+const LEADING_HASH_RE = /^#+\s*/;
+const NON_ALPHA_NUMERIC_RE = /[^a-z0-9]+/g;
+const TRAILING_DASH_RE = /^-+/;
+
+/**
+ * @this {import('unified').Processor}
+ * @type {import('unified').Plugin<void[], import('mdast').Root, import('mdast').Root>}
+ */
+export function remarkSlugs() {
+	const __parser = this.Parser;
+	if (!__parser) return;
+
+	// A hacky way to get access to the input code string
+	let doc = '';
+	/** @type {import('unified').ParserFunction<import('mdast').Root>} */
+	const parser = (_doc) => {
+		doc = _doc;
+		// @ts-expect-error
+		return __parser(_doc);
+	};
+	Object.assign(this, { Parser: parser });
+
+	return (tree) => {
+		visit(tree, 'heading', (node) => {
+			if (node.position === undefined) return;
+			const start = node.position.start.offset;
+			const end = node.position.end.offset;
+			const content = doc.slice(start, end).replace(LEADING_HASH_RE, '');
+			const slug = content
+				.toLowerCase()
+				.replace(NON_ALPHA_NUMERIC_RE, '-')
+				.replace(LEADING_DASH_RE, '')
+				.replace(TRAILING_DASH_RE, '');
+
+			node.data = {
+				// Allow overriding slug and content with attributes
+				slug,
+				content,
+				...node.data,
+			};
+		});
+	};
+}
+
 /** @type {import('unified').Plugin<void[], import('mdast').Root>} */
 export function remarkParseYaml() {
 	return (tree) => {
@@ -141,9 +169,11 @@ export function remarkAttributes() {
 			if (!isNonEmptyObject(parseOutput.prop)) return;
 
 			const previousSibling = parent.children[index - 1];
-			// @ts-expect-error
 			// TODO: only allow attributes on _some_ elements?
-			previousSibling.properties = parseOutput.prop;
+			previousSibling.data = {
+				...previousSibling.data,
+				...parseOutput.prop,
+			};
 			node.value = node.value.replace(match[1].trimEnd(), '');
 		});
 
@@ -156,7 +186,10 @@ export function remarkAttributes() {
 			const parseOutput = mdAttributes(match[1].trim());
 			if (!isNonEmptyObject(parseOutput.prop)) return;
 
-			/** @type {Code} */ (node).properties = parseOutput.prop;
+			node.data = {
+				...node.data,
+				...parseOutput.prop,
+			};
 			node.meta = node.meta.replace(match[1].trimEnd(), '');
 		});
 	};

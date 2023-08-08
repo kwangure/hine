@@ -1,13 +1,23 @@
 <script>
 	import { Shell, Sidebar } from '@hinejs/svelte-ui/components';
+	import { Icon } from '$lib/components/index.js';
+	import { siGithub } from 'simple-icons';
 </script>
 
-<Shell.Root>
-	<Sidebar.Root slot="sidebar">
-		<Sidebar.Section title="getting started">
-			<Sidebar.Link href="/docs/introduction">Introduction</Sidebar.Link>
-			<Sidebar.Link href="/docs/installation">Installation</Sidebar.Link>
-		</Sidebar.Section>
-	</Sidebar.Root>
-	<slot />
-</Shell.Root>
+<div class="grid h-full grid-rows-[max-content_1fr]">
+	<nav class="flex h-14 items-center px-5">
+		<a href="/" class="text-xl uppercase">hine</a>
+		<a class="ml-auto px-4" href="https://github.com/kwangure/hine">
+			<Icon path={siGithub.path} />
+		</a>
+	</nav>
+	<Shell.Root>
+		<Sidebar.Root slot="sidebar">
+			<Sidebar.Section title="getting started">
+				<Sidebar.Link href="/docs/introduction">Introduction</Sidebar.Link>
+				<Sidebar.Link href="/docs/installation">Installation</Sidebar.Link>
+			</Sidebar.Section>
+		</Sidebar.Root>
+		<slot />
+	</Shell.Root>
+</div>

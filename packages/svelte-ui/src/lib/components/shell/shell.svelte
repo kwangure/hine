@@ -1,8 +1,8 @@
-<div class="grid h-full grid-cols-[min-content_[content]_1fr] grid-rows-1">
-	<aside>
+<div class="grid min-h-0 grid-cols-[min-content_[content]_1fr] grid-rows-1">
+	<aside class="h-full overflow-y-auto">
 		<slot name="sidebar" />
 	</aside>
-	<main>
+	<main class="h-full overflow-y-auto">
 		<slot />
 	</main>
 </div>

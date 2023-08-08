@@ -103,7 +103,7 @@
 </script>
 
 <code
-	class="grid min-w-fit grid-cols-[1fr_max-content] whitespace-pre rounded border border-neutral-600 bg-zinc-900 py-4 pl-3 pr-5 text-sm text-neutral-200 dark:border-neutral-600 dark:bg-zinc-900"
+	class="grid grid-cols-[1fr_max-content] whitespace-pre-wrap rounded border border-neutral-600 bg-zinc-900 py-4 pl-3 pr-5 text-sm text-neutral-200 dark:border-neutral-600 dark:bg-zinc-900"
 	on:mouseleave={() => (hoverRange = undefined)}
 >
 	{#each lines as { ranges, segments }, i}

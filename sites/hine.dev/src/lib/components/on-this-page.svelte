@@ -53,7 +53,7 @@
 </script>
 
 {#if headings.length}
-	<aside class="sticky top-0 self-start px-8">
+	<aside class="sticky top-0 min-w-[18rem] self-start">
 		<h2 class="uppercase">On this page</h2>
 		<nav>
 			<ul>

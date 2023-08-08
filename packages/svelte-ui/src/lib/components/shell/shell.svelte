@@ -1,4 +1,4 @@
-<div class="grid min-h-0 grid-cols-[min-content_[content]_1fr] grid-rows-1">
+<div class="grid min-h-0 grid-cols-[15rem_[content]_1fr] grid-rows-1">
 	<aside class="h-full overflow-y-auto">
 		<slot name="sidebar" />
 	</aside>

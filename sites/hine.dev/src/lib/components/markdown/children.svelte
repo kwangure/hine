@@ -1,0 +1,37 @@
+<script>
+	import Code from './code.svelte';
+	import Heading from './heading.svelte';
+	import InlineCode from './inline-code.svelte';
+	import List from './list.svelte';
+	import ListItem from './list-item.svelte';
+	import Paragraph from './paragraph.svelte';
+	import Text from './text.svelte';
+
+	/** @type {import('mdast').Parent} */
+	export let node;
+
+	const notImplemented = (/** @type {{ type: any; }} */ node) => {
+		console.warn(`'${node.type}' not yet implemented.`, node);
+		return '';
+	};
+</script>
+
+{#each node.children as child}
+	{#if child.type === 'code'}
+		<Code node={child} />
+	{:else if child.type === 'heading'}
+		<Heading node={child} />
+	{:else if child.type === 'inlineCode'}
+		<InlineCode node={child} />
+	{:else if child.type === 'list'}
+		<List node={child} />
+	{:else if child.type === 'listItem'}
+		<ListItem node={child} />
+	{:else if child.type === 'paragraph'}
+		<Paragraph node={child} />
+	{:else if child.type === 'text'}
+		<Text node={child} />
+	{:else}
+		{notImplemented(child)}
+	{/if}
+{/each}

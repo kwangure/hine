@@ -1,0 +1,41 @@
+.tok-string {
+	color: #d69d85;
+}
+/* Literals with backticks */
+.tok-string2 {
+	color: #d69d85;
+}
+.tok-property-name {
+	color: #9cdcfe;
+}
+.tok-comment {
+	color: #6a9955;
+}
+.tok-classname {
+	color: #d7ba7d;
+}
+.tok-number {
+	color: #b5cea8;
+}
+.tok-keyword {
+	color: #c586c0;
+}
+.tok-definition-keyword,
+.tok-operator-keyword {
+	color: #569cd6;
+}
+.tok-atom {
+	color: #d69d85;
+}
+.tok-variable-name {
+	color: #9cdcfe;
+}
+.tok-variable-definition-name {
+	color: #4ec9b0;
+}
+.tok-function-name {
+	color: #dcdcaa;
+}
+.tok-type-name {
+	color: #569cd6;
+}

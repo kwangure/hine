@@ -5,8 +5,8 @@
 <Shell.Root>
 	<Sidebar.Root slot="sidebar">
 		<Sidebar.Section title="getting started">
-			<Sidebar.Link href="#test">Introduction</Sidebar.Link>
-			<Sidebar.Link href="#test">Quickstart</Sidebar.Link>
+			<Sidebar.Link href="/docs/introduction">Introduction</Sidebar.Link>
+			<Sidebar.Link href="/docs/installation">Installation</Sidebar.Link>
 		</Sidebar.Section>
 	</Sidebar.Root>
 	<slot />

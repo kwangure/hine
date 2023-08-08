@@ -46,6 +46,7 @@
 		}
 	},
 	"devDependencies": {
+		"@hinejs/vite-plugin-markdown": "^0.0.0",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.22.4",
 		"autoprefixer": "^10.4.14",
@@ -59,6 +60,17 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@hinejs/svelte-ui": "^0.0.0"
+		"@fig/lezer-bash": "^1.2.5",
+		"@hinejs/svelte-ui": "^0.0.0",
+		"@lezer/cpp": "^1.0.0",
+		"@lezer/css": "^1.0.1",
+		"@lezer/highlight": "^1.1.2",
+		"@lezer/html": "^1.0.1",
+		"@lezer/javascript": "^1.0.2",
+		"@lezer/json": "^1.0.0",
+		"@lezer/python": "^1.1.1",
+		"@lezer/rust": "^1.0.0",
+		"@mdi/js": "^7.2.96",
+		"@replit/codemirror-lang-svelte": "^6.0.0"
 	}
 }

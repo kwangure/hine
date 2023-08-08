@@ -1,0 +1,17 @@
+<script>
+	import '$lib/code/code.css';
+	import { multiHighlight } from '$lib/code/multi-language.js';
+
+	/** @type {import('mdast').InlineCode} */
+	export let node;
+
+	$: segments = multiHighlight(node.value, node.data?.lang);
+</script>
+
+<code
+	class="inline rounded border border-neutral-300 bg-zinc-100 px-1 py-0.5 text-sm text-neutral-900 dark:border-neutral-600 dark:bg-zinc-900 dark:text-neutral-200"
+>
+	{#each segments as { color, segment }}
+		<span class={color}>{segment}</span>
+	{/each}
+</code>

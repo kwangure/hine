@@ -5,6 +5,14 @@ import { vitePreprocess } from '@sveltejs/kit/vite';
 const config = {
 	kit: {
 		adapter: adapter(),
+		alias: {
+			$docs: './src/docs',
+		},
+		typescript: {
+			config(config) {
+				config.include?.push('../src/**/*.md');
+			},
+		},
 	},
 	preprocess: vitePreprocess(),
 };

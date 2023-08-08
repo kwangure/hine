@@ -10,10 +10,17 @@
 	/** @type {import('mdast').Parent} */
 	export let node;
 
-	const notImplemented = (/** @type {{ type: any; }} */ node) => {
+	const ignore = ['yaml'];
+	/**
+	 * Return empty strings to skip rendering nodes
+	 *
+	 * @type {(node: import('mdast').Node) => string}
+	 */
+	function notImplemented(node) {
+		if (ignore.includes(node.type)) return '';
 		console.warn(`'${node.type}' not yet implemented.`, node);
 		return '';
-	};
+	}
 </script>
 
 {#each node.children as child}

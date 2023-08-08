@@ -1,5 +1,6 @@
 <script>
-	import { Markdown, OnThisPage } from '$lib/components/index.js';
+	import { Markdown } from '@hinejs/svelte-ui/components';
+	import { OnThisPage } from '$lib/components/index.js';
 
 	export let data;
 </script>

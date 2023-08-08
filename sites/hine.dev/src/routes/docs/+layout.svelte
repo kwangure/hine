@@ -1,6 +1,5 @@
 <script>
-	import { Shell, Sidebar } from '@hinejs/svelte-ui/components';
-	import { Icon } from '$lib/components/index.js';
+	import { Icon, Shell, Sidebar } from '@hinejs/svelte-ui/components';
 	import { siGithub } from 'simple-icons';
 </script>
 

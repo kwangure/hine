@@ -1,7 +1,7 @@
 <script>
-	import '$lib/code/code.css';
+	import '../../code/code.css';
 	import { highlightLines } from '$lib/code/index.js';
-	import { Copy } from '../index.js';
+	import { Copy } from '$lib/components/index.js';
 	import { multiHighlight } from '$lib/code/multi-language.js';
 
 	/** @type {import('mdast').Code} */

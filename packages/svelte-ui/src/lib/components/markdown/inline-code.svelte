@@ -1,5 +1,5 @@
 <script>
-	import '$lib/code/code.css';
+	import '../../code/code.css';
 	import { multiHighlight } from '$lib/code/multi-language.js';
 
 	/** @type {import('mdast').InlineCode} */

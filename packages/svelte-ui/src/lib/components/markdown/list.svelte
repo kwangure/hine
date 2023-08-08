@@ -3,7 +3,6 @@
 
 	/** @type {import('mdast').List} */
 	export let node;
-
 </script>
 
 {#if node.ordered}

@@ -5,6 +5,7 @@ import { EOL } from 'node:os';
 import frontmatter from 'remark-frontmatter';
 import fs from 'node:fs/promises';
 import parse from 'remark-parse';
+import stringify from 'remark-stringify';
 import { unified } from 'unified';
 import { EXIT, visit } from 'unist-util-visit';
 import yaml from 'js-yaml';
@@ -45,10 +46,10 @@ export function markdown() {
 			const vitePluginContext = this;
 			const processor = unified()
 				.use(parse)
+				.use(stringify)
 				.use(frontmatter)
 				.use(remarkParseYaml)
 				.use(remarkAttributes)
-				.use(remarkSlugs)
 				.use(() => async (tree) => {
 					/** @type {import('mdast').Code[]} */
 					const codeBlocks = [];
@@ -75,7 +76,7 @@ export function markdown() {
 
 					await Promise.all(promises);
 				})
-				.use(() => (tree) => {
+				.use(() => (/** @type {import("mdast").Root} */ tree) => {
 					const replacements = { ...tree.data };
 					visit(tree, (node) => {
 						if (!hasValue(node)) return;
@@ -90,7 +91,9 @@ export function markdown() {
 							node.value = node.value.replace(match[0], value);
 						}
 					});
-				});
+				})
+				// Generate slugs after variables i.e. {{ stuff }} have been replaced
+				.use(remarkSlugs);
 			const tree = processor.parse(code);
 			const transformedTree = await processor.run(tree);
 			return dataToEsm(transformedTree);
@@ -108,25 +111,12 @@ const TRAILING_DASH_RE = /^-+/;
  * @type {import('unified').Plugin<void[], import('mdast').Root, import('mdast').Root>}
  */
 export function remarkSlugs() {
-	const __parser = this.Parser;
-	if (!__parser) return;
-
-	// A hacky way to get access to the input code string
-	let doc = '';
-	/** @type {import('unified').ParserFunction<import('mdast').Root>} */
-	const parser = (_doc) => {
-		doc = _doc;
-		// @ts-expect-error
-		return __parser(_doc);
-	};
-	Object.assign(this, { Parser: parser });
-
 	return (tree) => {
 		visit(tree, 'heading', (node) => {
-			if (node.position === undefined) return;
-			const start = node.position.start.offset;
-			const end = node.position.end.offset;
-			const content = doc.slice(start, end).replace(LEADING_HASH_RE, '');
+			const content = /** @type {string} */ (this.stringify(node)).replace(
+				LEADING_HASH_RE,
+				'',
+			);
 			const slug = content
 				.toLowerCase()
 				.replace(NON_ALPHA_NUMERIC_RE, '-')

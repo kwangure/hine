@@ -4,7 +4,6 @@
 	/** @type {import('mdast').List} */
 	export let node;
 
-	console.log({ node });
 </script>
 
 {#if node.ordered}

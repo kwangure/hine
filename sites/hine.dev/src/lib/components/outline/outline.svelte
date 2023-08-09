@@ -35,4 +35,9 @@
 	});
 </script>
 
+<h5
+	class="whitespace-nowrap bg-white pb-1 pt-2 text-xs font-semibold uppercase text-neutral-900 dark:bg-neutral-800 dark:text-neutral-400"
+>
+	On this page
+</h5>
 <List {activeTarget} {toc} />

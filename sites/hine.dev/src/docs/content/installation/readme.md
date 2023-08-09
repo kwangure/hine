@@ -1,8 +1,10 @@
 ---
-title: Installation
+title: Quickstart
 ---
 
 # {{ frontmatter.title }}
+
+## Installation
 
 Install Hine using your preferred package manager.
 

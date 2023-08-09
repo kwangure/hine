@@ -3,20 +3,22 @@
 	import { siGithub } from 'simple-icons';
 </script>
 
-<div class="grid h-full grid-rows-[max-content_1fr]">
-	<nav class="flex h-14 items-center px-5">
-		<a href="/" class="text-xl uppercase">hine</a>
+<Shell.Root>
+	<Shell.Navbar>
+		<a href="/" class="px-6 text-xl uppercase">hine</a>
 		<a class="ml-auto px-4" href="https://github.com/kwangure/hine">
 			<Icon path={siGithub.path} />
 		</a>
-	</nav>
-	<Shell.Root>
-		<Sidebar.Root slot="sidebar">
-			<Sidebar.Section title="getting started">
+	</Shell.Navbar>
+	<Sidebar.Primary>
+		<Sidebar.Section title="getting started">
+			<li>
 				<Sidebar.Link href="/docs/introduction">Introduction</Sidebar.Link>
+			</li>
+			<li>
 				<Sidebar.Link href="/docs/installation">Installation</Sidebar.Link>
-			</Sidebar.Section>
-		</Sidebar.Root>
-		<slot />
-	</Shell.Root>
-</div>
+			</li>
+		</Sidebar.Section>
+	</Sidebar.Primary>
+	<slot />
+</Shell.Root>

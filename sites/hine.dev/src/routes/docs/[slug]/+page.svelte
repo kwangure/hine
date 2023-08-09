@@ -1,13 +1,20 @@
 <script>
-	import { Markdown } from '@hinejs/svelte-ui/components';
+	import { Markdown, Shell, Sidebar } from '@hinejs/svelte-ui/components';
 	import { OnThisPage } from '$lib/components/index.js';
 
 	export let data;
 </script>
 
-<div class="flex">
-	<div id="main-content" class="mx-auto max-w-4xl px-4 pb-8 sm:px-6 md:px-8">
+<!--
+	Even though the secondary sidebar is to the right of content visually,
+	place it before content in the DOM so that keyboard-only users can jump to
+	a section if needed
+-->
+<Sidebar.Secondary>
+	<OnThisPage content={data.content} />
+</Sidebar.Secondary>
+<Shell.Main>
+	<div class="mx-auto mb-40 max-w-3xl px-12">
 		<Markdown.Children node={data.content} />
 	</div>
-	<OnThisPage content={data.content} />
-</div>
+</Shell.Main>

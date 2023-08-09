@@ -1,7 +1,7 @@
 <script>
 	import { page } from '$app/stores';
 
-	/** @type {'location' | 'page' | null | undefined} */
+	/** @type {'location' | 'page' | boolean | null | undefined} */
 	export let ariaCurrent = undefined;
 	/** @type {string} */
 	export let href;
@@ -15,6 +15,11 @@
 	 */
 	export function computeAriaCurrent(href, pathname, userAriaCurrent) {
 		if (userAriaCurrent !== undefined) return userAriaCurrent;
+		if (href[0] === '#') {
+			if (location.hash === href) return true;
+			return null;
+		}
+
 		if (href[0] !== '/') return null;
 
 		if (href.endsWith('/')) href = href.slice(0, href.length - 1);
@@ -25,22 +30,20 @@
 	}
 </script>
 
-<li>
-	{#if _ariaCurrent}
-		<a
-			{href}
-			class="flex h-8 cursor-pointer items-center gap-2 whitespace-nowrap rounded bg-blue-200 px-4 py-1 text-blue-600 hover:bg-blue-300 hover:text-blue-700 dark:bg-neutral-700 dark:text-inherit dark:hover:bg-neutral-500 dark:hover:text-inherit"
-			aria-current={_ariaCurrent}
-		>
-			<slot />
-		</a>
-	{:else}
-		<a
-			{href}
-			class="flex h-8 cursor-pointer items-center gap-2 whitespace-nowrap rounded px-4 py-1 hover:bg-blue-200 hover:text-blue-600 dark:hover:bg-neutral-700 dark:hover:text-inherit"
-			aria-current={_ariaCurrent}
-		>
-			<slot />
-		</a>
-	{/if}
-</li>
+{#if _ariaCurrent}
+	<a
+		{href}
+		class="flex h-8 cursor-pointer items-center gap-2 whitespace-nowrap rounded bg-blue-200 px-4 py-1 text-blue-600 hover:bg-blue-300 hover:text-blue-700 dark:bg-neutral-700 dark:text-inherit dark:hover:bg-neutral-500 dark:hover:text-inherit"
+		aria-current={_ariaCurrent}
+	>
+		<slot />
+	</a>
+{:else}
+	<a
+		{href}
+		class="flex h-8 cursor-pointer items-center gap-2 whitespace-nowrap rounded px-4 py-1 hover:bg-blue-200 hover:text-blue-600 dark:hover:bg-neutral-700 dark:hover:text-inherit"
+		aria-current={_ariaCurrent}
+	>
+		<slot />
+	</a>
+{/if}

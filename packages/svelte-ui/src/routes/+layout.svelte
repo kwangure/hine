@@ -6,8 +6,12 @@
 <Shell.Root>
 	<Sidebar.Root slot="sidebar">
 		<Sidebar.Section title="layout">
-			<Sidebar.Link href="#test">Shell</Sidebar.Link>
-			<Sidebar.Link href="#test">Sidebar</Sidebar.Link>
+			<li class="flex flex-col gap-1">
+				<Sidebar.Link href="#test">Shell</Sidebar.Link>
+			</li>
+			<li class="flex flex-col gap-1">
+				<Sidebar.Link href="#test">Sidebar</Sidebar.Link>
+			</li>
 		</Sidebar.Section>
 	</Sidebar.Root>
 	<slot />

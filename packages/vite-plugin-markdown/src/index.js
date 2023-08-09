@@ -13,6 +13,10 @@ import yaml from 'js-yaml';
 const ATTRIBUTE_BLOCK_RE = /^\s*(\{.*?\})(\s+|$)/;
 
 /**
+ * @typedef {import('./types.js').TocEntry} TocEntry
+ */
+
+/**
  * @param {{} | null} value
  */
 function isNonEmptyObject(value) {
@@ -104,7 +108,7 @@ export function markdown() {
 const LEADING_DASH_RE = /^-+/;
 const LEADING_HASH_RE = /^#+\s*/;
 const NON_ALPHA_NUMERIC_RE = /[^a-z0-9]+/g;
-const TRAILING_DASH_RE = /^-+/;
+const TRAILING_DASH_RE = /-+$/;
 
 /**
  * @this {import('unified').Processor}
@@ -112,24 +116,48 @@ const TRAILING_DASH_RE = /^-+/;
  */
 export function remarkSlugs() {
 	return (tree) => {
+		/** @type {{ children: import('./types.js').TocEntry[] }} */
+		const dummyRoot = { children: [] };
+		const stack = [dummyRoot];
+
 		visit(tree, 'heading', (node) => {
-			const content = /** @type {string} */ (this.stringify(node)).replace(
-				LEADING_HASH_RE,
-				'',
-			);
-			const slug = content
-				.toLowerCase()
-				.replace(NON_ALPHA_NUMERIC_RE, '-')
-				.replace(LEADING_DASH_RE, '')
-				.replace(TRAILING_DASH_RE, '');
+			if (node.depth !== 2 && node.depth !== 3) return;
+
+			const mdString = /** @type {string} */ (this.stringify(node));
+			const content =
+				node.data?.content || mdString.replace(LEADING_HASH_RE, '');
+			const slug =
+				node.data?.slug ||
+				content
+					.toLowerCase()
+					.replace(NON_ALPHA_NUMERIC_RE, '-')
+					.replace(LEADING_DASH_RE, '')
+					.replace(TRAILING_DASH_RE, '');
+
+			/** @type {import('./types.js').TocEntry} */
+			const tocEntry = {
+				depth: node.depth,
+				content,
+				slug,
+				children: [],
+			};
+			// Subract 1 since headings are 1-indexed
+			while (stack.length > tocEntry.depth - 1) {
+				stack.pop();
+			}
+			stack[stack.length - 1].children.push(tocEntry);
+			stack.push(tocEntry);
 
 			node.data = {
-				// Allow overriding slug and content with attributes
-				slug,
-				content,
 				...node.data,
+				...tocEntry,
 			};
 		});
+
+		tree.data = {
+			...tree.data,
+			tableOfContents: dummyRoot.children,
+		};
 	};
 }
 
@@ -137,9 +165,16 @@ export function remarkSlugs() {
 export function remarkParseYaml() {
 	return (tree) => {
 		visit(tree, 'yaml', (node) => {
+			const parsedYaml = yaml.load(node.value);
 			tree.data = {
-				frontmatter: yaml.load(node.value),
+				...tree.data,
+				frontmatter: parsedYaml,
 			};
+			node.data = {
+				...node.data,
+				value: parsedYaml,
+			};
+
 			return EXIT;
 		});
 	};

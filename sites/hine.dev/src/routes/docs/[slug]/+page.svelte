@@ -11,7 +11,9 @@
 	a section if needed
 -->
 <Sidebar.Secondary>
-	<OnThisPage content={data.content} />
+	{#if data.content.data?.tableOfContents}
+		<OnThisPage toc={data.content.data.tableOfContents} />
+	{/if}
 </Sidebar.Secondary>
 <Shell.Main>
 	<div class="mx-auto mb-40 max-w-3xl px-12">

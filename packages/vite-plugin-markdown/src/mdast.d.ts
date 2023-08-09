@@ -1,3 +1,5 @@
+import type { TocEntry } from './types';
+
 import 'mdast';
 
 declare module 'mdast' {
@@ -9,6 +11,11 @@ declare module 'mdast' {
 		lang?: string;
 	}
 	interface HeadingData {
+		content: string;
 		slug: string;
+	}
+	interface RootData {
+		tableOfContents?: TocEntry[];
+		frontmatter?: any;
 	}
 }

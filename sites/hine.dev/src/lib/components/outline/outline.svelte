@@ -3,64 +3,22 @@
 	import { isPartiallyHidden } from '$lib/dom/dom.js';
 	import List from './list.svelte';
 
-	/** @type {import('mdast').Root} */
-	export let content;
-
-	/**
-	 * @param {import('mdast').RootContent} node
-	 * @returns {node is import('./types.js').HeadingWithData}
-	 */
-	function isHeading(node) {
-		return (
-			node.type === 'heading' &&
-			(node.depth === 2 || node.depth === 3) &&
-			!!node.data?.slug
-		);
-	}
-
-	/**
-	 * @param {import("mdast").RootContent[]} nodes
-	 */
-	function getHeadingTree(nodes) {
-		/**
-		 * @type {{
-		 *   data: {
-		 *     children: import('./types.js').HeadingWithData[]
-		 *   }
-		 * }}
-		 */
-		const dummyRoot = { data: { children: [] } };
-		const stack = [dummyRoot];
-
-		nodes.forEach((node) => {
-			if (!isHeading(node)) return;
-			node.data.children = [];
-			// Subract 1 since headings are 1-indexed
-			while (stack.length > node.depth - 1) {
-				stack.pop();
-			}
-			stack[stack.length - 1].data.children.push(node);
-			stack.push(node);
-		});
-
-		return dummyRoot.data.children;
-	}
-
-	$: headings = getHeadingTree(content.children);
+	/** @type {import('mdast').RootData['tableOfContents']} */
+	export let toc;
 
 	/** @type {string | undefined} */
 	let activeTarget = undefined;
 
-	const updateActiveSlug = () => {
-		for (const heading of headings) {
-			const element = document.getElementById(heading.data.slug);
+	function updateActiveSlug() {
+		for (const heading of toc) {
+			const element = document.getElementById(heading.slug);
 			if (!element) continue;
 			if (isPartiallyHidden(element)) continue;
 
-			activeTarget = heading.data.slug;
-			break;
+			activeTarget = heading.slug;
+			return;
 		}
-	};
+	}
 
 	onMount(() => {
 		document.fonts.ready.then(() => {
@@ -75,8 +33,6 @@
 			window.removeEventListener('scroll', updateActiveSlug);
 		};
 	});
-
-	$: console.log({ headings });
 </script>
 
-<List {activeTarget} {headings} />
+<List {activeTarget} {toc} />

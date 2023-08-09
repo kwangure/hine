@@ -2,18 +2,15 @@
 	import { Sidebar } from '@hinejs/svelte-ui/components';
 	import List from './list.svelte';
 
-	/** @type {import('./types.js').HeadingWithData} */
+	/** @type {import('@hinejs/vite-plugin-markdown').TocEntry} */
 	export let self;
 	/** @type {string | undefined} */
 	export let activeTarget;
 </script>
 
 <li class="flex flex-col gap-1">
-	<Sidebar.Link
-		href="#{self.data.slug}"
-		ariaCurrent={self.data.slug === activeTarget}
-	>
-		{self.data.content}
+	<Sidebar.Link href="#{self.slug}" ariaCurrent={self.slug === activeTarget}>
+		{self.content}
 	</Sidebar.Link>
-	<List {activeTarget} headings={self.data.children} />
+	<List {activeTarget} toc={self.children} />
 </li>

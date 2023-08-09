@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { isPartiallyHidden } from '$lib/dom/dom.js';
 	import List from './list.svelte';
 
 	/** @type {import('mdast').Root} */
@@ -51,18 +52,14 @@
 	let activeTarget = undefined;
 
 	const updateActiveSlug = () => {
-		headings.forEach((heading) => {
+		for (const heading of headings) {
 			const element = document.getElementById(heading.data.slug);
-			if (!element) return;
+			if (!element) continue;
+			if (isPartiallyHidden(element)) continue;
 
-			const rect = element.getBoundingClientRect();
-			if (
-				rect.top <= window.innerHeight / 2 &&
-				rect.bottom >= window.innerHeight / 2
-			) {
-				activeTarget = heading.data.slug;
-			}
-		});
+			activeTarget = heading.data.slug;
+			break;
+		}
 	};
 
 	onMount(() => {

@@ -1,5 +1,5 @@
 <div
-	class="grid min-h-screen grid-cols-[[nav-start]_min-content_[content-start]_1fr_[content-end]_min-content_[nav-end]] grid-rows-[var(--svui-navbar-height)_1fr]"
+	class="grid min-h-screen grid-cols-[[nav-start]_min-content_[content-start]_1fr_[content-end]_min-content_[nav-end]] grid-rows-[var(--svui-navbar-height)_1fr] gap-y-2"
 >
 	<slot />
 </div>

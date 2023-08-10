@@ -86,3 +86,13 @@ Now that we have a checkbox machine we can run it! We will call the
 ```javascript {file=./05-dispatch.js copy}
 
 ```
+
+---
+
+There you have it! You now have everything you need to create a simple state
+machine. By subscribing to the machine you can use it to emit side effects like
+manipulating a checkbox on a web page or logging a state change to analytics.
+
+As an added challenge, try implementing a counter with an active and inactive
+state similar to the checked and unchecked states. It should only be possible
+to increment the counter in the active state.

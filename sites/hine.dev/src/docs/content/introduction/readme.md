@@ -23,7 +23,14 @@ supercharging your ability to reason about your code.
 ## A state machine example
 
 Let's build a state machine to get a concrete sense of how Hine and
-state machines work.
+state machines work. To get started, install Hine using your preferred
+package manager. You can use `npm`, `yarn` or `pnpm`.
+
+```bash {copy=1,2,3}
+npm install hine
+yarn add hine
+pnpm add hine
+```
 
 ### A checkbox state machine
 
@@ -89,7 +96,7 @@ Now that we have a checkbox machine we can run it! We will call the
 
 ---
 
-There you have it! You now have everything you need to create a simple state
+There you have it! That's most of what you need to create a simple state
 machine. By subscribing to the machine you can use it to emit side effects like
 manipulating a checkbox on a web page or logging a state change to analytics.
 

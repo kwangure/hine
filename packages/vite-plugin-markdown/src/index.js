@@ -72,6 +72,7 @@ export function markdown() {
 							if (resolution) {
 								const content = await fs.readFile(resolution.id, 'utf-8');
 								node.value = extractLines(content, start, end);
+								vitePluginContext.addWatchFile(resolution.id);
 							}
 						})();
 

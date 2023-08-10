@@ -11,23 +11,38 @@
 	/** @type {string | undefined} */
 	let activeTarget = undefined;
 
-	function updateActiveSlug() {
-		for (const heading of toc) {
+	/**
+	 * Set the first visible heading as active
+	 *
+	 * @param {import('@hinejs/vite-plugin-markdown').TocEntry[]} tree
+	 */
+	function updateActiveSlug(tree) {
+		for (const heading of tree) {
 			const element = document.getElementById(heading.slug);
 			if (!element) continue;
 			if (isPartiallyHidden(element)) continue;
 
 			activeTarget = heading.slug;
-			return;
+			return true;
 		}
+
+		for (const heading of tree) {
+			const activeTargetFound = updateActiveSlug(heading.children);
+			if (activeTargetFound) return true;
+		}
+
+		// Assume the last heading was scrolled up and out of the viewport
+		const lastChild = tree.at(-1);
+		const deepestLeaf = lastChild?.children.at(-1) || lastChild;
+		if (deepestLeaf) activeTarget = deepestLeaf.slug;
 	}
 
-	afterNavigate(updateActiveSlug);
+	afterNavigate(() => updateActiveSlug(toc));
 
 	onMount(async () => {
 		await document.fonts.ready;
 
-		updateActiveSlug();
+		updateActiveSlug(toc);
 	});
 
 	/**
@@ -49,7 +64,7 @@
 </script>
 
 <svelte:window
-	on:scroll={updateActiveSlug}
+	on:scroll={() => updateActiveSlug(toc)}
 	on:hashchange={() => preferHashchangeTarget($page.url)}
 />
 

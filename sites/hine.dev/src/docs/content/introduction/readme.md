@@ -41,3 +41,48 @@ We'll start by importing the Hine `h` object and creating a compound state.
 ```javascript {file=./01-checkbox-state.js copy}
 
 ```
+
+This defines the root state for our program. We will later interact with the
+state machine by calling methods on the `checkboxState`{lang=js} object.
+
+#### 2. Checkbox child states
+
+Let's add the child checked and unchecked states to our state machine. Remember
+that we use `atomic`{lang=js} because these states will have no nested child states.
+
+```javascript {file=./02-checked-unchecked.js copy}
+
+```
+
+Because the `unchecked` state is listed first among the child states, it is the
+initial state that the state machine will transition to when we initialise it.
+
+#### 3. Checkbox State Transitions
+
+We have added the necessary checkbox states above, but how do we switch between
+them? We'll add event handlers that transition from one state to the other.
+
+```javascript {file=./03-state-transitions.js copy}
+
+```
+
+#### 4. Subscribing to the Checkbox Machine
+
+Now that we have a checkbox state machine, we need to listen to changes and run
+it! We will call the `subscribe()`{lang=js} method with a subscriber function. The
+function will be called with a reference to the `checkboxState`{lang=js} object every
+time an event is dispatched to our machine.
+
+```javascript {file=./04-state-subscriptions.js copy}
+
+```
+
+#### 5. Emitting Events to the Checkbox Machine
+
+Now that we have a checkbox machine we can run it! We will call the
+`.matches()`{lang=js} method to confirm the current state and
+`.dispatch()`{lang=js} to change the current state.
+
+```javascript {file=./05-dispatch.js copy}
+
+```

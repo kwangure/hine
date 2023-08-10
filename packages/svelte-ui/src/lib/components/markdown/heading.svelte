@@ -29,14 +29,14 @@
 {:else if node.depth === 4}
 	<h4
 		id={node.data?.slug}
-		class="scroll-mt-[var(--svui-navbar-height)] font-bold text-neutral-900 dark:text-slate-200"
+		class="mb-2 mt-4 scroll-mt-[var(--svui-navbar-height)] font-bold text-neutral-900 dark:text-slate-200"
 	>
 		<Children {node} />
 	</h4>
 {:else if node.depth === 5}
 	<h5
 		id={node.data?.slug}
-		class="scroll-mt-[var(--svui-navbar-height)] font-bold text-neutral-900 dark:text-slate-200"
+		class="mb-2 mt-4 scroll-mt-[var(--svui-navbar-height)] font-bold text-neutral-900 dark:text-slate-200"
 	>
 		<Children {node} />
 	</h5>

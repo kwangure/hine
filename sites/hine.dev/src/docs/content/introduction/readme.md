@@ -34,12 +34,11 @@ pnpm add hine
 
 ### A checkbox state machine
 
-A checkbox has 2 main states of interest: a checked and unchecked state. In
-Hine, there are two kinds of primitives for modelling states:
-`compound`{lang=javascript} states and `atomic`{lang=javascript} states. The
-main difference between them is that `compound`{lang=javascript} states
-can have nested states, while `atomic`{lang=javascript} states do not have
-nested children.
+In Hine, there are two primitives for modelling states: `compound`{lang=javascript}
+and `atomic`{lang=javascript} states. We will use both to model the 2 main
+states of interest in a checkbox: a checked and unchecked state. The main
+difference between them is that `compound`{lang=javascript} states can have
+nested chilren, while `atomic`{lang=javascript} states do not have nested states.
 
 #### 1. The Checkbox State
 
@@ -75,10 +74,9 @@ them? We'll add event handlers that transition from one state to the other.
 
 #### 4. Subscribing to the Checkbox Machine
 
-Now that we have a checkbox state machine, we need to listen to changes and run
-it! We will call the `subscribe()`{lang=js} method with a subscriber function. The
-function will be called with a reference to the `checkboxState`{lang=js} object every
-time an event is dispatched to our machine.
+We can now run our checkbox state machine! We will call the `subscribe()`{lang=js}
+method with a subscriber function. The function will be called with a reference to
+the `checkboxState`{lang=js} object every time an event is dispatched to our machine.
 
 ```javascript {file=./04-state-subscriptions.js copy}
 

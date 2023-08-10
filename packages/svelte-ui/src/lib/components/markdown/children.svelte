@@ -5,6 +5,7 @@
 	import List from './list.svelte';
 	import ListItem from './list-item.svelte';
 	import Paragraph from './paragraph.svelte';
+	import ThematicBreak from './thematic-break.svelte';
 	import Text from './text.svelte';
 
 	/** @type {import('mdast').Parent} */
@@ -38,6 +39,8 @@
 		<Paragraph node={child} />
 	{:else if child.type === 'text'}
 		<Text node={child} />
+	{:else if child.type === 'thematicBreak'}
+		<ThematicBreak />
 	{:else}
 		{notImplemented(child)}
 	{/if}

@@ -33,7 +33,7 @@
 {#if _ariaCurrent}
 	<a
 		{href}
-		class="flex h-8 cursor-pointer items-center gap-2 whitespace-nowrap rounded bg-blue-200 px-4 py-1 text-blue-600 hover:bg-blue-300 hover:text-blue-700 dark:bg-neutral-700 dark:text-inherit dark:hover:bg-neutral-500 dark:hover:text-inherit"
+		class="flex h-8 cursor-pointer items-center gap-2 whitespace-nowrap rounded bg-blue-100 px-4 py-1 text-blue-600 hover:bg-blue-200 hover:text-blue-700 dark:bg-neutral-700 dark:text-inherit dark:hover:bg-neutral-500 dark:hover:text-inherit"
 		aria-current={_ariaCurrent}
 	>
 		<slot />
@@ -41,7 +41,7 @@
 {:else}
 	<a
 		{href}
-		class="flex cursor-pointer items-center gap-2 rounded px-4 py-1 hover:bg-blue-200 hover:text-blue-600 dark:hover:bg-neutral-700 dark:hover:text-inherit"
+		class="flex cursor-pointer items-center gap-2 rounded px-4 py-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 dark:hover:text-inherit"
 		aria-current={_ariaCurrent}
 	>
 		<slot />

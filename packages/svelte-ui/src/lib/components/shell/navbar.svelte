@@ -4,5 +4,5 @@
 	<slot />
 </nav>
 <div
-	class="sticky top-[var(--svui-navbar-height)] z-40 col-start-[page-start] col-end-[page-end] row-start-1 row-end-2 self-end border-b border-neutral-600"
+	class="sticky top-[var(--svui-navbar-height)] z-40 col-start-[page-start] col-end-[page-end] row-start-1 row-end-2 self-end border-b border-neutral-300 dark:border-neutral-600"
 />

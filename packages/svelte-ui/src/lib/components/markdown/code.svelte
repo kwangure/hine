@@ -1,5 +1,6 @@
 <script>
 	import '../../code/code.css';
+	import { isScrollableX, isScrollableY } from '$lib/dom/dom.js';
 	import { highlightLines } from '$lib/code/index.js';
 	import { Copy } from '$lib/components/index.js';
 	import { multiHighlight } from '$lib/code/multi-language.js';
@@ -100,10 +101,48 @@
 			isStart: lineNumber === start,
 		};
 	}
+
+	/**
+	 * Make overflowing element focusable to allow keyboard users to scroll
+	 * using arrow keys
+	 *
+	 * @param {HTMLElement} node
+	 */
+	function overflowFocusable(node) {
+		function checkOverflow() {
+			// I imagine this would be commonly used for handling horizontal
+			// keyboard scrolling so we start with X
+			if (isScrollableX(node) || isScrollableY(node)) {
+				node.setAttribute('tabindex', '0');
+			} else {
+				node.removeAttribute('tabindex');
+			}
+		}
+
+		const resizeObserver = new ResizeObserver(checkOverflow);
+		resizeObserver.observe(node);
+
+		const mutationObserver = new MutationObserver(checkOverflow);
+		mutationObserver.observe(node, {
+			childList: true,
+			subtree: true,
+			characterData: true,
+		});
+
+		checkOverflow();
+
+		return {
+			destroy() {
+				resizeObserver.disconnect();
+				mutationObserver.disconnect();
+			},
+		};
+	}
 </script>
 
 <code
-	class="mb-2 mt-4 grid grid-cols-[1fr_max-content] whitespace-pre-wrap rounded border border-neutral-600 bg-zinc-800 py-4 pl-3 pr-5 text-sm text-neutral-200 dark:border-neutral-600 dark:bg-zinc-900"
+	class="mb-2 mt-4 grid grid-cols-[1fr_max-content] overflow-auto whitespace-pre rounded border border-neutral-600 bg-zinc-800 py-4 pl-3 pr-5 text-sm text-neutral-200 dark:border-neutral-600 dark:bg-zinc-900"
+	use:overflowFocusable
 	on:mouseleave={() => (hoverRange = undefined)}
 >
 	{#each lines as { ranges, segments }, i}

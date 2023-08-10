@@ -1,19 +1,35 @@
 // https://github.com/ariakit/ariakit/blob/main/packages/ariakit-core/src/utils/dom.ts
 
 /**
+ * @param {Element} element
+ */
+export function isScrollableY(element) {
+	if (!element.clientHeight || element.scrollHeight <= element.clientHeight) {
+		return false;
+	}
+	const { overflowY } = getComputedStyle(element);
+	return overflowY !== 'visible' && overflowY !== 'hidden';
+}
+
+/**
+ * @param {Element} element
+ */
+export function isScrollableX(element) {
+	if (!element.clientWidth || element.scrollWidth <= element.clientWidth) {
+		return false;
+	}
+	const { overflowX } = getComputedStyle(element);
+	return overflowX !== 'visible' && overflowX !== 'hidden';
+}
+
+/**
  * @param {Element | null} element
  * @return {HTMLElement | Element | null}
  */
 export function getScrollingElement(element) {
 	if (!element) return null;
-	if (element.clientHeight && element.scrollHeight > element.clientHeight) {
-		const { overflowY } = getComputedStyle(element);
-		const isScrollable = overflowY !== 'visible' && overflowY !== 'hidden';
-		if (isScrollable) return element;
-	} else if (element.clientWidth && element.scrollWidth > element.clientWidth) {
-		const { overflowX } = getComputedStyle(element);
-		const isScrollable = overflowX !== 'visible' && overflowX !== 'hidden';
-		if (isScrollable) return element;
+	if (isScrollableY(element) || isScrollableX(element)) {
+		return element;
 	}
 	return (
 		getScrollingElement(element.parentElement) ||

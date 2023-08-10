@@ -24,5 +24,4 @@ const checkboxState = h.compound({
 	},
 });
 
-console.log({ checkboxState });
-// { checkboxState: CompoundState{} }
+console.log({ checkboxState }); // { checkboxState: CompoundState{} }

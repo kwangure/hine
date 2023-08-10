@@ -2,18 +2,3 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npm run pre-commit
-
-## `git commit --amend` is cool until you fail to realize that you've
-## already pushed a commit and should not ammend it
-
-LOCAL_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-REMOTE_COMMIT="$(git rev-parse --verify origin/$LOCAL_BRANCH)"
-LOCAL_COMMIT="$(git rev-parse --verify HEAD)"
-
-if [ "$REMOTE_COMMIT" != "$LOCAL_COMMIT" ]; then
-  ORIG_HEAD="$(git rev-parse ORIG_HEAD)"
-  if [ "$REMOTE_COMMIT" = "$ORIG_HEAD" ]; then
-    echo "You have amended a commit that has already been pushed! Please un-amend the commit and try again."
-    exit 1
-  fi
-fi

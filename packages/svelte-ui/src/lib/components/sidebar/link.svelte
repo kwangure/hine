@@ -11,7 +11,7 @@
 	/**
 	 * @param {string} href
 	 * @param {string} pathname
-	 * @param {'location' | 'page' | null | undefined} userAriaCurrent
+	 * @param {'location' | 'page' | boolean | null} [userAriaCurrent]
 	 */
 	export function computeAriaCurrent(href, pathname, userAriaCurrent) {
 		if (userAriaCurrent !== undefined) return userAriaCurrent;

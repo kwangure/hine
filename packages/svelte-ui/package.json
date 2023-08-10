@@ -85,16 +85,6 @@
 				"tsconfig.json"
 			],
 			"output": []
-		},
-		"typegen": {
-			"command": "tsc --project tsconfig.build.json",
-			"files": [
-				"src/**/*.{js,ts}",
-				"tsconfig.json"
-			],
-			"output": [
-				"dist/**/*.d.ts"
-			]
 		}
 	},
 	"exports": {

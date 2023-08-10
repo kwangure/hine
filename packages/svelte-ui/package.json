@@ -99,6 +99,7 @@
 	},
 	"exports": {
 		"./components": {
+			"types": "./dist/components/index.d.ts",
 			"svelte": "./dist/components/index.js",
 			"default": "./dist/components/index.js"
 		}
@@ -106,7 +107,10 @@
 	"files": [
 		"dist",
 		"!dist/**/*.test.*",
-		"!dist/**/*.spec.*"
+		"!dist/**/*.spec.*",
+		"src/lib",
+		"!src/lib/**/*.test.*",
+		"!src/lib/**/*.spec.*"
 	],
 	"peerDependencies": {
 		"@sveltejs/kit": "^1.20.4",

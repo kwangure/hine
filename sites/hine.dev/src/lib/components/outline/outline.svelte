@@ -53,7 +53,7 @@
 	 * @link {https://github.com/sveltejs/kit/blob/a6fe5fcb1c7258281b4bf53b94543272e6e6c6d8/sites/kit.svelte.dev/src/routes/docs/%5Bslug%5D/OnThisPage.svelte#L67}
 	 */
 	function preferHashchangeTarget(url) {
-		const update = () => (activeTarget = url.hash);
+		const update = () => (activeTarget = url.hash.slice(1));
 
 		// belt...
 		queueMicrotask(update);
@@ -61,6 +61,8 @@
 		// ...and braces
 		addEventListener('scroll', update, { once: true });
 	}
+
+	$: console.log({ activeTarget });
 </script>
 
 <svelte:window

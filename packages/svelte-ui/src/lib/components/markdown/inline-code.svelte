@@ -1,6 +1,6 @@
 <script>
 	import '../../code/code.css';
-	import { multiHighlight } from '$lib/code/multi-language.js';
+	import { multiHighlight } from '../../code/multi-language.js';
 
 	/** @type {import('mdast').InlineCode} */
 	export let node;

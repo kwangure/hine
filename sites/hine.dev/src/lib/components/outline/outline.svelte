@@ -61,8 +61,6 @@
 		// ...and braces
 		addEventListener('scroll', update, { once: true });
 	}
-
-	$: console.log({ activeTarget });
 </script>
 
 <svelte:window

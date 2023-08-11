@@ -1,4 +1,4 @@
-import { bash, css, javascript, json, svelte } from '$lib/code/index.js';
+import { bash, css, javascript, json, svelte } from './language.js';
 
 const SUPPORTED_LANGUAGES = {
 	bash,

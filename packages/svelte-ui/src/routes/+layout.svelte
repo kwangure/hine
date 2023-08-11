@@ -1,6 +1,6 @@
 <script>
 	import './layout.css';
-	import { Shell, Sidebar } from '$lib/components/index.js';
+	import { Shell, Sidebar } from '../lib/components/index.js';
 </script>
 
 <Shell.Root>

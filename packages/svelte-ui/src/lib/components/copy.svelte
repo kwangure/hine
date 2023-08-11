@@ -1,8 +1,5 @@
 <script>
-	import {
-		createEventForwarder,
-		createTextCopier,
-	} from '$lib/creators/index.js';
+	import { createEventForwarder, createTextCopier } from '../creators/index.js';
 	import { Icon } from './index.js';
 	import { mdiContentCopy, mdiCheck } from '@mdi/js';
 

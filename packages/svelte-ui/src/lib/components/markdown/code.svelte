@@ -1,9 +1,9 @@
 <script>
 	import '../../code/code.css';
-	import { isScrollableX, isScrollableY } from '$lib/dom/dom.js';
-	import { highlightLines } from '$lib/code/index.js';
-	import { Copy } from '$lib/components/index.js';
-	import { multiHighlight } from '$lib/code/multi-language.js';
+	import { isScrollableX, isScrollableY } from '../../dom/dom.js';
+	import { highlightLines } from '../../code/index.js';
+	import { Copy } from '../../components/index.js';
+	import { multiHighlight } from '../../code/multi-language.js';
 
 	/** @type {import('mdast').Code} */
 	export let node;

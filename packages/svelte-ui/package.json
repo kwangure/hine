@@ -50,7 +50,7 @@
 		},
 		"package": {
 			"clean": "if-file-deleted",
-			"command": "svelte-package",
+			"command": "svelte-package -i ./src/lib",
 			"files": [
 				"src/**/*.{js,ts,svelte}",
 				"svelte.config.js",
@@ -90,8 +90,8 @@
 	"exports": {
 		"./components": {
 			"types": "./dist/components/index.d.ts",
-			"svelte": "./dist/components/index.js",
-			"default": "./dist/components/index.js"
+			"svelte": "./src/lib/components/index.js",
+			"default": "./src/lib/components/index.js"
 		},
 		"./dom": {
 			"types": "./dist/dom/dom.d.ts",

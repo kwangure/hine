@@ -9,8 +9,12 @@
 </script>
 
 <li class="flex flex-col gap-1">
-	<div class:pl-5={self.depth == 3}>
-		<Sidebar.Link href="#{self.slug}" ariaCurrent={self.slug === activeTarget}>
+	<div class:pl-5={self.depth == 2} class:pl-10={self.depth == 3}>
+		<Sidebar.Link
+			secondary
+			href="#{self.slug}"
+			ariaCurrent={self.slug === activeTarget}
+		>
 			{self.content}
 		</Sidebar.Link>
 	</div>

@@ -5,6 +5,8 @@
 	export let ariaCurrent = undefined;
 	/** @type {string} */
 	export let href;
+	/** @type {boolean} */
+	export let secondary = false;
 
 	$: _ariaCurrent = computeAriaCurrent(href, $page.url.pathname, ariaCurrent);
 
@@ -33,7 +35,13 @@
 {#if _ariaCurrent}
 	<a
 		{href}
-		class="flex cursor-pointer items-center gap-2 rounded bg-blue-100 px-4 py-1 text-blue-600 hover:bg-blue-200 hover:text-blue-700 dark:bg-neutral-700 dark:text-inherit dark:hover:bg-neutral-500 dark:hover:text-inherit"
+		class="flex cursor-pointer items-center gap-2 rounded px-4 py-1 dark:bg-neutral-700 dark:text-inherit dark:hover:bg-neutral-500 dark:hover:text-inherit"
+		class:bg-blue-100={!secondary}
+		class:hover:bg-blue-200={!secondary}
+		class:hover:text-blue-700={!secondary}
+		class:text-blue-600={!secondary}
+		class:bg-neutral-200={secondary}
+		class:hover:bg-neutral-300={secondary}
 		aria-current={_ariaCurrent}
 	>
 		<slot />

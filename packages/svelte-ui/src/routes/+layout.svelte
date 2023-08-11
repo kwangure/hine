@@ -4,7 +4,7 @@
 </script>
 
 <Shell.Root>
-	<Sidebar.Primary>
+	<Sidebar.Root>
 		<Sidebar.Section title="layout">
 			<li class="flex flex-col gap-1">
 				<Sidebar.Link href="#test">Shell</Sidebar.Link>
@@ -13,6 +13,6 @@
 				<Sidebar.Link href="#test">Sidebar</Sidebar.Link>
 			</li>
 		</Sidebar.Section>
-	</Sidebar.Primary>
+	</Sidebar.Root>
 	<slot />
 </Shell.Root>

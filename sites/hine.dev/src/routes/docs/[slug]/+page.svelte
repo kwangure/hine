@@ -8,7 +8,7 @@
 
 <Shell.Root>
 	<Shell.Navbar>
-		<a href="/" class="px-6 text-xl uppercase">hine</a>
+		<a href="/" class="text-xl uppercase lg:px-6">hine</a>
 		<a class="ml-auto px-4" href="https://github.com/kwangure/hine">
 			<Icon path={siGithub.path} />
 		</a>
@@ -30,7 +30,7 @@
 		</Sidebar.Section>
 	</Sidebar.Root>
 	<Shell.Main>
-		<div class="mx-auto mb-40 max-w-3xl px-12">
+		<div class="mb-40 lg:px-6">
 			<Markdown.Children node={data.content} />
 		</div>
 	</Shell.Main>

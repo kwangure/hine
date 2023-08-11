@@ -1,23 +1,35 @@
+<script>
+	import { getSidebarContext } from './sidebar.js';
+	import { Icon } from '../index.js';
+	import { mdiClose } from '@mdi/js';
+
+	const { elements, state } = getSidebarContext();
+	const { hide } = elements;
+	const { visibility } = state;
+</script>
+
 <aside
-	class="sticky top-[calc(var(--svui-navbar-height)+var(--svui-navbar-y-gap))] col-start-[nav-start] col-end-[content-start] row-start-2 row-end-3 hidden max-h-screen w-72 self-start overflow-y-auto lg:block"
+	class="sticky top-0 z-40 col-start-[page-start] col-end-[page-end] row-start-1 row-end-3 max-h-screen overflow-y-auto lg:top-[calc(var(--svui-navbar-height)+var(--svui-navbar-y-gap))] lg:col-start-[nav-start] lg:col-end-[content-start] lg:row-start-2 lg:block lg:self-start"
+	class:hidden={$visibility === 'hidden'}
+	class:flex={$visibility === 'shown'}
 >
-	<nav class="flex flex-col overflow-y-auto overscroll-contain px-2">
+	<nav
+		class="flex w-72 flex-col overflow-y-auto overscroll-contain bg-white px-2 dark:bg-neutral-800"
+	>
 		<button
 			title="Close Menu"
 			aria-label="Close Menu"
-			class="flex h-16 w-16 touch-manipulation select-none items-center justify-center rounded p-4 outline-none lg:hidden"
+			class="flex h-12 w-12 touch-manipulation select-none items-center justify-center rounded p-2 lg:hidden"
+			use:hide={{ focus: true }}
 		>
-			<svg
-				class="w-full"
-				viewBox="0 0 50 50"
-				role="presentation"
-				focusable="false"
-				aria-label="Close symbol"
-			>
-				<line x1="10%" y1="10%" x2="90%" y2="90%" />
-				<line x1="90%" y1="10%" x2="10%" y2="90%" />
-			</svg>
+			<Icon class="w-full" path={mdiClose} />
 		</button>
 		<slot />
 	</nav>
+	<button
+		title="Close Menu"
+		aria-label="Close Menu"
+		use:hide
+		class="flex-1 touch-manipulation bg-black/10 dark:bg-neutral-700/40 lg:hidden"
+	/>
 </aside>

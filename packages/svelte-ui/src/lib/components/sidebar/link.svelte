@@ -1,4 +1,5 @@
 <script>
+	import { getSidebarContext } from './sidebar.js';
 	import { page } from '$app/stores';
 
 	/** @type {'location' | 'page' | boolean | null | undefined} */
@@ -7,6 +8,8 @@
 	export let href;
 	/** @type {boolean} */
 	export let secondary = false;
+
+	const sidebar = getSidebarContext();
 
 	$: _ariaCurrent = computeAriaCurrent(href, $page.url.pathname, ariaCurrent);
 
@@ -43,6 +46,7 @@
 		class:bg-neutral-200={secondary}
 		class:hover:bg-neutral-300={secondary}
 		aria-current={_ariaCurrent}
+		use:sidebar.elements.hide
 	>
 		<slot />
 	</a>
@@ -51,6 +55,7 @@
 		{href}
 		class="flex cursor-pointer items-center gap-2 rounded px-4 py-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 dark:hover:text-inherit"
 		aria-current={_ariaCurrent}
+		use:sidebar.elements.hide
 	>
 		<slot />
 	</a>

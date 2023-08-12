@@ -1,8 +1,13 @@
 .wireit
 node_modules
-**/dist/**
-**/tests/samples/**
-**/tests/**/samples/**
+.env
+.env.*
+!.env.example
+
+# Sites
+.svelte-kit
+sites/*/build
+sites/*/package
 
 # ESLint CJS doesn't like exports field
 vite.config.js

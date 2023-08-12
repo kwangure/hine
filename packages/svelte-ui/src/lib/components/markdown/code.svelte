@@ -2,7 +2,7 @@
 	import '../../code/code.css';
 	import { isScrollableX, isScrollableY } from '../../dom/dom.js';
 	import { highlightLines } from '../../code/index.js';
-	import { Copy } from '../../components/index.js';
+	import Copy from '../../components/copy.svelte';
 	import { multiHighlight } from '../../code/multi-language.js';
 
 	/** @type {import('mdast').Code} */

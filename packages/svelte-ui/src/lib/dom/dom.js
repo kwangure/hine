@@ -1,3 +1,39 @@
+const FOCUSABLE_SELECTOR = [
+	'a[href]',
+	'area[href]',
+	'input:not([type="hidden"])',
+	'select',
+	'textarea',
+	'button',
+	'iframe',
+	'object',
+	'embed',
+	'[contenteditable]',
+	'[tabindex]',
+].join(',');
+
+/**
+ * @param {HTMLElement} element
+ */
+export function getFocusableElements(element) {
+	const selectedElements = /** @type {HTMLElement[]} */ (
+		Array.from(element.querySelectorAll(FOCUSABLE_SELECTOR))
+	);
+
+	return selectedElements.filter((element) => {
+		const tabIndex = element.getAttribute('tabindex');
+		// @ts-expect-error
+		if (element.disabled || (tabIndex !== null && Number(tabIndex) < 0)) {
+			return false;
+		}
+
+		// Check computed style last since it's more expensive
+		const style = getComputedStyle(element);
+		const isHidden = style.display === 'none' || style.visibility === 'hidden';
+		return !isHidden;
+	});
+}
+
 // https://github.com/ariakit/ariakit/blob/main/packages/ariakit-core/src/utils/dom.ts
 
 /**

@@ -1,10 +1,10 @@
 <script>
 	import { getSidebarContext } from './sidebar.js';
-	import { Icon } from '../index.js';
+	import Icon from '../icon.svelte';
 	import { mdiClose } from '@mdi/js';
 
 	const { elements, state } = getSidebarContext();
-	const { hide } = elements;
+	const { hide, panel } = elements;
 	const { visibility } = state;
 </script>
 
@@ -15,6 +15,7 @@
 >
 	<nav
 		class="flex w-72 flex-col overflow-y-auto overscroll-contain bg-white px-2 dark:bg-neutral-800"
+		use:panel={{ shouldTrapFocus: () => window.innerWidth < 1024 }}
 	>
 		<button
 			title="Close Menu"

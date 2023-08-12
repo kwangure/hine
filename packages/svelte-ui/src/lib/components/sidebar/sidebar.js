@@ -1,4 +1,5 @@
 import { getContext, setContext, tick } from 'svelte';
+import { focustrap } from '../../actions/focustrap.js';
 import { writable } from 'svelte/store';
 
 export function createSidebar() {
@@ -66,7 +67,7 @@ export function createSidebar() {
 	}
 
 	return {
-		elements: { hide, show },
+		elements: { hide, show, panel: focustrap },
 		state: {
 			visibility: { subscribe },
 		},

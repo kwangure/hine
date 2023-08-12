@@ -95,7 +95,7 @@
 		},
 		"./dom": {
 			"types": "./dist/dom/dom.d.ts",
-			"default": "./dist/dom/dom.js"
+			"default": "./src/lib/dom/dom.js"
 		}
 	},
 	"files": [

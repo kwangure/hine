@@ -38,13 +38,18 @@
 {#if _ariaCurrent}
 	<a
 		{href}
-		class="flex cursor-pointer items-center gap-2 rounded px-4 py-1 dark:bg-neutral-700 dark:text-inherit dark:hover:bg-neutral-500 dark:hover:text-inherit"
+		class="flex cursor-pointer items-center gap-2 rounded px-4 py-1"
 		class:bg-blue-100={!secondary}
 		class:hover:bg-blue-200={!secondary}
-		class:hover:text-blue-700={!secondary}
 		class:text-blue-600={!secondary}
 		class:bg-neutral-200={secondary}
 		class:hover:bg-neutral-300={secondary}
+		class:dark:bg-neutral-200={!secondary}
+		class:dark:hover:bg-neutral-100={!secondary}
+		class:dark:text-neutral-800={!secondary}
+		class:dark:bg-neutral-700={secondary}
+		class:dark:hover:bg-neutral-600={secondary}
+		class:dark:text-neutral-300={secondary}
 		aria-current={_ariaCurrent}
 		use:sidebar.elements.hide
 	>

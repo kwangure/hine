@@ -5,7 +5,7 @@
 	import List from './list.svelte';
 	import { page } from '$app/stores';
 
-	/** @type {import('mdast').RootData['tableOfContents']} */
+	/** @type {import('@hinejs/vite-plugin-markdown').TocEntry[]} */
 	export let toc;
 
 	/** @type {string | undefined} */

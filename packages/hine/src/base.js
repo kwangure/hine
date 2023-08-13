@@ -2,14 +2,6 @@ import { Context } from './context.js';
 import { StateEvent } from './event.js';
 import { TransitionHandler } from './handler/transition.js';
 
-/**
- * @typedef {import('./types.js').AlwaysHandlerConfig} AlwaysHandlerConfig
- * @typedef {import('./types.js').DispatchHandlerConfig} DispatchHandlerConfig
- * @typedef {import('./types.js').EntryHandlerConfig} EntryHandlerConfig
- * @typedef {import('./types.js').ExitHandlerConfig} ExitHandlerConfig
- *
- */
-
 export class BaseState {
 	/**
 	 * Action configuration from the user that is propagated to children

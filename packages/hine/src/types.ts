@@ -37,25 +37,6 @@ export type TransitionHandlerConfig = {
 	goto: string;
 };
 
-export type AlwaysHandlerConfig = {
-	actions?: string[];
-	condition?: string;
-	transitionTo?: string;
-};
-export type DispatchHandlerConfig = {
-	actions?: string[];
-	condition?: string;
-	transitionTo?: string;
-};
-export type EntryHandlerConfig = {
-	actions?: string[];
-	condition?: string;
-};
-export type ExitHandlerConfig = {
-	actions?: string[];
-	condition?: string;
-};
-
 export type StateNode = AtomicState | CompoundState;
 
 type StateNodeConfig = {

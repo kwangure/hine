@@ -49,7 +49,7 @@ export interface BaseStateConfig {
 export interface AtomicStateConfig extends BaseStateConfig {}
 
 export interface CompoundStateConfig extends BaseStateConfig {
-	states: Record<string, StateNode>;
+	children: Record<string, StateNode>;
 }
 
 type BaseJSON = ReturnType<BaseState['__toJSON']>;

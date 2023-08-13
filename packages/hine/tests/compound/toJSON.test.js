@@ -7,7 +7,7 @@ describe('toJSON', () => {
 		const name = 'state';
 		const state = new CompoundState({
 			name,
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -16,7 +16,7 @@ describe('toJSON', () => {
 	});
 	it('defaults to empty string when missing name', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -25,7 +25,7 @@ describe('toJSON', () => {
 	});
 	it('includes type', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -35,7 +35,7 @@ describe('toJSON', () => {
 	it('serializes nested states', () => {
 		const state = new CompoundState({
 			name: 'state',
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -55,7 +55,7 @@ describe('toJSON', () => {
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -87,7 +87,7 @@ describe('toJSON', () => {
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -119,7 +119,7 @@ describe('toJSON', () => {
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -153,7 +153,7 @@ describe('toJSON', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -182,13 +182,13 @@ describe('toJSON', () => {
 	});
 	it('includes path', () => {
 		const s1 = new CompoundState({
-			states: {
+			children: {
 				s11: new AtomicState(),
 			},
 		});
 		new CompoundState({
 			name: 'state',
-			states: {
+			children: {
 				s1,
 			},
 		});

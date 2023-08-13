@@ -16,7 +16,7 @@ describe('context', () => {
 		const state = new AtomicState();
 		new CompoundState({
 			context: new Context({ key: 'value' }),
-			states: {
+			children: {
 				state,
 			},
 		}).start();
@@ -27,12 +27,12 @@ describe('context', () => {
 		const state = new AtomicState();
 		new CompoundState({
 			context: new Context({ key: 'value0' }),
-			states: {
+			children: {
 				s1: new CompoundState({
 					context: new Context({
 						key: 'value1',
 					}),
-					states: { state },
+					children: { state },
 				}),
 			},
 		}).start();

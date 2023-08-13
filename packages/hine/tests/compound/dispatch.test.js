@@ -5,7 +5,7 @@ import { TransitionHandler } from '../../src/handler/transition.js';
 describe('dispatch', () => {
 	it('throws on unresolved dispatch', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -16,7 +16,7 @@ describe('dispatch', () => {
 
 	it('transitions on dispatch', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
 					on: {
 						event: [
@@ -25,7 +25,7 @@ describe('dispatch', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
@@ -37,7 +37,7 @@ describe('dispatch', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s21: new AtomicState(),
 					},
 				}),
@@ -55,7 +55,7 @@ describe('dispatch', () => {
 
 	it('ignores invalid events', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState(),
 				s2: new AtomicState(),
 			},

@@ -15,7 +15,7 @@ describe('conditions', () => {
 					run: ['do'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -54,7 +54,7 @@ describe('conditions', () => {
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -82,7 +82,7 @@ describe('conditions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -122,7 +122,7 @@ describe('conditions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -162,7 +162,7 @@ describe('conditions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -196,7 +196,7 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
 					on: {
 						event: [
@@ -206,7 +206,7 @@ describe('conditions', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
@@ -254,7 +254,7 @@ describe('conditions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -291,7 +291,7 @@ describe('conditions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -318,7 +318,7 @@ describe('conditions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -352,7 +352,7 @@ describe('conditions', () => {
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -378,7 +378,7 @@ describe('conditions', () => {
 					if: 'isFalsy',
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -411,7 +411,7 @@ describe('conditions', () => {
 					if: 'run',
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -438,7 +438,7 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
 					always: [
 						new TransitionHandler({
@@ -451,12 +451,12 @@ describe('conditions', () => {
 							if: 'isFalsy',
 						}),
 					],
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
 				s2: new CompoundState({
-					states: {
+					children: {
 						s21: new AtomicState(),
 					},
 				}),
@@ -485,7 +485,7 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
 					always: [
 						new TransitionHandler({
@@ -498,12 +498,12 @@ describe('conditions', () => {
 							if: 'isTruthy',
 						}),
 					],
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
 				s2: new CompoundState({
-					states: {
+					children: {
 						s21: new AtomicState(),
 					},
 				}),
@@ -544,7 +544,7 @@ describe('conditions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s11: new AtomicState(),
 			},
 		});
@@ -580,7 +580,7 @@ describe('conditions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s11: new AtomicState(),
 			},
 		});
@@ -614,7 +614,7 @@ describe('conditions', () => {
 					if: 'isFalsy',
 				}),
 			],
-			states: {
+			children: {
 				s11: new AtomicState(),
 			},
 		});
@@ -647,7 +647,7 @@ describe('conditions', () => {
 					if: 'isTruthy',
 				}),
 			],
-			states: {
+			children: {
 				s11: new AtomicState(),
 			},
 		});

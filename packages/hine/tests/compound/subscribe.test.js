@@ -5,9 +5,9 @@ import { EffectHandler2 } from '../../src/handler/effect.js';
 describe('subscribe', () => {
 	it('calls subscribers on start', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
@@ -22,7 +22,7 @@ describe('subscribe', () => {
 	});
 	it('calls subscribers on disptach', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
 					on: {
 						event: [
@@ -31,7 +31,7 @@ describe('subscribe', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),

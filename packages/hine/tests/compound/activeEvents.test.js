@@ -14,7 +14,7 @@ describe('activeEvents', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new CompoundState({
 					on: {
 						EVENT2: [
@@ -23,7 +23,7 @@ describe('activeEvents', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
@@ -46,7 +46,7 @@ describe('activeEvents', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState({
 					on: {
 						EVENT: [
@@ -75,7 +75,7 @@ describe('activeEvents', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -91,7 +91,7 @@ describe('activeEvents', () => {
 			on: {
 				EVENT: [],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});

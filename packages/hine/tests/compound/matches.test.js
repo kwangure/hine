@@ -6,7 +6,7 @@ describe('matches', () => {
 	it('does not match when not started', () => {
 		const machine = new CompoundState({
 			name: 'machine',
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -15,7 +15,7 @@ describe('matches', () => {
 	it('matches state name when started', () => {
 		const state = new CompoundState({
 			name: 'machine',
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -25,14 +25,14 @@ describe('matches', () => {
 	it('matches nested states', () => {
 		const state = new CompoundState({
 			name: 'machine',
-			states: {
+			children: {
 				s1: new CompoundState({
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
 				s2: new CompoundState({
-					states: {
+					children: {
 						s21: new AtomicState(),
 					},
 				}),
@@ -46,9 +46,9 @@ describe('matches', () => {
 	});
 	it('matches anonymous states', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
@@ -66,7 +66,7 @@ describe('matches', () => {
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -98,7 +98,7 @@ describe('matches', () => {
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -133,7 +133,7 @@ describe('matches', () => {
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});

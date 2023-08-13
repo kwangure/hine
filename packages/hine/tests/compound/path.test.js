@@ -5,7 +5,7 @@ describe('path', () => {
 	it('matches state name when started', () => {
 		const state = new CompoundState({
 			name: 'state',
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -13,16 +13,16 @@ describe('path', () => {
 	});
 	it('creates path for nested states', () => {
 		const s2 = new CompoundState({
-			states: {
+			children: {
 				s21: new AtomicState(),
 			},
 		});
 		const s11 = new AtomicState();
 		const state = new CompoundState({
 			name: 'state',
-			states: {
+			children: {
 				s1: new CompoundState({
-					states: {
+					children: {
 						s11,
 					},
 				}),
@@ -37,15 +37,15 @@ describe('path', () => {
 	});
 	it('creates path for anonymous states', () => {
 		const s2 = new CompoundState({
-			states: {
+			children: {
 				s21: new AtomicState(),
 			},
 		});
 		const s11 = new AtomicState();
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
-					states: {
+					children: {
 						s11,
 					},
 				}),

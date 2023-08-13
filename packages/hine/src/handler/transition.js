@@ -37,7 +37,7 @@ export class TransitionHandler extends BaseHandler {
 			}
 			throw Error(message);
 		}
-		const to = parent.__states.get(this.__gotoName);
+		const to = parent.__children.get(this.__gotoName);
 		if (!to) {
 			let message = '';
 			if (this.path.some((segment) => Boolean(segment))) {
@@ -46,7 +46,7 @@ export class TransitionHandler extends BaseHandler {
 			} else {
 				message += `State references unknown transition target '${this.__gotoName}'.`;
 			}
-			const siblings = Array.from(parent.__states.keys());
+			const siblings = Array.from(parent.__children.keys());
 			if (siblings.length) {
 				message += `Expected one of: ${siblings.join(', ')}.`;
 			}

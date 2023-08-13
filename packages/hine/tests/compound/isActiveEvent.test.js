@@ -7,7 +7,7 @@ import { EffectHandler2 } from '../../src/handler/effect.js';
 describe('isActiveEvent', () => {
 	it('returns boolean for active events', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState({
 					on: {
 						EVENT1: [
@@ -47,7 +47,7 @@ describe('isActiveEvent', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -65,7 +65,7 @@ describe('isActiveEvent', () => {
 			on: {
 				EVENT: [],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});

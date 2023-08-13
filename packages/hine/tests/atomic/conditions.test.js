@@ -181,9 +181,9 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
-					states: {
+					children: {
 						s11: new AtomicState({
 							on: {
 								event: [
@@ -412,7 +412,7 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState({
 					always: [
 						new TransitionHandler({
@@ -456,7 +456,7 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState({
 					always: [
 						new TransitionHandler({
@@ -500,7 +500,7 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
 					on: {
 						myEvent: [
@@ -510,7 +510,7 @@ describe('conditions', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
@@ -544,7 +544,7 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
 					on: {
 						myEvent: [
@@ -554,7 +554,7 @@ describe('conditions', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),

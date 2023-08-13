@@ -12,7 +12,7 @@ describe('dispatch', () => {
 
 	it('transitions on dispatch', () => {
 		const compound = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState({
 					on: {
 						event: [

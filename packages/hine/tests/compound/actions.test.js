@@ -21,7 +21,7 @@ describe('actions', () => {
 					run: ['entry0'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new CompoundState({
 					always: [
 						new EffectHandler2({
@@ -33,7 +33,7 @@ describe('actions', () => {
 							run: ['entry1'],
 						}),
 					],
-					states: {
+					children: {
 						s2: new AtomicState({
 							always: [
 								new EffectHandler2({
@@ -111,7 +111,7 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				a: new AtomicState({
 					on: {
 						event: [
@@ -132,7 +132,7 @@ describe('actions', () => {
 							run: ['entry0'],
 						}),
 					],
-					states: {
+					children: {
 						s1: new CompoundState({
 							always: [
 								new EffectHandler2({
@@ -144,7 +144,7 @@ describe('actions', () => {
 									run: ['entry1'],
 								}),
 							],
-							states: {
+							children: {
 								s2: new AtomicState({
 									always: [
 										new EffectHandler2({
@@ -234,7 +234,7 @@ describe('actions', () => {
 					run: ['exit0'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new CompoundState({
 					exit: [
 						new EffectHandler2({
@@ -248,14 +248,14 @@ describe('actions', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new CompoundState({
 							exit: [
 								new EffectHandler2({
 									run: ['exit11'],
 								}),
 							],
-							states: {
+							children: {
 								s111: new AtomicState({
 									exit: [
 										new EffectHandler2({
@@ -330,7 +330,7 @@ describe('actions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new CompoundState({
 					on: {
 						event: [
@@ -339,7 +339,7 @@ describe('actions', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new CompoundState({
 							on: {
 								event: [
@@ -348,7 +348,7 @@ describe('actions', () => {
 									}),
 								],
 							},
-							states: {
+							children: {
 								s111: new AtomicState({
 									on: {
 										event: [
@@ -430,7 +430,7 @@ describe('actions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new CompoundState({
 					always: [
 						new EffectHandler2({
@@ -444,7 +444,7 @@ describe('actions', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new CompoundState({
 							always: [
 								new EffectHandler2({
@@ -458,7 +458,7 @@ describe('actions', () => {
 									}),
 								],
 							},
-							states: {
+							children: {
 								s111: new AtomicState({
 									always: [
 										new EffectHandler2({
@@ -577,7 +577,7 @@ describe('actions', () => {
 					run: ['exit0'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new CompoundState({
 					exit: [
 						new EffectHandler2({
@@ -592,14 +592,14 @@ describe('actions', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new CompoundState({
 							exit: [
 								new EffectHandler2({
 									run: ['exit11'],
 								}),
 							],
-							states: {
+							children: {
 								s111: new AtomicState(),
 							},
 						}),
@@ -616,7 +616,7 @@ describe('actions', () => {
 							run: ['entry2'],
 						}),
 					],
-					states: {
+					children: {
 						s21: new CompoundState({
 							always: [
 								new EffectHandler2({
@@ -628,7 +628,7 @@ describe('actions', () => {
 									run: ['entry21'],
 								}),
 							],
-							states: {
+							children: {
 								s211: new AtomicState(),
 							},
 						}),
@@ -751,14 +751,14 @@ describe('actions', () => {
 	it('runs always actions on unhandled events', () => {
 		let alwaysCount = 0;
 		const state = new CompoundState({
-			states: {
+			children: {
 				current: new CompoundState({
 					always: [
 						new EffectHandler2({
 							run: ['always'],
 						}),
 					],
-					states: {
+					children: {
 						s: new AtomicState(),
 					},
 				}),
@@ -789,7 +789,7 @@ describe('actions', () => {
 		const log = [];
 		const state = new CompoundState({
 			name: 's0',
-			states: {
+			children: {
 				s1: new CompoundState({
 					always: [
 						new EffectHandler2({
@@ -814,12 +814,12 @@ describe('actions', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
 				s2: new CompoundState({
-					states: {
+					children: {
 						s21: new AtomicState(),
 					},
 				}),
@@ -860,7 +860,7 @@ describe('actions', () => {
 		const log = [];
 		const state = new CompoundState({
 			name: 's0',
-			states: {
+			children: {
 				s1: new CompoundState({
 					always: [
 						new EffectHandler2({
@@ -885,12 +885,12 @@ describe('actions', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
 				s2: new CompoundState({
-					states: {
+					children: {
 						s21: new AtomicState(),
 					},
 				}),
@@ -955,7 +955,7 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
 					entry: [
 						new EffectHandler2({
@@ -970,7 +970,7 @@ describe('actions', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
@@ -981,7 +981,7 @@ describe('actions', () => {
 							run: ['always2'],
 						}),
 					],
-					states: {
+					children: {
 						s21: new AtomicState(),
 					},
 				}),
@@ -1033,7 +1033,7 @@ describe('actions', () => {
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -1055,7 +1055,7 @@ describe('actions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -1090,7 +1090,7 @@ describe('actions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -1125,7 +1125,7 @@ describe('actions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -1162,7 +1162,7 @@ describe('actions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -1189,7 +1189,7 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
 					on: {
 						event: [
@@ -1198,7 +1198,7 @@ describe('actions', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
@@ -1240,7 +1240,7 @@ describe('actions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -1261,7 +1261,7 @@ describe('actions', () => {
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -1288,7 +1288,7 @@ describe('actions', () => {
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -1311,7 +1311,7 @@ describe('actions', () => {
 					run: ['action1'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -1335,7 +1335,7 @@ describe('actions', () => {
 			on: {
 				event: [new EffectHandler2({ run: ['action'] })],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -1359,7 +1359,7 @@ describe('actions', () => {
 					run: ['missing'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -1372,7 +1372,7 @@ describe('actions', () => {
 					run: ['missing'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -1385,7 +1385,7 @@ describe('actions', () => {
 					run: ['missing'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});

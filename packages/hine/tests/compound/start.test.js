@@ -13,7 +13,7 @@ describe('start', () => {
 					run: ['always'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -33,7 +33,7 @@ describe('start', () => {
 	});
 	it('sets initial state', () => {
 		const machine = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -43,7 +43,7 @@ describe('start', () => {
 	});
 	it('is resets to initial state', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState({
 					on: {
 						event: [new TransitionHandler({ goto: 's2' })],

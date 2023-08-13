@@ -44,7 +44,7 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				a: new AtomicState({
 					on: {
 						event: [
@@ -100,7 +100,7 @@ describe('actions', () => {
 					run: ['exit0'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState({
 					exit: [
 						new EffectHandler2({
@@ -215,7 +215,7 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const machine = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState({
 					exit: [
 						new EffectHandler2({
@@ -319,9 +319,9 @@ describe('actions', () => {
 		const log = [];
 		const state = new CompoundState({
 			name: 's0',
-			states: {
+			children: {
 				s1: new CompoundState({
-					states: {
+					children: {
 						s11: new AtomicState({
 							always: [
 								new EffectHandler2({
@@ -387,7 +387,7 @@ describe('actions', () => {
 		const log = [];
 		const state = new CompoundState({
 			name: 's0',
-			states: {
+			children: {
 				s1: new AtomicState({
 					always: [
 						new EffectHandler2({
@@ -625,9 +625,9 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
-					states: {
+					children: {
 						s11: new AtomicState({
 							on: {
 								event: [

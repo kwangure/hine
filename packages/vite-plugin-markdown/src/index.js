@@ -4,11 +4,11 @@ import { EOL } from 'node:os';
 import frontmatter from 'remark-frontmatter';
 import fs from 'node:fs/promises';
 import parse from 'remark-parse';
-import remarkAttributes from '@hinejs/remark-attributes';
+import { remarkAttributes } from '@hinejs/remark-attributes';
+import { remarkYamlParse } from '@hinejs/remark-yaml-parse';
 import stringify from 'remark-stringify';
 import { unified } from 'unified';
-import { EXIT, visit } from 'unist-util-visit';
-import yaml from 'js-yaml';
+import { visit } from 'unist-util-visit';
 
 /**
  * @typedef {import('./types.js').TocEntry} TocEntry
@@ -41,7 +41,7 @@ export function markdown() {
 				.use(parse)
 				.use(stringify)
 				.use(frontmatter)
-				.use(remarkParseYaml)
+				.use(remarkYamlParse)
 				.use(remarkAttributes)
 				.use(() => async (tree) => {
 					/** @type {import('mdast').Code[]} */
@@ -148,25 +148,6 @@ export function remarkSlugs() {
 			...tree.data,
 			tableOfContents: dummyRoot.children,
 		};
-	};
-}
-
-/** @type {import('unified').Plugin<void[], import('mdast').Root>} */
-export function remarkParseYaml() {
-	return (tree) => {
-		visit(tree, 'yaml', (node) => {
-			const parsedYaml = yaml.load(node.value);
-			tree.data = {
-				...tree.data,
-				frontmatter: parsedYaml,
-			};
-			node.data = {
-				...node.data,
-				value: parsedYaml,
-			};
-
-			return EXIT;
-		});
 	};
 }
 

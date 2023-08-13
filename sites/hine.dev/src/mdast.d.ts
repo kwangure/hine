@@ -4,8 +4,8 @@ import type { TocEntry } from '@hinejs/vite-plugin-markdown';
 declare module 'mdast' {
 	interface CodeData {
 		attributes: {
+			copy?: string;
 			file?: string;
-			lang?: string;
 		};
 	}
 	interface HeadingData {

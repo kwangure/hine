@@ -10,4 +10,9 @@ declare module 'mdast' {
 			lang?: string;
 		};
 	}
+	interface CodeData {
+		attributes: {
+			copy?: string;
+		};
+	}
 }

@@ -52,7 +52,7 @@ export function markdown() {
 
 					const promises = [];
 					for (const node of codeBlocks) {
-						const file = node.data?.file;
+						const file = node.data?.attributes.file;
 						if (!file) continue;
 
 						const { filepath, start, end } = parseFileMeta(file);

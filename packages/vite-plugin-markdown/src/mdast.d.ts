@@ -4,11 +4,15 @@ import 'mdast';
 
 declare module 'mdast' {
 	interface CodeData {
-		file?: string;
-		lang?: string;
+		attributes: {
+			file?: string;
+			lang?: string;
+		};
 	}
 	interface InlineCodeData {
-		lang?: string;
+		attributes: {
+			lang?: string;
+		};
 	}
 	interface HeadingData {
 		content: string;

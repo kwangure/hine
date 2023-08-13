@@ -27,6 +27,10 @@ export default remarkAttributes;
  * @param {import("mdast").Code} code
  */
 function parseCode(code) {
+	code.data = {
+		...code.data,
+		attributes: {},
+	};
 	if (!code.meta) return;
 
 	const match = code.meta.match(ATTRIBUTE_BLOCK_RE);
@@ -35,10 +39,7 @@ function parseCode(code) {
 	const parseOutput = mdAttributes(match[1].trim());
 	if (!isNonEmptyObject(parseOutput.prop)) return;
 
-	code.data = {
-		...code.data,
-		...parseOutput.prop,
-	};
+	code.data.attributes = parseOutput.prop;
 	code.meta = code.meta.replace(match[0].trimEnd(), '');
 }
 
@@ -48,6 +49,10 @@ function parseCode(code) {
  * @param {import("mdast").Parents} [parent]
  */
 function parseInlineCode(inlineCode, index, parent) {
+	inlineCode.data = {
+		...inlineCode.data,
+		attributes: {},
+	};
 	if (typeof index !== 'number' || !parent) return;
 
 	const nextSibling = parent.children[index + 1];
@@ -59,11 +64,8 @@ function parseInlineCode(inlineCode, index, parent) {
 	const parseOutput = mdAttributes(match[1].trim());
 	if (!isNonEmptyObject(parseOutput.prop)) return;
 
-	inlineCode.data = {
-		...inlineCode.data,
-		...parseOutput.prop,
-	};
-	nextSibling.value = nextSibling.value.replace(match[0].trimEnd(), '');
+	(inlineCode.data.attributes = parseOutput.prop),
+		(nextSibling.value = nextSibling.value.replace(match[0].trimEnd(), ''));
 }
 
 /**

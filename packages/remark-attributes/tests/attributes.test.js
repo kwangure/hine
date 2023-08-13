@@ -14,7 +14,9 @@ test('code', async (t) => {
 		const transformed = await processor.run(parsed);
 		visit(transformed, 'code', (node) => {
 			assert.deepStrictEqual(node.data, {
-				foo: 'bar',
+				attributes: {
+					foo: 'bar',
+				},
 			});
 			assert.strictEqual(node.meta, '');
 		});
@@ -25,7 +27,9 @@ test('code', async (t) => {
 		const transformed = await processor.run(parsed);
 		visit(transformed, 'code', (node) => {
 			assert.deepStrictEqual(node.data, {
-				foo: 'bar',
+				attributes: {
+					foo: 'bar',
+				},
 			});
 			assert.strictEqual(node.meta, '');
 		});
@@ -36,7 +40,9 @@ test('code', async (t) => {
 		const transformed = await processor.run(parsed);
 		visit(transformed, 'code', (node) => {
 			assert.deepStrictEqual(node.data, {
-				foo: 'bar',
+				attributes: {
+					foo: 'bar',
+				},
 			});
 			assert.strictEqual(node.meta, ' meta content');
 		});
@@ -58,7 +64,9 @@ test('inlineCode', async (t) => {
 		const transformed = await processor.run(parsed);
 		visit(transformed, 'inlineCode', (node) => {
 			assert.deepStrictEqual(node.data, {
-				bar: 'baz',
+				attributes: {
+					bar: 'baz',
+				},
 			});
 		});
 	});
@@ -71,7 +79,9 @@ test('inlineCode', async (t) => {
 
 			const nextSibling = parent?.children[index + 1];
 			assert.deepStrictEqual(node.data, {
-				bar: 'baz',
+				attributes: {
+					bar: 'baz',
+				},
 			});
 
 			if (nextSibling?.type !== 'text') return; // Hush TypeScript. Hush.
@@ -88,7 +98,9 @@ test('inlineCode', async (t) => {
 
 			const nextSibling = parent?.children[index + 1];
 			assert.deepStrictEqual(node.data, {
-				bar: 'baz',
+				attributes: {
+					bar: 'baz',
+				},
 			});
 
 			if (nextSibling?.type !== 'text') return; // Hush TypeScript. Hush.

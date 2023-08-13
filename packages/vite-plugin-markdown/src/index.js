@@ -1,38 +1,18 @@
-import mdAttributes from 'md-attr-parser';
 import { dataToEsm } from '@rollup/pluginutils';
-import delve from 'dlv';
 import { EOL } from 'node:os';
 import frontmatter from 'remark-frontmatter';
 import fs from 'node:fs/promises';
 import parse from 'remark-parse';
+import { remarkAttributes } from '@hinejs/remark-attributes';
+import { remarkVariables } from '@hinejs/remark-variables';
+import { remarkYamlParse } from '@hinejs/remark-yaml-parse';
 import stringify from 'remark-stringify';
 import { unified } from 'unified';
-import { EXIT, visit } from 'unist-util-visit';
-import yaml from 'js-yaml';
-
-const ATTRIBUTE_BLOCK_RE = /^\s*(\{.*?\})(\s+|$)/;
+import { visit } from 'unist-util-visit';
 
 /**
  * @typedef {import('./types.js').TocEntry} TocEntry
  */
-
-/**
- * @param {{} | null} value
- */
-function isNonEmptyObject(value) {
-	return (
-		typeof value === 'object' && value !== null && Object.keys(value).length > 0
-	);
-}
-
-/**
- * @template {Object} T
- * @param {T} thing
- * @returns {thing is Extract<T, { value: any }>}
- */
-function hasValue(thing) {
-	return 'value' in thing;
-}
 
 /**
  * A Vite plugin for handling Markdown files
@@ -52,7 +32,7 @@ export function markdown() {
 				.use(parse)
 				.use(stringify)
 				.use(frontmatter)
-				.use(remarkParseYaml)
+				.use(remarkYamlParse)
 				.use(remarkAttributes)
 				.use(() => async (tree) => {
 					/** @type {import('mdast').Code[]} */
@@ -63,7 +43,7 @@ export function markdown() {
 
 					const promises = [];
 					for (const node of codeBlocks) {
-						const file = node.data?.file;
+						const file = node.data?.attributes.file;
 						if (!file) continue;
 
 						const { filepath, start, end } = parseFileMeta(file);
@@ -81,23 +61,7 @@ export function markdown() {
 
 					await Promise.all(promises);
 				})
-				.use(() => (/** @type {import("mdast").Root} */ tree) => {
-					const replacements = { ...tree.data };
-					visit(tree, (node) => {
-						if (!hasValue(node)) return;
-						for (const match of node.value.matchAll(/{{\s*([0-9\w.]+)\s*}}/g)) {
-							const path = match[1];
-							const value = delve(replacements, path);
-							if (value === undefined) {
-								console.warn(
-									`Value '${path}' accessed in '${id}' is not defined`,
-								);
-							}
-							node.value = node.value.replace(match[0], value);
-						}
-					});
-				})
-				// Generate slugs after variables i.e. {{ stuff }} have been replaced
+				.use(remarkVariables)
 				.use(remarkSlugs);
 			const tree = processor.parse(code);
 			const transformedTree = await processor.run(tree);
@@ -159,65 +123,6 @@ export function remarkSlugs() {
 			...tree.data,
 			tableOfContents: dummyRoot.children,
 		};
-	};
-}
-
-/** @type {import('unified').Plugin<void[], import('mdast').Root>} */
-export function remarkParseYaml() {
-	return (tree) => {
-		visit(tree, 'yaml', (node) => {
-			const parsedYaml = yaml.load(node.value);
-			tree.data = {
-				...tree.data,
-				frontmatter: parsedYaml,
-			};
-			node.data = {
-				...node.data,
-				value: parsedYaml,
-			};
-
-			return EXIT;
-		});
-	};
-}
-
-/** @type {import('unified').Plugin<void[], import('mdast').Root>} */
-export function remarkAttributes() {
-	return (tree) => {
-		visit(tree, 'text', (node, index, parent) => {
-			// An attribute must be a sibling that follows a previous element
-			if (!parent || !index) return;
-
-			const match = node.value.match(ATTRIBUTE_BLOCK_RE);
-			if (!match) return;
-
-			const parseOutput = mdAttributes(match[1].trim());
-			if (!isNonEmptyObject(parseOutput.prop)) return;
-
-			const previousSibling = parent.children[index - 1];
-			// TODO: only allow attributes on _some_ elements?
-			previousSibling.data = {
-				...previousSibling.data,
-				...parseOutput.prop,
-			};
-			node.value = node.value.replace(match[1].trimEnd(), '');
-		});
-
-		visit(tree, 'code', (node) => {
-			if (!node.meta) return;
-
-			const match = node.meta.match(ATTRIBUTE_BLOCK_RE);
-			if (!match) return;
-
-			const parseOutput = mdAttributes(match[1].trim());
-			if (!isNonEmptyObject(parseOutput.prop)) return;
-
-			node.data = {
-				...node.data,
-				...parseOutput.prop,
-			};
-			node.meta = node.meta.replace(match[1].trimEnd(), '');
-		});
 	};
 }
 

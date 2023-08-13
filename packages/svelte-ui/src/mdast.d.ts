@@ -6,6 +6,13 @@ declare module 'mdast' {
 		slug: string;
 	}
 	interface InlineCodeData {
-		lang?: string;
+		attributes: {
+			lang?: string;
+		};
+	}
+	interface CodeData {
+		attributes: {
+			copy?: string;
+		};
 	}
 }

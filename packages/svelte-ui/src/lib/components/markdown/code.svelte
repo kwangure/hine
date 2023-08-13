@@ -16,7 +16,9 @@
 		multiHighlight(code, language, options),
 	);
 	$: copyRanges = parseRanges(
-		typeof node.data?.copy === 'string' ? node.data.copy : '',
+		typeof node.data?.attributes.copy === 'string'
+			? node.data.attributes.copy
+			: '',
 	);
 	$: lines = enrichLineRanges(highlightedLines, copyRanges);
 
@@ -141,7 +143,7 @@
 </script>
 
 <code
-	class="mb-2 mt-4 grid grid-cols-[1fr_max-content] overflow-auto whitespace-pre rounded border border-neutral-600 bg-zinc-800 py-4 pl-3 pr-5 text-sm text-neutral-200 dark:border-neutral-600 dark:bg-zinc-900"
+	class="mb-2 mt-4 grid grid-cols-[1fr_max-content] overflow-auto whitespace-pre rounded border border-neutral-600 bg-zinc-800 py-4 pl-3 pr-5 text-sm leading-6 text-neutral-200 dark:border-neutral-600 dark:bg-zinc-900"
 	use:overflowFocusable
 	on:mouseleave={() => (hoverRange = undefined)}
 >

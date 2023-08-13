@@ -5,7 +5,7 @@
 	/** @type {import('mdast').InlineCode} */
 	export let node;
 
-	$: segments = multiHighlight(node.value, node.data?.lang);
+	$: segments = multiHighlight(node.value, node.data?.attributes.lang);
 </script>
 
 <code

@@ -1,9 +1,11 @@
 {
-	"name": "@hinejs/vite-plugin-markdown",
-	"version": "0.0.0",
+	"name": "@hinejs/remark-variables",
 	"scripts": {
 		"check": "wireit",
-		"package": "wireit"
+		"package": "wireit",
+		"publint": "wireit",
+		"pre-commit": "wireit",
+		"test": "wireit"
 	},
 	"wireit": {
 		"check": {
@@ -18,15 +20,13 @@
 		"package": {
 			"clean": "if-file-deleted",
 			"command": "tsc --project tsconfig.build.json",
-			"dependencies": [
-				"../remark-attributes:package",
-				"../remark-variables:package",
-				"../remark-yaml-parse:package"
-			],
 			"files": [
 				"src/**/*.{js,ts}",
 				"tsconfig.build.json",
 				"tsconfig.json"
+			],
+			"dependencies": [
+				"../remark-yaml-parse:package"
 			],
 			"output": [
 				"types"
@@ -34,7 +34,9 @@
 		},
 		"pre-commit": {
 			"dependencies": [
-				"check"
+				"check",
+				"publint",
+				"test"
 			]
 		},
 		"publint": {
@@ -45,9 +47,16 @@
 				"package.json"
 			],
 			"output": []
+		},
+		"test": {
+			"command": "node --test --test-reporter spec",
+			"files": [
+				"src/**/*.js",
+				"tests/**/*.js"
+			],
+			"output": []
 		}
 	},
-	"license": "MIT",
 	"files": [
 		"src",
 		"types",
@@ -60,23 +69,15 @@
 			"default": "./src/index.js"
 		}
 	},
-	"devDependencies": {
-		"@types/dlv": "^1.1.2",
-		"@types/js-yaml": "^4.0.5",
-		"type-fest": "^4.1.0",
-		"vite": "^4.4.8"
-	},
-	"type": "module",
 	"dependencies": {
-		"@hinejs/remark-attributes": "*",
-		"@hinejs/remark-variables": "*",
-		"@hinejs/remark-yaml-parse": "*",
-		"@rollup/pluginutils": "^5.0.2",
-		"@types/mdast": "^4.0.0",
-		"remark-frontmatter": "^4.0.1",
-		"remark-parse": "^10.0.2",
-		"remark-stringify": "^10.0.3",
-		"unified": "^10.1.2",
 		"unist-util-visit": "^5.0.0"
-	}
+	},
+	"devDependencies": {
+		"@hinejs/remark-yaml-parse": "*",
+		"@types/node": "^20.4.10",
+		"publint": "^0.2.0",
+		"remark-frontmatter": "^4.0.1",
+		"remark-parse": "^10.0.2"
+	},
+	"type": "module"
 }

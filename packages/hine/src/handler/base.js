@@ -15,7 +15,7 @@ export class BaseHandler {
 	/** @type {boolean | undefined} */
 	__shouldNotifyAfter = undefined;
 	/**
-	 * @param {import('../types').EffectHandlerConfig} options
+	 * @param {import('../types').BaseHandlerConfig} options
 	 */
 	constructor(options) {
 		if (typeof options.notifyAfter === 'boolean') {

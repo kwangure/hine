@@ -72,7 +72,7 @@ export class BaseState {
 	__subscribers = new Set();
 
 	/**
-	 * @param {import('./types.js').AtomicStateConfig} [stateConfig]
+	 * @param {import('./types.js').BaseStateConfig} [stateConfig]
 	 */
 	constructor(stateConfig) {
 		this.#alwaysConfig = stateConfig?.always || [];
@@ -361,7 +361,7 @@ export class BaseState {
 				(this.__handler && path === this.__handler.path.join('.')),
 		);
 	}
-	/** @param {import('./types.js').MonitorConfig} config */
+	/** @param {import('./types.js').BaseMonitorConfig} config */
 	monitor(config) {
 		if (config.actionConfig) {
 			if ('name' in config.actionConfig) {

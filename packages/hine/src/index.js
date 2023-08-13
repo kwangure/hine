@@ -7,9 +7,9 @@ import { EffectHandler2 } from './handler/effect.js';
 import { TransitionHandler } from './handler/transition.js';
 
 /**
- * @typedef {import('./types').AtomicStateConfig} AtomicStateConfig
+ * @typedef {import('./types').BaseStateConfig} AtomicStateConfig
  * @typedef {import('./types').CompoundStateConfig} CompoundStateConfig
- * @typedef {import('./types').MonitorConfig} AtomicMonitorConfig
+ * @typedef {import('./types').BaseMonitorConfig} AtomicMonitorConfig
  * @typedef {import('./types').CompoundMonitorConfig} CompoundMonitorConfig
  * @typedef {import('./types').AtomicStateJSON} AtomicStateJSON
  * @typedef {import('./types').CompoundStateJSON} CompoundStateJSON

@@ -8,50 +8,49 @@ import type { EffectHandler2 } from './handler/effect.js';
 import type { Simplify } from 'type-fest';
 import type { TransitionHandler } from './handler/transition.js';
 
-export interface ActionConfig {
+interface RunnerConfig {
 	name?: string;
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
+}
+
+export interface ActionConfig extends RunnerConfig {
 	run: (this: undefined, arg: Action) => any;
 }
 
-export interface ConditionConfig {
-	name?: string;
-	notifyAfter?: boolean;
-	notifyBefore?: boolean;
+export interface ConditionConfig extends RunnerConfig {
 	run: (this: undefined, arg: Condition) => boolean;
 }
 
-export type EffectHandlerConfig = {
+export interface BaseHandlerConfig {
 	run?: string[];
 	if?: string;
 	notifyAfter?: boolean;
 	notifyBefore?: boolean;
-};
+}
 
-export type TransitionHandlerConfig = {
-	run?: string[];
-	if?: string;
-	notifyAfter?: boolean;
-	notifyBefore?: boolean;
+export interface EffectHandlerConfig extends BaseHandlerConfig {
+	run: string[];
+}
+
+export interface TransitionHandlerConfig extends BaseHandlerConfig {
 	goto: string;
-};
+}
 
-export type StateNode = AtomicState | CompoundState;
+export interface BaseStateConfig {
+	always?: (EffectHandler2 | TransitionHandler)[];
+	context?: Context;
+	entry?: EffectHandler2[];
+	exit?: EffectHandler2[];
+	name?: string;
+	on?: Record<string, (EffectHandler2 | TransitionHandler)[]>;
+}
 
-type StateNodeConfig = {
-	always: (EffectHandler2 | TransitionHandler)[];
-	context: Context;
-	entry: EffectHandler2[];
-	exit: EffectHandler2[];
-	name: string;
-	on: Record<string, (EffectHandler2 | TransitionHandler)[]>;
-};
+export interface AtomicStateConfig extends BaseStateConfig {}
 
-export type AtomicStateConfig = Partial<StateNodeConfig>;
-export type CompoundStateConfig = Partial<StateNodeConfig> & {
+export interface CompoundStateConfig extends BaseStateConfig {
 	states: Record<string, StateNode>;
-};
+}
 
 type BaseJSON = ReturnType<BaseState['__toJSON']>;
 
@@ -76,20 +75,24 @@ export type HandlerJSON = ReturnType<
 	(EffectHandler2 | TransitionHandler)['toJSON']
 >;
 
-export type MonitorConfig = {
+export interface BaseMonitorConfig {
 	actions?: Record<string, Action>;
-	actionConfig?: Partial<Omit<ActionConfig, 'run'>>;
+	actionConfig?: RunnerConfig;
 	conditions?: Record<string, Condition>;
-	conditionConfig?: Partial<Omit<ConditionConfig, 'run'>>;
-};
+	conditionConfig?: RunnerConfig;
+}
 
-export type CompoundMonitorConfig = MonitorConfig & {
-	states?: Record<string, MonitorConfig | CompoundMonitorConfig>;
-};
+export interface AtomicMonitorConfig extends BaseMonitorConfig {}
 
-export type EventOptions = {
+export interface CompoundMonitorConfig extends BaseMonitorConfig {
+	states?: Record<string, AtomicMonitorConfig | CompoundMonitorConfig>;
+}
+
+export interface EventOptions {
 	name: string;
 	value?: string;
-};
+}
+
+export type StateNode = AtomicState | CompoundState;
 
 export {};

@@ -1,10 +1,10 @@
 import { dataToEsm } from '@rollup/pluginutils';
-import delve from 'dlv';
 import { EOL } from 'node:os';
 import frontmatter from 'remark-frontmatter';
 import fs from 'node:fs/promises';
 import parse from 'remark-parse';
 import { remarkAttributes } from '@hinejs/remark-attributes';
+import { remarkVariables } from '@hinejs/remark-variables';
 import { remarkYamlParse } from '@hinejs/remark-yaml-parse';
 import stringify from 'remark-stringify';
 import { unified } from 'unified';
@@ -13,15 +13,6 @@ import { visit } from 'unist-util-visit';
 /**
  * @typedef {import('./types.js').TocEntry} TocEntry
  */
-
-/**
- * @template {Object} T
- * @param {T} thing
- * @returns {thing is Extract<T, { value: any }>}
- */
-function hasValue(thing) {
-	return 'value' in thing;
-}
 
 /**
  * A Vite plugin for handling Markdown files
@@ -70,23 +61,7 @@ export function markdown() {
 
 					await Promise.all(promises);
 				})
-				.use(() => (/** @type {import("mdast").Root} */ tree) => {
-					const replacements = { ...tree.data };
-					visit(tree, (node) => {
-						if (!hasValue(node)) return;
-						for (const match of node.value.matchAll(/{{\s*([0-9\w.]+)\s*}}/g)) {
-							const path = match[1];
-							const value = delve(replacements, path);
-							if (value === undefined) {
-								console.warn(
-									`Value '${path}' accessed in '${id}' is not defined`,
-								);
-							}
-							node.value = node.value.replace(match[0], value);
-						}
-					});
-				})
-				// Generate slugs after variables i.e. {{ stuff }} have been replaced
+				.use(remarkVariables)
 				.use(remarkSlugs);
 			const tree = processor.parse(code);
 			const transformedTree = await processor.run(tree);

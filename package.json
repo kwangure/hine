@@ -109,6 +109,7 @@
 				"./packages/svelte-ui:package",
 				"./packages/vite-plugin-markdown:package",
 				"./packages/remark-attributes:package",
+				"./packages/remark-variables:package",
 				"./packages/remark-yaml-parse:package"
 			]
 		},
@@ -135,6 +136,7 @@
 			"dependencies": [
 				"./packages/hine:test",
 				"./packages/remark-attributes:test",
+				"./packages/remark-variables:test",
 				"./packages/remark-yaml-parse:test"
 			]
 		},

@@ -1,29 +1,18 @@
-import mdAttributes from 'md-attr-parser';
 import { dataToEsm } from '@rollup/pluginutils';
 import delve from 'dlv';
 import { EOL } from 'node:os';
 import frontmatter from 'remark-frontmatter';
 import fs from 'node:fs/promises';
 import parse from 'remark-parse';
+import remarkAttributes from '@hinejs/remark-attributes';
 import stringify from 'remark-stringify';
 import { unified } from 'unified';
 import { EXIT, visit } from 'unist-util-visit';
 import yaml from 'js-yaml';
 
-const ATTRIBUTE_BLOCK_RE = /^\s*(\{.*?\})(\s+|$)/;
-
 /**
  * @typedef {import('./types.js').TocEntry} TocEntry
  */
-
-/**
- * @param {{} | null} value
- */
-function isNonEmptyObject(value) {
-	return (
-		typeof value === 'object' && value !== null && Object.keys(value).length > 0
-	);
-}
 
 /**
  * @template {Object} T
@@ -177,46 +166,6 @@ export function remarkParseYaml() {
 			};
 
 			return EXIT;
-		});
-	};
-}
-
-/** @type {import('unified').Plugin<void[], import('mdast').Root>} */
-export function remarkAttributes() {
-	return (tree) => {
-		visit(tree, 'text', (node, index, parent) => {
-			// An attribute must be a sibling that follows a previous element
-			if (!parent || !index) return;
-
-			const match = node.value.match(ATTRIBUTE_BLOCK_RE);
-			if (!match) return;
-
-			const parseOutput = mdAttributes(match[1].trim());
-			if (!isNonEmptyObject(parseOutput.prop)) return;
-
-			const previousSibling = parent.children[index - 1];
-			// TODO: only allow attributes on _some_ elements?
-			previousSibling.data = {
-				...previousSibling.data,
-				...parseOutput.prop,
-			};
-			node.value = node.value.replace(match[1].trimEnd(), '');
-		});
-
-		visit(tree, 'code', (node) => {
-			if (!node.meta) return;
-
-			const match = node.meta.match(ATTRIBUTE_BLOCK_RE);
-			if (!match) return;
-
-			const parseOutput = mdAttributes(match[1].trim());
-			if (!isNonEmptyObject(parseOutput.prop)) return;
-
-			node.data = {
-				...node.data,
-				...parseOutput.prop,
-			};
-			node.meta = node.meta.replace(match[1].trimEnd(), '');
 		});
 	};
 }

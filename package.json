@@ -65,6 +65,7 @@
 				"./examples/basic:check",
 				"./packages/hine:check",
 				"./packages/vite-plugin-markdown:check",
+				"./packages/remark-attributes:check",
 				"./packages/svelte-ui:check",
 				"./sites/hine.dev:check"
 			]
@@ -106,7 +107,8 @@
 			"dependencies": [
 				"./packages/hine:package",
 				"./packages/svelte-ui:package",
-				"./packages/vite-plugin-markdown:package"
+				"./packages/vite-plugin-markdown:package",
+				"./packages/remark-attributes:package"
 			]
 		},
 		"pre-commit": {
@@ -117,6 +119,7 @@
 				"./examples/basic:pre-commit",
 				"./packages/hine:pre-commit",
 				"./packages/svelte-ui:pre-commit",
+				"./packages/remark-attributes:pre-commit",
 				"./sites/hine.dev:pre-commit"
 			]
 		},
@@ -128,7 +131,8 @@
 		},
 		"test": {
 			"dependencies": [
-				"./packages/hine:test"
+				"./packages/hine:test",
+				"./packages/remark-attributes:test"
 			]
 		},
 		"version": {

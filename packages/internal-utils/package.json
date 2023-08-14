@@ -1,0 +1,79 @@
+{
+	"name": "@hinejs/internal-utils",
+	"version": "0.0.0",
+	"scripts": {
+		"check": "wireit",
+		"package": "wireit",
+		"test": "wireit"
+	},
+	"wireit": {
+		"check": {
+			"command": "tsc",
+			"files": [
+				"src/**/*.{js,ts}",
+				"tests/**/*.{js,ts}",
+				"tsconfig.json"
+			],
+			"output": []
+		},
+		"package": {
+			"clean": "if-file-deleted",
+			"command": "tsc --project tsconfig.build.json",
+			"files": [
+				"src/**/*.{js,ts}",
+				"tsconfig.build.json",
+				"tsconfig.json"
+			],
+			"output": [
+				"types"
+			]
+		},
+		"pre-commit": {
+			"dependencies": [
+				"check",
+				"publint",
+				"test"
+			]
+		},
+		"publint": {
+			"command": "publint",
+			"files": [
+				"src/**",
+				"types/**",
+				"package.json"
+			],
+			"output": []
+		},
+		"test": {
+			"command": "node --test --test-reporter spec",
+			"files": [
+				"src/**/*.js",
+				"tests/**/*.js"
+			],
+			"output": []
+		}
+	},
+	"exports": {
+		"./filesystem": {
+			"types": "./types/filesystem.d.ts",
+			"default": "./src/filesystem.js"
+		},
+		"./vite": {
+			"types": "./types/vite.d.ts",
+			"default": "./src/vite.js"
+		}
+	},
+	"devDependencies": {
+		"@types/node": "^20.4.10",
+		"publint": "^0.1.16",
+		"typescript": "^5.1.6"
+	},
+	"files": [
+		"src",
+		"types",
+		"!**/*.test.*",
+		"!**/*.spec.*"
+	],
+	"license": "MIT",
+	"type": "module"
+}

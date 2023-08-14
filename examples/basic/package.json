@@ -10,6 +10,9 @@
 	"wireit": {
 		"check": {
 			"command": "tsc",
+			"dependencies": [
+				"../../packages/hine:package"
+			],
 			"files": [
 				"**/*.{js,ts}",
 				"tsconfig.json"

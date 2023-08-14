@@ -1,5 +1,6 @@
-import { AtomicState, CompoundState } from '../../src';
 import { describe, expect, it } from 'vitest';
+import { AtomicState } from '../../src/atomic.js';
+import { CompoundState } from '../../src/compound.js';
 import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('dispatch', () => {

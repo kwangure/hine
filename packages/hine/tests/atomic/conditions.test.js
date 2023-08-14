@@ -1,5 +1,8 @@
-import { Action, AtomicState, CompoundState, Condition } from '../../src';
 import { describe, expect, it } from 'vitest';
+import { Action } from '../../src/action.js';
+import { AtomicState } from '../../src/atomic.js';
+import { CompoundState } from '../../src/compound.js';
+import { Condition } from '../../src/condition.js';
 import { EffectHandler2 } from '../../src/handler/effect.js';
 import { TransitionHandler } from '../../src/handler/transition.js';
 

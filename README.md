@@ -18,19 +18,19 @@ npm install hine
 import { h } from 'hine';
 
 // Compound states can have child states
-const toggle = h.compound({
+const toggle = h.state({
 	// The first state is the default initial state
-	states: {
+	children: {
 		// Atomic states are leaf nodes. They do not have children
-		inactive: h.atomic({
+		inactive: h.state({
 			on: {
 				// Transitions change the current state after an event
-				toggle: [h.transition({ goto: 'active' })],
+				toggle: [h.handler({ goto: 'active' })],
 			},
 		}),
-		active: h.atomic({
+		active: h.state({
 			on: {
-				toggle: [h.transition({ goto: 'inactive' })],
+				toggle: [h.handler({ goto: 'inactive' })],
 			},
 		}),
 	},

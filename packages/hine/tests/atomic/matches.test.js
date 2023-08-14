@@ -1,5 +1,7 @@
-import { Action, AtomicState, Condition } from '../../src';
 import { describe, expect, it } from 'vitest';
+import { Action } from '../../src/action.js';
+import { AtomicState } from '../../src/atomic.js';
+import { Condition } from '../../src/condition.js';
 import { EffectHandler2 } from '../../src/handler/effect.js';
 
 describe('matches', () => {

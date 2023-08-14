@@ -1,8 +1,8 @@
 import { h } from 'hine';
 
-const checkboxState = h.compound({
+const checkboxState = h.state({
 	name: 'checkbox',
-	states: {
+	children: {
 		// child states will go here
 	},
 });

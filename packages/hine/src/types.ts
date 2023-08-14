@@ -37,6 +37,10 @@ export interface TransitionHandlerConfig extends BaseHandlerConfig {
 	goto: string;
 }
 
+export interface HandlerConfig extends BaseHandlerConfig {
+	goto?: string;
+}
+
 export interface BaseStateConfig {
 	always?: (EffectHandler2 | TransitionHandler)[];
 	context?: Context;
@@ -50,6 +54,10 @@ export interface AtomicStateConfig extends BaseStateConfig {}
 
 export interface CompoundStateConfig extends BaseStateConfig {
 	children: Record<string, StateNode>;
+}
+
+export interface StateConfig extends BaseStateConfig {
+	children?: Record<string, StateNode>;
 }
 
 type BaseJSON = ReturnType<BaseState['__toJSON']>;

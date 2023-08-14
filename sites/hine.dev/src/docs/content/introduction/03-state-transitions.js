@@ -1,21 +1,21 @@
 import { h } from 'hine';
 
-const checkboxState = h.compound({
+const checkboxState = h.state({
 	name: 'checkbox',
-	states: {
-		unchecked: h.atomic({
+	children: {
+		unchecked: h.state({
 			on: {
 				toggle: [
-					h.transition({
+					h.handler({
 						goto: 'checked',
 					}),
 				],
 			},
 		}),
-		checked: h.atomic({
+		checked: h.state({
 			on: {
 				toggle: [
-					h.transition({
+					h.handler({
 						goto: 'unchecked',
 					}),
 				],

@@ -1,5 +1,6 @@
-import { AtomicState, CompoundState } from '../../src';
 import { describe, expect, it } from 'vitest';
+import { AtomicState } from '../../src/atomic.js';
+import { CompoundState } from '../../src/compound.js';
 
 describe('path', () => {
 	it('matches state name when started', () => {

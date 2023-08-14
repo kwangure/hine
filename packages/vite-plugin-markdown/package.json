@@ -34,7 +34,8 @@
 		},
 		"pre-commit": {
 			"dependencies": [
-				"check"
+				"check",
+				"publint"
 			]
 		},
 		"publint": {
@@ -47,26 +48,12 @@
 			"output": []
 		}
 	},
-	"license": "MIT",
-	"files": [
-		"src",
-		"types",
-		"!**/*.test.*",
-		"!**/*.spec.*"
-	],
 	"exports": {
 		".": {
 			"types": "./types/index.d.ts",
 			"default": "./src/index.js"
 		}
 	},
-	"devDependencies": {
-		"@types/dlv": "^1.1.2",
-		"@types/js-yaml": "^4.0.5",
-		"type-fest": "^4.1.0",
-		"vite": "^4.4.8"
-	},
-	"type": "module",
 	"dependencies": {
 		"@hinejs/remark-attributes": "*",
 		"@hinejs/remark-variables": "*",
@@ -78,5 +65,21 @@
 		"remark-stringify": "^10.0.3",
 		"unified": "^10.1.2",
 		"unist-util-visit": "^5.0.0"
-	}
+	},
+	"devDependencies": {
+		"@types/dlv": "^1.1.2",
+		"@types/js-yaml": "^4.0.5",
+		"publint": "^0.1.16",
+		"type-fest": "^4.1.0",
+		"typescript": "^5.1.6",
+		"vite": "^4.4.9"
+	},
+	"files": [
+		"src",
+		"types",
+		"!**/*.test.*",
+		"!**/*.spec.*"
+	],
+	"license": "MIT",
+	"type": "module"
 }

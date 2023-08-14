@@ -1,4 +1,8 @@
 /**
+ * @typedef {import('./action.js').Action}
+ * @typedef {import('./condition.js').Condition}
+ * @typedef {import('./atomic.js').AtomicState}
+ * @typedef {import('./compound.js').CompoundState}
  * @typedef {import('./types').AtomicStateConfig} AtomicStateConfig
  * @typedef {import('./types').CompoundStateConfig} CompoundStateConfig
  * @typedef {import('./types').AtomicMonitorConfig} AtomicMonitorConfig

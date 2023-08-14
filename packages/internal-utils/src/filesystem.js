@@ -24,34 +24,29 @@ export function rimraf(path) {
 }
 
 /**
- * @param {string} dir
- * @param {(arg: { filepath: string; stat: fs.Stats }) => boolean} [filter]
+ * @param {string} root
+ * @param {string} current
+ * @param {((filepath: string, entry: fs.Dirent) => void)} visitor
  */
-export function walk(dir, filter) {
-	/** @type {string[]} */
-	const files = [];
-
-	/** @param {string} current */
-	function walkDir(current) {
-		for (const file of fs.readdirSync(path.resolve(dir, current))) {
-			const child = path.posix.join(current, file);
-			const stat = fs.statSync(path.resolve(dir, child));
-			if (stat.isDirectory()) {
-				if (!filter || filter({ filepath: child, stat })) {
-					files.push(`${child}/`); // append a slash to indicate a directory
-				}
-				walkDir(child);
-			} else {
-				if (!filter || filter({ filepath: child, stat })) {
-					files.push(child);
-				}
-			}
-		}
+function walkDir(root, current, visitor) {
+	const dirs = fs.readdirSync(path.resolve(root, current), {
+		// 2X faster than `fs.readdirSync` followed by `fs.statSync`
+		withFileTypes: true,
+	});
+	for (const entry of dirs) {
+		const child = path.posix.join(current, entry.name);
+		const isDirectory = entry.isDirectory();
+		visitor(isDirectory ? `${child}/` : child, entry);
+		if (isDirectory) walkDir(root, child, visitor);
 	}
+}
 
-	if (fs.existsSync(dir)) walkDir('');
-
-	return files;
+/**
+ * @param {string} dir
+ * @param {(filepath: string, entry: fs.Dirent) => void} visitor
+ */
+export function walk(dir, visitor) {
+	if (fs.existsSync(dir)) walkDir(dir, '', visitor);
 }
 
 /**

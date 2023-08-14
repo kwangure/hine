@@ -131,16 +131,23 @@ describe('walk', () => {
 		fs.rmSync(tempDir, { recursive: true });
 	});
 
-	it('returns an empty array for non-existent directories', () => {
-		assert.deepStrictEqual(walk('non-existent'), []);
+	it("doesn't call visitor for non-existent directories", () => {
+		let count = 0;
+		walk('non-existent', () => count++);
+		assert.strictEqual(count, 0);
 	});
 
-	it('returns an empty array for an empty directory', () => {
-		assert.deepStrictEqual(walk(path.join(tempDir, 'empty')), []);
+	it("doesn't call visitor for an empty directory", () => {
+		let count = 0;
+		walk(path.join(tempDir, 'empty'), () => count++);
+		assert.strictEqual(count, 0);
 	});
 
-	it('returns files and directories', () => {
-		assert.deepStrictEqual(walk(tempDir), [
+	it('is calls visitor with files and directories', () => {
+		/** @type {string[]} */
+		const files = [];
+		walk(tempDir, (filepath) => files.push(filepath));
+		assert.deepStrictEqual(files, [
 			'empty/',
 			'file1.txt',
 			'file2.txt',
@@ -152,26 +159,10 @@ describe('walk', () => {
 	});
 
 	it('appends slash to directories', () => {
-		const files = walk(tempDir);
-		for (const file of files) {
-			const stat = fs.statSync(path.resolve(tempDir, file));
-			if (stat.isDirectory()) {
-				assert(file.endsWith('/'));
+		walk(tempDir, (filepath, entry) => {
+			if (entry.isDirectory()) {
+				assert(filepath.endsWith('/'));
 			}
-		}
-	});
-
-	it('returns files when filtered', () => {
-		assert.deepStrictEqual(
-			walk(tempDir, ({ stat }) => stat.isFile()),
-			['file1.txt', 'file2.txt', 'subdir1/file3.txt', 'subdir2/file4.txt'],
-		);
-	});
-
-	it('returns directories when filtered', () => {
-		assert.deepStrictEqual(
-			walk(tempDir, ({ stat }) => stat.isDirectory()),
-			['empty/', 'subdir1/', 'subdir2/'],
-		);
+		});
 	});
 });

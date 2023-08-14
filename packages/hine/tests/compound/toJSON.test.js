@@ -3,7 +3,7 @@ import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { CompoundState } from '../../src/compound.js';
 import { Condition } from '../../src/condition.js';
-import { EffectHandler2 } from '../../src/handler/effect.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('toJSON', () => {
 	it('includes name', () => {
@@ -54,7 +54,7 @@ describe('toJSON', () => {
 	it('serializes always handlers', () => {
 		const state = new CompoundState({
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
@@ -86,7 +86,7 @@ describe('toJSON', () => {
 	it('serializes entry handlers', () => {
 		const state = new CompoundState({
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
@@ -118,7 +118,7 @@ describe('toJSON', () => {
 	it('serializes exit handlers', () => {
 		const state = new CompoundState({
 			exit: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
@@ -151,7 +151,7 @@ describe('toJSON', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						run: ['action'],
 					}),
 				],

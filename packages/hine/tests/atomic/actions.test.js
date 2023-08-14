@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { CompoundState } from '../../src/compound.js';
-import { EffectHandler2 } from '../../src/handler/effect.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('actions', () => {
@@ -12,12 +12,12 @@ describe('actions', () => {
 		const state = new AtomicState({
 			name: 's0',
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['always0'],
 				}),
 			],
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['entry0'],
 				}),
 			],
@@ -56,12 +56,12 @@ describe('actions', () => {
 				}),
 				b: new AtomicState({
 					always: [
-						new EffectHandler2({
+						new EffectHandler({
 							run: ['always0'],
 						}),
 					],
 					entry: [
-						new EffectHandler2({
+						new EffectHandler({
 							run: ['entry0'],
 						}),
 					],
@@ -96,14 +96,14 @@ describe('actions', () => {
 		const log = [];
 		const state = new CompoundState({
 			exit: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['exit0'],
 				}),
 			],
 			children: {
 				s1: new AtomicState({
 					exit: [
-						new EffectHandler2({
+						new EffectHandler({
 							run: ['exit1'],
 						}),
 					],
@@ -151,7 +151,7 @@ describe('actions', () => {
 		const machine = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						run: ['on0'],
 					}),
 				],
@@ -178,13 +178,13 @@ describe('actions', () => {
 		const log = [];
 		const machine = new AtomicState({
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['always0'],
 				}),
 			],
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						run: ['on0'],
 					}),
 				],
@@ -218,7 +218,7 @@ describe('actions', () => {
 			children: {
 				s1: new AtomicState({
 					exit: [
-						new EffectHandler2({
+						new EffectHandler({
 							run: ['exit1'],
 						}),
 					],
@@ -233,12 +233,12 @@ describe('actions', () => {
 				}),
 				s2: new AtomicState({
 					always: [
-						new EffectHandler2({
+						new EffectHandler({
 							run: ['always2'],
 						}),
 					],
 					entry: [
-						new EffectHandler2({
+						new EffectHandler({
 							run: ['entry2'],
 						}),
 					],
@@ -293,7 +293,7 @@ describe('actions', () => {
 		let alwaysCount = 0;
 		const state = new AtomicState({
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['always'],
 				}),
 			],
@@ -324,17 +324,17 @@ describe('actions', () => {
 					children: {
 						s11: new AtomicState({
 							always: [
-								new EffectHandler2({
+								new EffectHandler({
 									run: ['always'],
 								}),
 							],
 							entry: [
-								new EffectHandler2({
+								new EffectHandler({
 									run: ['entry'],
 								}),
 							],
 							exit: [
-								new EffectHandler2({
+								new EffectHandler({
 									run: ['exit'],
 								}),
 							],
@@ -390,17 +390,17 @@ describe('actions', () => {
 			children: {
 				s1: new AtomicState({
 					always: [
-						new EffectHandler2({
+						new EffectHandler({
 							run: ['always'],
 						}),
 					],
 					entry: [
-						new EffectHandler2({
+						new EffectHandler({
 							run: ['entry'],
 						}),
 					],
 					exit: [
-						new EffectHandler2({
+						new EffectHandler({
 							run: ['exit'],
 						}),
 					],
@@ -480,7 +480,7 @@ describe('actions', () => {
 		});
 		const state = new AtomicState({
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
@@ -498,7 +498,7 @@ describe('actions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						run: ['action'],
 					}),
 				],
@@ -530,7 +530,7 @@ describe('actions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						run: ['action'],
 					}),
 				],
@@ -562,7 +562,7 @@ describe('actions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						run: ['action'],
 					}),
 				],
@@ -596,7 +596,7 @@ describe('actions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						run: ['action'],
 					}),
 				],
@@ -631,7 +631,7 @@ describe('actions', () => {
 						s11: new AtomicState({
 							on: {
 								event: [
-									new EffectHandler2({
+									new EffectHandler({
 										run: ['action'],
 									}),
 								],
@@ -677,7 +677,7 @@ describe('actions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						run: ['action'],
 					}),
 				],
@@ -695,7 +695,7 @@ describe('actions', () => {
 		const state2 = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						run: ['other-action'],
 					}),
 				],
@@ -720,7 +720,7 @@ describe('actions', () => {
 		});
 		const state = new AtomicState({
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
@@ -740,7 +740,7 @@ describe('actions', () => {
 		});
 		const state = new AtomicState({
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action1'],
 				}),
 			],
@@ -763,7 +763,7 @@ describe('actions', () => {
 	it('calls actions with value', () => {
 		const state = new AtomicState({
 			on: {
-				event: [new EffectHandler2({ run: ['action'] })],
+				event: [new EffectHandler({ run: ['action'] })],
 			},
 		});
 		state.monitor({
@@ -782,7 +782,7 @@ describe('actions', () => {
 	it('throws on missing entry actions', () => {
 		const state = new AtomicState({
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['missing'],
 				}),
 			],
@@ -792,7 +792,7 @@ describe('actions', () => {
 	it('throws on missing exit actions', () => {
 		const state = new AtomicState({
 			exit: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['missing'],
 				}),
 			],
@@ -802,7 +802,7 @@ describe('actions', () => {
 	it('throws on missing always actions', () => {
 		const state = new AtomicState({
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['missing'],
 				}),
 			],

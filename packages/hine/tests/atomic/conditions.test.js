@@ -3,7 +3,7 @@ import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { CompoundState } from '../../src/compound.js';
 import { Condition } from '../../src/condition.js';
-import { EffectHandler2 } from '../../src/handler/effect.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('conditions', () => {
@@ -13,7 +13,7 @@ describe('conditions', () => {
 		});
 		const state = new AtomicState({
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					if: 'cond1',
 					run: ['do'],
 				}),
@@ -49,7 +49,7 @@ describe('conditions', () => {
 		});
 		const state = new AtomicState({
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					if: 'condition',
 					run: ['action'],
 				}),
@@ -73,7 +73,7 @@ describe('conditions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						if: 'condition',
 						run: ['action'],
 					}),
@@ -110,7 +110,7 @@ describe('conditions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						if: 'condition',
 						run: ['action'],
 					}),
@@ -147,7 +147,7 @@ describe('conditions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						if: 'condition',
 						run: ['action'],
 					}),
@@ -190,7 +190,7 @@ describe('conditions', () => {
 						s11: new AtomicState({
 							on: {
 								event: [
-									new EffectHandler2({
+									new EffectHandler({
 										if: 'condition',
 										run: ['action'],
 									}),
@@ -243,7 +243,7 @@ describe('conditions', () => {
 		const state = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						if: 'condition',
 						run: ['action'],
 					}),
@@ -277,7 +277,7 @@ describe('conditions', () => {
 		const state1 = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						if: 'condition',
 						run: ['action'],
 					}),
@@ -301,7 +301,7 @@ describe('conditions', () => {
 		const state2 = new AtomicState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						if: 'other-condition',
 						run: ['action'],
 					}),
@@ -333,7 +333,7 @@ describe('conditions', () => {
 		});
 		const state = new AtomicState({
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					if: 'condition',
 					run: ['action'],
 				}),
@@ -356,7 +356,7 @@ describe('conditions', () => {
 		const actions = [];
 		const state = new AtomicState({
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 					if: 'isFalsy',
 				}),
@@ -386,7 +386,7 @@ describe('conditions', () => {
 		const actions = [];
 		const state = new AtomicState({
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 					if: 'isTruthy',
 				}),
@@ -423,7 +423,7 @@ describe('conditions', () => {
 						}),
 					],
 					exit: [
-						new EffectHandler2({
+						new EffectHandler({
 							run: ['action'],
 							if: 'isFalsy',
 						}),
@@ -467,7 +467,7 @@ describe('conditions', () => {
 						}),
 					],
 					exit: [
-						new EffectHandler2({
+						new EffectHandler({
 							run: ['action'],
 							if: 'isTruthy',
 						}),
@@ -507,7 +507,7 @@ describe('conditions', () => {
 				s1: new CompoundState({
 					on: {
 						myEvent: [
-							new EffectHandler2({
+							new EffectHandler({
 								run: ['action'],
 								if: 'isFalsy',
 							}),
@@ -551,7 +551,7 @@ describe('conditions', () => {
 				s1: new CompoundState({
 					on: {
 						myEvent: [
-							new EffectHandler2({
+							new EffectHandler({
 								run: ['action'],
 								if: 'isTruthy',
 							}),
@@ -592,7 +592,7 @@ describe('conditions', () => {
 		const actions = [];
 		const state = new AtomicState({
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 					if: 'isFalsy',
 				}),
@@ -622,7 +622,7 @@ describe('conditions', () => {
 		const actions = [];
 		const state = new AtomicState({
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 					if: 'isFalsy',
 				}),

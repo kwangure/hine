@@ -3,7 +3,7 @@ import { AtomicState } from './atomic.js';
 import { CompoundState } from './compound.js';
 import { Condition } from './condition.js';
 import { Context } from './context.js';
-import { EffectHandler2 } from './handler/effect.js';
+import { EffectHandler } from './handler/effect.js';
 import { TransitionHandler } from './handler/transition.js';
 
 /**
@@ -42,7 +42,7 @@ export function handler(options) {
 			/** @type {import('./types.js').TransitionHandlerConfig} */ (options),
 		);
 	}
-	return new EffectHandler2(options);
+	return new EffectHandler(options);
 }
 
 /**

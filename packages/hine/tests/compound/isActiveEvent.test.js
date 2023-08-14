@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { CompoundState } from '../../src/compound.js';
-import { EffectHandler2 } from '../../src/handler/effect.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('isActiveEvent', () => {
 	it('returns boolean for active events', () => {
@@ -11,7 +11,7 @@ describe('isActiveEvent', () => {
 				s1: new AtomicState({
 					on: {
 						EVENT1: [
-							new EffectHandler2({
+							new EffectHandler({
 								run: ['action'],
 							}),
 						],
@@ -20,7 +20,7 @@ describe('isActiveEvent', () => {
 				s2: new AtomicState({
 					on: {
 						EVENT2: [
-							new EffectHandler2({
+							new EffectHandler({
 								run: ['action'],
 							}),
 						],
@@ -42,7 +42,7 @@ describe('isActiveEvent', () => {
 		const state = new CompoundState({
 			on: {
 				EVENT: [
-					new EffectHandler2({
+					new EffectHandler({
 						run: ['action'],
 					}),
 				],

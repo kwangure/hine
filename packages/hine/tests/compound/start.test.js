@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { CompoundState } from '../../src/compound.js';
-import { EffectHandler2 } from '../../src/handler/effect.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('start', () => {
@@ -11,7 +11,7 @@ describe('start', () => {
 		const log = [];
 		const state = new CompoundState({
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['always'],
 				}),
 			],

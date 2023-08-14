@@ -3,7 +3,7 @@ import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { CompoundState } from '../../src/compound.js';
 import { Condition } from '../../src/condition.js';
-import { EffectHandler2 } from '../../src/handler/effect.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('matches', () => {
 	it('does not match when not started', () => {
@@ -65,7 +65,7 @@ describe('matches', () => {
 		const state = new CompoundState({
 			name: 'state',
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
@@ -96,7 +96,7 @@ describe('matches', () => {
 		const state = new CompoundState({
 			name: 'state',
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					if: 'condition',
 					run: ['action'],
 				}),
@@ -131,7 +131,7 @@ describe('matches', () => {
 		const state = new CompoundState({
 			name: 'state',
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					if: 'condition',
 					run: ['action'],
 				}),

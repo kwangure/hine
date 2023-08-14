@@ -4,7 +4,7 @@ import type { BaseState } from './base.js';
 import type { CompoundState } from './compound';
 import type { Condition } from './condition.js';
 import type { Context } from './context.js';
-import type { EffectHandler2 } from './handler/effect.js';
+import type { EffectHandler } from './handler/effect.js';
 import type { Simplify } from 'type-fest';
 import type { TransitionHandler } from './handler/transition.js';
 
@@ -42,12 +42,12 @@ export interface HandlerConfig extends BaseHandlerConfig {
 }
 
 export interface BaseStateConfig {
-	always?: (EffectHandler2 | TransitionHandler)[];
+	always?: (EffectHandler | TransitionHandler)[];
 	context?: Context;
-	entry?: EffectHandler2[];
-	exit?: EffectHandler2[];
+	entry?: EffectHandler[];
+	exit?: EffectHandler[];
 	name?: string;
-	on?: Record<string, (EffectHandler2 | TransitionHandler)[]>;
+	on?: Record<string, (EffectHandler | TransitionHandler)[]>;
 }
 
 export interface AtomicStateConfig extends BaseStateConfig {}
@@ -80,7 +80,7 @@ export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
 export type ActionJSON = ReturnType<Action['toJSON']>;
 export type ConditionJSON = ReturnType<Condition['toJSON']>;
 export type HandlerJSON = ReturnType<
-	(EffectHandler2 | TransitionHandler)['toJSON']
+	(EffectHandler | TransitionHandler)['toJSON']
 >;
 
 export interface BaseMonitorConfig {

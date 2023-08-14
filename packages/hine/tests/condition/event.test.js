@@ -2,13 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { Condition } from '../../src/condition.js';
-import { EffectHandler2 } from '../../src/handler/effect.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('event', () => {
 	it('is an alias to ownerState.event', () => {
 		const state = new AtomicState({
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					if: 'condition',
 					run: ['action'],
 				}),

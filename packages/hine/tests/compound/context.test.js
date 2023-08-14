@@ -7,7 +7,7 @@ describe('context', () => {
 	it('should return the context value for a given key', () => {
 		const state = new CompoundState({
 			context: new Context({ key: 'value' }),
-			states: { s1: new AtomicState() },
+			children: { s1: new AtomicState() },
 		});
 		state.start();
 		expect(state.context?.get('key')).toBe('value');
@@ -15,11 +15,11 @@ describe('context', () => {
 
 	it('should return the parent context value for a given key', () => {
 		const state = new CompoundState({
-			states: { s1: new AtomicState() },
+			children: { s1: new AtomicState() },
 		});
 		new CompoundState({
 			context: new Context({ key: 'value' }),
-			states: {
+			children: {
 				state,
 			},
 		}).start();
@@ -28,16 +28,16 @@ describe('context', () => {
 
 	it('should return the closest context ancestor value for a given key', () => {
 		const state = new CompoundState({
-			states: { s1: new AtomicState() },
+			children: { s1: new AtomicState() },
 		});
 		new CompoundState({
 			context: new Context({ key: 'value0' }),
-			states: {
+			children: {
 				s1: new CompoundState({
 					context: new Context({
 						key: 'value1',
 					}),
-					states: { state },
+					children: { state },
 				}),
 			},
 		}).start();

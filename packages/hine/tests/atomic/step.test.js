@@ -2,20 +2,20 @@ import { describe, expect, it } from 'vitest';
 import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/atomic.js';
 import { Condition } from '../../src/condition.js';
-import { EffectHandler2 } from '../../src/handler/effect.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 import { zip } from '../../src/utils/iterator.js';
 
 describe('step', () => {
 	it('call subscribers at the end', () => {
 		const state = new AtomicState({
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						run: ['action'],
 					}),
 				],
@@ -54,13 +54,13 @@ describe('step', () => {
 		});
 		const state = new AtomicState({
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						if: 'condition',
 						run: ['action'],
 					}),
@@ -73,13 +73,7 @@ describe('step', () => {
 		});
 		state.start();
 
-		const expected = [
-			EffectHandler2,
-			condition,
-			action,
-			EffectHandler2,
-			action,
-		];
+		const expected = [EffectHandler, condition, action, EffectHandler, action];
 		const expectedIterator = expected[Symbol.iterator]();
 		const eventIterator = state.step('event');
 		for (const [expected, actual] of zip(expectedIterator, eventIterator)) {
@@ -98,7 +92,7 @@ describe('step', () => {
 	it('throws if state is not initialized', () => {
 		const state = new AtomicState({
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
@@ -116,7 +110,7 @@ describe('step', () => {
 	it('throws if step is already in progress', () => {
 		const state = new AtomicState({
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],

@@ -1,13 +1,16 @@
-import { Action, AtomicState, CompoundState, Condition } from '../../src';
 import { describe, expect, it } from 'vitest';
-import { EffectHandler2 } from '../../src/handler/effect.js';
+import { Action } from '../../src/action.js';
+import { AtomicState } from '../../src/atomic.js';
+import { CompoundState } from '../../src/compound.js';
+import { Condition } from '../../src/condition.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('toJSON', () => {
 	it('includes name', () => {
 		const name = 'state';
 		const state = new CompoundState({
 			name,
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -16,7 +19,7 @@ describe('toJSON', () => {
 	});
 	it('defaults to empty string when missing name', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -25,7 +28,7 @@ describe('toJSON', () => {
 	});
 	it('includes type', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -35,12 +38,12 @@ describe('toJSON', () => {
 	it('serializes nested states', () => {
 		const state = new CompoundState({
 			name: 'state',
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
 		const json = state.toJSON();
-		expect(json.states).toEqual({
+		expect(json.children).toEqual({
 			s1: {
 				name: 's1',
 				type: 'atomic',
@@ -51,11 +54,11 @@ describe('toJSON', () => {
 	it('serializes always handlers', () => {
 		const state = new CompoundState({
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -83,11 +86,11 @@ describe('toJSON', () => {
 	it('serializes entry handlers', () => {
 		const state = new CompoundState({
 			entry: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -115,11 +118,11 @@ describe('toJSON', () => {
 	it('serializes exit handlers', () => {
 		const state = new CompoundState({
 			exit: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -148,12 +151,12 @@ describe('toJSON', () => {
 		const state = new CompoundState({
 			on: {
 				event: [
-					new EffectHandler2({
+					new EffectHandler({
 						run: ['action'],
 					}),
 				],
 			},
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -182,13 +185,13 @@ describe('toJSON', () => {
 	});
 	it('includes path', () => {
 		const s1 = new CompoundState({
-			states: {
+			children: {
 				s11: new AtomicState(),
 			},
 		});
 		new CompoundState({
 			name: 'state',
-			states: {
+			children: {
 				s1,
 			},
 		});

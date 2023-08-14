@@ -1,13 +1,15 @@
-import { Action, AtomicState, CompoundState } from '../../src';
 import { describe, expect, it } from 'vitest';
-import { EffectHandler2 } from '../../src/handler/effect.js';
+import { Action } from '../../src/action.js';
+import { AtomicState } from '../../src/atomic.js';
+import { CompoundState } from '../../src/compound.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('subscribe', () => {
 	it('calls subscribers on start', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
@@ -22,23 +24,23 @@ describe('subscribe', () => {
 	});
 	it('calls subscribers on disptach', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
 					on: {
 						event: [
-							new EffectHandler2({
+							new EffectHandler({
 								run: ['noop'],
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
 			},
 		});
 		state.monitor({
-			states: {
+			children: {
 				s1: {
 					actions: {
 						noop: new Action({

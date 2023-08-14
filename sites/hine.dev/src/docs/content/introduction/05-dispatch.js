@@ -1,6 +1,6 @@
 import { h } from 'hine';
 
-const checkboxState = h.compound({
+const checkboxState = h.state({
 	// omitted for brevity
 });
 

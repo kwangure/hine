@@ -1,10 +1,10 @@
 import { h } from 'hine';
 
-const checkboxState = h.compound({
+const checkboxState = h.state({
 	name: 'checkbox',
-	states: {
-		unchecked: h.atomic(),
-		checked: h.atomic(),
+	children: {
+		unchecked: h.state(),
+		checked: h.state(),
 	},
 });
 

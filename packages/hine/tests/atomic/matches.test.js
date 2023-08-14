@@ -1,6 +1,8 @@
-import { Action, AtomicState, Condition } from '../../src';
 import { describe, expect, it } from 'vitest';
-import { EffectHandler2 } from '../../src/handler/effect.js';
+import { Action } from '../../src/action.js';
+import { AtomicState } from '../../src/atomic.js';
+import { Condition } from '../../src/condition.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('matches', () => {
 	it('does not match when not started', () => {
@@ -25,7 +27,7 @@ describe('matches', () => {
 		const state = new AtomicState({
 			name: 'state',
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
@@ -53,7 +55,7 @@ describe('matches', () => {
 		const state = new AtomicState({
 			name: 'state',
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					if: 'condition',
 					run: ['action'],
 				}),
@@ -85,7 +87,7 @@ describe('matches', () => {
 		const state = new AtomicState({
 			name: 'state',
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],

@@ -7,7 +7,7 @@ describe('canTransitionTo', () => {
 	it('returns booleans for transition', () => {
 		const state = new CompoundState({
 			name: 's0',
-			states: {
+			children: {
 				s1: new CompoundState({
 					on: {
 						EVENT: [
@@ -16,12 +16,12 @@ describe('canTransitionTo', () => {
 							}),
 						],
 					},
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
 				s2: new CompoundState({
-					states: {
+					children: {
 						s21: new AtomicState(),
 					},
 				}),

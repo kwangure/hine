@@ -34,12 +34,6 @@ pnpm add hine
 
 ### A checkbox state machine
 
-In Hine, there are two primitives for modelling states: `compound`{lang=javascript}
-and `atomic`{lang=javascript} states. We will use both to model the 2 main
-states of interest in a checkbox: a checked and unchecked state. The main
-difference between them is that `compound`{lang=javascript} states can have
-nested chilren, while `atomic`{lang=javascript} states do not have nested states.
-
 #### 1. The Checkbox State
 
 We'll start by importing the Hine `h` object and creating a compound state.
@@ -53,8 +47,7 @@ state machine by calling methods on the `checkboxState`{lang=js} object.
 
 #### 2. Checkbox child states
 
-Let's add the child checked and unchecked states to our state machine. Remember
-that we use `atomic`{lang=js} because these states will have no nested child states.
+Let's add the child checked and unchecked states to our state machine.
 
 ```javascript {file=./02-checked-unchecked.js copy}
 

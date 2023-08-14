@@ -9,7 +9,7 @@ export class CompoundState extends BaseState {
 	#initial = null;
 	#type = /** @type {const} */ ('compound');
 	/** @type {Map<string, StateNode>} */
-	__states = new Map();
+	__children = new Map();
 	/** @type {StateNode | null} */
 	__state = null;
 	/**
@@ -19,16 +19,16 @@ export class CompoundState extends BaseState {
 		super(stateConfig);
 
 		const missingError = Error('Compound states require at least one child');
-		if (!stateConfig.states) throw missingError;
+		if (!stateConfig.children) throw missingError;
 
-		const states = Object.entries(stateConfig.states);
-		if (!states.length) throw missingError;
+		const children = Object.entries(stateConfig.children);
+		if (!children.length) throw missingError;
 
-		for (const [name, state] of states) {
+		for (const [name, state] of children) {
 			if (!state.name) {
 				state.__name = name;
 			}
-			this.__states.set(state.name, state);
+			this.__children.set(state.name, state);
 			state.__parent = this;
 		}
 	}
@@ -42,7 +42,7 @@ export class CompoundState extends BaseState {
 	}
 	__initialize() {
 		this.__state = this.#initial;
-		for (const state of this.__states.values()) {
+		for (const state of this.__children.values()) {
 			state.__initialize();
 		}
 		super.__initialize();
@@ -81,13 +81,13 @@ export class CompoundState extends BaseState {
 	}
 	__resolveConfig() {
 		super.__resolveConfig();
-		const iterator = this.__states.values();
+		const iterator = this.__children.values();
 		const first = iterator.next();
 		// We know `first` is not empty but TypeScript doesn't. Help it.
 		if (first.done) throw Error('Impossible!');
 		this.#initial = first.value;
 
-		for (const state of this.__states.values()) {
+		for (const state of this.__children.values()) {
 			state.__resolveConfig();
 		}
 	}
@@ -132,9 +132,9 @@ export class CompoundState extends BaseState {
 	/** @param {import('./types.js').CompoundMonitorConfig} config */
 	monitor(config) {
 		super.monitor(config);
-		if (!config?.states) return;
-		for (const [name, monitorConfig] of Object.entries(config.states)) {
-			const state = this.__states.get(name);
+		if (!config?.children) return;
+		for (const [name, monitorConfig] of Object.entries(config.children)) {
+			const state = this.__children.get(name);
 			if (!state) {
 				const parentPath = this.parent?.path || [];
 				const pathString = parentPath.length
@@ -142,7 +142,7 @@ export class CompoundState extends BaseState {
 					: name;
 				throw Error(
 					`State '${pathString}' defined on monitor does not exist in state tree. Expected one of: ${[
-						...this.__states.keys(),
+						...this.__children.keys(),
 					].join(', ')}`,
 				);
 			}
@@ -159,15 +159,15 @@ export class CompoundState extends BaseState {
 	}
 	toJSON() {
 		/** @type {Record<string, import('./types').StateNodeJSON>} */
-		const states = {};
-		for (const [name, state] of this.__states) {
-			states[name] = state.toJSON();
+		const children = {};
+		for (const [name, state] of this.__children) {
+			children[name] = state.toJSON();
 		}
 
 		return {
 			type: this.#type,
 			...super.__toJSON(),
-			states,
+			children,
 		};
 	}
 	get type() {

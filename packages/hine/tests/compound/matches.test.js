@@ -1,12 +1,15 @@
-import { Action, AtomicState, CompoundState, Condition } from '../../src';
 import { describe, expect, it } from 'vitest';
-import { EffectHandler2 } from '../../src/handler/effect.js';
+import { Action } from '../../src/action.js';
+import { AtomicState } from '../../src/atomic.js';
+import { CompoundState } from '../../src/compound.js';
+import { Condition } from '../../src/condition.js';
+import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('matches', () => {
 	it('does not match when not started', () => {
 		const machine = new CompoundState({
 			name: 'machine',
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -15,7 +18,7 @@ describe('matches', () => {
 	it('matches state name when started', () => {
 		const state = new CompoundState({
 			name: 'machine',
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -25,14 +28,14 @@ describe('matches', () => {
 	it('matches nested states', () => {
 		const state = new CompoundState({
 			name: 'machine',
-			states: {
+			children: {
 				s1: new CompoundState({
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
 				s2: new CompoundState({
-					states: {
+					children: {
 						s21: new AtomicState(),
 					},
 				}),
@@ -46,9 +49,9 @@ describe('matches', () => {
 	});
 	it('matches anonymous states', () => {
 		const state = new CompoundState({
-			states: {
+			children: {
 				s1: new CompoundState({
-					states: {
+					children: {
 						s11: new AtomicState(),
 					},
 				}),
@@ -62,11 +65,11 @@ describe('matches', () => {
 		const state = new CompoundState({
 			name: 'state',
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -93,12 +96,12 @@ describe('matches', () => {
 		const state = new CompoundState({
 			name: 'state',
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					if: 'condition',
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});
@@ -128,12 +131,12 @@ describe('matches', () => {
 		const state = new CompoundState({
 			name: 'state',
 			always: [
-				new EffectHandler2({
+				new EffectHandler({
 					if: 'condition',
 					run: ['action'],
 				}),
 			],
-			states: {
+			children: {
 				s1: new AtomicState(),
 			},
 		});

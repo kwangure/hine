@@ -1,6 +1,6 @@
 import { BaseHandler } from './base.js';
 
-export class EffectHandler2 extends BaseHandler {
+export class EffectHandler extends BaseHandler {
 	#type = /** @type {const} */ ('effect');
 	run() {
 		// This should never happen. Its mostly to help TypeScript out

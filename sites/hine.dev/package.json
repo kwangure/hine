@@ -23,6 +23,9 @@
 		},
 		"check": {
 			"command": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+			"dependencies": [
+				"../../packages/hine:package"
+			],
 			"files": [
 				"{src,test}/**/*.{js,ts,svelte}",
 				"tsconfig.json"

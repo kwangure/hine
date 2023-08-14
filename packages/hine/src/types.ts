@@ -71,7 +71,7 @@ export type AtomicStateJSON = Simplify<
 export type CompoundStateJSON = Simplify<
 	BaseJSON & {
 		type: 'compound';
-		states: Record<string, StateNodeJSON>;
+		children: Record<string, StateNodeJSON>;
 	}
 >;
 
@@ -93,7 +93,7 @@ export interface BaseMonitorConfig {
 export interface AtomicMonitorConfig extends BaseMonitorConfig {}
 
 export interface CompoundMonitorConfig extends BaseMonitorConfig {
-	states?: Record<string, AtomicMonitorConfig | CompoundMonitorConfig>;
+	children?: Record<string, AtomicMonitorConfig | CompoundMonitorConfig>;
 }
 
 export interface EventOptions {

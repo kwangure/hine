@@ -43,7 +43,7 @@ describe('toJSON', () => {
 			},
 		});
 		const json = state.toJSON();
-		expect(json.states).toEqual({
+		expect(json.children).toEqual({
 			s1: {
 				name: 's1',
 				type: 'atomic',

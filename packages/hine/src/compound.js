@@ -132,8 +132,8 @@ export class CompoundState extends BaseState {
 	/** @param {import('./types.js').CompoundMonitorConfig} config */
 	monitor(config) {
 		super.monitor(config);
-		if (!config?.states) return;
-		for (const [name, monitorConfig] of Object.entries(config.states)) {
+		if (!config?.children) return;
+		for (const [name, monitorConfig] of Object.entries(config.children)) {
 			const state = this.__children.get(name);
 			if (!state) {
 				const parentPath = this.parent?.path || [];
@@ -159,15 +159,15 @@ export class CompoundState extends BaseState {
 	}
 	toJSON() {
 		/** @type {Record<string, import('./types').StateNodeJSON>} */
-		const states = {};
+		const children = {};
 		for (const [name, state] of this.__children) {
-			states[name] = state.toJSON();
+			children[name] = state.toJSON();
 		}
 
 		return {
 			type: this.#type,
 			...super.__toJSON(),
-			states,
+			children,
 		};
 	}
 	get type() {

@@ -205,9 +205,9 @@ describe('conditions', () => {
 			conditionConfig: {
 				notifyBefore: true,
 			},
-			states: {
+			children: {
 				s1: {
-					states: {
+					children: {
 						s11: {
 							actions: {
 								action: new Action({ run() {} }),
@@ -433,7 +433,7 @@ describe('conditions', () => {
 			},
 		});
 		state.monitor({
-			states: {
+			children: {
 				s1: {
 					actions: {
 						action: new Action({
@@ -477,7 +477,7 @@ describe('conditions', () => {
 			},
 		});
 		state.monitor({
-			states: {
+			children: {
 				s1: {
 					actions: {
 						action: new Action({
@@ -520,7 +520,7 @@ describe('conditions', () => {
 			},
 		});
 		state.monitor({
-			states: {
+			children: {
 				s1: {
 					actions: {
 						action: new Action({
@@ -564,7 +564,7 @@ describe('conditions', () => {
 			},
 		});
 		state.monitor({
-			states: {
+			children: {
 				s1: {
 					actions: {
 						action: new Action({

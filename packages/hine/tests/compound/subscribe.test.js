@@ -40,7 +40,7 @@ describe('subscribe', () => {
 			},
 		});
 		state.monitor({
-			states: {
+			children: {
 				s1: {
 					actions: {
 						noop: new Action({

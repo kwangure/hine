@@ -219,7 +219,7 @@ describe('conditions', () => {
 			conditionConfig: {
 				notifyBefore: true,
 			},
-			states: {
+			children: {
 				s1: {
 					actions: {
 						action: new Action({ run() {} }),
@@ -513,7 +513,7 @@ describe('conditions', () => {
 			},
 		});
 		state.monitor({
-			states: {
+			children: {
 				s1: {
 					actions: {
 						action: new Action({

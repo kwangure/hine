@@ -69,7 +69,7 @@ describe('actions', () => {
 			},
 		});
 		state.monitor({
-			states: {
+			children: {
 				b: {
 					actions: {
 						always0: new Action({
@@ -126,7 +126,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-			states: {
+			children: {
 				s1: {
 					actions: {
 						exit1: new Action({
@@ -246,7 +246,7 @@ describe('actions', () => {
 			},
 		});
 		machine.monitor({
-			states: {
+			children: {
 				s1: {
 					actions: {
 						exit1: new Action({
@@ -439,7 +439,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-			states: {
+			children: {
 				s1: {
 					actions: {
 						always: new Action({
@@ -645,9 +645,9 @@ describe('actions', () => {
 			actionConfig: {
 				notifyBefore: true,
 			},
-			states: {
+			children: {
 				s1: {
-					states: {
+					children: {
 						s11: {
 							actions: {
 								action: new Action({

@@ -63,7 +63,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-			states: {
+			children: {
 				s1: {
 					actions: {
 						always1: new Action({
@@ -77,7 +77,7 @@ describe('actions', () => {
 							},
 						}),
 					},
-					states: {
+					children: {
 						s2: {
 							actions: {
 								always2: new Action({
@@ -164,7 +164,7 @@ describe('actions', () => {
 			},
 		});
 		state.monitor({
-			states: {
+			children: {
 				b: {
 					actions: {
 						always0: new Action({
@@ -178,7 +178,7 @@ describe('actions', () => {
 							},
 						}),
 					},
-					states: {
+					children: {
 						s1: {
 							actions: {
 								always1: new Action({
@@ -192,7 +192,7 @@ describe('actions', () => {
 									},
 								}),
 							},
-							states: {
+							children: {
 								s2: {
 									actions: {
 										always2: new Action({
@@ -278,7 +278,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-			states: {
+			children: {
 				s1: {
 					actions: {
 						exit1: new Action({
@@ -287,7 +287,7 @@ describe('actions', () => {
 							},
 						}),
 					},
-					states: {
+					children: {
 						s11: {
 							actions: {
 								exit11: new Action({
@@ -296,7 +296,7 @@ describe('actions', () => {
 									},
 								}),
 							},
-							states: {
+							children: {
 								s111: {
 									actions: {
 										exit111: new Action({
@@ -373,7 +373,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-			states: {
+			children: {
 				s1: {
 					actions: {
 						on1: new Action({
@@ -382,7 +382,7 @@ describe('actions', () => {
 							},
 						}),
 					},
-					states: {
+					children: {
 						s11: {
 							actions: {
 								on11: new Action({
@@ -391,7 +391,7 @@ describe('actions', () => {
 									},
 								}),
 							},
-							states: {
+							children: {
 								s111: {
 									actions: {
 										on111: new Action({
@@ -493,7 +493,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-			states: {
+			children: {
 				s1: {
 					actions: {
 						always1: new Action({
@@ -507,7 +507,7 @@ describe('actions', () => {
 							},
 						}),
 					},
-					states: {
+					children: {
 						s11: {
 							actions: {
 								always11: new Action({
@@ -521,7 +521,7 @@ describe('actions', () => {
 									},
 								}),
 							},
-							states: {
+							children: {
 								s111: {
 									actions: {
 										always111: new Action({
@@ -659,7 +659,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-			states: {
+			children: {
 				s1: {
 					actions: {
 						exit1: new Action({
@@ -673,7 +673,7 @@ describe('actions', () => {
 							},
 						}),
 					},
-					states: {
+					children: {
 						s11: {
 							actions: {
 								exit11: new Action({
@@ -708,7 +708,7 @@ describe('actions', () => {
 							},
 						}),
 					},
-					states: {
+					children: {
 						s21: {
 							actions: {
 								always21: new Action({
@@ -765,7 +765,7 @@ describe('actions', () => {
 			},
 		});
 		state.monitor({
-			states: {
+			children: {
 				current: {
 					actions: {
 						always: new Action({
@@ -919,7 +919,7 @@ describe('actions', () => {
 					},
 				}),
 			},
-			states: {
+			children: {
 				s1: {
 					actions: {
 						always: new Action({
@@ -988,7 +988,7 @@ describe('actions', () => {
 			},
 		});
 		state.monitor({
-			states: {
+			children: {
 				s1: {
 					actions: {
 						entry1: new Action({
@@ -1208,7 +1208,7 @@ describe('actions', () => {
 			actionConfig: {
 				notifyBefore: true,
 			},
-			states: {
+			children: {
 				s1: {
 					actions: {
 						action: new Action({

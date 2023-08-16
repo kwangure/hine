@@ -146,7 +146,12 @@ describe('walk', () => {
 	it('is calls visitor with files and directories', () => {
 		/** @type {string[]} */
 		const files = [];
-		walk(tempDir, (filepath) => files.push(filepath));
+		walk(tempDir, (entry) => {
+			const filepath = path
+				.join(entry.path, entry.name)
+				.slice(tempDir.length + 1);
+			files.push(entry.isDirectory() ? `${filepath}/` : filepath);
+		});
 		assert.deepStrictEqual(files, [
 			'empty/',
 			'file1.txt',
@@ -156,13 +161,5 @@ describe('walk', () => {
 			'subdir2/',
 			'subdir2/file4.txt',
 		]);
-	});
-
-	it('appends slash to directories', () => {
-		walk(tempDir, (filepath, entry) => {
-			if (entry.isDirectory()) {
-				assert(filepath.endsWith('/'));
-			}
-		});
 	});
 });

@@ -24,29 +24,28 @@ export function rimraf(path) {
 }
 
 /**
- * @param {string} root
- * @param {string} current
- * @param {((filepath: string, entry: fs.Dirent) => void)} visitor
+ * @param {string} parent
+ * @param {((file: fs.Dirent) => void)} visitor
  */
-function walkDir(root, current, visitor) {
-	const dirs = fs.readdirSync(path.resolve(root, current), {
+function walkDir(parent, visitor) {
+	const dirs = fs.readdirSync(parent, {
 		// 2X faster than `fs.readdirSync` followed by `fs.statSync`
 		withFileTypes: true,
 	});
 	for (const entry of dirs) {
-		const child = path.posix.join(current, entry.name);
-		const isDirectory = entry.isDirectory();
-		visitor(isDirectory ? `${child}/` : child, entry);
-		if (isDirectory) walkDir(root, child, visitor);
+		visitor(entry);
+		if (entry.isDirectory()) {
+			walkDir(path.posix.join(entry.path, entry.name), visitor);
+		}
 	}
 }
 
 /**
  * @param {string} dir
- * @param {(filepath: string, entry: fs.Dirent) => void} visitor
+ * @param {(file: fs.Dirent) => void} visitor
  */
 export function walk(dir, visitor) {
-	if (fs.existsSync(dir)) walkDir(dir, '', visitor);
+	if (fs.existsSync(dir)) walkDir(dir, visitor);
 }
 
 /**

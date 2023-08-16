@@ -3,7 +3,7 @@
 
 	/** @type {string | undefined} */
 	export let activeTarget;
-	/** @type {import('@hinejs/vite-plugin-markdown').TocEntry[]} */
+	/** @type {import('@hinejs/content-thing').TocEntry[]} */
 	export let toc;
 </script>
 

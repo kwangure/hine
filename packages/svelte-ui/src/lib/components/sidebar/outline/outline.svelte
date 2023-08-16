@@ -5,7 +5,7 @@
 	import List from './list.svelte';
 	import { page } from '$app/stores';
 
-	/** @type {import('@hinejs/vite-plugin-markdown').TocEntry[]} */
+	/** @type {import('@hinejs/content-thing').TocEntry[]} */
 	export let toc;
 
 	/** @type {string | undefined} */
@@ -14,7 +14,7 @@
 	/**
 	 * Set the first visible heading as active
 	 *
-	 * @param {import('@hinejs/vite-plugin-markdown').TocEntry[]} tree
+	 * @param {import('@hinejs/content-thing').TocEntry[]} tree
 	 */
 	function updateActiveSlug(tree) {
 		for (const heading of tree) {

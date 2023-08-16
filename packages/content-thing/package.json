@@ -59,10 +59,13 @@
 		"@hinejs/remark-attributes": "*",
 		"@hinejs/remark-variables": "*",
 		"@hinejs/remark-yaml-parse": "*",
-		"@rollup/pluginutils": "^5.0.3"
+		"@rollup/pluginutils": "^5.0.3",
+		"vfile": "^5.0.0"
 	},
 	"devDependencies": {
+		"@types/mdast": "^4.0.0",
 		"@types/node": "^20.4.10",
+		"mdast": "^3.0.0",
 		"publint": "^0.1.16",
 		"typescript": "^5.1.6",
 		"vite": "^4.4.9"

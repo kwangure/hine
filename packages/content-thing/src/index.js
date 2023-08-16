@@ -1,5 +1,6 @@
 import { rimraf, walk, write } from '@hinejs/internal-utils/filesystem';
 import { dataToEsm } from '@rollup/pluginutils';
+import { EOL } from 'node:os';
 import fs from 'node:fs';
 import path from 'node:path';
 import { remarkAttributes } from '@hinejs/remark-attributes';
@@ -9,6 +10,7 @@ import { remarkVariables } from '@hinejs/remark-variables';
 import remarkStringify from 'remark-stringify';
 import { remarkYamlParse } from '@hinejs/remark-yaml-parse';
 import { unified } from 'unified';
+import { VFile } from 'vfile';
 import { visit } from 'unist-util-visit';
 
 const __filename = new URL(import.meta.url).pathname;
@@ -41,6 +43,7 @@ export function content() {
 		.use(remarkFrontmatter)
 		.use(remarkYamlParse)
 		.use(remarkAttributes)
+		.use(remarkFileAttributes)
 		.use(remarkVariables)
 		.use(remarkTableOfContents);
 
@@ -99,9 +102,13 @@ export function content() {
  * @param {import('unified').Processor} processor
  */
 async function markdownToESM(file, processor) {
-	const markdown = fs.readFileSync(file, 'utf8');
-	const tree = processor.parse(markdown);
-	const transformedTree = await processor.run(tree);
+	const code = fs.readFileSync(file);
+	const vfile = new VFile({
+		path: file,
+		value: code,
+	});
+	const tree = processor.parse(vfile);
+	const transformedTree = await processor.run(tree, vfile);
 	return dataToEsm(transformedTree);
 }
 
@@ -161,3 +168,65 @@ export function remarkTableOfContents() {
 		};
 	};
 }
+
+/**
+ * Processes `file` attributes
+ *
+ * @this {import('unified').Processor}
+ * @type {import('unified').Plugin<void[], import('mdast').Root, import('mdast').Root>}
+ */
+export function remarkFileAttributes() {
+	return async (tree, vfile) => {
+		/** @type {import('mdast').Code[]} */
+		const codeBlocks = [];
+		visit(tree, 'code', (node) => {
+			codeBlocks.push(node);
+		});
+		for (const node of codeBlocks) {
+			const file = node.data?.attributes.file;
+			if (!file) continue;
+
+			let { filepath, start, end } = parseFileMeta(file);
+			const { dirname } = vfile;
+
+			if (filepath[0] !== '/' && dirname) {
+				filepath = path.join(dirname, filepath);
+			}
+
+			const content = fs.readFileSync(filepath, 'utf-8');
+			node.value = extractLines(content, start, end);
+		}
+	};
+}
+
+/**
+ * @param {string} meta
+ */
+function parseFileMeta(meta) {
+	const [filepath, lines] = meta.split('#L');
+
+	if (!lines) return { filepath };
+
+	/** @type {number[]} */
+	const [start, end = start] = lines.split('-').map(Number);
+	return { filepath, start, end };
+}
+
+/**
+ * @param {string} content
+ * @param {number} [start]
+ * @param {number} [end]
+ */
+function extractLines(content, start, end) {
+	const lines = content.split(EOL);
+	if (!start) {
+		start = 1;
+		end = lines[lines.length - 1] === '' ? lines.length - 1 : lines.length;
+	}
+
+	return lines.slice(start - 1, end).join('\n');
+}
+
+/**
+ * @typedef {import('./types.js').TocEntry} TocEntry
+ */

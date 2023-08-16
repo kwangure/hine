@@ -71,6 +71,7 @@
 		"unist-util-visit": "^5.0.0"
 	},
 	"devDependencies": {
+		"@types/js-yaml": "^4.0.5",
 		"@types/node": "^20.4.10",
 		"publint": "^0.2.0",
 		"remark-frontmatter": "^4.0.1",

@@ -2,7 +2,7 @@
 	import { Sidebar } from '@hinejs/svelte-ui/components';
 	import List from './list.svelte';
 
-	/** @type {import('@hinejs/vite-plugin-markdown').TocEntry} */
+	/** @type {import('@hinejs/content-thing').TocEntry} */
 	export let self;
 	/** @type {string | undefined} */
 	export let activeTarget;

@@ -65,7 +65,6 @@
 				"./examples/basic:check",
 				"./packages/content-thing:check",
 				"./packages/hine:check",
-				"./packages/vite-plugin-markdown:check",
 				"./packages/remark-attributes:check",
 				"./packages/svelte-ui:check",
 				"./sites/hine.dev:check"
@@ -109,7 +108,6 @@
 				"./packages/content-thing:package",
 				"./packages/hine:package",
 				"./packages/svelte-ui:package",
-				"./packages/vite-plugin-markdown:package",
 				"./packages/internal-utils:package",
 				"./packages/remark-attributes:package",
 				"./packages/remark-variables:package",

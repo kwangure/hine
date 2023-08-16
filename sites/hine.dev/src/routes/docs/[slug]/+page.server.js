@@ -1,8 +1,8 @@
+import { getEntry } from 'content-thing:io';
+
 export async function load({ params }) {
 	const { slug } = params;
-	const content = /** @type {import('mdast').Root} */ (
-		(await import(`../../../docs/content/${slug}/readme.md`)).default
-	);
+	const content = await getEntry('content', slug);
 
 	return { content };
 }

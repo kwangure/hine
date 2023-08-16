@@ -1,0 +1,78 @@
+{
+	"name": "@hinejs/content-thing",
+	"version": "0.0.0",
+	"scripts": {
+		"check": "wireit",
+		"package": "wireit"
+	},
+	"wireit": {
+		"check": {
+			"command": "tsc",
+			"files": [
+				"src/**/*.{js,ts}",
+				"tests/**/*.{js,ts}",
+				"tsconfig.json"
+			],
+			"output": []
+		},
+		"package": {
+			"clean": "if-file-deleted",
+			"command": "tsc --project tsconfig.build.json",
+			"dependencies": [
+				"../remark-attributes:package",
+				"../remark-variables:package",
+				"../remark-yaml-parse:package"
+			],
+			"files": [
+				"src/**/*.{js,ts}",
+				"tsconfig.build.json",
+				"tsconfig.json"
+			],
+			"output": [
+				"types"
+			]
+		},
+		"pre-commit": {
+			"dependencies": [
+				"check",
+				"publint"
+			]
+		},
+		"publint": {
+			"command": "publint",
+			"files": [
+				"src/**",
+				"types/**",
+				"package.json"
+			],
+			"output": []
+		}
+	},
+	"exports": {
+		".": {
+			"types": "./types/index.d.ts",
+			"default": "./src/index.js"
+		}
+	},
+	"dependencies": {
+		"@hinejs/internal-utils": "^0.0.0",
+		"@hinejs/remark-attributes": "*",
+		"@hinejs/remark-variables": "*",
+		"@hinejs/remark-yaml-parse": "*",
+		"@rollup/pluginutils": "^5.0.3"
+	},
+	"devDependencies": {
+		"@types/node": "^20.4.10",
+		"publint": "^0.1.16",
+		"typescript": "^5.1.6",
+		"vite": "^4.4.9"
+	},
+	"files": [
+		"src",
+		"types",
+		"!**/*.test.*",
+		"!**/*.spec.*"
+	],
+	"license": "MIT",
+	"type": "module"
+}

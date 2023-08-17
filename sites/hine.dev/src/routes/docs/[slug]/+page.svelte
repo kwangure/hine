@@ -14,20 +14,15 @@
 		</a>
 	</Shell.Navbar>
 	<Sidebar.Root>
-		<Sidebar.Section title="getting started">
-			<SidebarItem
-				href="/docs/introduction"
-				toc={data.content.data?.tableOfContents}
-			>
-				Introduction
-			</SidebarItem>
-			<SidebarItem
-				href="/docs/installation"
-				toc={data.content.data?.tableOfContents}
-			>
-				Quick start
-			</SidebarItem>
-		</Sidebar.Section>
+		{#each data.groups as group}
+			<Sidebar.Section title={group.data.title}>
+				{#each group.entries as entry}
+					<SidebarItem href={entry.data.path} toc={entry.data.tableOfContents}>
+						{entry.data.frontmatter.title}
+					</SidebarItem>
+				{/each}
+			</Sidebar.Section>
+		{/each}
 	</Sidebar.Root>
 	<Shell.Main>
 		<div class="mb-40 lg:px-6">

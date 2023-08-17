@@ -12,6 +12,7 @@ import { remarkYamlParse } from '@hinejs/remark-yaml-parse';
 import { unified } from 'unified';
 import { VFile } from 'vfile';
 import { visit } from 'unist-util-visit';
+import yaml from 'js-yaml';
 
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
@@ -49,30 +50,48 @@ export function content() {
 
 	async function outputMarkdownESM() {
 		rimraf(outputDir);
-		/** @type {string[]} */
-		const outputs = [];
+		/** @type {Record<string, Record<string, any>>} */
+		const collections = {};
+		let currentCollection = '';
+		let currentCollectionPath = '';
 		walk(contentDir, async (entry) => {
-			if (entry.name === 'readme.md') {
-				// ouputs are used synchronously. do them first.
-				const shortpath = entry.path.slice(contentDir.length + 1);
-				const dest = path.join(
-					outputDir,
-					'collections',
-					shortpath,
-					entry.name,
-					'output.js',
-				);
-				outputs.push(`\t"${shortpath}": () => import('${dest}'),`);
-
-				const filepath = path.join(entry.path, entry.name);
-				const ast = await markdownToESM(filepath, processor);
-				write(dest, ast);
+			if (entry.path === contentDir) {
+				collections[entry.name] = {};
+				currentCollection = entry.name;
+				currentCollectionPath = path.join(entry.path, entry.name);
 			}
+			if (entry.name !== 'readme.md' && entry.name !== 'data.yaml') return;
+
+			const shortpath = entry.path.slice(currentCollectionPath.length + 1);
+			const filepath = path.join(entry.path, entry.name);
+
+			let outputName = '';
+			let output = '';
+			switch (entry.name) {
+				case 'data.yaml':
+					outputName = 'output.json';
+					output = yamlToJson(filepath);
+					break;
+				case 'readme.md':
+					outputName = 'output.js';
+					output = markdownToESM(filepath, processor);
+					break;
+			}
+			const outputPath = path.join(
+				outputDir,
+				'collections',
+				currentCollection,
+				shortpath,
+				entry.name,
+				outputName,
+			);
+			collections[currentCollection][shortpath] = outputPath;
+			write(outputPath, output);
 		});
 
 		const runtime = RUNTIME_TEMPLATE.replaceAll(
 			'__ENTRIES__',
-			`{\n${outputs.join('\n')}\n}`,
+			JSON.stringify(collections, null, 4),
 		);
 		write(runtimePath, runtime);
 	}
@@ -107,15 +126,24 @@ export function content() {
  * @param {string} file
  * @param {import('unified').Processor} processor
  */
-async function markdownToESM(file, processor) {
+function markdownToESM(file, processor) {
 	const code = fs.readFileSync(file);
 	const vfile = new VFile({
 		path: file,
 		value: code,
 	});
 	const tree = processor.parse(vfile);
-	const transformedTree = await processor.run(tree, vfile);
+	const transformedTree = processor.runSync(tree, vfile);
 	return dataToEsm(transformedTree);
+}
+
+/**
+ * @param {string} file
+ */
+function yamlToJson(file) {
+	const code = fs.readFileSync(file, 'utf-8');
+	const json = yaml.load(code);
+	return JSON.stringify(json);
 }
 
 const LEADING_DASH_RE = /^-+/;
@@ -182,7 +210,7 @@ export function remarkTableOfContents() {
  * @type {import('unified').Plugin<void[], import('mdast').Root, import('mdast').Root>}
  */
 export function remarkFileAttributes() {
-	return async (tree, vfile) => {
+	return (tree, vfile) => {
 		/** @type {import('mdast').Code[]} */
 		const codeBlocks = [];
 		visit(tree, 'code', (node) => {

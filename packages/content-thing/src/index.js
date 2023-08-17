@@ -16,7 +16,7 @@ import { visit } from 'unist-util-visit';
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 
-const INPUT_DIR = 'src/docs';
+const INPUT_DIR = 'src/content';
 const OUTPUT_DIR = '.svelte-kit/content-thing/generated';
 const NAMESPACE = 'content-thing:io';
 const runtimeTemplatePath = path.join(__dirname, './runtime.js');
@@ -53,9 +53,15 @@ export function content() {
 		const outputs = [];
 		walk(contentDir, async (entry) => {
 			if (entry.name === 'readme.md') {
-				const shortpath = entry.path.slice(contentDir.length + 1);
 				// ouputs are used synchronously. do them first.
-				const dest = path.join(outputDir, shortpath, entry.name, 'output.js');
+				const shortpath = entry.path.slice(contentDir.length + 1);
+				const dest = path.join(
+					outputDir,
+					'collections',
+					shortpath,
+					entry.name,
+					'output.js',
+				);
 				outputs.push(`\t"${shortpath}": () => import('${dest}'),`);
 
 				const filepath = path.join(entry.path, entry.name);

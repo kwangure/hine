@@ -8,8 +8,8 @@
 	/** @type {import('@hinejs/content-thing').TocEntry[]} */
 	export let toc;
 
-	/** @type {string | undefined} */
-	let activeTarget = undefined;
+	/** @type {string} */
+	let activeTarget = toc[0]?.slug;
 
 	/**
 	 * Set the first visible heading as active

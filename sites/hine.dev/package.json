@@ -11,6 +11,11 @@
 	"wireit": {
 		"build": {
 			"command": "vite build",
+			"dependencies": [
+				"../../packages/hine:package",
+				"../../packages/svelte-ui:package",
+				"../../packages/content-thing:package"
+			],
 			"files": [
 				"src/**/*.{js,ts,svelte}",
 				"static/**",
@@ -24,7 +29,9 @@
 		"check": {
 			"command": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 			"dependencies": [
-				"../../packages/hine:package"
+				"../../packages/hine:package",
+				"../../packages/svelte-ui:package",
+				"../../packages/content-thing:package"
 			],
 			"files": [
 				"{src,test}/**/*.{js,ts,svelte}",

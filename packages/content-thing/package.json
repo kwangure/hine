@@ -13,12 +13,20 @@
 				"tests/**/*.{js,ts}",
 				"tsconfig.json"
 			],
+			"dependencies": [
+				"../internal-utils:package",
+				"../remark-attributes:package",
+				"../remark-toc:package",
+				"../remark-variables:package",
+				"../remark-yaml-parse:package"
+			],
 			"output": []
 		},
 		"package": {
 			"clean": "if-file-deleted",
 			"command": "tsc --project tsconfig.build.json",
 			"dependencies": [
+				"../internal-utils:package",
 				"../remark-attributes:package",
 				"../remark-toc:package",
 				"../remark-variables:package",

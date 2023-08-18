@@ -1,11 +1,9 @@
 import type { Action } from './action.js';
 import type { AtomicState } from './atomic';
-import type { BaseState } from './base.js';
 import type { CompoundState } from './compound';
 import type { Condition } from './condition.js';
 import type { Context } from './context.js';
 import type { EffectHandler } from './handler/effect.js';
-import type { Simplify } from 'type-fest';
 import type { TransitionHandler } from './handler/transition.js';
 
 interface RunnerConfig {
@@ -60,28 +58,58 @@ export interface StateConfig extends BaseStateConfig {
 	children?: Record<string, StateNode>;
 }
 
-type BaseJSON = ReturnType<BaseState['__toJSON']>;
+interface BaseHandlerJSON {
+	name: string;
+	if: string | undefined;
+	run: string[];
+	path: string[];
+}
 
-export type AtomicStateJSON = Simplify<
-	BaseJSON & {
-		type: 'atomic';
-	}
->;
+export interface EffectHandlerJSON extends BaseHandlerJSON {
+	type: 'effect';
+}
 
-export type CompoundStateJSON = Simplify<
-	BaseJSON & {
-		type: 'compound';
-		children: Record<string, StateNodeJSON>;
-	}
->;
+export interface TransitionHandlerJSON extends BaseHandlerJSON {
+	type: 'transition';
+	goto: string | undefined;
+}
+
+export type HandlerJSON = EffectHandlerJSON | TransitionHandlerJSON;
+
+export interface BaseStateJSON {
+	always: HandlerJSON[] | undefined;
+	entry: HandlerJSON[] | undefined;
+	exit: HandlerJSON[] | undefined;
+	name: string;
+	on: Record<string, HandlerJSON[]> | undefined;
+	path: string[];
+}
+
+export interface AtomicStateJSON extends BaseStateJSON {
+	type: 'atomic';
+}
+
+export interface CompoundStateJSON extends BaseStateJSON {
+	type: 'compound';
+	children: Record<string, StateNodeJSON>;
+}
 
 export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
 
-export type ActionJSON = ReturnType<Action['toJSON']>;
-export type ConditionJSON = ReturnType<Condition['toJSON']>;
-export type HandlerJSON = ReturnType<
-	(EffectHandler | TransitionHandler)['toJSON']
->;
+interface BaseRunnerJSON {
+	name: string;
+	path: string[];
+}
+
+export interface ActionJSON extends BaseRunnerJSON {
+	name: string;
+	path: string[];
+	type: 'action';
+}
+
+export interface ConditionJSON extends BaseRunnerJSON {
+	type: 'condition';
+}
 
 export interface BaseMonitorConfig {
 	actions?: Record<string, Action>;

@@ -33,6 +33,9 @@ export class EffectHandler extends BaseHandler {
 		}
 		this.__notifyAfter();
 	}
+	/**
+	 * @returns {import('../types.js').EffectHandlerJSON}
+	 */
 	toJSON() {
 		return {
 			type: this.#type,

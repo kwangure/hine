@@ -65,6 +65,9 @@ export class Action {
 		this.__ownerState.__action = null;
 		return result;
 	}
+	/**
+	 * @returns {import('./types').ActionJSON}
+	 */
 	toJSON() {
 		return {
 			name: this.__name,

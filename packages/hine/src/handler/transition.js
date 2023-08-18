@@ -132,6 +132,9 @@ export class TransitionHandler extends BaseHandler {
 		from.__handler = null;
 		return shouldExecute;
 	}
+	/**
+	 * @returns {import('../types.js').TransitionHandlerJSON}
+	 */
 	toJSON() {
 		return {
 			type: this.#type,

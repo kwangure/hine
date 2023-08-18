@@ -64,6 +64,9 @@ export class Condition {
 		this.__ownerState.__condition = null;
 		return result;
 	}
+	/**
+	 * @returns {import('./types').ConditionJSON}
+	 */
 	toJSON() {
 		return {
 			name: this.__name,

@@ -66,6 +66,7 @@
 				"./packages/content-thing:check",
 				"./packages/hine:check",
 				"./packages/remark-attributes:check",
+				"./packages/remark-toc:check",
 				"./packages/svelte-ui:check",
 				"./sites/hine.dev:check"
 			]
@@ -110,6 +111,7 @@
 				"./packages/svelte-ui:package",
 				"./packages/internal-utils:package",
 				"./packages/remark-attributes:package",
+				"./packages/remark-toc:package",
 				"./packages/remark-variables:package",
 				"./packages/remark-yaml-parse:package"
 			]
@@ -124,6 +126,7 @@
 				"./packages/hine:pre-commit",
 				"./packages/svelte-ui:pre-commit",
 				"./packages/remark-attributes:pre-commit",
+				"./packages/remark-toc:pre-commit",
 				"./packages/remark-yaml-parse:pre-commit",
 				"./sites/hine.dev:pre-commit"
 			]

@@ -1,9 +1,11 @@
 {
-	"name": "@hinejs/content-thing",
-	"version": "0.0.0",
+	"name": "@hinejs/remark-toc",
 	"scripts": {
 		"check": "wireit",
-		"package": "wireit"
+		"package": "wireit",
+		"publint": "wireit",
+		"pre-commit": "wireit",
+		"test": "wireit"
 	},
 	"wireit": {
 		"check": {
@@ -18,12 +20,6 @@
 		"package": {
 			"clean": "if-file-deleted",
 			"command": "tsc --project tsconfig.build.json",
-			"dependencies": [
-				"../remark-attributes:package",
-				"../remark-toc:package",
-				"../remark-variables:package",
-				"../remark-yaml-parse:package"
-			],
 			"files": [
 				"src/**/*.{js,ts}",
 				"tsconfig.build.json",
@@ -36,7 +32,8 @@
 		"pre-commit": {
 			"dependencies": [
 				"check",
-				"publint"
+				"publint",
+				"test"
 			]
 		},
 		"publint": {
@@ -47,32 +44,15 @@
 				"package.json"
 			],
 			"output": []
+		},
+		"test": {
+			"command": "node --test --test-reporter spec",
+			"files": [
+				"src/**/*.js",
+				"tests/**/*.js"
+			],
+			"output": []
 		}
-	},
-	"exports": {
-		".": {
-			"types": "./types/index.d.ts",
-			"default": "./src/index.js"
-		}
-	},
-	"dependencies": {
-		"@hinejs/internal-utils": "^0.0.0",
-		"@hinejs/remark-attributes": "*",
-		"@hinejs/remark-toc": "*",
-		"@hinejs/remark-variables": "*",
-		"@hinejs/remark-yaml-parse": "*",
-		"@rollup/pluginutils": "^5.0.3",
-		"js-yaml": "^4.1.0",
-		"remark-stringify": "^10.0.3",
-		"vfile": "^5.0.0"
-	},
-	"devDependencies": {
-		"@types/mdast": "^4.0.0",
-		"@types/node": "^20.4.10",
-		"mdast": "^3.0.0",
-		"publint": "^0.1.16",
-		"typescript": "^5.1.6",
-		"vite": "^4.4.9"
 	},
 	"files": [
 		"src",
@@ -80,6 +60,21 @@
 		"!**/*.test.*",
 		"!**/*.spec.*"
 	],
-	"license": "MIT",
+	"exports": {
+		".": {
+			"types": "./types/index.d.ts",
+			"default": "./src/index.js"
+		}
+	},
+	"dependencies": {
+		"unist-util-visit": "^5.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.4.10",
+		"publint": "^0.2.0",
+		"remark-parse": "^10.0.2",
+		"remark-stringify": "^10.0.3",
+		"unified": "^10.1.2"
+	},
 	"type": "module"
 }

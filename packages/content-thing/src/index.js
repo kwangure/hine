@@ -56,7 +56,6 @@ export function content() {
 		let currentCollection = '';
 		let currentCollectionPath = '';
 		walk(contentDir, async (entry) => {
-			console.log({ contentDir, entry });
 			if (entry.path === contentDir) {
 				collections[entry.name] = {};
 				currentCollection = entry.name;

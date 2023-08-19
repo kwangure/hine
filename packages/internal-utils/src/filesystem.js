@@ -34,6 +34,10 @@ function walkDir(parent, visitor) {
 	});
 	for (const entry of dirs) {
 		visitor(entry);
+		// Polyfill: fs.Dirent.path was added in Node v20.1
+		if (entry.path === undefined) {
+			entry.path = parent;
+		}
 		if (entry.isDirectory()) {
 			walkDir(path.posix.join(entry.path, entry.name), visitor);
 		}

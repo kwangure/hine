@@ -33,7 +33,6 @@
 			"output": []
 		},
 		"package": {
-			"clean": "if-file-deleted",
 			"command": "tsc --project tsconfig.build.json",
 			"dependencies": [
 				"../internal-utils:package",

@@ -48,7 +48,6 @@
 			"output": []
 		},
 		"package": {
-			"clean": "if-file-deleted",
 			"command": "svelte-package -i ./src/lib",
 			"files": [
 				"src/**/*.{js,ts,svelte}",

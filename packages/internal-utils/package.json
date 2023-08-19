@@ -27,7 +27,6 @@
 			"output": []
 		},
 		"package": {
-			"clean": "if-file-deleted",
 			"command": "tsc --project tsconfig.build.json",
 			"files": [
 				"src/**/*.{js,ts}",

@@ -16,7 +16,6 @@
 		"dev": "wireit",
 		"format": "wireit",
 		"lint": "wireit",
-		"pack": "wireit",
 		"package": "wireit",
 		"pre-commit": "wireit",
 		"prepare": "npx husky install",
@@ -97,12 +96,6 @@
 				".eslintrc.cjs"
 			],
 			"output": []
-		},
-		"pack": {
-			"dependencies": [
-				"./packages/hine:pack",
-				"./packages/svelte-ui:pack"
-			]
 		},
 		"package": {
 			"dependencies": [

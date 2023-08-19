@@ -4,7 +4,6 @@
 	"description": "A state machine library",
 	"scripts": {
 		"format": "wireit",
-		"pack": "wireit",
 		"package": "wireit",
 		"pre-commit": "wireit",
 		"publint": "wireit",

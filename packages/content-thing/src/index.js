@@ -109,7 +109,7 @@ export function content() {
 			contentDir = path.join(root, INPUT_DIR);
 			outputDir = path.join(root, DEV_OUTPUT_DIR);
 			runtimeDir = path.join(outputDir, 'io');
-			runtimePath = path.join(outputDir, 'io', 'index.js');
+			runtimePath = path.join(runtimeDir, 'index.js');
 		},
 		configureServer(vite) {
 			vite.watcher.on('all', (_event, filepath) => {

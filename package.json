@@ -40,7 +40,6 @@
 	"wireit": {
 		"build": {
 			"dependencies": [
-				"./packages/hine:build",
 				"./packages/svelte-ui:build",
 				"./sites/hine.dev:build",
 				"build:readme"

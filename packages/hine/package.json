@@ -3,10 +3,9 @@
 	"version": "0.0.17",
 	"description": "A state machine library",
 	"scripts": {
-		"build": "wireit",
 		"format": "wireit",
 		"pack": "wireit",
-		"package": "npm run build",
+		"package": "wireit",
 		"pre-commit": "wireit",
 		"publint": "wireit",
 		"release": "wireit",
@@ -32,18 +31,6 @@
 		}
 	},
 	"wireit": {
-		"build": {
-			"clean": "if-file-deleted",
-			"command": "tsc --project tsconfig.build.json",
-			"files": [
-				"src/**/*.{js,ts}",
-				"tsconfig.build.json",
-				"tsconfig.json"
-			],
-			"output": [
-				"types"
-			]
-		},
 		"check": {
 			"command": "tsc",
 			"files": [
@@ -62,29 +49,20 @@
 			],
 			"output": []
 		},
-		"pack": {
-			"command": "npm pack",
-			"dependencies": [
-				"build",
-				"publint"
-			],
+		"package": {
+			"clean": "if-file-deleted",
+			"command": "tsc --project tsconfig.build.json",
 			"files": [
-				"src/**",
-				"types/**",
-				"!**/*.test.*",
-				"!**/*.spec.*",
-				"LICENSE",
-				"README.md"
+				"src/**/*.{js,ts}",
+				"tsconfig.build.json",
+				"tsconfig.json"
 			],
 			"output": [
-				"hine*.tgz"
+				"types"
 			]
 		},
 		"publint": {
 			"command": "publint",
-			"dependencies": [
-				"build"
-			],
 			"files": [
 				"src/**",
 				"types/**",
@@ -101,7 +79,7 @@
 		},
 		"release": {
 			"dependencies": [
-				"build",
+				"package",
 				"publint",
 				"test"
 			]

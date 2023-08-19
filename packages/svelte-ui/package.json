@@ -47,20 +47,6 @@
 			],
 			"output": []
 		},
-		"pack": {
-			"command": "npm pack",
-			"dependencies": [
-				"package"
-			],
-			"files": [
-				"dist/**",
-				"LICENSE",
-				"README.md"
-			],
-			"output": [
-				"*.tgz"
-			]
-		},
 		"package": {
 			"clean": "if-file-deleted",
 			"command": "svelte-package -i ./src/lib",

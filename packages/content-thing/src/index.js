@@ -20,7 +20,6 @@ const __dirname = path.dirname(__filename);
 
 const INPUT_DIR = 'src/content';
 const DEV_OUTPUT_DIR = '.svelte-kit/content-thing/generated';
-const PROD_OUTPUT_DIR = 'static/content-thing/generated';
 const NAMESPACE = 'content-thing:io';
 const runtimeTemplatePath = path.join(__dirname, './runtime.js');
 const RUNTIME_TEMPLATE = fs.readFileSync(runtimeTemplatePath, 'utf-8');
@@ -37,6 +36,8 @@ export function content() {
 	let root = process.cwd();
 	/** @type {string} */
 	let outputDir;
+	/** @type {string} */
+	let runtimeDir;
 	/** @type {string} */
 	let runtimePath;
 
@@ -71,7 +72,7 @@ export function content() {
 			let output = '';
 			switch (entry.name) {
 				case 'data.yaml':
-					outputName = 'output.js';
+					outputName = 'output.json';
 					output = yamlToJson(filepath);
 					break;
 				case 'readme.md':
@@ -87,13 +88,14 @@ export function content() {
 				entry.name,
 				outputName,
 			);
-			collections[currentCollection][shortpath] = outputPath;
 			write(outputPath, output);
+			const relativeOutputPath = path.relative(runtimeDir, outputPath);
+			collections[currentCollection][shortpath] = relativeOutputPath;
 		});
 
 		const runtime = RUNTIME_TEMPLATE.replaceAll(
 			'__ENTRIES__',
-			JSON.stringify(collections, null, 4),
+			stringifyWithDynamicImports(collections),
 		);
 		write(runtimePath, runtime);
 	}
@@ -105,11 +107,8 @@ export function content() {
 				root = config.root;
 			}
 			contentDir = path.join(root, INPUT_DIR);
-			if (config.command === 'serve') {
-				outputDir = path.join(root, DEV_OUTPUT_DIR);
-			} else {
-				outputDir = path.join(root, PROD_OUTPUT_DIR);
-			}
+			outputDir = path.join(root, DEV_OUTPUT_DIR);
+			runtimeDir = path.join(outputDir, 'io');
 			runtimePath = path.join(outputDir, 'io', 'index.js');
 		},
 		configureServer(vite) {
@@ -149,7 +148,7 @@ function markdownToESM(file, processor) {
 function yamlToJson(file) {
 	const code = fs.readFileSync(file, 'utf-8');
 	const json = yaml.load(code);
-	return dataToEsm(json);
+	return JSON.stringify(json, null, 4);
 }
 
 /**
@@ -208,6 +207,27 @@ function extractLines(content, start, end) {
 	}
 
 	return lines.slice(start - 1, end).join('\n');
+}
+
+/**
+ * @param {Record<string, any>} obj
+ */
+function stringifyWithDynamicImports(obj) {
+	let result = '{\n';
+
+	for (const [key, value] of Object.entries(obj)) {
+		result += `    "${key}": {\n`;
+		for (const [subKey, subValue] of Object.entries(value)) {
+			result += `        "${subKey}": () => import("${subValue}"),\n`;
+		}
+		result = result.slice(0, -2); // Remove the trailing comma and newline
+		result += '\n    },\n';
+	}
+
+	result = result.slice(0, -2); // Remove the trailing comma and newline
+	result += '\n}';
+
+	return result;
 }
 
 /**

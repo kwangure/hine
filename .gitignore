@@ -12,7 +12,6 @@ types
 
 # Sites
 .svelte-kit
-**/static/content-thing
 build
 package
 vite.config.js.timestamp-*

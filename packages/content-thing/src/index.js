@@ -19,7 +19,8 @@ const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 
 const INPUT_DIR = 'src/content';
-const OUTPUT_DIR = '.svelte-kit/content-thing/generated';
+const DEV_OUTPUT_DIR = '.svelte-kit/content-thing/generated';
+const PROD_OUTPUT_DIR = 'static/content-thing/generated';
 const NAMESPACE = 'content-thing:io';
 const runtimeTemplatePath = path.join(__dirname, './runtime.js');
 const RUNTIME_TEMPLATE = fs.readFileSync(runtimeTemplatePath, 'utf-8');
@@ -70,7 +71,7 @@ export function content() {
 			let output = '';
 			switch (entry.name) {
 				case 'data.yaml':
-					outputName = 'output.json';
+					outputName = 'output.js';
 					output = yamlToJson(filepath);
 					break;
 				case 'readme.md':
@@ -104,7 +105,11 @@ export function content() {
 				root = config.root;
 			}
 			contentDir = path.join(root, INPUT_DIR);
-			outputDir = path.join(root, OUTPUT_DIR);
+			if (config.command === 'serve') {
+				outputDir = path.join(root, DEV_OUTPUT_DIR);
+			} else {
+				outputDir = path.join(root, PROD_OUTPUT_DIR);
+			}
 			runtimePath = path.join(outputDir, 'io', 'index.js');
 		},
 		configureServer(vite) {
@@ -144,7 +149,7 @@ function markdownToESM(file, processor) {
 function yamlToJson(file) {
 	const code = fs.readFileSync(file, 'utf-8');
 	const json = yaml.load(code);
-	return JSON.stringify(json);
+	return dataToEsm(json);
 }
 
 /**

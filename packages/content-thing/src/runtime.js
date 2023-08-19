@@ -1,4 +1,4 @@
-/* global __ENTRIES__  */
+// eslint-disable-next-line no-undef
 const collections = __ENTRIES__;
 
 /**

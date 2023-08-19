@@ -1,4 +1,4 @@
-/* global __ENTRIES__  */
+// eslint-disable-next-line no-undef
 const collections = __ENTRIES__;
 
 /**
@@ -7,11 +7,11 @@ const collections = __ENTRIES__;
  * @param {string} slug
  */
 export async function getEntry(collection, slug) {
-	const path =
+	const importer =
 		collections[collection][
 			/** @type {keyof (typeof collections)[T]} */ (slug)
 		];
-	const module = await import(/* @vite-ignore */ path);
+	const module = await importer();
 	return /** @type {import('mdast').Root} */ (module.default);
 }
 
@@ -21,9 +21,9 @@ export async function getEntry(collection, slug) {
 export async function getCollection(name) {
 	const collection = collections[name];
 	const promises = [];
-	for (const [id, path] of Object.entries(collection)) {
+	for (const [id, importer] of Object.entries(collection)) {
 		const promise = (async () => {
-			const module = await import(/* @vite-ignore */ path);
+			const module = await importer();
 			return /** @type {[string, any]} */ ([id, module.default]);
 		})();
 		promises.push(promise);

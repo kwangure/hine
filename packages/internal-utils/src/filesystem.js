@@ -33,11 +33,11 @@ function walkDir(parent, visitor) {
 		withFileTypes: true,
 	});
 	for (const entry of dirs) {
-		visitor(entry);
 		// Polyfill: fs.Dirent.path was added in Node v20.1
 		if (entry.path === undefined) {
 			entry.path = parent;
 		}
+		visitor(entry);
 		if (entry.isDirectory()) {
 			walkDir(path.posix.join(entry.path, entry.name), visitor);
 		}

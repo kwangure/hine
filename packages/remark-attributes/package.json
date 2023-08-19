@@ -2,6 +2,7 @@
 	"name": "@hinejs/remark-attributes",
 	"scripts": {
 		"check": "wireit",
+		"format": "wireit",
 		"package": "wireit",
 		"publint": "wireit",
 		"pre-commit": "wireit",
@@ -14,6 +15,15 @@
 				"src/**/*.{js,ts}",
 				"tests/**/*.{js,ts}",
 				"tsconfig.json"
+			],
+			"output": []
+		},
+		"format": {
+			"command": "prettier . --write --cache",
+			"files": [
+				"**/*.{css,html,js,json,md,ts,svelte}",
+				"!types/**",
+				".prettierignore"
 			],
 			"output": []
 		},
@@ -32,6 +42,7 @@
 		"pre-commit": {
 			"dependencies": [
 				"check",
+				"format",
 				"publint",
 				"test"
 			]
@@ -71,9 +82,13 @@
 		"unist-util-visit": "^5.0.0"
 	},
 	"devDependencies": {
+		"@hinejs/prettier": "*",
 		"@types/node": "^20.4.10",
+		"prettier": "^3.0.2",
 		"publint": "^0.2.0",
 		"remark-parse": "^10.0.2"
 	},
+	"prettier": "@hinejs/prettier",
+	"license": "MIT",
 	"type": "module"
 }

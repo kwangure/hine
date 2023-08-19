@@ -6,6 +6,7 @@
 		"build": "wireit",
 		"check": "wireit",
 		"dev": "vite dev",
+		"format": "wireit",
 		"test": "wireit"
 	},
 	"wireit": {
@@ -39,9 +40,22 @@
 			],
 			"output": []
 		},
+		"format": {
+			"command": "prettier . --write --cache",
+			"files": [
+				"**/*.{css,html,js,json,md,ts,svelte}",
+				"!types/**",
+				"!dist/**",
+				"!.svelte-kit/**",
+				".prettierignore",
+				"prettier.config.js"
+			],
+			"output": []
+		},
 		"pre-commit": {
 			"dependencies": [
-				"check"
+				"check",
+				"format"
 			]
 		},
 		"test": {
@@ -55,23 +69,6 @@
 			"output": []
 		}
 	},
-	"devDependencies": {
-		"@hinejs/content-thing": "^0.0.0",
-		"@sveltejs/adapter-auto": "^2.0.0",
-		"@sveltejs/adapter-vercel": "^3.0.3",
-		"@sveltejs/kit": "^1.22.4",
-		"autoprefixer": "^10.4.14",
-		"husky": "^8.0.3",
-		"postcss": "^8.4.27",
-		"svelte": "^4.0.5",
-		"svelte-check": "^3.4.3",
-		"tailwindcss": "^3.3.3",
-		"typescript": "^5.0.0",
-		"vite": "^4.4.2",
-		"vitest": "^0.33.0",
-		"wireit": "^0.9.3"
-	},
-	"type": "module",
 	"dependencies": {
 		"@fig/lezer-bash": "^1.2.5",
 		"@hinejs/svelte-ui": "^0.0.0",
@@ -86,5 +83,26 @@
 		"@mdi/js": "^7.2.96",
 		"@replit/codemirror-lang-svelte": "^6.0.0",
 		"simple-icons": "^9.9.0"
-	}
+	},
+	"devDependencies": {
+		"@hinejs/content-thing": "*",
+		"@sveltejs/adapter-auto": "^2.0.0",
+		"@sveltejs/adapter-vercel": "^3.0.3",
+		"@sveltejs/kit": "^1.22.4",
+		"autoprefixer": "^10.4.14",
+		"husky": "^8.0.3",
+		"prettier": "^3.0.2",
+		"prettier-plugin-svelte": "^3.0.3",
+		"prettier-plugin-tailwindcss": "^0.5.3",
+		"postcss": "^8.4.27",
+		"svelte": "^4.0.5",
+		"svelte-check": "^3.4.3",
+		"tailwindcss": "^3.3.3",
+		"typescript": "^5.0.0",
+		"vite": "^4.4.2",
+		"vitest": "^0.33.0",
+		"wireit": "^0.9.3"
+	},
+	"license": "MIT",
+	"type": "module"
 }

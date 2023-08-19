@@ -1,0 +1,68 @@
+{
+	"name": "@hinejs/prettier",
+	"version": "0.0.0",
+	"scripts": {
+		"check": "wireit",
+		"format": "wireit",
+		"pre-commit": "wireit",
+		"publint": "wireit"
+	},
+	"wireit": {
+		"check": {
+			"command": "tsc",
+			"files": [
+				"*.js",
+				"tsconfig.json"
+			],
+			"output": []
+		},
+		"package": {
+			"command": "tsc",
+			"files": [
+				"*.js",
+				"tsconfig.json"
+			],
+			"output": [
+				"types"
+			]
+		},
+		"format": {
+			"command": "prettier . --write --cache",
+			"files": [
+				"**/*.{js,json}"
+			],
+			"output": []
+		},
+		"pre-commit": {
+			"dependencies": [
+				"format",
+				"publint"
+			]
+		},
+		"publint": {
+			"command": "publint",
+			"files": [
+				"*.js",
+				"package.json"
+			],
+			"output": []
+		}
+	},
+	"exports": {
+		".": {
+			"types": "./types/prettier.config.d.ts",
+			"default": "./prettier.config.mjs"
+		}
+	},
+	"module": "./prettier.config.mjs",
+	"devDependencies": {
+		"prettier": "^3.0.2",
+		"typescript": "^5.1.6"
+	},
+	"files": [
+		"prettier.config.mjs"
+	],
+	"prettier": "@hinejs/prettier",
+	"license": "MIT",
+	"type": "module"
+}

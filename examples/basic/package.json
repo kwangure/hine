@@ -2,9 +2,9 @@
 	"name": "@hine-examples/basic",
 	"version": "0.0.1",
 	"private": true,
-	"type": "module",
 	"scripts": {
 		"check": "wireit",
+		"format": "wireit",
 		"pre-commit": "wireit"
 	},
 	"wireit": {
@@ -19,13 +19,29 @@
 			],
 			"output": []
 		},
+		"format": {
+			"command": "prettier . --write --cache",
+			"files": [
+				"**/*.{css,html,js,json,md,ts,svelte}",
+				"!types/**",
+				".prettierignore"
+			],
+			"output": []
+		},
 		"pre-commit": {
 			"dependencies": [
-				"check"
+				"check",
+				"format"
 			]
 		}
 	},
 	"dependencies": {
 		"hine": "^0.0.17"
-	}
+	},
+	"devDependencies": {
+		"prettier": "^3.0.2"
+	},
+	"prettier": "@hinejs/prettier",
+	"license": "MIT",
+	"type": "module"
 }

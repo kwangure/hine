@@ -31,9 +31,6 @@
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte": "^2.30.0",
 		"husky": "^8.0.3",
-		"prettier": "^2.8.8",
-		"prettier-plugin-svelte": "^2.10.1",
-		"prettier-plugin-tailwindcss": "^0.4.1",
 		"remark-parse": "^10.0.2",
 		"remark-stringify": "^10.0.3",
 		"unified": "^10.1.2",
@@ -77,15 +74,19 @@
 			]
 		},
 		"format": {
-			"command": "prettier . --write --cache",
-			"files": [
-				"**/*.{css,html,js,json,md,ts,svelte}",
-				"!**/dist/**",
-				"!**/tests/samples/**",
-				".prettierignore",
-				".prettierrc"
-			],
-			"output": []
+			"dependencies": [
+				"./examples/basic:format",
+				"./packages/content-thing:format",
+				"./packages/hine:format",
+				"./packages/internal-utils:format",
+				"./packages/prettier:format",
+				"./packages/remark-attributes:format",
+				"./packages/remark-toc:format",
+				"./packages/remark-variables:format",
+				"./packages/remark-yaml-parse:format",
+				"./packages/svelte-ui:format",
+				"./sites/hine.dev:format"
+			]
 		},
 		"lint": {
 			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
@@ -110,6 +111,7 @@
 				"./packages/hine:package",
 				"./packages/svelte-ui:package",
 				"./packages/internal-utils:package",
+				"./packages/prettier:package",
 				"./packages/remark-attributes:package",
 				"./packages/remark-toc:package",
 				"./packages/remark-variables:package",
@@ -118,7 +120,6 @@
 		},
 		"pre-commit": {
 			"dependencies": [
-				"format",
 				"lint",
 				"build:readme",
 				"./examples/basic:pre-commit",

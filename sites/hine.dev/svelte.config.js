@@ -10,7 +10,9 @@ const config = {
 		},
 		typescript: {
 			config(config) {
-				config.include?.push('../src/**/*.md');
+				config.compilerOptions.paths['content-thing:io'] = [
+					'./content-thing/generated/io/index.js',
+				];
 			},
 		},
 	},

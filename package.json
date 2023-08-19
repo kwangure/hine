@@ -63,9 +63,10 @@
 		"check": {
 			"dependencies": [
 				"./examples/basic:check",
+				"./packages/content-thing:check",
 				"./packages/hine:check",
-				"./packages/vite-plugin-markdown:check",
 				"./packages/remark-attributes:check",
+				"./packages/remark-toc:check",
 				"./packages/svelte-ui:check",
 				"./sites/hine.dev:check"
 			]
@@ -105,10 +106,12 @@
 		},
 		"package": {
 			"dependencies": [
+				"./packages/content-thing:package",
 				"./packages/hine:package",
 				"./packages/svelte-ui:package",
-				"./packages/vite-plugin-markdown:package",
+				"./packages/internal-utils:package",
 				"./packages/remark-attributes:package",
+				"./packages/remark-toc:package",
 				"./packages/remark-variables:package",
 				"./packages/remark-yaml-parse:package"
 			]
@@ -119,9 +122,11 @@
 				"lint",
 				"build:readme",
 				"./examples/basic:pre-commit",
+				"./packages/content-thing:pre-commit",
 				"./packages/hine:pre-commit",
 				"./packages/svelte-ui:pre-commit",
 				"./packages/remark-attributes:pre-commit",
+				"./packages/remark-toc:pre-commit",
 				"./packages/remark-yaml-parse:pre-commit",
 				"./sites/hine.dev:pre-commit"
 			]
@@ -135,6 +140,7 @@
 		"test": {
 			"dependencies": [
 				"./packages/hine:test",
+				"./packages/internal-utils:test",
 				"./packages/remark-attributes:test",
 				"./packages/remark-variables:test",
 				"./packages/remark-yaml-parse:test"

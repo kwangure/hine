@@ -1,5 +1,7 @@
 ---
 title: Quickstart
+group: getting-started
+order: 2
 ---
 
 # {{ frontmatter.title }}

@@ -1,5 +1,7 @@
 ---
 title: Introduction
+group: getting-started
+order: 1
 description: >
   Hine is a JavaScript library for building state machines. At its core, it is a
   set of functions that can be composed to model the behaviour of your application

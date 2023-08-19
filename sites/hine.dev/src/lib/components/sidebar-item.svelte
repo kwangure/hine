@@ -4,7 +4,7 @@
 
 	/** @type {string} */
 	export let href;
-	/** @type {import('@hinejs/vite-plugin-markdown').TocEntry[]}*/
+	/** @type {import('@hinejs/content-thing').TocEntry[]}*/
 	export let toc = [];
 </script>
 

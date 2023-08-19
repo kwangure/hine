@@ -1,5 +1,5 @@
 {
-	"name": "@hinejs/remark-variables",
+	"name": "@hinejs/remark-toc",
 	"scripts": {
 		"check": "wireit",
 		"package": "wireit",
@@ -24,9 +24,6 @@
 				"src/**/*.{js,ts}",
 				"tsconfig.build.json",
 				"tsconfig.json"
-			],
-			"dependencies": [
-				"../remark-yaml-parse:package"
 			],
 			"output": [
 				"types"
@@ -73,12 +70,11 @@
 		"unist-util-visit": "^5.0.0"
 	},
 	"devDependencies": {
-		"@hinejs/remark-yaml-parse": "*",
-		"@types/dlv": "^1.1.2",
 		"@types/node": "^20.4.10",
 		"publint": "^0.2.0",
-		"remark-frontmatter": "^4.0.1",
-		"remark-parse": "^10.0.2"
+		"remark-parse": "^10.0.2",
+		"remark-stringify": "^10.0.3",
+		"unified": "^10.1.2"
 	},
 	"type": "module"
 }

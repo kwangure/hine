@@ -1,5 +1,5 @@
 import type { CodeData, InlineCodeData, HeadingData } from 'mdast';
-import type { TocEntry } from '@hinejs/vite-plugin-markdown';
+import type { TocEntry } from '@hinejs/content-thing';
 
 declare module 'mdast' {
 	interface CodeData {

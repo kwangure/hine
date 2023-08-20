@@ -42,7 +42,7 @@
 		"publint": {
 			"command": "publint",
 			"files": [
-				"*.js",
+				"*.{js,ts,mjs}",
 				"package.json"
 			],
 			"output": []
@@ -50,7 +50,7 @@
 	},
 	"exports": {
 		".": {
-			"types": "./types/prettier.config.d.ts",
+			"types": "./types/prettier.config.d.mts",
 			"default": "./prettier.config.mjs"
 		}
 	},
@@ -60,7 +60,8 @@
 		"typescript": "^5.1.6"
 	},
 	"files": [
-		"prettier.config.mjs"
+		"prettier.config.mjs",
+		"types"
 	],
 	"prettier": "@hinejs/prettier",
 	"license": "MIT",

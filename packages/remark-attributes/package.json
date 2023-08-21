@@ -93,7 +93,7 @@
 	},
 	"devDependencies": {
 		"@hinejs/eslint-config": "*",
-		"@hinejs/prettier": "*",
+		"@hinejs/prettier-config": "*",
 		"@types/node": "^20.4.10",
 		"eslint": "^8.47.0",
 		"prettier": "^3.0.2",
@@ -101,7 +101,7 @@
 		"remark-parse": "^10.0.2",
 		"typescript": "^5.1.6"
 	},
-	"prettier": "@hinejs/prettier",
+	"prettier": "@hinejs/prettier-config",
 	"license": "MIT",
 	"type": "module"
 }

@@ -1,5 +1,5 @@
 {
-	"name": "@hinejs/prettier",
+	"name": "@hinejs/prettier-config",
 	"version": "0.0.0",
 	"scripts": {
 		"check": "wireit",
@@ -78,7 +78,7 @@
 		"prettier.config.mjs",
 		"types"
 	],
-	"prettier": "@hinejs/prettier",
+	"prettier": "@hinejs/prettier-config",
 	"license": "MIT",
 	"type": "module"
 }

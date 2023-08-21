@@ -5,6 +5,7 @@
 	"scripts": {
 		"check": "wireit",
 		"format": "wireit",
+		"lint": "wireit",
 		"pre-commit": "wireit"
 	},
 	"wireit": {
@@ -28,10 +29,20 @@
 			],
 			"output": []
 		},
+		"lint": {
+			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
+			"files": [
+				"**/*.{js,svelte}",
+				".eslintignore",
+				"eslint.config.js"
+			],
+			"output": []
+		},
 		"pre-commit": {
 			"dependencies": [
 				"check",
-				"format"
+				"format",
+				"lint"
 			]
 		}
 	},
@@ -39,6 +50,8 @@
 		"hine": "^0.0.17"
 	},
 	"devDependencies": {
+		"@hinejs/eslint-config": "*",
+		"eslint": "^8.47.0",
 		"prettier": "^3.0.2"
 	},
 	"prettier": "@hinejs/prettier",

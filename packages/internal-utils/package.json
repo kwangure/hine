@@ -4,6 +4,7 @@
 	"scripts": {
 		"check": "wireit",
 		"format": "wireit",
+		"lint": "wireit",
 		"package": "wireit",
 		"test": "wireit"
 	},
@@ -26,6 +27,15 @@
 			],
 			"output": []
 		},
+		"lint": {
+			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
+			"files": [
+				"**/*.{js,svelte}",
+				".eslintignore",
+				"eslint.config.js"
+			],
+			"output": []
+		},
 		"package": {
 			"command": "tsc --project tsconfig.build.json",
 			"files": [
@@ -41,6 +51,7 @@
 			"dependencies": [
 				"check",
 				"format",
+				"lint",
 				"publint",
 				"test"
 			]
@@ -80,8 +91,10 @@
 		"!**/*.spec.*"
 	],
 	"devDependencies": {
+		"@hinejs/eslint-config": "*",
 		"@hinejs/prettier": "*",
 		"@types/node": "^20.4.10",
+		"eslint": "^8.47.0",
 		"prettier": "^3.0.2",
 		"publint": "^0.1.16",
 		"typescript": "^5.1.6"

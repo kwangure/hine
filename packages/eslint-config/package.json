@@ -1,5 +1,5 @@
 {
-	"name": "@hinejs/prettier",
+	"name": "@hinejs/eslint-config",
 	"version": "0.0.0",
 	"scripts": {
 		"check": "wireit",
@@ -21,14 +21,14 @@
 		"format": {
 			"command": "prettier . --write --cache",
 			"files": [
-				"**/*.{mjs,js,json}"
+				"**/*.{js,json}"
 			],
 			"output": []
 		},
 		"lint": {
-			"command": "eslint \"**/*.{mjs,js,svelte}\" --color --cache --fix",
+			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
 			"files": [
-				"**/*.{mjs,js,svelte}",
+				"**/*.{js,svelte}",
 				".eslintignore",
 				"eslint.config.js"
 			],
@@ -63,19 +63,26 @@
 	},
 	"exports": {
 		".": {
-			"types": "./types/prettier.config.d.mts",
-			"default": "./prettier.config.mjs"
+			"types": "./types/eslint.config.d.ts",
+			"default": "./eslint.config.js"
 		}
 	},
-	"module": "./prettier.config.mjs",
+	"module": "./eslint.config.js",
+	"dependencies": {
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-svelte": "^2.32.0"
+	},
 	"devDependencies": {
-		"@hinejs/eslint-config": "*",
+		"@eslint/js": "^8.47.0",
+		"@types/eslint": "^8.44.2",
+		"@types/eslint__js": "^8.42.0",
+		"@types/eslint-config-prettier": "^6.11.0",
 		"eslint": "^8.47.0",
 		"prettier": "^3.0.2",
 		"typescript": "^5.1.6"
 	},
 	"files": [
-		"prettier.config.mjs",
+		"./eslint.config.js",
 		"types"
 	],
 	"prettier": "@hinejs/prettier",

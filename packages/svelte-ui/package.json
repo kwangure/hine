@@ -6,6 +6,7 @@
 		"check": "wireit",
 		"dev": "vite dev",
 		"format": "wireit",
+		"lint": "wireit",
 		"package": "wireit",
 		"publint": "wireit",
 		"sync": "wireit"
@@ -24,6 +25,17 @@
 				"build"
 			]
 		},
+		"check": {
+			"command": "svelte-check --tsconfig ./tsconfig.json",
+			"dependencies": [
+				"sync"
+			],
+			"files": [
+				"{src,test}/**/*.{js,ts,svelte}",
+				"tsconfig.json"
+			],
+			"output": []
+		},
 		"format": {
 			"command": "prettier . --write --cache",
 			"files": [
@@ -36,14 +48,12 @@
 			],
 			"output": []
 		},
-		"check": {
-			"command": "svelte-check --tsconfig ./tsconfig.json",
-			"dependencies": [
-				"sync"
-			],
+		"lint": {
+			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
 			"files": [
-				"{src,test}/**/*.{js,ts,svelte}",
-				"tsconfig.json"
+				"**/*.{js,svelte}",
+				".eslintignore",
+				"eslint.config.js"
 			],
 			"output": []
 		},
@@ -61,12 +71,16 @@
 		"pre-commit": {
 			"dependencies": [
 				"check",
+				"format",
 				"publint",
 				"sync"
 			]
 		},
 		"publint": {
 			"command": "publint",
+			"dependencies": [
+				"package"
+			],
 			"files": [
 				"dist",
 				"package.json"
@@ -112,11 +126,13 @@
 		"svelte": "^4.0.0"
 	},
 	"devDependencies": {
+		"@hinejs/eslint-config": "*",
 		"@hinejs/prettier": "*",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@sveltejs/package": "^2.0.0",
 		"autoprefixer": "^10.4.14",
+		"eslint": "^8.47.0",
 		"postcss": "^8.4.27",
 		"prettier": "^3.0.2",
 		"prettier-plugin-svelte": "^3.0.3",

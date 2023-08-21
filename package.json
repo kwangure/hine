@@ -25,10 +25,6 @@
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.26.1",
-		"@kwangure/eslint-config-svelte": "^0.3.6",
-		"eslint": "^8.32.0",
-		"eslint-config-prettier": "^8.5.0",
-		"eslint-plugin-svelte": "^2.30.0",
 		"husky": "^8.0.3",
 		"remark-parse": "^10.0.2",
 		"remark-stringify": "^10.0.3",
@@ -75,6 +71,7 @@
 			"dependencies": [
 				"./examples/basic:format",
 				"./packages/content-thing:format",
+				"./packages/eslint-config:format",
 				"./packages/hine:format",
 				"./packages/internal-utils:format",
 				"./packages/prettier:format",
@@ -87,19 +84,25 @@
 			]
 		},
 		"lint": {
-			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
-			"files": [
-				"**/*.{js,svelte}",
-				"!**/dist/**",
-				"!**/tests/samples/**",
-				".eslintignore",
-				".eslintrc.cjs"
-			],
-			"output": []
+			"dependencies": [
+				"./examples/basic:lint",
+				"./packages/content-thing:lint",
+				"./packages/eslint-config:lint",
+				"./packages/hine:lint",
+				"./packages/internal-utils:lint",
+				"./packages/prettier:lint",
+				"./packages/remark-attributes:lint",
+				"./packages/remark-toc:lint",
+				"./packages/remark-variables:lint",
+				"./packages/remark-yaml-parse:lint",
+				"./packages/svelte-ui:lint",
+				"./sites/hine.dev:lint"
+			]
 		},
 		"package": {
 			"dependencies": [
 				"./packages/content-thing:package",
+				"./packages/eslint-config:package",
 				"./packages/hine:package",
 				"./packages/svelte-ui:package",
 				"./packages/internal-utils:package",
@@ -112,15 +115,18 @@
 		},
 		"pre-commit": {
 			"dependencies": [
-				"lint",
 				"build:readme",
 				"./examples/basic:pre-commit",
 				"./packages/content-thing:pre-commit",
+				"./packages/eslint-config:pre-commit",
 				"./packages/hine:pre-commit",
-				"./packages/svelte-ui:pre-commit",
+				"./packages/internal-utils:pre-commit",
+				"./packages/prettier:pre-commit",
 				"./packages/remark-attributes:pre-commit",
 				"./packages/remark-toc:pre-commit",
+				"./packages/remark-variables:lint",
 				"./packages/remark-yaml-parse:pre-commit",
+				"./packages/svelte-ui:pre-commit",
 				"./sites/hine.dev:pre-commit"
 			]
 		},

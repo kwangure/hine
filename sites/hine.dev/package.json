@@ -7,6 +7,7 @@
 		"check": "wireit",
 		"dev": "vite dev",
 		"format": "wireit",
+		"lint": "wireit",
 		"test": "wireit"
 	},
 	"wireit": {
@@ -52,10 +53,20 @@
 			],
 			"output": []
 		},
+		"lint": {
+			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
+			"files": [
+				"**/*.{js,svelte}",
+				".eslintignore",
+				"eslint.config.js"
+			],
+			"output": []
+		},
 		"pre-commit": {
 			"dependencies": [
 				"check",
-				"format"
+				"format",
+				"lint"
 			]
 		},
 		"test": {
@@ -85,17 +96,20 @@
 		"simple-icons": "^9.9.0"
 	},
 	"devDependencies": {
-		"@hinejs/prettier": "*",
 		"@hinejs/content-thing": "*",
+		"@hinejs/eslint-config": "*",
+		"@hinejs/prettier": "*",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-vercel": "^3.0.3",
 		"@sveltejs/kit": "^1.22.4",
+		"@types/eslint": "^8.44.2",
 		"autoprefixer": "^10.4.14",
+		"eslint": "^8.47.0",
 		"husky": "^8.0.3",
+		"postcss": "^8.4.27",
 		"prettier": "^3.0.2",
 		"prettier-plugin-svelte": "^3.0.3",
 		"prettier-plugin-tailwindcss": "^0.5.3",
-		"postcss": "^8.4.27",
 		"svelte": "^4.0.5",
 		"svelte-check": "^3.4.3",
 		"tailwindcss": "^3.3.3",

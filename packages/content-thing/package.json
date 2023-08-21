@@ -4,6 +4,7 @@
 	"scripts": {
 		"check": "wireit",
 		"format": "wireit",
+		"lint": "wireit",
 		"package": "wireit"
 	},
 	"wireit": {
@@ -29,6 +30,15 @@
 				"**/*.{css,html,js,json,md,ts,svelte}",
 				"!types/**",
 				".prettierignore"
+			],
+			"output": []
+		},
+		"lint": {
+			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
+			"files": [
+				"**/*.{js,svelte}",
+				".eslintignore",
+				"eslint.config.js"
 			],
 			"output": []
 		},
@@ -85,9 +95,11 @@
 		"vfile": "^5.0.0"
 	},
 	"devDependencies": {
+		"@hinejs/eslint-config": "*",
 		"@hinejs/prettier": "*",
 		"@types/mdast": "^4.0.0",
 		"@types/node": "^20.4.10",
+		"eslint": "^8.47.0",
 		"prettier": "^3.0.2",
 		"publint": "^0.1.16",
 		"typescript": "^5.1.6",

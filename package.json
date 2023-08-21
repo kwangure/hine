@@ -7,9 +7,6 @@
 		"examples/*",
 		"sites/*"
 	],
-	"#comment": [
-		"Prefix Husky with 'npx' to stop failing Vercel deploy"
-	],
 	"scripts": {
 		"build": "wireit",
 		"check": "wireit",
@@ -18,7 +15,7 @@
 		"lint": "wireit",
 		"package": "wireit",
 		"pre-commit": "wireit",
-		"prepare": "npx husky install",
+		"prepare": "husky install",
 		"release": "wireit",
 		"test": "wireit",
 		"version": "wireit"

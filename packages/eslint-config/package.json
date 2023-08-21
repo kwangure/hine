@@ -1,19 +1,19 @@
 {
-	"name": "@hinejs/internal-utils",
+	"name": "@hinejs/eslint-config",
 	"version": "0.0.0",
 	"scripts": {
 		"check": "wireit",
 		"format": "wireit",
 		"lint": "wireit",
 		"package": "wireit",
-		"test": "wireit"
+		"pre-commit": "wireit",
+		"publint": "wireit"
 	},
 	"wireit": {
 		"check": {
 			"command": "tsc",
 			"files": [
-				"src/**/*.{js,ts}",
-				"tests/**/*.{js,ts}",
+				"*.js",
 				"tsconfig.json"
 			],
 			"output": []
@@ -21,9 +21,7 @@
 		"format": {
 			"command": "prettier . --write --cache",
 			"files": [
-				"**/*.{css,html,js,json,md,ts,svelte}",
-				"!types/**",
-				".prettierignore"
+				"**/*.{js,json}"
 			],
 			"output": []
 		},
@@ -37,10 +35,9 @@
 			"output": []
 		},
 		"package": {
-			"command": "tsc --project tsconfig.build.json",
+			"command": "tsc",
 			"files": [
-				"src/**/*.{js,ts}",
-				"tsconfig.build.json",
+				"*.js",
 				"tsconfig.json"
 			],
 			"output": [
@@ -52,53 +49,42 @@
 				"check",
 				"format",
 				"lint",
-				"publint",
-				"test"
+				"publint"
 			]
 		},
 		"publint": {
 			"command": "publint",
 			"files": [
-				"src/**",
-				"types/**",
+				"*.{js,ts,mjs}",
 				"package.json"
-			],
-			"output": []
-		},
-		"test": {
-			"command": "node --test --test-reporter spec",
-			"files": [
-				"src/**/*.js",
-				"tests/**/*.js"
 			],
 			"output": []
 		}
 	},
 	"exports": {
-		"./filesystem": {
-			"types": "./types/filesystem.d.ts",
-			"default": "./src/filesystem.js"
-		},
-		"./vite": {
-			"types": "./types/vite.d.ts",
-			"default": "./src/vite.js"
+		".": {
+			"types": "./types/eslint.config.d.ts",
+			"default": "./eslint.config.js"
 		}
 	},
-	"files": [
-		"src",
-		"types",
-		"!**/*.test.*",
-		"!**/*.spec.*"
-	],
+	"module": "./eslint.config.js",
+	"dependencies": {
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-svelte": "^2.32.0"
+	},
 	"devDependencies": {
-		"@hinejs/eslint-config": "*",
-		"@hinejs/prettier-config": "*",
-		"@types/node": "^20.4.10",
+		"@eslint/js": "^8.47.0",
+		"@types/eslint": "^8.44.2",
+		"@types/eslint__js": "^8.42.0",
+		"@types/eslint-config-prettier": "^6.11.0",
 		"eslint": "^8.47.0",
 		"prettier": "^3.0.2",
-		"publint": "^0.1.16",
 		"typescript": "^5.1.6"
 	},
+	"files": [
+		"./eslint.config.js",
+		"types"
+	],
 	"prettier": "@hinejs/prettier-config",
 	"license": "MIT",
 	"type": "module"

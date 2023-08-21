@@ -2,9 +2,10 @@
 	"name": "@hine-examples/basic",
 	"version": "0.0.1",
 	"private": true,
-	"type": "module",
 	"scripts": {
 		"check": "wireit",
+		"format": "wireit",
+		"lint": "wireit",
 		"pre-commit": "wireit"
 	},
 	"wireit": {
@@ -19,13 +20,41 @@
 			],
 			"output": []
 		},
+		"format": {
+			"command": "prettier . --write --cache",
+			"files": [
+				"**/*.{css,html,js,json,md,ts,svelte}",
+				"!types/**",
+				".prettierignore"
+			],
+			"output": []
+		},
+		"lint": {
+			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
+			"files": [
+				"**/*.{js,svelte}",
+				".eslintignore",
+				"eslint.config.js"
+			],
+			"output": []
+		},
 		"pre-commit": {
 			"dependencies": [
-				"check"
+				"check",
+				"format",
+				"lint"
 			]
 		}
 	},
 	"dependencies": {
 		"hine": "^0.0.17"
-	}
+	},
+	"devDependencies": {
+		"@hinejs/eslint-config": "*",
+		"eslint": "^8.47.0",
+		"prettier": "^3.0.2"
+	},
+	"prettier": "@hinejs/prettier-config",
+	"license": "MIT",
+	"type": "module"
 }

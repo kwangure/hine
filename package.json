@@ -7,33 +7,22 @@
 		"examples/*",
 		"sites/*"
 	],
-	"#comment": [
-		"Prefix Husky with 'npx' to stop failing Vercel deploy"
-	],
 	"scripts": {
 		"build": "wireit",
 		"check": "wireit",
 		"dev": "wireit",
 		"format": "wireit",
 		"lint": "wireit",
-		"pack": "wireit",
 		"package": "wireit",
 		"pre-commit": "wireit",
-		"prepare": "npx husky install",
+		"prepare": "husky install",
 		"release": "wireit",
 		"test": "wireit",
 		"version": "wireit"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.26.1",
-		"@kwangure/eslint-config-svelte": "^0.3.6",
-		"eslint": "^8.32.0",
-		"eslint-config-prettier": "^8.5.0",
-		"eslint-plugin-svelte": "^2.30.0",
 		"husky": "^8.0.3",
-		"prettier": "^2.8.8",
-		"prettier-plugin-svelte": "^2.10.1",
-		"prettier-plugin-tailwindcss": "^0.4.1",
 		"remark-parse": "^10.0.2",
 		"remark-stringify": "^10.0.3",
 		"unified": "^10.1.2",
@@ -43,7 +32,6 @@
 	"wireit": {
 		"build": {
 			"dependencies": [
-				"./packages/hine:build",
 				"./packages/svelte-ui:build",
 				"./sites/hine.dev:build",
 				"build:readme"
@@ -77,39 +65,45 @@
 			]
 		},
 		"format": {
-			"command": "prettier . --write --cache",
-			"files": [
-				"**/*.{css,html,js,json,md,ts,svelte}",
-				"!**/dist/**",
-				"!**/tests/samples/**",
-				".prettierignore",
-				".prettierrc"
-			],
-			"output": []
+			"dependencies": [
+				"./examples/basic:format",
+				"./packages/content-thing:format",
+				"./packages/eslint-config:format",
+				"./packages/hine:format",
+				"./packages/internal-utils:format",
+				"./packages/prettier-config:format",
+				"./packages/remark-attributes:format",
+				"./packages/remark-toc:format",
+				"./packages/remark-variables:format",
+				"./packages/remark-yaml-parse:format",
+				"./packages/svelte-ui:format",
+				"./sites/hine.dev:format"
+			]
 		},
 		"lint": {
-			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
-			"files": [
-				"**/*.{js,svelte}",
-				"!**/dist/**",
-				"!**/tests/samples/**",
-				".eslintignore",
-				".eslintrc.cjs"
-			],
-			"output": []
-		},
-		"pack": {
 			"dependencies": [
-				"./packages/hine:pack",
-				"./packages/svelte-ui:pack"
+				"./examples/basic:lint",
+				"./packages/content-thing:lint",
+				"./packages/eslint-config:lint",
+				"./packages/hine:lint",
+				"./packages/internal-utils:lint",
+				"./packages/prettier-config:lint",
+				"./packages/remark-attributes:lint",
+				"./packages/remark-toc:lint",
+				"./packages/remark-variables:lint",
+				"./packages/remark-yaml-parse:lint",
+				"./packages/svelte-ui:lint",
+				"./sites/hine.dev:lint"
 			]
 		},
 		"package": {
 			"dependencies": [
 				"./packages/content-thing:package",
+				"./packages/eslint-config:package",
 				"./packages/hine:package",
 				"./packages/svelte-ui:package",
 				"./packages/internal-utils:package",
+				"./packages/prettier-config:package",
 				"./packages/remark-attributes:package",
 				"./packages/remark-toc:package",
 				"./packages/remark-variables:package",
@@ -118,16 +112,18 @@
 		},
 		"pre-commit": {
 			"dependencies": [
-				"format",
-				"lint",
 				"build:readme",
 				"./examples/basic:pre-commit",
 				"./packages/content-thing:pre-commit",
+				"./packages/eslint-config:pre-commit",
 				"./packages/hine:pre-commit",
-				"./packages/svelte-ui:pre-commit",
+				"./packages/internal-utils:pre-commit",
+				"./packages/prettier-config:pre-commit",
 				"./packages/remark-attributes:pre-commit",
 				"./packages/remark-toc:pre-commit",
+				"./packages/remark-variables:lint",
 				"./packages/remark-yaml-parse:pre-commit",
+				"./packages/svelte-ui:pre-commit",
 				"./sites/hine.dev:pre-commit"
 			]
 		},

@@ -3,9 +3,9 @@
 	"version": "0.0.17",
 	"description": "A state machine library",
 	"scripts": {
-		"build": "wireit",
-		"pack": "wireit",
-		"package": "npm run build",
+		"format": "wireit",
+		"lint": "wireit",
+		"package": "wireit",
 		"pre-commit": "wireit",
 		"publint": "wireit",
 		"release": "wireit",
@@ -18,29 +18,47 @@
 		"svelte",
 		"react"
 	],
-	"license": "MIT",
 	"files": [
 		"src",
 		"types",
 		"!**/*.test.*",
 		"!**/*.spec.*"
 	],
-	"type": "module",
 	"exports": {
 		".": {
 			"types": "./types/index.d.ts",
 			"default": "./src/index.js"
 		}
 	},
-	"devDependencies": {
-		"publint": "^0.1.11",
-		"typescript": "^5.0.3",
-		"vite": "^4.4.8",
-		"vitest": "^0.27.3"
-	},
 	"wireit": {
-		"build": {
-			"clean": "if-file-deleted",
+		"check": {
+			"command": "tsc",
+			"files": [
+				"src/**/*.{js,ts}",
+				"tests/**/*.{js,ts}",
+				"tsconfig.json"
+			],
+			"output": []
+		},
+		"format": {
+			"command": "prettier . --write --cache",
+			"files": [
+				"**/*.{css,html,js,json,md,ts,svelte}",
+				"!types/**",
+				".prettierignore"
+			],
+			"output": []
+		},
+		"lint": {
+			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
+			"files": [
+				"**/*.{js,svelte}",
+				".eslintignore",
+				"eslint.config.js"
+			],
+			"output": []
+		},
+		"package": {
 			"command": "tsc --project tsconfig.build.json",
 			"files": [
 				"src/**/*.{js,ts}",
@@ -51,38 +69,8 @@
 				"types"
 			]
 		},
-		"check": {
-			"command": "tsc",
-			"files": [
-				"src/**/*.{js,ts}",
-				"tests/**/*.{js,ts}",
-				"tsconfig.json"
-			],
-			"output": []
-		},
-		"pack": {
-			"command": "npm pack",
-			"dependencies": [
-				"build",
-				"publint"
-			],
-			"files": [
-				"src/**",
-				"types/**",
-				"!**/*.test.*",
-				"!**/*.spec.*",
-				"LICENSE",
-				"README.md"
-			],
-			"output": [
-				"hine*.tgz"
-			]
-		},
 		"publint": {
 			"command": "publint",
-			"dependencies": [
-				"build"
-			],
 			"files": [
 				"src/**",
 				"types/**",
@@ -93,12 +81,15 @@
 		"pre-commit": {
 			"dependencies": [
 				"check",
+				"format",
+				"lint",
+				"publint",
 				"test"
 			]
 		},
 		"release": {
 			"dependencies": [
-				"build",
+				"package",
 				"publint",
 				"test"
 			]
@@ -111,5 +102,18 @@
 			],
 			"output": []
 		}
-	}
+	},
+	"devDependencies": {
+		"@hinejs/eslint-config": "*",
+		"@hinejs/prettier-config": "*",
+		"eslint": "^8.47.0",
+		"prettier": "^3.0.2",
+		"publint": "^0.1.11",
+		"typescript": "^5.1.6",
+		"vite": "^4.4.8",
+		"vitest": "^0.27.3"
+	},
+	"prettier": "@hinejs/prettier-config",
+	"license": "MIT",
+	"type": "module"
 }

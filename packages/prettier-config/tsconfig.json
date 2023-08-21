@@ -2,11 +2,15 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"checkJs": true,
+		"declaration": true,
+		"declarationDir": "types",
+		"emitDeclarationOnly": true,
 		"moduleResolution": "bundler",
-		"noEmit": true,
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"strict": true,
 		"target": "esnext"
-	}
+	},
+	"include": ["./prettier.config.mjs"],
+	"exclude": []
 }

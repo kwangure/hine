@@ -3,3 +3,9 @@ node_modules
 .wireit
 package-lock.json
 types
+
+/.svelte-kit
+/dist
+.env
+.env.*
+!.env.example

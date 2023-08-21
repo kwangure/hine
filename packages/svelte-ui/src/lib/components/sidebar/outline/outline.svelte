@@ -5,7 +5,7 @@
 	import List from './list.svelte';
 	import { page } from '$app/stores';
 
-	/** @type {import('@hinejs/content-thing').TocEntry[]} */
+	/** @type {import('./types.js').TocEntry[]} */
 	export let toc;
 
 	/** @type {string} */

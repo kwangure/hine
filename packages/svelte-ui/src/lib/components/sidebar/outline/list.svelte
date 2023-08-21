@@ -3,7 +3,7 @@
 
 	/** @type {string | undefined} */
 	export let activeTarget;
-	/** @type {import('@hinejs/content-thing').TocEntry[]} */
+	/** @type {import('./types.js').TocEntry[]} */
 	export let toc;
 </script>
 

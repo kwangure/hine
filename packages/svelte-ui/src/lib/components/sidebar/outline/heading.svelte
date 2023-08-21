@@ -8,7 +8,7 @@
 	export let activeTarget;
 </script>
 
-<li class="flex flex-col gap-1">
+<Sidebar.Item>
 	<div class:pl-5={self.depth == 2} class:pl-10={self.depth == 3}>
 		<Sidebar.Link
 			secondary
@@ -19,4 +19,4 @@
 		</Sidebar.Link>
 	</div>
 	<List {activeTarget} toc={self.children} />
-</li>
+</Sidebar.Item>

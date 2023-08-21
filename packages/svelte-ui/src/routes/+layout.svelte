@@ -6,12 +6,12 @@
 <Shell.Root>
 	<Sidebar.Root>
 		<Sidebar.Section title="layout">
-			<li class="flex flex-col gap-1">
+			<Sidebar.Item>
 				<Sidebar.Link href="#test">Shell</Sidebar.Link>
-			</li>
-			<li class="flex flex-col gap-1">
+			</Sidebar.Item>
+			<Sidebar.Item>
 				<Sidebar.Link href="#test">Sidebar</Sidebar.Link>
-			</li>
+			</Sidebar.Item>
 		</Sidebar.Section>
 	</Sidebar.Root>
 	<slot />

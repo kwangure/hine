@@ -8,9 +8,9 @@
 	export let toc = [];
 </script>
 
-<li class="flex flex-col gap-1">
+<Sidebar.Item>
 	<Sidebar.Link {href}><slot /></Sidebar.Link>
 	{#if $page.url.pathname === href}
 		<Sidebar.Outline {toc} />
 	{/if}
-</li>
+</Sidebar.Item>

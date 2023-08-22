@@ -105,6 +105,11 @@
 			"svelte": "./src/lib/components/index.js",
 			"default": "./src/lib/components/index.js"
 		},
+		"./creators": {
+			"types": "./dist/creators/index.d.ts",
+			"svelte": "./src/lib/creators/index.js",
+			"default": "./src/lib/creators/index.js"
+		},
 		"./dom": {
 			"types": "./dist/dom/dom.d.ts",
 			"default": "./src/lib/dom/dom.js"

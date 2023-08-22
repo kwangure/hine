@@ -8,8 +8,6 @@ description: >
   as a state machine.
 ---
 
-# {{ frontmatter.title }}
-
 ## What is Hine?
 
 {{ frontmatter.description }}

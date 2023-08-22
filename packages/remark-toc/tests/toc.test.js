@@ -23,26 +23,27 @@ describe('toc', () => {
 			assert.deepEqual(node.data, {
 				tableOfContents: [
 					{
-						children: [],
-						value: 'h2-1\n',
-						depth: 2,
-						id: 'h2-1',
-						hash: '#h2-1',
-					},
-					{
 						children: [
 							{
-								children: [],
-								value: 'h3-1\n',
-								depth: 3,
-								id: 'h3-1',
-								hash: '#h3-1',
+								children: [
+									{
+										children: [],
+										depth: 3,
+										hash: '#h3-1',
+										id: 'h3-1',
+										value: 'h3-1\n',
+									},
+								],
+								depth: 2,
+								hash: '#h2-2',
+								id: 'h2-2',
+								value: 'h2-2\n',
 							},
 						],
-						value: 'h2-2\n',
 						depth: 2,
-						id: 'h2-2',
-						hash: '#h2-2',
+						hash: '#h2-1',
+						id: 'h2-1',
+						value: 'h2-1\n',
 					},
 				],
 			});

@@ -16,7 +16,7 @@ async function groupDocs() {
 	/**
 	 * @type {Record<string, {
 	 *   data: any,
-	 *   entries: import('./types.js').GroupEntry[],
+	 *   entries: import('./types.js').Document[],
 	 * }>}
 	 */
 	const groupedDocs = {};
@@ -36,22 +36,14 @@ async function groupDocs() {
 			throw Error(`Docs '${name}' has unknown group '${group}'`);
 		}
 		const path = `/docs/${name}`;
+		walkTree(tree.data.tableOfContents, (/** @type {any} */ heading) => {
+			heading.path = path;
+		});
 		groupedDocs[group].entries.push({
-			depth: 1,
-			path,
-			children: mapTree(
-				tree.data.tableOfContents,
-				(/** @type {any} */ heading) => ({
-					depth: heading.depth,
-					value: heading.value,
-					path,
-					id: heading.id,
-					hash: heading.hash,
-					children: heading.children,
-				}),
-			),
-			value: tree.data.frontmatter.title,
+			title: tree.data.frontmatter.title,
 			order: tree.data.frontmatter.order,
+			path,
+			children: tree.data.tableOfContents,
 		});
 	}
 
@@ -68,10 +60,10 @@ async function groupDocs() {
  * @param {any[]} tree
  * @param {{ (arg0: any): any } } fn
  */
-function mapTree(tree, fn) {
+function walkTree(tree, fn) {
 	for (let i = 0; i < tree.length; i++) {
-		tree[i] = fn(tree[i]);
-		mapTree(tree[i].children, fn);
+		fn(tree[i]);
+		walkTree(tree[i].children, fn);
 	}
 	return tree;
 }

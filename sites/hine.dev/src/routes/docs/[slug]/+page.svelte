@@ -4,6 +4,8 @@
 	import { SidebarItem } from '$lib/components/index.js';
 
 	export let data;
+
+	$: console.log({ data: data.content.data });
 </script>
 
 <Shell.Root>
@@ -18,7 +20,7 @@
 			<Sidebar.Section title={group.data.title}>
 				{#each group.entries as entry}
 					<SidebarItem href={entry.path} toc={entry.children}>
-						{entry.value}
+						{entry.title}
 					</SidebarItem>
 				{/each}
 			</Sidebar.Section>
@@ -26,6 +28,9 @@
 	</Sidebar.Root>
 	<Shell.Main>
 		<div class="mb-40 lg:px-6">
+			<h1 class="mb-2 mt-4 flex scroll-mt-[var(--svui-navbar-height)] text-3xl font-semibold tracking-tight text-neutral-900 dark:text-slate-200 sm:text-4xl">
+			{data.content.data?.frontmatter.title}
+	</h1>
 			<Markdown.Children node={data.content} />
 		</div>
 	</Shell.Main>

@@ -16,7 +16,7 @@ export function remarkTableOfContents() {
 		const stack = [dummyRoot];
 
 		visit(tree, 'heading', (node) => {
-			if (node.depth !== 2 && node.depth !== 3) return;
+			if (node.depth !== 1 && node.depth !== 2 && node.depth !== 3) return;
 
 			const mdString = /** @type {string} */ (this.stringify(node));
 			const content = node.data?.value || mdString.replace(LEADING_HASH_RE, '');
@@ -36,8 +36,7 @@ export function remarkTableOfContents() {
 				hash: `#${id}`,
 				children: [],
 			};
-			// Subract 1 since headings are 1-indexed
-			while (stack.length > tocEntry.depth - 1) {
+			while (stack.length > tocEntry.depth) {
 				stack.pop();
 			}
 			stack[stack.length - 1].children.push(tocEntry);

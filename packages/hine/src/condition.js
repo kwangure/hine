@@ -2,7 +2,7 @@ export class Condition {
 	/** @type {(arg: any) => boolean} */
 	#run;
 	#type = /** @type {const} */ ('condition');
-	/** @type {import('./base.js').BaseState | null} */
+	/** @type {import('./state/base.js').BaseState | null} */
 	__ownerState = null;
 	__name = '';
 	/** @type {boolean | undefined} */

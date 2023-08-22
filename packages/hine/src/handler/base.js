@@ -8,7 +8,7 @@ export class BaseHandler {
 	/** @type {string | null} */
 	__ifConfig;
 	__name = '';
-	/** @type {import('../base.js').BaseState | null} */
+	/** @type {import('../state/base.js').BaseState | null} */
 	__ownerState = null;
 	/** @type {boolean | undefined} */
 	__shouldNotifyBefore = undefined;
@@ -38,7 +38,7 @@ export class BaseHandler {
 	/**
 	 * @param {{
 	 *   name: string;
-	 *   ownerState: import("../base.js").BaseState;
+	 *   ownerState: import("../state/base.js").BaseState;
 	 * }} options
 	 */
 	__resolve(options) {

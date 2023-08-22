@@ -1,7 +1,7 @@
 export class Context {
 	/** @type {Map<string, unknown>} */
 	#data = new Map();
-	/** @type {import('./base.js').BaseState | null} */
+	/** @type {import('./state/base.js').BaseState | null} */
 	__ownerState = null;
 	/** @param {Record<string, unknown>} [data] */
 	constructor(data) {

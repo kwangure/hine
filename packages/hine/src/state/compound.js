@@ -1,7 +1,7 @@
 import { BaseState } from './base.js';
 
 /**
- * @typedef {import('./types').StateNode} StateNode
+ * @typedef {import('../types.js').StateNode} StateNode
  */
 
 export class CompoundState extends BaseState {
@@ -13,7 +13,7 @@ export class CompoundState extends BaseState {
 	/** @type {StateNode | null} */
 	__state = null;
 	/**
-	 * @param {import('./types').CompoundStateConfig} stateConfig
+	 * @param {import('../types.js').CompoundStateConfig} stateConfig
 	 */
 	constructor(stateConfig) {
 		super(stateConfig);
@@ -129,7 +129,7 @@ export class CompoundState extends BaseState {
 				this.__state.matches(path.slice(this.name.length + 1)))
 		);
 	}
-	/** @param {import('./types.js').CompoundMonitorConfig} config */
+	/** @param {import('../types.js').CompoundMonitorConfig} config */
 	monitor(config) {
 		super.monitor(config);
 		if (!config?.children) return;
@@ -158,7 +158,7 @@ export class CompoundState extends BaseState {
 		};
 	}
 	toJSON() {
-		/** @type {Record<string, import('./types').StateNodeJSON>} */
+		/** @type {Record<string, import('../types.js').StateNodeJSON>} */
 		const children = {};
 		for (const [name, state] of this.__children) {
 			children[name] = state.toJSON();

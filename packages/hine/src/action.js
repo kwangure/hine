@@ -4,7 +4,7 @@ export class Action {
 	/** @type {(arg: any) => any} */
 	#run = noop;
 	#type = /** @type {const} */ ('action');
-	/** @type {import('./base.js').BaseState | null} */
+	/** @type {import('./state/base.js').BaseState | null} */
 	__ownerState = null;
 	__name = '';
 	/** @type {boolean | undefined} */

@@ -1,6 +1,6 @@
 import type { Action } from './action.js';
-import type { AtomicState } from './atomic';
-import type { CompoundState } from './compound';
+import type { AtomicState } from './state/atomic.js';
+import type { CompoundState } from './state/compound.js';
 import type { Condition } from './condition.js';
 import type { Context } from './context.js';
 import type { EffectHandler } from './handler/effect.js';

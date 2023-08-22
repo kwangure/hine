@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AtomicState } from '../../src/atomic.js';
+import { AtomicState } from '../../src/state/atomic.js';
 import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('path', () => {

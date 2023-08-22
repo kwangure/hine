@@ -1,4 +1,4 @@
-import { CompoundState } from '../compound.js';
+import { CompoundState } from '../state/compound.js';
 
 /**
  * Returns the active path of a state

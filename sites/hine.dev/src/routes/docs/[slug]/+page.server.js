@@ -43,8 +43,10 @@ async function groupDocs() {
 				tree.data.tableOfContents,
 				(/** @type {any} */ heading) => ({
 					depth: heading.depth,
-					content: heading.content,
-					slug: heading.slug,
+					value: heading.value,
+					path,
+					id: heading.id,
+					hash: heading.hash,
 					children: heading.children,
 				}),
 			),

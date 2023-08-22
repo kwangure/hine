@@ -12,10 +12,10 @@
 	<div class:pl-5={self.depth == 2} class:pl-10={self.depth == 3}>
 		<Sidebar.Link
 			secondary
-			href="#{self.slug}"
-			ariaCurrent={self.slug === activeTarget}
+			href={self.hash}
+			ariaCurrent={self.id === activeTarget}
 		>
-			{self.content}
+			{self.value}
 		</Sidebar.Link>
 	</div>
 	<List {activeTarget} toc={self.children} />

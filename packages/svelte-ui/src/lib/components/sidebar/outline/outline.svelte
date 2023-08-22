@@ -9,7 +9,7 @@
 	export let toc;
 
 	/** @type {string} */
-	let activeTarget = toc[0]?.slug;
+	let activeTarget = toc[0]?.id;
 
 	/**
 	 * Set the first visible heading as active
@@ -18,11 +18,11 @@
 	 */
 	function updateActiveSlug(tree) {
 		for (const heading of tree) {
-			const element = document.getElementById(heading.slug);
+			const element = document.getElementById(heading.id);
 			if (!element) continue;
 			if (isPartiallyHidden(element)) continue;
 
-			activeTarget = heading.slug;
+			activeTarget = heading.id;
 			return true;
 		}
 
@@ -34,7 +34,7 @@
 		// Assume the last heading was scrolled up and out of the viewport
 		const lastChild = tree.at(-1);
 		const deepestLeaf = lastChild?.children.at(-1) || lastChild;
-		if (deepestLeaf) activeTarget = deepestLeaf.slug;
+		if (deepestLeaf) activeTarget = deepestLeaf.id;
 	}
 
 	afterNavigate(() => updateActiveSlug(toc));

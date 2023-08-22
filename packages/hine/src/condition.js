@@ -47,7 +47,7 @@ export class Condition {
 		if (!this.__ownerState) {
 			throw Error('Attempted to read ownerState before calling state.start().');
 		}
-		return /** @type {import('./types').StateNode} */ (this.__ownerState);
+		return /** @type {import('./state/types').StateNode} */ (this.__ownerState);
 	}
 	/** @type {string[]} */
 	get path() {

@@ -1,7 +1,7 @@
 import { BaseHandler } from './base.js';
 
 export class TransitionHandler extends BaseHandler {
-	/** @type {import('../types.js').StateNode | null} */
+	/** @type {import('../state/types.js').StateNode | null} */
 	#goto = null;
 	#type = /** @type {const} */ ('transition');
 	__gotoName;

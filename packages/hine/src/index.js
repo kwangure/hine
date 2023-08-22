@@ -3,14 +3,14 @@
  * @typedef {import('./condition.js').Condition}
  * @typedef {import('./state/atomic.js').AtomicState}
  * @typedef {import('./state/compound.js').CompoundState}
- * @typedef {import('./types').AtomicStateConfig} AtomicStateConfig
- * @typedef {import('./types').CompoundStateConfig} CompoundStateConfig
+ * @typedef {import('./state/types').AtomicStateConfig} AtomicStateConfig
+ * @typedef {import('./state/types').CompoundStateConfig} CompoundStateConfig
  * @typedef {import('./types').AtomicMonitorConfig} AtomicMonitorConfig
  * @typedef {import('./types').CompoundMonitorConfig} CompoundMonitorConfig
- * @typedef {import('./types').AtomicStateJSON} AtomicStateJSON
- * @typedef {import('./types').CompoundStateJSON} CompoundStateJSON
- * @typedef {import('./types').StateNode} StateNode
- * @typedef {import('./types').StateNodeJSON} StateNodeJSON
+ * @typedef {import('./state/types').AtomicStateJSON} AtomicStateJSON
+ * @typedef {import('./state/types').CompoundStateJSON} CompoundStateJSON
+ * @typedef {import('./state/types').StateNode} StateNode
+ * @typedef {import('./state/types').StateNodeJSON} StateNodeJSON
  */
 
 export * as h from './helpers.js';

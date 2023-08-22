@@ -1,6 +1,4 @@
 import { Action } from './action.js';
-import { AtomicState } from './state/atomic.js';
-import { CompoundState } from './state/compound.js';
 import { Condition } from './condition.js';
 import { Context } from './context.js';
 import { EffectHandler } from './handler/effect.js';
@@ -45,14 +43,4 @@ export function handler(options) {
 	return new EffectHandler(options);
 }
 
-/**
- * @param {import("./types.js").StateConfig} [options]
- */
-export function state(options) {
-	if (options?.children) {
-		return new CompoundState(
-			/** @type {import('./types.js').CompoundStateConfig} */ (options),
-		);
-	}
-	return new AtomicState(options);
-}
+export { state } from './state/helper.js';

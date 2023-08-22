@@ -72,7 +72,7 @@ export class BaseState {
 	__subscribers = new Set();
 
 	/**
-	 * @param {import('../types.js').BaseStateConfig} [stateConfig]
+	 * @param {import('./types.js').BaseStateConfig} [stateConfig]
 	 */
 	constructor(stateConfig) {
 		this.#alwaysConfig = stateConfig?.always || [];

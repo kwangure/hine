@@ -4,8 +4,6 @@
 	import { SidebarItem } from '$lib/components/index.js';
 
 	export let data;
-
-	$: console.log({ data: data.content.data });
 </script>
 
 <Shell.Root>

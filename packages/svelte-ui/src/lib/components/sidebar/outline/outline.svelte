@@ -34,7 +34,10 @@
 		// Assume the last heading was scrolled up and out of the viewport
 		const lastChild = tree.at(-1);
 		const deepestLeaf = lastChild?.children.at(-1) || lastChild;
-		if (deepestLeaf) activeTarget = deepestLeaf.id;
+		if (deepestLeaf) {
+			activeTarget = deepestLeaf.id;
+			return true;
+		}
 	}
 
 	afterNavigate(() => updateActiveSlug(toc));

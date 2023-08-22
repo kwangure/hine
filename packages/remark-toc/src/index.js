@@ -16,13 +16,12 @@ export function remarkTableOfContents() {
 		const stack = [dummyRoot];
 
 		visit(tree, 'heading', (node) => {
-			if (node.depth !== 2 && node.depth !== 3) return;
+			if (node.depth !== 1 && node.depth !== 2 && node.depth !== 3) return;
 
 			const mdString = /** @type {string} */ (this.stringify(node));
-			const content =
-				node.data?.content || mdString.replace(LEADING_HASH_RE, '');
-			const slug =
-				node.data?.slug ||
+			const content = node.data?.value || mdString.replace(LEADING_HASH_RE, '');
+			const id =
+				node.data?.id ||
 				content
 					.toLowerCase()
 					.replace(NON_ALPHA_NUMERIC_RE, '-')
@@ -32,12 +31,12 @@ export function remarkTableOfContents() {
 			/** @type {import('./types.js').TocEntry} */
 			const tocEntry = {
 				depth: node.depth,
-				content,
-				slug,
+				value: content,
+				id: id,
+				hash: `#${id}`,
 				children: [],
 			};
-			// Subract 1 since headings are 1-indexed
-			while (stack.length > tocEntry.depth - 1) {
+			while (stack.length > tocEntry.depth) {
 				stack.pop();
 			}
 			stack[stack.length - 1].children.push(tocEntry);

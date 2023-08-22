@@ -4,6 +4,7 @@ export default {
 		'./src/**/*.{html,js,svelte,ts}',
 		'../../packages/svelte-ui/**/*.{html,js,svelte,ts}',
 	],
+	darkMode: 'class',
 	theme: {
 		extend: {
 			colors: {

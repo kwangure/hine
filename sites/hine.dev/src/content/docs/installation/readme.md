@@ -4,8 +4,6 @@ group: getting-started
 order: 2
 ---
 
-# {{ frontmatter.title }}
-
 ## Installation
 
 Install Hine using your preferred package manager.

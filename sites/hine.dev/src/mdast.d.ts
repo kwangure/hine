@@ -9,8 +9,8 @@ declare module 'mdast' {
 		};
 	}
 	interface HeadingData {
-		content: string;
-		slug: string;
+		value: string;
+		id: string;
 	}
 	interface RootData {
 		tableOfContents: TocEntry[];

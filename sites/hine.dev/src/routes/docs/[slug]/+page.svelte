@@ -17,8 +17,8 @@
 		{#each data.groups as group}
 			<Sidebar.Section title={group.data.title}>
 				{#each group.entries as entry}
-					<SidebarItem href={entry.data.path} toc={entry.data.tableOfContents}>
-						{entry.data.frontmatter.title}
+					<SidebarItem href={entry.path} toc={entry.children}>
+						{entry.value}
 					</SidebarItem>
 				{/each}
 			</Sidebar.Section>

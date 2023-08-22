@@ -1,6 +1,6 @@
 <script>
 	import { getSidebarContext } from '../sidebar/sidebar.js';
-	import Icon from '../icon.svelte';
+	import Icon from '../icon/simple.svelte';
 	import { mdiMenu } from '@mdi/js';
 
 	const { elements } = getSidebarContext();

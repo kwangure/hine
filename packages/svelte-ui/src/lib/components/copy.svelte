@@ -1,6 +1,6 @@
 <script>
 	import { createEventForwarder, createTextCopier } from '../creators/index.js';
-	import { Icon } from './index.js';
+	import Icon from './icon/simple.svelte';
 	import { mdiContentCopy, mdiCheck } from '@mdi/js';
 
 	/** @type {string | undefined} */

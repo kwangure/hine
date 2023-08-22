@@ -1,7 +1,7 @@
 <script>
 	import { Icon, Markdown, Shell, Sidebar } from '@hinejs/svelte-ui/components';
 	import { page } from '$app/stores';
-	import { siGithub } from 'simple-icons';
+	import { siGithub, siNpm } from 'simple-icons';
 
 	export let data;
 </script>
@@ -9,9 +9,10 @@
 <Shell.Root>
 	<Shell.Navbar>
 		<a href="/" class="text-xl uppercase lg:px-6">hine</a>
-		<a class="ml-auto px-4" href="https://github.com/kwangure/hine">
-			<Icon path={siGithub.path} />
-		</a>
+		<div class="ml-auto flex gap-1 lg:pr-6">
+			<Icon.Link href="https://github.com/kwangure/hine" label="GitHub" path={siGithub.path}/>
+			<Icon.Link href="https://www.npmjs.com/package/hine" label="NPM" path={siNpm.path}/>
+		</div>
 	</Shell.Navbar>
 	<Sidebar.Root>
 		{#each data.groups as group}

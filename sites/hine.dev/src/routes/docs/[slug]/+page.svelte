@@ -1,7 +1,7 @@
 <script>
 	import { Icon, Markdown, Shell, Sidebar } from '@hinejs/svelte-ui/components';
+	import { page } from '$app/stores';
 	import { siGithub } from 'simple-icons';
-	import { SidebarItem } from '$lib/components/index.js';
 
 	export let data;
 </script>
@@ -17,9 +17,14 @@
 		{#each data.groups as group}
 			<Sidebar.Section title={group.data.title}>
 				{#each group.entries as entry}
-					<SidebarItem href={entry.path} toc={entry.children}>
-						{entry.title}
-					</SidebarItem>
+					<Sidebar.Item>
+						<Sidebar.Link href={entry.path}>
+							{entry.title}
+						</Sidebar.Link>
+						{#if $page.url.pathname === entry.path}
+							<Sidebar.Outline toc={entry.children} />
+						{/if}
+					</Sidebar.Item>
 				{/each}
 			</Sidebar.Section>
 		{/each}

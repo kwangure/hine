@@ -254,7 +254,7 @@ export class BaseState {
 	}
 	__toJSON() {
 		const onEntries = Object.entries(this.__onHandler);
-		/** @type {Record<string, import('../types.js').HandlerJSON[]>} */
+		/** @type {Record<string, import('../handler/types').HandlerJSON[]>} */
 		const on = {};
 		for (const [event, handlers] of onEntries) {
 			on[event] = handlers.map((handler) => handler.toJSON());

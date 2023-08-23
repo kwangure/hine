@@ -3,7 +3,7 @@ import type { CompoundState } from './compound.js';
 import type { Context } from '../context.js';
 import type { EffectHandler } from '../handler/effect.js';
 import type { TransitionHandler } from '../handler/transition.js';
-import type { HandlerJSON } from '../types.js';
+import type { HandlerJSON } from '../handler/types.js';
 
 export type StateNode = AtomicState | CompoundState;
 

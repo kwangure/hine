@@ -7,7 +7,7 @@ export class TransitionHandler extends BaseHandler {
 	__gotoName;
 
 	/**
-	 * @param {import('../types.js').TransitionHandlerConfig} options
+	 * @param {import('./types.js').TransitionHandlerConfig} options
 	 */
 	constructor(options) {
 		super(options);
@@ -133,7 +133,7 @@ export class TransitionHandler extends BaseHandler {
 		return shouldExecute;
 	}
 	/**
-	 * @returns {import('../types.js').TransitionHandlerJSON}
+	 * @returns {import('./types.js').TransitionHandlerJSON}
 	 */
 	toJSON() {
 		return {

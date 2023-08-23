@@ -4,7 +4,7 @@ export class Action {
 	/** @type {(arg: any) => any} */
 	#run = noop;
 	#type = /** @type {const} */ ('action');
-	/** @type {import('./base.js').BaseState | null} */
+	/** @type {import('./state/base.js').BaseState | null} */
 	__ownerState = null;
 	__name = '';
 	/** @type {boolean | undefined} */
@@ -48,7 +48,7 @@ export class Action {
 		if (!this.__ownerState) {
 			throw Error('Attempted to read ownerState before calling state.start().');
 		}
-		return /** @type {import('./types').StateNode} */ (this.__ownerState);
+		return /** @type {import('./state/types').StateNode} */ (this.__ownerState);
 	}
 	/** @type {string[]} */
 	get path() {

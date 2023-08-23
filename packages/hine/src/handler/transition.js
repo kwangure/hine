@@ -1,13 +1,13 @@
 import { BaseHandler } from './base.js';
 
 export class TransitionHandler extends BaseHandler {
-	/** @type {import('../types.js').StateNode | null} */
+	/** @type {import('../state/types.js').StateNode | null} */
 	#goto = null;
 	#type = /** @type {const} */ ('transition');
 	__gotoName;
 
 	/**
-	 * @param {import('../types.js').TransitionHandlerConfig} options
+	 * @param {import('./types.js').TransitionHandlerConfig} options
 	 */
 	constructor(options) {
 		super(options);
@@ -16,7 +16,7 @@ export class TransitionHandler extends BaseHandler {
 	/**
 	 * @param {{
 	 *   name: string;
-	 *   ownerState: import("../base.js").BaseState;
+	 *   ownerState: import("../state/base.js").BaseState;
 	 * }} options
 	 */
 	__resolve(options) {
@@ -133,7 +133,7 @@ export class TransitionHandler extends BaseHandler {
 		return shouldExecute;
 	}
 	/**
-	 * @returns {import('../types.js').TransitionHandlerJSON}
+	 * @returns {import('./types.js').TransitionHandlerJSON}
 	 */
 	toJSON() {
 		return {

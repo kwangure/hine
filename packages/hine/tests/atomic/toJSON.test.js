@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AtomicState } from '../../src/atomic.js';
+import { AtomicState } from '../../src/state/atomic.js';
 
 describe('toJSON', () => {
 	it('includes name', () => {

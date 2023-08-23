@@ -71,6 +71,9 @@
 		},
 		"publint": {
 			"command": "publint",
+			"dependencies": [
+				"package"
+			],
 			"files": [
 				"src/**",
 				"types/**",

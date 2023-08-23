@@ -2,7 +2,7 @@ export class Condition {
 	/** @type {(arg: any) => boolean} */
 	#run;
 	#type = /** @type {const} */ ('condition');
-	/** @type {import('./base.js').BaseState | null} */
+	/** @type {import('./state/base.js').BaseState | null} */
 	__ownerState = null;
 	__name = '';
 	/** @type {boolean | undefined} */
@@ -47,7 +47,7 @@ export class Condition {
 		if (!this.__ownerState) {
 			throw Error('Attempted to read ownerState before calling state.start().');
 		}
-		return /** @type {import('./types').StateNode} */ (this.__ownerState);
+		return /** @type {import('./state/types').StateNode} */ (this.__ownerState);
 	}
 	/** @type {string[]} */
 	get path() {

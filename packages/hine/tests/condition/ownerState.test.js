@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AtomicState } from '../../src/atomic.js';
+import { AtomicState } from '../../src/state/atomic.js';
 import { Condition } from '../../src/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 

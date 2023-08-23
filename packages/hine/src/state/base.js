@@ -1,72 +1,72 @@
-import { Context } from './context.js';
-import { StateEvent } from './event.js';
-import { TransitionHandler } from './handler/transition.js';
+import { Context } from '../context.js';
+import { StateEvent } from '../event.js';
+import { TransitionHandler } from '../handler/transition.js';
 
 export class BaseState {
 	/**
 	 * Action configuration from the user that is propagated to children
-	 * @type {Omit<import('./types.js').ActionConfig, 'run'>}
+	 * @type {Omit<import('../types.js').ActionConfig, 'run'>}
 	 */
 	#actionConfig = {};
 	/**
 	 * Actions from the user config
-	 * @type {Record<string, import('./action.js').Action>}
+	 * @type {Record<string, import('../action.js').Action>}
 	 */
 	#actions = {};
-	/** @type {(import('./handler/effect.js').EffectHandler | import('./handler/transition.js').TransitionHandler)[]} */
+	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#always = [];
 	#alwaysConfig;
 	/**
 	 * Condition configuration from the user that is propagated to children
-	 * @type {Omit<import('./types.js').ConditionConfig, 'run'>}
+	 * @type {Omit<import('../types.js').ConditionConfig, 'run'>}
 	 */
 	#conditionConfig = {};
 	/**
 	 * Conditions from the user config
-	 * @type {Record<string, import('./condition.js').Condition>}
+	 * @type {Record<string, import('../condition.js').Condition>}
 	 */
 	#conditions = {};
 	#context;
-	/** @type {(import('./handler/effect.js').EffectHandler | import('./handler/transition.js').TransitionHandler)[]} */
+	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#entry = [];
-	/** @type {(import('./handler/effect.js').EffectHandler | import('./handler/transition.js').TransitionHandler)[]} */
+	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#entryConfig = [];
 	/** @type {StateEvent | null} */
 	#event = null;
-	/** @type {(import('./handler/effect.js').EffectHandler | import('./handler/transition.js').TransitionHandler)[]} */
+	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#exit = [];
-	/** @type {(import('./handler/effect.js').EffectHandler | import('./handler/transition.js').TransitionHandler)[]} */
+	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#exitConfig = [];
 	#initialized = false;
 	#isStepping = false;
 	#onConfig;
 	/**
 	 * Actions from all ancestor states and the config
-	 * @type {Record<string, import('./action').Action>}
+	 * @type {Record<string, import('../action.js').Action>}
 	 */
 	__allActions = {};
 	/**
 	 * Conditions from all ancestor states and the config
-	 * @type {Record<string, import('./condition').Condition>}
+	 * @type {Record<string, import('../condition.js').Condition>}
 	 */
 	__allConditions = {};
 
-	/** @type {import('./action.js').Action | null} */
+	/** @type {import('../action.js').Action | null} */
 	__action = null;
-	/** @type {import('./condition.js').Condition | null} */
+	/** @type {import('../condition.js').Condition | null} */
 	__condition = null;
 	/**
 	 * The active handler that is currently executing
 	 *
-	 * @type {(import('./handler/effect.js').EffectHandler | import('./handler/transition.js').TransitionHandler) | null}
+	 * @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler) | null}
 	 */
 	__handler = null;
-	/** @type {(import('./handler/effect.js').EffectHandler | import('./handler/transition.js').TransitionHandler)[]} */
+	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	__handlerQueue = [];
 	__name = '';
 	/** @type {import('./compound.js').CompoundState | null} */
 	__parent = null;
-	/** @type {Record<string, (import('./handler/effect.js').EffectHandler | import('./handler/transition.js').TransitionHandler)[]>} */
+	/** @type {Record<string, (import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]>} */
 	__onHandler = {};
 	/** @type {Set<(arg: BaseState) => any>} */
 	__subscribers = new Set();
@@ -110,7 +110,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @returns {Record<string, import('./action.js').Action>}
+	 * @returns {Record<string, import('../action.js').Action>}
 	 */
 	get __actions() {
 		const actions = this.__parent?.__actions || {};
@@ -158,7 +158,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @returns {Record<string, import('./condition').Condition>}
+	 * @returns {Record<string, import('../condition.js').Condition>}
 	 */
 	get __conditions() {
 		const conditions = this.__parent?.__conditions || {};
@@ -254,7 +254,7 @@ export class BaseState {
 	}
 	__toJSON() {
 		const onEntries = Object.entries(this.__onHandler);
-		/** @type {Record<string, import('./types.js').HandlerJSON[]>} */
+		/** @type {Record<string, import('../handler/types').HandlerJSON[]>} */
 		const on = {};
 		for (const [event, handlers] of onEntries) {
 			on[event] = handlers.map((handler) => handler.toJSON());
@@ -361,7 +361,7 @@ export class BaseState {
 				(this.__handler && path === this.__handler.path.join('.')),
 		);
 	}
-	/** @param {import('./types.js').BaseMonitorConfig} config */
+	/** @param {import('../types.js').BaseMonitorConfig} config */
 	monitor(config) {
 		if (config.actionConfig) {
 			if ('name' in config.actionConfig) {

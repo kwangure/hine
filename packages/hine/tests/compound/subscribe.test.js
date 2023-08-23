@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Action } from '../../src/action.js';
-import { AtomicState } from '../../src/atomic.js';
-import { CompoundState } from '../../src/compound.js';
+import { AtomicState } from '../../src/state/atomic.js';
+import { CompoundState } from '../../src/state/compound.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('subscribe', () => {

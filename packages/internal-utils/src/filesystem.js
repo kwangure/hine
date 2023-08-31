@@ -24,32 +24,60 @@ export function rimraf(path) {
 }
 
 /**
- * @param {string} parent
- * @param {((file: fs.Dirent) => void)} visitor
+ * @typedef {Object} WalkEntry
+ * @property {string} baseDir The `parent` excluding the walk `root` from the prefix
+ * @property {string} basePath The `fullPath` excluding the walk `root` from the prefix
+ * @property {string} fullPath The complete path of the current file or directory
+ * @property {string} name The name of the current file or directory
+ * @property {string} parent The fullpath of the parent of the current file or directory
+ * @property {string} root The input walk directory
+ * @property {() => boolean} isDirectory Returns true if the `WalkEntry` object describes a file system directory
+ * @property {() => boolean} isFile Returns true if the `WalkEntry` object describes a regular file
  */
-function walkDir(parent, visitor) {
+
+/**
+ * @param {string} root
+ * @param {string} parent
+ * @param {((file: WalkEntry) => void)} visitor
+ */
+function walkDir(root, parent, visitor) {
 	const dirs = fs.readdirSync(parent, {
 		// 2X faster than `fs.readdirSync` followed by `fs.statSync`
 		withFileTypes: true,
 	});
 	for (const entry of dirs) {
-		// Polyfill: fs.Dirent.path was added in Node v20.1
-		if (entry.path === undefined) {
-			entry.path = parent;
-		}
-		visitor(entry);
+		const info = {
+			get baseDir() {
+				return parent.slice(root.length + 1);
+			},
+			get basePath() {
+				return path.join(info.baseDir, entry.name);
+			},
+			get fullPath() {
+				return path.join(parent, entry.name);
+			},
+			name: entry.name,
+			parent,
+			root,
+			isDirectory: () => entry.isDirectory(),
+			isFile: () => entry.isFile(),
+		};
+		visitor(info);
 		if (entry.isDirectory()) {
-			walkDir(path.posix.join(entry.path, entry.name), visitor);
+			walkDir(root, path.join(entry.path, entry.name), visitor);
 		}
 	}
 }
 
 /**
  * @param {string} dir
- * @param {(file: fs.Dirent) => void} visitor
+ * @param {(file: WalkEntry) => void} visitor
  */
 export function walk(dir, visitor) {
-	if (fs.existsSync(dir)) walkDir(dir, visitor);
+	if (fs.existsSync(dir)) {
+		const resolved = path.resolve(dir);
+		walkDir(resolved, resolved, visitor);
+	}
 }
 
 /**

@@ -143,23 +143,111 @@ describe('walk', () => {
 		assert.strictEqual(count, 0);
 	});
 
-	it('is calls visitor with files and directories', () => {
+	it('should call visitor for each file and directory', () => {
 		/** @type {string[]} */
-		const files = [];
-		walk(tempDir, (entry) => {
-			const filepath = path
-				.join(entry.path, entry.name)
-				.slice(tempDir.length + 1);
-			files.push(entry.isDirectory() ? `${filepath}/` : filepath);
+		const visited = [];
+		walk(tempDir, (info) => {
+			visited.push(info.basePath);
 		});
-		assert.deepStrictEqual(files, [
-			'empty/',
+
+		const expected = [
+			'empty',
 			'file1.txt',
 			'file2.txt',
-			'subdir1/',
+			'subdir1',
 			'subdir1/file3.txt',
-			'subdir2/',
+			'subdir2',
 			'subdir2/file4.txt',
-		]);
+		];
+		assert.deepStrictEqual(visited, expected);
+	});
+
+	it('should correctly recurse into subdirectories', () => {
+		/** @type {string[]} */
+		const visitedSubdirs = [];
+		walk(tempDir, (info) => {
+			if (info.isDirectory()) {
+				visitedSubdirs.push(info.basePath);
+			}
+		});
+
+		/** @type {string[]} */
+		const expectedSubdirs = ['empty', 'subdir1', 'subdir2'];
+		assert.deepStrictEqual(visitedSubdirs, expectedSubdirs);
+	});
+
+	it('should provide correct WalkEntry objects to the visitor', () => {
+		/** @type {any[]} */
+		const receivedEntries = [];
+		walk(tempDir, (info) => {
+			receivedEntries.push({
+				baseDir: info.baseDir,
+				basePath: info.basePath,
+				fullPath: info.fullPath,
+				name: info.name,
+				isDirectory: info.isDirectory(),
+				isFile: info.isFile(),
+			});
+		});
+
+		const expectedEntries = [
+			{
+				baseDir: '',
+				basePath: 'empty',
+				fullPath: path.join(tempDir, 'empty'),
+				name: 'empty',
+				isDirectory: true,
+				isFile: false,
+			},
+			{
+				baseDir: '',
+				basePath: 'file1.txt',
+				fullPath: path.join(tempDir, 'file1.txt'),
+				name: 'file1.txt',
+				isDirectory: false,
+				isFile: true,
+			},
+			{
+				baseDir: '',
+				basePath: 'file2.txt',
+				fullPath: path.join(tempDir, 'file2.txt'),
+				name: 'file2.txt',
+				isDirectory: false,
+				isFile: true,
+			},
+			{
+				baseDir: '',
+				basePath: 'subdir1',
+				fullPath: path.join(tempDir, 'subdir1'),
+				name: 'subdir1',
+				isDirectory: true,
+				isFile: false,
+			},
+			{
+				baseDir: 'subdir1',
+				basePath: 'subdir1/file3.txt',
+				fullPath: path.join(tempDir, 'subdir1', 'file3.txt'),
+				name: 'file3.txt',
+				isDirectory: false,
+				isFile: true,
+			},
+			{
+				baseDir: '',
+				basePath: 'subdir2',
+				fullPath: path.join(tempDir, 'subdir2'),
+				name: 'subdir2',
+				isDirectory: true,
+				isFile: false,
+			},
+			{
+				baseDir: 'subdir2',
+				basePath: 'subdir2/file4.txt',
+				fullPath: path.join(tempDir, 'subdir2', 'file4.txt'),
+				name: 'file4.txt',
+				isDirectory: false,
+				isFile: true,
+			},
+		];
+		assert.deepStrictEqual(receivedEntries, expectedEntries);
 	});
 });

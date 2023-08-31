@@ -64,7 +64,7 @@ function walkDir(root, parent, visitor) {
 		};
 		visitor(info);
 		if (entry.isDirectory()) {
-			walkDir(root, path.join(entry.path, entry.name), visitor);
+			walkDir(root, path.join(parent, entry.name), visitor);
 		}
 	}
 }

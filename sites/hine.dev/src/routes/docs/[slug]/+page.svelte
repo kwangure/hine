@@ -35,14 +35,14 @@
 	</Shell.Navbar>
 	<Sidebar.Root>
 		{#each data.groups as group}
-			<Sidebar.Section title={group.data.title}>
-				{#each group.entries as entry}
+			<Sidebar.Section title={group.data_title || ''}>
+				{#each group.docs as entry}
 					<Sidebar.Item>
-						<Sidebar.Link href={entry.path}>
-							{entry.title}
+						<Sidebar.Link href="/docs/{entry.id}">
+							{entry.data_title}
 						</Sidebar.Link>
-						{#if $page.url.pathname === entry.path}
-							<Sidebar.Outline toc={entry.children} />
+						{#if $page.url.pathname === `/docs/${entry.id}`}
+							<Sidebar.Outline toc={entry.content?.data?.tableOfContents || []} />
 						{/if}
 					</Sidebar.Item>
 				{/each}
@@ -51,10 +51,12 @@
 	</Sidebar.Root>
 	<Shell.Main>
 		<div class="mb-40 lg:px-6">
-			<h1 class="mb-2 mt-4 flex scroll-mt-[var(--svui-navbar-height)] text-3xl font-semibold tracking-tight text-neutral-900 dark:text-slate-200 sm:text-4xl">
-			{data.content.data?.frontmatter.title}
-	</h1>
-			<Markdown.Children node={data.content} />
+			{#if data.content}
+				<h1 class="mb-2 mt-4 flex scroll-mt-[var(--svui-navbar-height)] text-3xl font-semibold tracking-tight text-neutral-900 dark:text-slate-200 sm:text-4xl">
+					{data.content.data?.frontmatter.title}
+				</h1>
+				<Markdown.Children node={data.content} />
+			{/if}
 		</div>
 	</Shell.Main>
 </Shell.Root>

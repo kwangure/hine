@@ -1,0 +1,15 @@
+{
+	"$schema": "../../../../../packages/content-thing/config/schema.json",
+	"type": "yaml",
+	"schema": {
+		"title": {
+			"type": "text"
+		}
+	},
+	"relations": {
+		"docs": {
+			"type": "many",
+			"collection": "docs"
+		}
+	}
+}

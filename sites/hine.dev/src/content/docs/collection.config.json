@@ -1,0 +1,25 @@
+{
+	"$schema": "../../../../../packages/content-thing/config/schema.json",
+	"type": "markdown",
+	"schema": {
+		"frontmatter": {
+			"title": {
+				"type": "text"
+			},
+			"group": {
+				"type": "text"
+			},
+			"order": {
+				"type": "integer"
+			}
+		}
+	},
+	"relations": {
+		"group": {
+			"type": "one",
+			"collection": "groups",
+			"reference": "id",
+			"field": "group"
+		}
+	}
+}

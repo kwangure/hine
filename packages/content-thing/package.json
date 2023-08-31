@@ -5,7 +5,8 @@
 		"check": "wireit",
 		"format": "wireit",
 		"lint": "wireit",
-		"package": "wireit"
+		"package": "wireit",
+		"test": "wireit"
 	},
 	"wireit": {
 		"check": {
@@ -43,6 +44,24 @@
 			"output": []
 		},
 		"package": {
+			"dependencies": [
+				"package:config",
+				"package:lib"
+			]
+		},
+		"package:config": {
+			"command": "node ./src/config/json-schema.js",
+			"dependencies": [
+				"../internal-utils:package"
+			],
+			"files": [
+				"./src/config/*.js"
+			],
+			"output": [
+				"./config/schema.json"
+			]
+		},
+		"package:lib": {
 			"command": "tsc --project tsconfig.build.json",
 			"dependencies": [
 				"../internal-utils:package",
@@ -64,15 +83,27 @@
 			"dependencies": [
 				"check",
 				"format",
-				"publint"
+				"publint",
+				"test"
 			]
 		},
 		"publint": {
 			"command": "publint",
+			"dependencies": [
+				"package"
+			],
 			"files": [
 				"src/**",
 				"types/**",
 				"package.json"
+			],
+			"output": []
+		},
+		"test": {
+			"command": "node --test --test-reporter spec",
+			"files": [
+				"src/**/*.js",
+				"tests/**/*.js"
 			],
 			"output": []
 		}
@@ -81,6 +112,13 @@
 		".": {
 			"types": "./types/index.d.ts",
 			"default": "./src/index.js"
+		},
+		"./config": {
+			"default": "./config/schema.json"
+		},
+		"./db": {
+			"types": "./types/db/index.d.ts",
+			"default": "./src/db/index.js"
 		}
 	},
 	"dependencies": {
@@ -90,20 +128,31 @@
 		"@hinejs/remark-variables": "*",
 		"@hinejs/remark-yaml-parse": "*",
 		"@rollup/pluginutils": "^5.0.3",
+		"better-sqlite3": "^8.5.2",
+		"drizzle-zod": "^0.5.1",
+		"glob": "^10.3.3",
 		"js-yaml": "^4.1.0",
 		"remark-stringify": "^10.0.3",
-		"vfile": "^5.0.0"
+		"vfile": "^5.0.0",
+		"zod": "^3.22.2"
 	},
 	"devDependencies": {
 		"@hinejs/eslint-config": "*",
 		"@hinejs/prettier-config": "*",
-		"@types/mdast": "^4.0.0",
+		"@sveltejs/kit": "^1.22.4",
+		"@types/better-sqlite3": "^7.6.4",
 		"@types/node": "^20.4.10",
+		"drizzle-kit": "^0.19.13",
 		"eslint": "^8.47.0",
 		"prettier": "^3.0.2",
 		"publint": "^0.1.16",
 		"typescript": "^5.1.6",
-		"vite": "^4.4.9"
+		"vite": "^4.4.9",
+		"zod-to-json-schema": "^3.21.4"
+	},
+	"peerDependencies": {
+		"@sveltejs/kit": "^1.22.0",
+		"@types/mdast": "^4.0.0"
 	},
 	"files": [
 		"src",

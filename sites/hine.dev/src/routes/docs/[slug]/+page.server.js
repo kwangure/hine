@@ -1,69 +1,27 @@
-import { getCollection, getEntry } from 'content-thing:io';
+import { db } from 'thing:db';
+import { error } from '@sveltejs/kit';
 
 export async function load({ params }) {
 	const { slug } = params;
-	const content = await getEntry('docs', slug);
-	const groups = await groupDocs();
-
-	return { groups, content };
-}
-
-async function groupDocs() {
-	const [docs, groups] = await Promise.all([
-		getCollection('docs'),
-		getCollection('groups'),
-	]);
-	/**
-	 * @type {Record<string, {
-	 *   data: any,
-	 *   entries: import('./types.js').Document[],
-	 * }>}
-	 */
-	const groupedDocs = {};
-	for (const [slug, group] of groups) {
-		groupedDocs[slug] = {
-			data: group,
-			entries: [],
-		};
+	const data = await db.query.docs.findFirst({
+		where: (docs, { eq }) => eq(docs.id, slug),
+	});
+	if (!data) {
+		throw error(404, 'Page not found.');
 	}
 
-	for (const [name, tree] of docs) {
-		const group = tree.data.frontmatter.group;
-		if (!group) {
-			throw Error(`Docs '${name}' is missing group`);
-		}
-		if (!Object.hasOwn(groupedDocs, group)) {
-			throw Error(`Docs '${name}' has unknown group '${group}'`);
-		}
-		const path = `/docs/${name}`;
-		walkTree(tree.data.tableOfContents, (/** @type {any} */ heading) => {
-			heading.path = path;
-		});
-		groupedDocs[group].entries.push({
-			title: tree.data.frontmatter.title,
-			order: tree.data.frontmatter.order,
-			path,
-			children: tree.data.tableOfContents,
-		});
-	}
+	const groups = await db.query.groups.findMany({
+		with: {
+			docs: {
+				columns: {
+					id: true,
+					data_title: true,
+					content: true,
+				},
+				orderBy: (docs, { asc }) => [asc(docs.data_order)],
+			},
+		},
+	});
 
-	const values = Object.values(groupedDocs);
-
-	for (const group of values) {
-		group.entries.sort((a, b) => a.order - b.order);
-	}
-
-	return values;
-}
-
-/**
- * @param {any[]} tree
- * @param {{ (arg0: any): any } } fn
- */
-function walkTree(tree, fn) {
-	for (let i = 0; i < tree.length; i++) {
-		fn(tree[i]);
-		walkTree(tree[i].children, fn);
-	}
-	return tree;
+	return { groups, content: data.content };
 }

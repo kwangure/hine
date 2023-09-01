@@ -1,5 +1,5 @@
 {
-	"name": "@hinejs/internal-utils",
+	"name": "@content-thing/internal-utils",
 	"version": "0.0.0",
 	"scripts": {
 		"check": "wireit",

@@ -6,7 +6,7 @@ import {
 	yamlConfigSchema,
 } from './load.js';
 import path from 'node:path';
-import { write } from '@hinejs/internal-utils/filesystem';
+import { write } from '@content-thing/internal-utils/filesystem';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { z } from 'zod';
 

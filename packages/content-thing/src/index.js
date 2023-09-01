@@ -12,7 +12,7 @@ import {
 } from './collections/write.js';
 import { loadCollectionConfig } from './config/load.js';
 import path from 'node:path';
-import { rimraf } from '@hinejs/internal-utils/filesystem';
+import { rimraf } from '@content-thing/internal-utils/filesystem';
 import fs from 'node:fs';
 
 export { extendSvelteConfig } from './svelte-kit.js';

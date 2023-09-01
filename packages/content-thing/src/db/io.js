@@ -3,7 +3,7 @@ import { drizzle } from 'drizzle-orm/better-sqlite3';
 import { exec } from 'child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { walk } from '@hinejs/internal-utils/filesystem';
+import { walk } from '@content-thing/internal-utils/filesystem';
 import { writeFileErrors } from '../collections/write.js';
 
 /**

@@ -11,7 +11,7 @@ import { remarkTableOfContents } from '@hinejs/remark-toc';
 import { remarkYamlParse } from '@hinejs/remark-yaml-parse';
 import { unified } from 'unified';
 import { VFile } from 'vfile';
-import { write } from '@hinejs/internal-utils/filesystem';
+import { write } from '@content-thing/internal-utils/filesystem';
 import yaml from 'js-yaml';
 
 /**

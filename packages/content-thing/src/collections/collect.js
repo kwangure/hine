@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { walk } from '@hinejs/internal-utils/filesystem';
+import { walk } from '@content-thing/internal-utils/filesystem';
 
 /**
  * @param {string} input The parent directory of input collections

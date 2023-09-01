@@ -1,5 +1,5 @@
 {
-	"name": "@hinejs/remark-toc",
+	"name": "@content-thing/remark-toc",
 	"scripts": {
 		"check": "wireit",
 		"format": "wireit",
@@ -91,7 +91,7 @@
 		}
 	},
 	"dependencies": {
-		"unist-util-visit": "^5.0.0"
+		"unist-util-visit": "^4.0.0"
 	},
 	"devDependencies": {
 		"@hinejs/eslint-config": "*",
@@ -103,7 +103,8 @@
 		"remark-parse": "^10.0.2",
 		"remark-stringify": "^10.0.3",
 		"typescript": "^5.1.6",
-		"unified": "^10.1.2"
+		"unified": "^10.1.2",
+		"vfile": "^5.0.0"
 	},
 	"prettier": "@hinejs/prettier-config",
 	"license": "MIT",

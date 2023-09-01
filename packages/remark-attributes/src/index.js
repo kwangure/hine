@@ -12,7 +12,7 @@ export function remarkAttributes() {
 					parseCode(node);
 					break;
 				case 'inlineCode':
-					parseInlineCode(node, index, parent);
+					parseInlineCode(node, index ?? undefined, parent ?? undefined);
 					break;
 				default:
 					break;

@@ -4,7 +4,7 @@ import remarkStringify from 'remark-stringify';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkParse from 'remark-parse';
 import { unified } from 'unified';
-import { visit } from 'unist-util-visit';
+import { VFile } from 'vfile';
 import remarkTableOfContents from '../src/index.js';
 
 const processor = unified()
@@ -16,47 +16,50 @@ const processor = unified()
 
 describe('toc', () => {
 	it('creates toc from headings', async () => {
-		const input = `## h2-1\n## h2-2\nparagraph\n### h3-1`;
+		const input = new VFile({
+			path: '/',
+			value: `## h2-1\n## h2-2\nparagraph\n### h3-1`,
+		});
 		const parsed = processor.parse(input);
-		const transformed = await processor.run(parsed);
-		visit(transformed, 'root', (node) => {
-			assert.deepEqual(node.data, {
-				tableOfContents: [
-					{
-						children: [
-							{
-								children: [
-									{
-										children: [],
-										depth: 3,
-										hash: '#h3-1',
-										id: 'h3-1',
-										value: 'h3-1\n',
-									},
-								],
-								depth: 2,
-								hash: '#h2-2',
-								id: 'h2-2',
-								value: 'h2-2\n',
-							},
-						],
-						depth: 2,
-						hash: '#h2-1',
-						id: 'h2-1',
-						value: 'h2-1\n',
-					},
-				],
-			});
+		await processor.run(parsed, input);
+
+		assert.deepEqual(input.data, {
+			tableOfContents: [
+				{
+					children: [
+						{
+							children: [
+								{
+									children: [],
+									depth: 3,
+									hash: '#h3-1',
+									id: 'h3-1',
+									value: 'h3-1\n',
+								},
+							],
+							depth: 2,
+							hash: '#h2-2',
+							id: 'h2-2',
+							value: 'h2-2\n',
+						},
+					],
+					depth: 2,
+					hash: '#h2-1',
+					id: 'h2-1',
+					value: 'h2-1\n',
+				},
+			],
 		});
 	});
 	it('creates toc without headings', async () => {
-		const input = `paragraph-1\n\nparagraph-2`;
+		const input = new VFile({
+			value: `paragraph-1\n\nparagraph-2`,
+		});
 		const parsed = processor.parse(input);
-		const transformed = await processor.run(parsed);
-		visit(transformed, 'root', (node) => {
-			assert.deepEqual(node.data, {
-				tableOfContents: [],
-			});
+		await processor.run(parsed, input);
+
+		assert.deepEqual(input.data, {
+			tableOfContents: [],
 		});
 	});
 });

@@ -3,7 +3,7 @@ import assert from 'node:assert';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkParse from 'remark-parse';
 import { remarkVariables } from '../src/index.js';
-import { remarkYamlParse } from '@hinejs/remark-yaml-parse';
+import { remarkYamlParse } from '@content-thing/remark-yaml-parse';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 

@@ -10,7 +10,7 @@ const TRAILING_DASH_RE = /-+$/;
  * @type {import('unified').Plugin<void[], import('mdast').Root, import('mdast').Root>}
  */
 export function remarkTableOfContents() {
-	return (tree) => {
+	return (tree, vfile) => {
 		/** @type {{ children: import('./types.js').TocEntry[] }} */
 		const dummyRoot = { children: [] };
 		const stack = [dummyRoot];
@@ -32,7 +32,7 @@ export function remarkTableOfContents() {
 			const tocEntry = {
 				depth: node.depth,
 				value: content,
-				id: id,
+				id,
 				hash: `#${id}`,
 				children: [],
 			};
@@ -48,8 +48,8 @@ export function remarkTableOfContents() {
 			};
 		});
 
-		tree.data = {
-			...tree.data,
+		vfile.data = {
+			...vfile.data,
 			tableOfContents: dummyRoot.children,
 		};
 	};

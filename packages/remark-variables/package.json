@@ -1,5 +1,5 @@
 {
-	"name": "@hinejs/remark-variables",
+	"name": "@content-thing/remark-variables",
 	"scripts": {
 		"check": "wireit",
 		"format": "wireit",
@@ -62,6 +62,9 @@
 		},
 		"publint": {
 			"command": "publint",
+			"dependencies": [
+				"package"
+			],
 			"files": [
 				"src/**",
 				"types/**",
@@ -91,12 +94,12 @@
 		}
 	},
 	"dependencies": {
-		"unist-util-visit": "^5.0.0"
+		"unist-util-visit": "^4.0.0"
 	},
 	"devDependencies": {
 		"@hinejs/eslint-config": "*",
 		"@hinejs/prettier-config": "*",
-		"@hinejs/remark-yaml-parse": "*",
+		"@content-thing/remark-yaml-parse": "*",
 		"@types/dlv": "^1.1.2",
 		"@types/node": "^20.4.10",
 		"eslint": "^8.47.0",

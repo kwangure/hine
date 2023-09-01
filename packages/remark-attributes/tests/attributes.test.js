@@ -75,7 +75,7 @@ describe('inlineCode', () => {
 		const parsed = processor.parse(input);
 		const transformed = await processor.run(parsed);
 		visit(transformed, 'inlineCode', (node, index, parent) => {
-			if (typeof index === 'undefined') return; // Hush TypeScript. Hush.
+			if (typeof index !== 'number') return; // Hush TypeScript. Hush.
 
 			const nextSibling = parent?.children[index + 1];
 			assert.deepStrictEqual(node.data, {
@@ -94,7 +94,7 @@ describe('inlineCode', () => {
 		const parsed = processor.parse(input);
 		const transformed = await processor.run(parsed);
 		visit(transformed, 'inlineCode', (node, index, parent) => {
-			if (typeof index === 'undefined') return; // Hush TypeScript. Hush.
+			if (typeof index !== 'number') return; // Hush TypeScript. Hush.
 
 			const nextSibling = parent?.children[index + 1];
 			assert.deepStrictEqual(node.data, {

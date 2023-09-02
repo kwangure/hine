@@ -1,5 +1,5 @@
 <script>
-	import { Sidebar } from '@hinejs/svelte-ui/components';
+	import { Sidebar } from '../../index.js';
 	import List from './list.svelte';
 
 	/** @type {import('./types.js').TocEntry} */

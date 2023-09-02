@@ -22,6 +22,14 @@
 			darkModeLabel  = 'Switch to dark mode';
 		}
 	}
+
+	/** @type {string} */
+	let title;
+	$: {
+		if (data.content?.data) {
+			title = /** @type {{ title: string }} */(data.content.data.frontmatter).title
+		}
+	}
 </script>
 
 <Shell.Root>
@@ -42,7 +50,10 @@
 							{entry.data_title}
 						</Sidebar.Link>
 						{#if $page.url.pathname === `/docs/${entry.id}`}
-							<Sidebar.Outline toc={entry.content?.data?.tableOfContents || []} />
+							{#if entry.content}
+								{@const toc = /** @type {import('@hinejs/content-thing').TocEntry[]}*/(entry.content.data?.tableOfContents)}
+								<Sidebar.Outline {toc} />
+							{/if}
 						{/if}
 					</Sidebar.Item>
 				{/each}
@@ -53,7 +64,7 @@
 		<div class="mb-40 lg:px-6">
 			{#if data.content}
 				<h1 class="mb-2 mt-4 flex scroll-mt-[var(--svui-navbar-height)] text-3xl font-semibold tracking-tight text-neutral-900 dark:text-slate-200 sm:text-4xl">
-					{data.content.data?.frontmatter.title}
+					{title}
 				</h1>
 				<Markdown.Children node={data.content} />
 			{/if}

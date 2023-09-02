@@ -2,7 +2,7 @@
 export default {
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
-		'../../packages/svelte-ui/**/*.{html,js,svelte,ts}',
+		'../../packages/svelte-ui/src/lib/**/*.{html,js,svelte,ts}',
 	],
 	darkMode: 'class',
 	theme: {

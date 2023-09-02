@@ -47,7 +47,7 @@ export function generateRelations(relations, tableName) {
  * @param {string} output The output directory of the current collection
  */
 export function generateRelationImports(relations, collectionOutputs, output) {
-	let imports = `import { relations } from 'drizzle-orm';\n`;
+	let imports = `import { relations } from '@hinejs/content-thing/drizzle-orm';\n`;
 	const relatedCollections = new Set(
 		Object.values(relations).map(({ collection }) => collection),
 	);

@@ -2,13 +2,13 @@ import { generateMarkdownSchema, generateYamlSchema } from '../db/schema.js';
 import { generateRelationImports, generateRelations } from '../db/relations.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { remarkAttributes } from '@hinejs/remark-attributes';
+import { remarkAttributes } from '@content-thing/remark-attributes';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkParse from 'remark-parse';
-import { remarkVariables } from '@hinejs/remark-variables';
+import { remarkVariables } from '@content-thing/remark-variables';
 import remarkStringify from 'remark-stringify';
-import { remarkTableOfContents } from '@hinejs/remark-toc';
-import { remarkYamlParse } from '@hinejs/remark-yaml-parse';
+import { remarkTableOfContents } from '@content-thing/remark-toc';
+import { remarkYamlParse } from '@content-thing/remark-yaml-parse';
 import { unified } from 'unified';
 import { VFile } from 'vfile';
 import { write } from '@content-thing/internal-utils/filesystem';
@@ -87,8 +87,8 @@ export function outputYamlCollection(
  * @param {string} dbPath
  */
 export function writeDBClient(dbClientPath, collections, dbPath) {
-	let result = `import Database from 'better-sqlite3';\n`;
-	result += `import { drizzle } from 'drizzle-orm/better-sqlite3';\n`;
+	let result = `import { Database } from '@hinejs/content-thing/better-sqlite3';\n`;
+	result += `import { drizzle } from '@hinejs/content-thing/drizzle-orm/better-sqlite3';\n`;
 	result += `// @ts-ignore\n`;
 	result += `import dbPath from './sqlite.db';\n`;
 	for (const collection of collections) {
@@ -175,7 +175,7 @@ export function writeSchemaExporter(output, collections) {
  * @param {import('./types.js').CollectionInfo} collection
  */
 function writeValidator(collection) {
-	let result = `import { createInsertSchema } from 'drizzle-zod';\n`;
+	let result = `import { createInsertSchema } from '@hinejs/content-thing/drizzle-zod';\n`;
 	result += `import { ${collection.name} } from './schema.config.js'\n`;
 	result += `\n`;
 	result += `export const insert = createInsertSchema(${collection.name});\n`;

@@ -137,12 +137,12 @@ describe('generateMarkdownSchema', () => {
 		const tableName = 'testTable';
 		const expected =
 			"import { json } from '@hinejs/content-thing/db';\n" +
-			`import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';\n\n` +
+			`import { integer, sqliteTable, text } from '@hinejs/content-thing/drizzle-orm/sqlite-core';\n\n` +
 			`export const testTable = sqliteTable('testTable', {\n` +
 			`\tid: text('id').primaryKey(),\n` +
 			`\tdata_title: text('data_title'),\n` +
 			`\tdata_age: integer('data_age'),\n` +
-			"\tcontent: /** @type {ReturnType<typeof json<import('mdast').Root, 'content'>>} */(json('content')),\n" +
+			"\tcontent: /** @type {ReturnType<typeof json<import('@hinejs/content-thing/mdast').Root, 'content'>>} */(json('content')),\n" +
 			`});\n`;
 		assert.strictEqual(generateMarkdownSchema(config, tableName), expected);
 	});
@@ -176,7 +176,7 @@ describe('generateYamlSchema', () => {
 		};
 		const tableName = 'testTable';
 		const expected =
-			`import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';\n\n` +
+			`import { sqliteTable, integer, text } from '@hinejs/content-thing/drizzle-orm/sqlite-core';\n\n` +
 			`export const testTable = sqliteTable('testTable', {\n` +
 			`\tid: text('id').primaryKey(),\n` +
 			`\tdata_title: text('data_title'),\n` +

@@ -81,18 +81,9 @@
 		}
 	},
 	"dependencies": {
-		"@fig/lezer-bash": "^1.2.5",
 		"@hinejs/svelte-ui": "^0.0.0",
-		"@lezer/cpp": "^1.0.0",
-		"@lezer/css": "^1.0.1",
-		"@lezer/highlight": "^1.1.2",
-		"@lezer/html": "^1.0.1",
-		"@lezer/javascript": "^1.0.2",
-		"@lezer/json": "^1.0.0",
-		"@lezer/python": "^1.1.1",
-		"@lezer/rust": "^1.0.0",
 		"@mdi/js": "^7.2.96",
-		"@replit/codemirror-lang-svelte": "^6.0.0",
+		"hine": "workspace:^0.0.17",
 		"simple-icons": "^9.9.0"
 	},
 	"devDependencies": {
@@ -104,6 +95,7 @@
 		"@sveltejs/kit": "^1.22.4",
 		"@types/eslint": "^8.44.2",
 		"autoprefixer": "^10.4.14",
+		"drizzle-kit": "^0.19.13",
 		"eslint": "^8.47.0",
 		"husky": "^8.0.3",
 		"postcss": "^8.4.27",
@@ -116,7 +108,7 @@
 		"typescript": "^5.1.6",
 		"vite": "^4.4.2",
 		"vitest": "^0.33.0",
-		"wireit": "^0.9.3"
+		"wireit": "^0.13.0"
 	},
 	"license": "MIT",
 	"type": "module"

@@ -92,7 +92,7 @@ export function generateMarkdownSchema(schema, tableName) {
 		);
 		schemaCode += `import { ${[...types].join(
 			', ',
-		)} } from 'drizzle-orm/sqlite-core';\n`;
+		)} } from '@hinejs/content-thing/drizzle-orm/sqlite-core';\n`;
 	}
 	schemaCode += `\n`;
 	schemaCode += `export const ${tableName} = sqliteTable('${tableName}', {\n`;
@@ -116,7 +116,7 @@ export function generateMarkdownSchema(schema, tableName) {
 			schemaCode += `\tdata_${key}: ${columnCode},\n`;
 		}
 	}
-	schemaCode += `\tcontent: /** @type {ReturnType<typeof json<import('mdast').Root, 'content'>>} */(json('content')),\n`;
+	schemaCode += `\tcontent: /** @type {ReturnType<typeof json<import('@hinejs/content-thing/mdast').Root, 'content'>>} */(json('content')),\n`;
 	schemaCode += '});\n';
 	return schemaCode;
 }
@@ -129,7 +129,7 @@ export function generateMarkdownSchema(schema, tableName) {
  * @returns {string} - The generated SQLite schema
  */
 export function generateYamlSchema(schema, tableName) {
-	let schemaCode = `import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';\n\n`;
+	let schemaCode = `import { sqliteTable, integer, text } from '@hinejs/content-thing/drizzle-orm/sqlite-core';\n\n`;
 	schemaCode += `export const ${tableName} = sqliteTable('${tableName}', {\n`;
 	schemaCode += `\tid: text('id').primaryKey(),\n`;
 

@@ -72,6 +72,7 @@
 		"@hinejs/eslint-config": "*",
 		"eslint": "^8.47.0",
 		"prettier": "^3.0.2",
+		"publint": "^0.2.2",
 		"typescript": "^5.1.6"
 	},
 	"files": [

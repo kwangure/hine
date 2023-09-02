@@ -19,9 +19,11 @@ export function remarkTableOfContents() {
 			if (node.depth !== 1 && node.depth !== 2 && node.depth !== 3) return;
 
 			const mdString = /** @type {string} */ (this.stringify(node));
-			const content = node.data?.value || mdString.replace(LEADING_HASH_RE, '');
+			const content =
+				/** @type {string} */ (node.data?.value) ||
+				mdString.replace(LEADING_HASH_RE, '');
 			const id =
-				node.data?.id ||
+				/** @type {string} */ (node.data?.id) ||
 				content
 					.toLowerCase()
 					.replace(NON_ALPHA_NUMERIC_RE, '-')

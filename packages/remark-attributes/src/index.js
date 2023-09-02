@@ -12,7 +12,11 @@ export function remarkAttributes() {
 					parseCode(node);
 					break;
 				case 'inlineCode':
-					parseInlineCode(node, index ?? undefined, parent ?? undefined);
+					parseInlineCode(
+						node,
+						index ?? undefined,
+						/** @type {import("mdast").Parent} */ (parent ?? undefined),
+					);
 					break;
 				default:
 					break;
@@ -46,7 +50,7 @@ function parseCode(code) {
 /**
  * @param {import("mdast").InlineCode} inlineCode
  * @param {number} [index]
- * @param {import("mdast").Parents} [parent]
+ * @param {import("mdast").Parent} [parent]
  */
 function parseInlineCode(inlineCode, index, parent) {
 	inlineCode.data = {

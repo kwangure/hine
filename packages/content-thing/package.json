@@ -119,16 +119,42 @@
 		"./db": {
 			"types": "./types/db/index.d.ts",
 			"default": "./src/db/index.js"
+		},
+		"./better-sqlite3": {
+			"types": "./types/packages/better-sqlite3.d.ts",
+			"default": "./src/packages/better-sqlite3.js"
+		},
+		"./drizzle-orm": {
+			"types": "./types/packages/drizzle-orm/index.d.ts",
+			"default": "./src/packages/drizzle-orm/index.js"
+		},
+		"./drizzle-orm/better-sqlite3": {
+			"types": "./types/packages/drizzle-orm/better-sqlite3.d.ts",
+			"default": "./src/packages/drizzle-orm/better-sqlite3.js"
+		},
+		"./drizzle-orm/sqlite-core": {
+			"types": "./types/packages/drizzle-orm/sqlite.d.ts",
+			"default": "./src/packages/drizzle-orm/sqlite.js"
+		},
+		"./drizzle-zod": {
+			"types": "./types/packages/drizzle-zod.d.ts",
+			"default": "./src/packages/drizzle-zod.js"
+		},
+		"./mdast": {
+			"types": "./types/packages/mdast.d.ts",
+			"default": "./src/packages/mdast.js"
 		}
 	},
 	"dependencies": {
 		"@content-thing/internal-utils": "^0.0.0",
-		"@hinejs/remark-attributes": "*",
-		"@hinejs/remark-toc": "*",
-		"@hinejs/remark-variables": "*",
-		"@hinejs/remark-yaml-parse": "*",
+		"@content-thing/remark-attributes": "*",
+		"@content-thing/remark-toc": "*",
+		"@content-thing/remark-variables": "*",
+		"@content-thing/remark-yaml-parse": "*",
 		"@rollup/pluginutils": "^5.0.3",
+		"@types/mdast": "^3.0.12",
 		"better-sqlite3": "^8.5.2",
+		"drizzle-orm": "^0.28.5",
 		"drizzle-zod": "^0.5.1",
 		"glob": "^10.3.3",
 		"js-yaml": "^4.1.0",
@@ -141,18 +167,20 @@
 		"@hinejs/prettier-config": "*",
 		"@sveltejs/kit": "^1.22.4",
 		"@types/better-sqlite3": "^7.6.4",
+		"@types/js-yaml": "^4.0.5",
 		"@types/node": "^20.4.10",
 		"drizzle-kit": "^0.19.13",
 		"eslint": "^8.47.0",
 		"prettier": "^3.0.2",
-		"publint": "^0.1.16",
+		"publint": "^0.2.2",
+		"remark-frontmatter": "^4.0.1",
 		"typescript": "^5.1.6",
 		"vite": "^4.4.9",
 		"zod-to-json-schema": "^3.21.4"
 	},
 	"peerDependencies": {
 		"@sveltejs/kit": "^1.22.0",
-		"@types/mdast": "^4.0.0"
+		"drizzle-kit": "^0.19.13"
 	},
 	"files": [
 		"src",

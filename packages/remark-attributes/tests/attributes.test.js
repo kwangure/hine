@@ -84,9 +84,10 @@ describe('inlineCode', () => {
 				},
 			});
 
-			if (nextSibling?.type !== 'text') return; // Hush TypeScript. Hush.
-
-			assert.strictEqual(nextSibling?.value, ' abc');
+			assert.strictEqual(
+				/** @type {import('mdast').Text} */ (nextSibling)?.value,
+				' abc',
+			);
 		});
 	});
 	it('allows preceeding whitespace', async () => {
@@ -103,9 +104,10 @@ describe('inlineCode', () => {
 				},
 			});
 
-			if (nextSibling?.type !== 'text') return; // Hush TypeScript. Hush.
-
-			assert.strictEqual(nextSibling?.value, ' abc');
+			assert.strictEqual(
+				/** @type {import('mdast').Text} */ (nextSibling)?.value,
+				' abc',
+			);
 		});
 	});
 });

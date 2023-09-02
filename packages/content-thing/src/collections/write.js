@@ -5,6 +5,7 @@ import path from 'node:path';
 import { remarkAttributes } from '@content-thing/remark-attributes';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkParse from 'remark-parse';
+import { remarkRichAttributes } from '@content-thing/remark-rich-attributes';
 import { remarkVariables } from '@content-thing/remark-variables';
 import remarkStringify from 'remark-stringify';
 import { remarkTableOfContents } from '@content-thing/remark-toc';
@@ -133,6 +134,7 @@ const processor = unified()
 	.use(remarkFrontmatter)
 	.use(remarkYamlParse)
 	.use(remarkAttributes)
+	.use(remarkRichAttributes)
 	.use(remarkVariables)
 	.use(remarkTableOfContents);
 

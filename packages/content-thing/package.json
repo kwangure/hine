@@ -148,6 +148,7 @@
 	"dependencies": {
 		"@content-thing/internal-utils": "^0.0.0",
 		"@content-thing/remark-attributes": "*",
+		"@content-thing/remark-rich-attributes": "workspace:^",
 		"@content-thing/remark-toc": "*",
 		"@content-thing/remark-variables": "*",
 		"@content-thing/remark-yaml-parse": "*",

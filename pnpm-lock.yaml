@@ -60,6 +60,9 @@ importers:
       '@content-thing/remark-attributes':
         specifier: '*'
         version: link:../remark-attributes
+      '@content-thing/remark-rich-attributes':
+        specifier: workspace:^
+        version: link:../remark-rich-attributes
       '@content-thing/remark-toc':
         specifier: '*'
         version: link:../remark-toc
@@ -281,6 +284,46 @@ importers:
         version: 3.0.2
       publint:
         specifier: ^0.2.2
+        version: 0.2.2
+      remark-parse:
+        specifier: ^10.0.2
+        version: 10.0.2
+      typescript:
+        specifier: ^5.1.6
+        version: 5.1.6
+
+  packages/remark-rich-attributes:
+    dependencies:
+      unist-util-visit:
+        specifier: ^4.0.0
+        version: 4.0.0
+    devDependencies:
+      '@content-thing/internal-utils':
+        specifier: '*'
+        version: link:../internal-utils
+      '@content-thing/remark-attributes':
+        specifier: '*'
+        version: link:../remark-attributes
+      '@hinejs/eslint-config':
+        specifier: '*'
+        version: link:../eslint-config
+      '@hinejs/prettier-config':
+        specifier: '*'
+        version: link:../prettier-config
+      '@types/mdast':
+        specifier: ^3.0.12
+        version: 3.0.12
+      '@types/node':
+        specifier: ^20.4.10
+        version: 20.4.10
+      eslint:
+        specifier: ^8.47.0
+        version: 8.47.0
+      prettier:
+        specifier: ^3.0.2
+        version: 3.0.2
+      publint:
+        specifier: ^0.2.0
         version: 0.2.2
       remark-parse:
         specifier: ^10.0.2

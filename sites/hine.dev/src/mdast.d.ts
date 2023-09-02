@@ -1,5 +1,5 @@
 import type { CodeData, InlineCodeData, HeadingData } from 'mdast';
-import type { TocEntry } from '@hinejs/content-thing';
+import type { TocEntry } from 'content-thing';
 
 declare module 'mdast' {
 	interface CodeData {

@@ -1,5 +1,5 @@
 {
-	"name": "@hinejs/content-thing",
+	"name": "content-thing",
 	"version": "0.0.0",
 	"scripts": {
 		"check": "wireit",

@@ -87,7 +87,7 @@
 		"simple-icons": "^9.9.0"
 	},
 	"devDependencies": {
-		"@hinejs/content-thing": "*",
+		"content-thing": "*",
 		"@hinejs/eslint-config": "*",
 		"@hinejs/prettier-config": "*",
 		"@sveltejs/adapter-auto": "^2.0.0",

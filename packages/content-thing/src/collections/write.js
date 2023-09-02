@@ -88,8 +88,8 @@ export function outputYamlCollection(
  * @param {string} dbPath
  */
 export function writeDBClient(dbClientPath, collections, dbPath) {
-	let result = `import { Database } from '@hinejs/content-thing/better-sqlite3';\n`;
-	result += `import { drizzle } from '@hinejs/content-thing/drizzle-orm/better-sqlite3';\n`;
+	let result = `import { Database } from 'content-thing/better-sqlite3';\n`;
+	result += `import { drizzle } from 'content-thing/drizzle-orm/better-sqlite3';\n`;
 	result += `// @ts-ignore\n`;
 	result += `import dbPath from './sqlite.db';\n`;
 	for (const collection of collections) {
@@ -177,7 +177,7 @@ export function writeSchemaExporter(output, collections) {
  * @param {import('./types.js').CollectionInfo} collection
  */
 function writeValidator(collection) {
-	let result = `import { createInsertSchema } from '@hinejs/content-thing/drizzle-zod';\n`;
+	let result = `import { createInsertSchema } from 'content-thing/drizzle-zod';\n`;
 	result += `import { ${collection.name} } from './schema.config.js'\n`;
 	result += `\n`;
 	result += `export const insert = createInsertSchema(${collection.name});\n`;

@@ -12,7 +12,10 @@ export function remarkRichAttributes() {
 			codeBlocks.push(node);
 		});
 		for (const node of codeBlocks) {
-			const file = /** @type {{ file: string | undefined }} */(node.data?.attributes).file;
+			if (!node.data) return;
+			const file = /** @type {{ file: string | undefined }} */ (
+				node.data.attributes
+			).file;
 			if (!file) continue;
 
 			let { filepath, start, end } = parseFileMeta(file);

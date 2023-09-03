@@ -19,6 +19,7 @@
 			"dependencies": [
 				"../internal-utils:package",
 				"../remark-attributes:package",
+				"../remark-rich-attributes:package",
 				"../remark-toc:package",
 				"../remark-variables:package",
 				"../remark-yaml-parse:package"
@@ -66,6 +67,7 @@
 			"dependencies": [
 				"../internal-utils:package",
 				"../remark-attributes:package",
+				"../remark-rich-attributes:package",
 				"../remark-toc:package",
 				"../remark-variables:package",
 				"../remark-yaml-parse:package"

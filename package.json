@@ -54,6 +54,7 @@
 				"./packages/content-thing:check",
 				"./packages/hine:check",
 				"./packages/remark-attributes:check",
+				"./packages/remark-rich-attributes:check",
 				"./packages/remark-toc:check",
 				"./packages/svelte-ui:check",
 				"./sites/hine.dev:check"
@@ -73,6 +74,7 @@
 				"./packages/internal-utils:format",
 				"./packages/prettier-config:format",
 				"./packages/remark-attributes:format",
+				"./packages/remark-rich-attributes:format",
 				"./packages/remark-toc:format",
 				"./packages/remark-variables:format",
 				"./packages/remark-yaml-parse:format",
@@ -89,6 +91,7 @@
 				"./packages/internal-utils:lint",
 				"./packages/prettier-config:lint",
 				"./packages/remark-attributes:lint",
+				"./packages/remark-rich-attributes:lint",
 				"./packages/remark-toc:lint",
 				"./packages/remark-variables:lint",
 				"./packages/remark-yaml-parse:lint",
@@ -105,6 +108,7 @@
 				"./packages/internal-utils:package",
 				"./packages/prettier-config:package",
 				"./packages/remark-attributes:package",
+				"./packages/remark-rich-attributes:package",
 				"./packages/remark-toc:package",
 				"./packages/remark-variables:package",
 				"./packages/remark-yaml-parse:package"
@@ -120,6 +124,7 @@
 				"./packages/internal-utils:pre-commit",
 				"./packages/prettier-config:pre-commit",
 				"./packages/remark-attributes:pre-commit",
+				"./packages/remark-rich-attributes:pre-commit",
 				"./packages/remark-toc:pre-commit",
 				"./packages/remark-variables:lint",
 				"./packages/remark-yaml-parse:pre-commit",
@@ -138,6 +143,7 @@
 				"./packages/hine:test",
 				"./packages/internal-utils:test",
 				"./packages/remark-attributes:test",
+				"./packages/remark-rich-attributes:test",
 				"./packages/remark-variables:test",
 				"./packages/remark-yaml-parse:test"
 			]

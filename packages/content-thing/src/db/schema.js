@@ -141,8 +141,8 @@ export function generateYamlSchema(schema, tableName) {
 	schemaCode += `export const ${tableName} = sqliteTable('${tableName}', {\n`;
 	schemaCode += `\tid: text('id').primaryKey(),\n`;
 
-	for (const key in schema) {
-		const column = schema[key];
+	for (const key in schema.data) {
+		const column = schema.data[key];
 		const columnType = column.type;
 		let columnCode = '';
 		if (columnType === 'text') {

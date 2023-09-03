@@ -188,11 +188,13 @@ describe('generateYamlSchema', () => {
 	it('should generate yaml schema', () => {
 		/** @type {import('../src/db/types.js').CTYamlSchema} */
 		const config = {
-			title: {
-				type: 'text',
-			},
-			age: {
-				type: 'integer',
+			data: {
+				title: {
+					type: 'text',
+				},
+				age: {
+					type: 'integer',
+				},
 			},
 		};
 		const tableName = 'testTable';
@@ -208,9 +210,11 @@ describe('generateYamlSchema', () => {
 	it('throws error for unsupported YAML column type', () => {
 		/** @type {import('../src/db/types.js').CTYamlSchema} */
 		const config = {
-			title: {
-				// @ts-expect-error
-				type: 'unsupported',
+			data: {
+				title: {
+					// @ts-expect-error
+					type: 'unsupported',
+				},
 			},
 		};
 		assert.throws(

@@ -59,9 +59,11 @@ export const markdownConfig = z.object({
 		.optional(),
 });
 
-export const yamlSchema = z.record(
-	z.discriminatedUnion('type', [drizzleIntegerColumn, drizzleTextColumn]),
-);
+export const yamlSchema = z.object({
+	data: z.record(
+		z.discriminatedUnion('type', [drizzleIntegerColumn, drizzleTextColumn]),
+	),
+});
 
 export const yamlConfig = z.object({
 	type: z.literal('yaml'),

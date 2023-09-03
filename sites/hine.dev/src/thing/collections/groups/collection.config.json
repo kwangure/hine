@@ -2,8 +2,10 @@
 	"$schema": "../../../../../../packages/content-thing/config/schema.json",
 	"type": "yaml",
 	"schema": {
-		"title": {
-			"type": "text"
+		"data": {
+			"title": {
+				"type": "text"
+			}
 		}
 	},
 	"relations": {

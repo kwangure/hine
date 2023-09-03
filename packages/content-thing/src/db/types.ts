@@ -1,36 +1,18 @@
-interface DrizzlePrimaryKeyConfig {
-	autoIncrement?: boolean;
-	onConflict?: 'abort' | 'fail' | 'ignore' | 'replace' | 'rollback';
-}
+import { z } from 'zod';
+import type {
+	drizzleIntegerColumn,
+	drizzleTextColumn,
+	markdownSchema,
+	yamlSchema,
+} from '../config/load.js';
 
-interface DrizzleColumn {
-	primaryKey?: boolean | DrizzlePrimaryKeyConfig;
-}
+export type CTInteger = z.input<typeof drizzleIntegerColumn>;
 
-export interface CTInteger extends DrizzleColumn {
-	type: 'integer';
-	mode?: 'boolean' | 'number' | 'timestamp' | 'timestamp_ms';
-	defaultValue?: number;
-}
+export type CTText = z.input<typeof drizzleTextColumn>;
 
-export interface CTText extends DrizzleColumn {
-	type: 'text';
-	enum?: string[];
-	length?: number;
-	defaultValue?: string;
-}
+export type CTMarkdownSchema = z.input<typeof markdownSchema>;
 
-export interface CTMarkdownSchema {
-	frontmatter?: {
-		[x: string]: CTInteger | CTText;
-	};
-}
-
-export interface CTYamlSchema {
-	[x: string]: CTInteger | CTText;
-}
-
-export type CTSchema = CTMarkdownSchema | CTYamlSchema;
+export type CTYamlSchema = z.input<typeof yamlSchema>;
 
 export interface CTOneRelation {
 	type: 'one';

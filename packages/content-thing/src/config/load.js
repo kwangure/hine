@@ -2,25 +2,30 @@ import { z } from 'zod';
 import fs from 'node:fs';
 import path from 'node:path';
 
-export const drizzlePrimaryKeyConfig = z.object({
-	autoIncrement: z.boolean().optional(),
-	onConflict: z
-		.enum(['abort', 'fail', 'ignore', 'replace', 'rollback'])
-		.optional(),
+export const drizzlePrimaryKeyConfig = z
+	.object({
+		autoIncrement: z.boolean().optional(),
+		onConflict: z
+			.enum(['abort', 'fail', 'ignore', 'replace', 'rollback'])
+			.optional(),
+	})
+	.or(z.boolean());
+
+export const drizzleColumn = z.object({
+	nullable: z.boolean().default(false),
+	primaryKey: drizzlePrimaryKeyConfig.optional(),
 });
 
-export const drizzleIntegerColumn = z.object({
+export const drizzleIntegerColumn = drizzleColumn.extend({
 	type: z.literal('integer'),
 	mode: z.enum(['boolean', 'number', 'timestamp', 'timestamp_ms']).optional(),
-	primaryKey: drizzlePrimaryKeyConfig.optional(),
 	defaultValue: z.number().optional(),
 });
 
-export const drizzleTextColumn = z.object({
+export const drizzleTextColumn = drizzleColumn.extend({
 	type: z.literal('text'),
 	enum: z.string().array().optional(),
 	length: z.number().optional(),
-	primaryKey: drizzlePrimaryKeyConfig.optional(),
 	defaultValue: z.string().optional(),
 });
 
@@ -36,15 +41,17 @@ export const drizzleManyRelation = z.object({
 	collection: z.string(),
 });
 
-export const markdownConfigSchema = z.object({
+export const markdownSchema = z.object({
+	frontmatter: z
+		.record(
+			z.discriminatedUnion('type', [drizzleIntegerColumn, drizzleTextColumn]),
+		)
+		.optional(),
+});
+
+export const markdownConfig = z.object({
 	type: z.literal('markdown'),
-	schema: z.object({
-		frontmatter: z
-			.record(
-				z.discriminatedUnion('type', [drizzleIntegerColumn, drizzleTextColumn]),
-			)
-			.optional(),
-	}),
+	schema: markdownSchema,
 	relations: z
 		.record(
 			z.discriminatedUnion('type', [drizzleOneRelation, drizzleManyRelation]),
@@ -52,11 +59,13 @@ export const markdownConfigSchema = z.object({
 		.optional(),
 });
 
-export const yamlConfigSchema = z.object({
+export const yamlSchema = z.record(
+	z.discriminatedUnion('type', [drizzleIntegerColumn, drizzleTextColumn]),
+);
+
+export const yamlConfig = z.object({
 	type: z.literal('yaml'),
-	schema: z.record(
-		z.discriminatedUnion('type', [drizzleIntegerColumn, drizzleTextColumn]),
-	),
+	schema: yamlSchema,
 	relations: z
 		.record(
 			z.discriminatedUnion('type', [drizzleOneRelation, drizzleManyRelation]),
@@ -65,8 +74,8 @@ export const yamlConfigSchema = z.object({
 });
 
 export const configSchema = z.discriminatedUnion('type', [
-	markdownConfigSchema,
-	yamlConfigSchema,
+	markdownConfig,
+	yamlConfig,
 ]);
 
 /** @param {string} directory */

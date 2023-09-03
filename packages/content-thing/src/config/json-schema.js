@@ -2,8 +2,8 @@ import {
 	drizzleIntegerColumn,
 	drizzlePrimaryKeyConfig,
 	drizzleTextColumn,
-	markdownConfigSchema,
-	yamlConfigSchema,
+	markdownConfig,
+	yamlConfig,
 } from './load.js';
 import path from 'node:path';
 import { write } from '@content-thing/internal-utils/filesystem';
@@ -17,14 +17,14 @@ const jsonSchemaString = {
 };
 
 const configSchema = z.discriminatedUnion('type', [
-	markdownConfigSchema.extend(jsonSchemaString),
-	yamlConfigSchema.extend(jsonSchemaString),
+	markdownConfig.extend(jsonSchemaString),
+	yamlConfig.extend(jsonSchemaString),
 ]);
 
 const jsonSchema = zodToJsonSchema(configSchema, {
 	definitions: {
-		markdownConfig: markdownConfigSchema,
-		yamlConfig: yamlConfigSchema,
+		markdownConfig: markdownConfig,
+		yamlConfig: yamlConfig,
 		fieldPrimaryKey: drizzlePrimaryKeyConfig,
 		integerField: drizzleIntegerColumn,
 		textField: drizzleTextColumn,

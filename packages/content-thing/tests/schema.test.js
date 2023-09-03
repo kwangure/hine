@@ -10,12 +10,12 @@ import {
 describe('generateTextColumnCode', () => {
 	it('generates code for text column with no options', () => {
 		const result = generateTextColumnCode('name', { type: 'text' });
-		assert.strictEqual(result, "text('name')");
+		assert.strictEqual(result, "text('name').notNull()");
 	});
 
 	it('generates code for text column with length', () => {
 		const result = generateTextColumnCode('name', { type: 'text', length: 50 });
-		assert.strictEqual(result, 'text(\'name\', {"length":50})');
+		assert.strictEqual(result, 'text(\'name\', {"length":50}).notNull()');
 	});
 
 	it('generates code for text column with enum', () => {
@@ -23,7 +23,7 @@ describe('generateTextColumnCode', () => {
 			type: 'text',
 			enum: ['a', 'b'],
 		});
-		assert.strictEqual(result, 'text(\'name\', {"enum":["a","b"]})');
+		assert.strictEqual(result, 'text(\'name\', {"enum":["a","b"]}).notNull()');
 	});
 
 	it('generates code for text column with default value', () => {
@@ -31,7 +31,7 @@ describe('generateTextColumnCode', () => {
 			type: 'text',
 			defaultValue: 'abc',
 		});
-		assert.strictEqual(result, 'text(\'name\').default("abc")');
+		assert.strictEqual(result, 'text(\'name\').notNull().default("abc")');
 	});
 
 	it('generates code for text column as primary key', () => {
@@ -39,7 +39,15 @@ describe('generateTextColumnCode', () => {
 			type: 'text',
 			primaryKey: true,
 		});
-		assert.strictEqual(result, "text('name').primaryKey()");
+		assert.strictEqual(result, "text('name').notNull().primaryKey()");
+	});
+
+	it('generates code for nullable text column', () => {
+		const result = generateTextColumnCode('name', {
+			type: 'text',
+			nullable: true,
+		});
+		assert.strictEqual(result, "text('name')");
 	});
 
 	it('should generate text column code with all options', () => {
@@ -51,6 +59,7 @@ describe('generateTextColumnCode', () => {
 			enum: ['value1', 'value2'],
 			defaultValue: 'value1',
 			primaryKey: true,
+			nullable: true,
 		};
 		const expected = `text('name', {"length":50,"enum":["value1","value2"]}).default("value1").primaryKey()`;
 		assert.strictEqual(generateTextColumnCode(key, column), expected);
@@ -62,7 +71,7 @@ describe('generateTextColumnCode', () => {
 		const column = {
 			type: 'text',
 		};
-		const expected = `text('name')`;
+		const expected = `text('name').notNull()`;
 		assert.strictEqual(generateTextColumnCode(key, column), expected);
 	});
 });
@@ -70,7 +79,7 @@ describe('generateTextColumnCode', () => {
 describe('generateIntegerColumnCode', () => {
 	it('generates code for integer column with no options', () => {
 		const result = generateIntegerColumnCode('age', { type: 'integer' });
-		assert.strictEqual(result, "integer('age')");
+		assert.strictEqual(result, "integer('age').notNull()");
 	});
 
 	it('generates code for integer column with mode', () => {
@@ -78,7 +87,10 @@ describe('generateIntegerColumnCode', () => {
 			type: 'integer',
 			mode: 'timestamp',
 		});
-		assert.strictEqual(result, 'integer(\'age\', {"mode":"timestamp"})');
+		assert.strictEqual(
+			result,
+			'integer(\'age\', {"mode":"timestamp"}).notNull()',
+		);
 	});
 
 	it('generates code for integer column with default value', () => {
@@ -86,7 +98,7 @@ describe('generateIntegerColumnCode', () => {
 			type: 'integer',
 			defaultValue: 25,
 		});
-		assert.strictEqual(result, "integer('age').default(25)");
+		assert.strictEqual(result, "integer('age').notNull().default(25)");
 	});
 
 	it('generates code for integer column as primary key', () => {
@@ -94,7 +106,15 @@ describe('generateIntegerColumnCode', () => {
 			type: 'integer',
 			primaryKey: true,
 		});
-		assert.strictEqual(result, "integer('age').primaryKey()");
+		assert.strictEqual(result, "integer('age').notNull().primaryKey()");
+	});
+
+	it('generates code for nullable integer column', () => {
+		const result = generateIntegerColumnCode('age', {
+			type: 'integer',
+			nullable: true,
+		});
+		assert.strictEqual(result, "integer('age')");
 	});
 
 	it('should generate integer column code with all options', () => {
@@ -105,6 +125,7 @@ describe('generateIntegerColumnCode', () => {
 			mode: 'timestamp',
 			defaultValue: 0,
 			primaryKey: true,
+			nullable: true,
 		};
 		const expected = `integer('age', {"mode":"timestamp"}).default(0).primaryKey()`;
 		assert.strictEqual(generateIntegerColumnCode(key, column), expected);
@@ -116,7 +137,7 @@ describe('generateIntegerColumnCode', () => {
 		const column = {
 			type: 'integer',
 		};
-		const expected = `integer('age')`;
+		const expected = `integer('age').notNull()`;
 		assert.strictEqual(generateIntegerColumnCode(key, column), expected);
 	});
 });
@@ -140,9 +161,9 @@ describe('generateMarkdownSchema', () => {
 			`import { integer, sqliteTable, text } from 'content-thing/drizzle-orm/sqlite-core';\n\n` +
 			`export const testTable = sqliteTable('testTable', {\n` +
 			`\tid: text('id').primaryKey(),\n` +
-			`\tdata_title: text('data_title'),\n` +
-			`\tdata_age: integer('data_age'),\n` +
-			"\tcontent: /** @type {ReturnType<typeof json<import('content-thing/mdast').Root, 'content'>>} */(json('content')),\n" +
+			`\tdata_title: text('data_title').notNull(),\n` +
+			`\tdata_age: integer('data_age').notNull(),\n` +
+			"\tcontent: /** @type {ReturnType<typeof json<import('content-thing/mdast').Root, 'content'>>} */(json('content')).notNull(),\n" +
 			`});\n`;
 		assert.strictEqual(generateMarkdownSchema(config, tableName), expected);
 	});
@@ -179,8 +200,8 @@ describe('generateYamlSchema', () => {
 			`import { sqliteTable, integer, text } from 'content-thing/drizzle-orm/sqlite-core';\n\n` +
 			`export const testTable = sqliteTable('testTable', {\n` +
 			`\tid: text('id').primaryKey(),\n` +
-			`\tdata_title: text('data_title'),\n` +
-			`\tdata_age: integer('data_age'),\n` +
+			`\tdata_title: text('data_title').notNull(),\n` +
+			`\tdata_age: integer('data_age').notNull(),\n` +
 			`});\n`;
 		assert.strictEqual(generateYamlSchema(config, tableName), expected);
 	});

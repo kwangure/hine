@@ -23,6 +23,10 @@ export function generateTextColumnCode(key, column) {
 
 	columnCode += ')';
 
+	if (!column.nullable) {
+		columnCode += `.notNull()`;
+	}
+
 	if (column.defaultValue !== undefined) {
 		columnCode += `.default(${JSON.stringify(column.defaultValue)})`;
 	}
@@ -58,6 +62,10 @@ export function generateIntegerColumnCode(key, column) {
 	}
 
 	columnCode += ')';
+
+	if (!column.nullable) {
+		columnCode += `.notNull()`;
+	}
 
 	if (column.defaultValue !== undefined) {
 		columnCode += `.default(${JSON.stringify(column.defaultValue)})`;
@@ -116,7 +124,7 @@ export function generateMarkdownSchema(schema, tableName) {
 			schemaCode += `\tdata_${key}: ${columnCode},\n`;
 		}
 	}
-	schemaCode += `\tcontent: /** @type {ReturnType<typeof json<import('content-thing/mdast').Root, 'content'>>} */(json('content')),\n`;
+	schemaCode += `\tcontent: /** @type {ReturnType<typeof json<import('content-thing/mdast').Root, 'content'>>} */(json('content')).notNull(),\n`;
 	schemaCode += '});\n';
 	return schemaCode;
 }

@@ -51,7 +51,6 @@
 						</Sidebar.Link>
 						{#if $page.url.pathname === `/docs/${entry.id}`}
 							{#if entry.content}
-								{console.log({ data: entry.content.data }), ''}
 								{@const toc = /** @type {import('content-thing').TocEntry[]}*/(entry.content.data?.tableOfContents)}
 								<Sidebar.Outline {toc} />
 							{/if}

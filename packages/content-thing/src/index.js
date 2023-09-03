@@ -39,7 +39,7 @@ export function content() {
 				root = _config.root;
 			}
 			config = _config;
-			contentDir = path.join(root, 'src/content');
+			contentDir = path.join(root, 'src/thing/collections');
 			outputDir = path.join(root, '.svelte-kit/content-thing/generated');
 		},
 		configureServer(vite) {

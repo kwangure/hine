@@ -1,4 +1,4 @@
-import { collections } from 'thing:db';
+import { collections } from 'thing:data';
 import { error } from '@sveltejs/kit';
 
 export async function load({ params }) {

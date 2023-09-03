@@ -1,5 +1,5 @@
 /**
- * Adds 'thing:db' and 'thing:schema' keys to the alias object inside the kit object of a given Config.
+ * Adds 'thing:data' and 'thing:schema' keys to the alias object inside the kit object of a given Config.
  *
  * @param {import("@sveltejs/kit").Config} config - The configuration object to update.
  */
@@ -12,7 +12,8 @@ export function extendSvelteConfig(config) {
 		config.kit.alias = {};
 	}
 
-	config.kit.alias['thing:db'] = './.svelte-kit/content-thing/generated/db.js';
+	config.kit.alias['thing:data'] =
+		'./.svelte-kit/content-thing/generated/db.js';
 	config.kit.alias['thing:schema'] =
 		'./.svelte-kit/content-thing/generated/schema.js';
 

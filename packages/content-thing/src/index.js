@@ -108,7 +108,7 @@ async function outputCollections(input, output) {
 	const collectionNames = collections.map((entry) => entry.name);
 
 	writeSchemaExporter(schemaPath, collectionNames);
-	writeDBClient(path.join(output, 'db.js'), collectionNames, dbPath);
+	writeDBClient(path.join(output, 'db.js'), collectionNames);
 
 	await generateSQLiteDB(schemaPath, path.join(output, 'migrations'));
 	await pushSQLiteDB(schemaPath, dbPath);

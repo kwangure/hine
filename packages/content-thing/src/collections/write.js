@@ -85,9 +85,8 @@ export function outputYamlCollection(
 /**
  * @param {string} dbClientPath
  * @param {string[]} collections
- * @param {string} dbPath
  */
-export function writeDBClient(dbClientPath, collections, dbPath) {
+export function writeDBClient(dbClientPath, collections) {
 	let result = `import { Database } from 'content-thing/better-sqlite3';\n`;
 	result += `import { drizzle } from 'content-thing/drizzle-orm/better-sqlite3';\n`;
 	result += `// @ts-ignore\n`;

@@ -6,7 +6,7 @@
 	import { page } from '$app/stores';
 
 	/** @type {import('./types.js').TocEntry[]} */
-	export let toc = [];
+	export let toc;
 
 	/** @type {string} */
 	let activeTarget = toc[0]?.id;

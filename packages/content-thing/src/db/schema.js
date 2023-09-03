@@ -124,6 +124,7 @@ export function generateMarkdownSchema(schema, tableName) {
 			schemaCode += `\tdata_${key}: ${columnCode},\n`;
 		}
 	}
+	schemaCode += `\theadingTree: /** @type {ReturnType<typeof json<import('content-thing').TocEntry[], 'headingTree'>>} */(json('headingTree')).notNull(),\n`;
 	schemaCode += `\tcontent: /** @type {ReturnType<typeof json<import('content-thing/mdast').Root, 'content'>>} */(json('content')).notNull(),\n`;
 	schemaCode += '});\n';
 	return schemaCode;

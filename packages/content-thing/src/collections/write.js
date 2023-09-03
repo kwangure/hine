@@ -150,7 +150,11 @@ export function writeMarkdownData(file) {
 	const transformedTree = processor.runSync(tree, vfile);
 
 	/** @type {Record<string, any>} */
-	const data = { id: file.id, content: transformedTree };
+	const data = {
+		id: file.id,
+		content: transformedTree,
+		headingTree: vfile.data.tableOfContents,
+	};
 	const frontmatter = transformedTree.data?.frontmatter;
 	if (frontmatter) {
 		for (const [key, value] of Object.entries(frontmatter)) {

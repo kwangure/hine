@@ -50,8 +50,7 @@
 							{entry.data_title}
 						</Sidebar.Link>
 						{#if $page.url.pathname === `/docs/${entry.id}`}
-							{@const toc = /** @type {import('content-thing').TocEntry[]}*/(entry.content.data?.tableOfContents)}
-							<Sidebar.Outline {toc} />
+							<Sidebar.Outline toc={entry.headingTree} />
 						{/if}
 					</Sidebar.Item>
 				{/each}

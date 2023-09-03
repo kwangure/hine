@@ -163,6 +163,7 @@ describe('generateMarkdownSchema', () => {
 			`\tid: text('id').primaryKey(),\n` +
 			`\tdata_title: text('data_title').notNull(),\n` +
 			`\tdata_age: integer('data_age').notNull(),\n` +
+			"\theadingTree: /** @type {ReturnType<typeof json<import('content-thing').TocEntry[], 'headingTree'>>} */(json('headingTree')).notNull(),\n" +
 			"\tcontent: /** @type {ReturnType<typeof json<import('content-thing/mdast').Root, 'content'>>} */(json('content')).notNull(),\n" +
 			`});\n`;
 		assert.strictEqual(generateMarkdownSchema(config, tableName), expected);

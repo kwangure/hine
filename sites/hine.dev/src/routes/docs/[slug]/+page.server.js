@@ -17,6 +17,7 @@ export async function load({ params }) {
 					id: true,
 					data_title: true,
 					content: true,
+					headingTree: true,
 				},
 				orderBy: (docs, { asc }) => [asc(docs.data_order)],
 			},

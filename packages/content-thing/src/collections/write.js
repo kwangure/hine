@@ -103,7 +103,7 @@ export function writeDBClient(dbClientPath, collections) {
 	result += `// Vite prepends file:// in production\n`;
 	result += `const normalizedDBPath = dbPath.replace(/^[a-zA-Z]+:\\/\\//, '');\n`;
 	result += `const sqlite = new Database(normalizedDBPath);\n`;
-	result += `export const db = drizzle(sqlite, { schema });\n`;
+	result += `export const collections = drizzle(sqlite, { schema });\n`;
 
 	write(dbClientPath, result);
 }

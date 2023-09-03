@@ -1,16 +1,16 @@
-import { db } from 'thing:db';
+import { collections } from 'thing:db';
 import { error } from '@sveltejs/kit';
 
 export async function load({ params }) {
 	const { slug } = params;
-	const data = await db.query.docs.findFirst({
+	const data = await collections.query.docs.findFirst({
 		where: (docs, { eq }) => eq(docs.id, slug),
 	});
 	if (!data) {
 		throw error(404, 'Page not found.');
 	}
 
-	const groups = await db.query.groups.findMany({
+	const groups = await collections.query.groups.findMany({
 		with: {
 			docs: {
 				columns: {

@@ -42,7 +42,7 @@ export const drizzleManyRelation = z.object({
 });
 
 export const markdownSchema = z.object({
-	frontmatter: z
+	data: z
 		.record(
 			z.discriminatedUnion('type', [drizzleIntegerColumn, drizzleTextColumn]),
 		)

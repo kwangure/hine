@@ -91,11 +91,11 @@ export function generateIntegerColumnCode(key, column) {
  */
 export function generateMarkdownSchema(schema, tableName) {
 	let schemaCode = `import { json } from 'content-thing/db';\n`;
-	if (schema.frontmatter) {
+	if (schema.data) {
 		const types = new Set(
 			[
 				'sqliteTable',
-				...Object.values(schema.frontmatter).map(({ type }) => type),
+				...Object.values(schema.data).map(({ type }) => type),
 			].sort(),
 		);
 		schemaCode += `import { ${[...types].join(
@@ -106,7 +106,7 @@ export function generateMarkdownSchema(schema, tableName) {
 	schemaCode += `export const ${tableName} = sqliteTable('${tableName}', {\n`;
 	schemaCode += `\tid: text('id').primaryKey(),\n`;
 
-	const frontmatter = schema.frontmatter;
+	const frontmatter = schema.data;
 	if (frontmatter) {
 		for (const key in frontmatter) {
 			const column = frontmatter[key];

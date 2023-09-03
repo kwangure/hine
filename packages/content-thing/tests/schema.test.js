@@ -146,7 +146,7 @@ describe('generateMarkdownSchema', () => {
 	it('should generate markdown schema', () => {
 		/** @type {import('../src/db/types.js').CTMarkdownSchema} */
 		const config = {
-			frontmatter: {
+			data: {
 				title: {
 					type: 'text',
 				},
@@ -170,7 +170,7 @@ describe('generateMarkdownSchema', () => {
 	it('throws error for unsupported column types', () => {
 		/** @type {import('../src/db/types.js').CTMarkdownSchema} */
 		const config = {
-			frontmatter: {
+			data: {
 				title: {
 					// @ts-expect-error
 					type: 'unsupported',

@@ -27,6 +27,14 @@ export function generateTextColumnCode(key, column) {
 		columnCode += `.notNull()`;
 	}
 
+	if (column.unique) {
+		if (typeof column.unique === 'boolean') {
+			columnCode += `.unique()`;
+		} else {
+			columnCode += `.unique(${JSON.stringify(column.unique)})`;
+		}
+	}
+
 	if (column.defaultValue !== undefined) {
 		columnCode += `.default(${JSON.stringify(column.defaultValue)})`;
 	}
@@ -65,6 +73,14 @@ export function generateIntegerColumnCode(key, column) {
 
 	if (!column.nullable) {
 		columnCode += `.notNull()`;
+	}
+
+	if (column.unique) {
+		if (typeof column.unique === 'boolean') {
+			columnCode += `.unique()`;
+		} else {
+			columnCode += `.unique(${JSON.stringify(column.unique)})`;
+		}
 	}
 
 	if (column.defaultValue !== undefined) {

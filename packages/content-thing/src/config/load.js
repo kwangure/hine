@@ -14,6 +14,7 @@ export const drizzlePrimaryKeyConfig = z
 export const drizzleColumn = z.object({
 	nullable: z.boolean().default(false),
 	primaryKey: drizzlePrimaryKeyConfig.optional(),
+	unique: z.string().or(z.boolean()).default(false),
 });
 
 export const drizzleIntegerColumn = drizzleColumn.extend({

@@ -10,7 +10,8 @@
 				"type": "text"
 			},
 			"order": {
-				"type": "integer"
+				"type": "integer",
+				"unique": true
 			}
 		}
 	},

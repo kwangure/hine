@@ -50,6 +50,14 @@ describe('generateTextColumnCode', () => {
 		assert.strictEqual(result, "text('name')");
 	});
 
+	it('generates code for unique text column', () => {
+		const result = generateTextColumnCode('name', {
+			type: 'text',
+			unique: 'unique_name',
+		});
+		assert.strictEqual(result, `text('name').notNull().unique("unique_name")`);
+	});
+
 	it('should generate text column code with all options', () => {
 		const key = 'name';
 		/** @type {import('../src/db/types.js').CTText} */
@@ -60,8 +68,9 @@ describe('generateTextColumnCode', () => {
 			defaultValue: 'value1',
 			primaryKey: true,
 			nullable: true,
+			unique: true,
 		};
-		const expected = `text('name', {"length":50,"enum":["value1","value2"]}).default("value1").primaryKey()`;
+		const expected = `text('name', {"length":50,"enum":["value1","value2"]}).unique().default("value1").primaryKey()`;
 		assert.strictEqual(generateTextColumnCode(key, column), expected);
 	});
 
@@ -117,6 +126,14 @@ describe('generateIntegerColumnCode', () => {
 		assert.strictEqual(result, "integer('age')");
 	});
 
+	it('generates code for unique integer column', () => {
+		const result = generateIntegerColumnCode('age', {
+			type: 'integer',
+			unique: 'unique_age',
+		});
+		assert.strictEqual(result, `integer('age').notNull().unique("unique_age")`);
+	});
+
 	it('should generate integer column code with all options', () => {
 		const key = 'age';
 		/** @type {import('../src/db/types.js').CTInteger} */
@@ -126,8 +143,9 @@ describe('generateIntegerColumnCode', () => {
 			defaultValue: 0,
 			primaryKey: true,
 			nullable: true,
+			unique: true,
 		};
-		const expected = `integer('age', {"mode":"timestamp"}).default(0).primaryKey()`;
+		const expected = `integer('age', {"mode":"timestamp"}).unique().default(0).primaryKey()`;
 		assert.strictEqual(generateIntegerColumnCode(key, column), expected);
 	});
 

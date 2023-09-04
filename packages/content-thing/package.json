@@ -123,8 +123,8 @@
 			"default": "./src/db/index.js"
 		},
 		"./better-sqlite3": {
-			"types": "./types/packages/better-sqlite3.d.ts",
-			"default": "./src/packages/better-sqlite3.js"
+			"types": "./types/packages/better-sqlite3/index.d.ts",
+			"default": "./src/packages/better-sqlite3/index.js"
 		},
 		"./drizzle-orm": {
 			"types": "./types/packages/drizzle-orm/index.d.ts",

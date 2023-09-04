@@ -122,10 +122,9 @@ export function generateMarkdownSchema(schema, tableName) {
 	schemaCode += `export const ${tableName} = sqliteTable('${tableName}', {\n`;
 	schemaCode += `\tid: text('id').primaryKey(),\n`;
 
-	const frontmatter = schema.data;
-	if (frontmatter) {
-		for (const key in frontmatter) {
-			const column = frontmatter[key];
+	if (schema.data) {
+		for (const key in schema.data) {
+			const column = schema.data[key];
 			const columnType = column.type;
 			let columnCode = '';
 			if (columnType === 'text') {

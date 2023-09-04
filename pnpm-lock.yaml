@@ -136,9 +136,15 @@ importers:
       remark-frontmatter:
         specifier: ^4.0.1
         version: 4.0.1
+      remark-parse:
+        specifier: ^10.0.2
+        version: 10.0.2
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
+      unified:
+        specifier: ^10.1.2
+        version: 10.1.2
       vite:
         specifier: ^4.4.9
         version: 4.4.9(@types/node@20.4.10)

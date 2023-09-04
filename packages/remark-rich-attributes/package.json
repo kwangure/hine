@@ -92,19 +92,19 @@
 		"unist-util-visit": "^4.0.0"
 	},
 	"devDependencies": {
-		"@content-thing/internal-utils": "*",
-		"@content-thing/remark-attributes": "*",
-		"@hinejs/eslint-config": "*",
-		"@hinejs/prettier-config": "*",
+		"@content-thing/internal-utils": "workspace:^0.0.0",
+		"@content-thing/remark-attributes": "workspace:^0.0.0",
 		"@types/mdast": "^3.0.12",
 		"@types/node": "^20.4.10",
 		"eslint": "^8.47.0",
+		"eslint-config": "workspace:*",
 		"prettier": "^3.0.2",
+		"prettier-config": "workspace:*",
 		"publint": "^0.2.0",
 		"remark-parse": "^10.0.2",
 		"typescript": "^5.1.6"
 	},
-	"prettier": "@hinejs/prettier-config",
+	"prettier": "prettier-config",
 	"license": "MIT",
 	"type": "module"
 }

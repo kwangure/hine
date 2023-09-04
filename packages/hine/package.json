@@ -108,16 +108,16 @@
 		}
 	},
 	"devDependencies": {
-		"@hinejs/eslint-config": "*",
-		"@hinejs/prettier-config": "*",
 		"eslint": "^8.47.0",
+		"eslint-config": "workspace:*",
 		"prettier": "^3.0.2",
+		"prettier-config": "workspace:*",
 		"publint": "^0.2.2",
 		"typescript": "^5.1.6",
 		"vite": "^4.4.8",
 		"vitest": "^0.33.0"
 	},
-	"prettier": "@hinejs/prettier-config",
+	"prettier": "prettier-config",
 	"license": "MIT",
 	"type": "module"
 }

@@ -94,15 +94,15 @@
 		"!**/*.spec.*"
 	],
 	"devDependencies": {
-		"@hinejs/eslint-config": "*",
-		"@hinejs/prettier-config": "*",
 		"@types/node": "^20.4.10",
 		"eslint": "^8.47.0",
+		"eslint-config": "workspace:*",
 		"prettier": "^3.0.2",
+		"prettier-config": "workspace:*",
 		"publint": "^0.2.2",
 		"typescript": "^5.1.6"
 	},
-	"prettier": "@hinejs/prettier-config",
+	"prettier": "prettier-config",
 	"license": "MIT",
 	"type": "module"
 }

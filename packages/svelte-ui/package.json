@@ -1,5 +1,5 @@
 {
-	"name": "@hinejs/svelte-ui",
+	"name": "svelte-ui",
 	"version": "0.0.0",
 	"scripts": {
 		"build": "wireit",
@@ -132,8 +132,6 @@
 	},
 	"devDependencies": {
 		"@fig/lezer-bash": "^1.2.5",
-		"@hinejs/eslint-config": "*",
-		"@hinejs/prettier-config": "*",
 		"@lezer/common": "^1.0.4",
 		"@lezer/cpp": "^1.0.0",
 		"@lezer/css": "^1.0.1",
@@ -151,8 +149,10 @@
 		"@types/mdast": "^3.0.12",
 		"autoprefixer": "^10.4.14",
 		"eslint": "^8.47.0",
+		"eslint-config": "workspace:*",
 		"postcss": "^8.4.27",
 		"prettier": "^3.0.2",
+		"prettier-config": "workspace:*",
 		"prettier-plugin-svelte": "^3.0.3",
 		"prettier-plugin-tailwindcss": "^0.5.3",
 		"publint": "^0.2.2",

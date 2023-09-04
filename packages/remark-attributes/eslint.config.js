@@ -1,1 +1,1 @@
-export { default } from '@hinejs/eslint-config';
+export { default } from 'eslint-config';

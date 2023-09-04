@@ -81,15 +81,13 @@
 		}
 	},
 	"dependencies": {
-		"@hinejs/svelte-ui": "^0.0.0",
 		"@mdi/js": "^7.2.96",
 		"hine": "workspace:^0.0.17",
-		"simple-icons": "^9.9.0"
+		"simple-icons": "^9.9.0",
+		"svelte-ui": "workspace:^0.0.0"
 	},
 	"devDependencies": {
 		"content-thing": "*",
-		"@hinejs/eslint-config": "*",
-		"@hinejs/prettier-config": "*",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-vercel": "^3.0.3",
 		"@sveltejs/kit": "^1.22.4",
@@ -97,9 +95,11 @@
 		"autoprefixer": "^10.4.14",
 		"drizzle-kit": "^0.19.13",
 		"eslint": "^8.47.0",
+		"eslint-config": "workspace:*",
 		"husky": "^8.0.3",
 		"postcss": "^8.4.27",
 		"prettier": "^3.0.2",
+		"prettier-config": "workspace:*",
 		"prettier-plugin-svelte": "^3.0.3",
 		"prettier-plugin-tailwindcss": "^0.5.3",
 		"svelte": "^4.0.5",

@@ -15,8 +15,7 @@
 			"command": "vite build",
 			"dependencies": [
 				"../../packages/hine:package",
-				"../../packages/svelte-ui:package",
-				"../../packages/content-thing:package"
+				"../../packages/svelte-ui:package"
 			],
 			"files": [
 				"src/**/*.{js,ts,svelte}",
@@ -32,8 +31,7 @@
 			"command": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 			"dependencies": [
 				"../../packages/hine:package",
-				"../../packages/svelte-ui:package",
-				"../../packages/content-thing:package"
+				"../../packages/svelte-ui:package"
 			],
 			"files": [
 				"{src,test}/**/*.{js,ts,svelte}",
@@ -87,12 +85,12 @@
 		"svelte-ui": "workspace:^0.0.0"
 	},
 	"devDependencies": {
-		"content-thing": "*",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-vercel": "^3.0.3",
 		"@sveltejs/kit": "^1.22.4",
 		"@types/eslint": "^8.44.2",
 		"autoprefixer": "^10.4.14",
+		"content-thing": "^0.0.1",
 		"drizzle-kit": "^0.19.13",
 		"eslint": "^8.47.0",
 		"eslint-config": "workspace:*",

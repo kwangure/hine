@@ -51,11 +51,7 @@
 		"check": {
 			"dependencies": [
 				"./examples/basic:check",
-				"./packages/content-thing:check",
 				"./packages/hine:check",
-				"./packages/remark-attributes:check",
-				"./packages/remark-rich-attributes:check",
-				"./packages/remark-toc:check",
 				"./packages/svelte-ui:check",
 				"./sites/hine.dev:check"
 			]
@@ -68,16 +64,9 @@
 		"format": {
 			"dependencies": [
 				"./examples/basic:format",
-				"./packages/content-thing:format",
 				"./packages/eslint-config:format",
 				"./packages/hine:format",
-				"./packages/internal-utils:format",
 				"./packages/prettier-config:format",
-				"./packages/remark-attributes:format",
-				"./packages/remark-rich-attributes:format",
-				"./packages/remark-toc:format",
-				"./packages/remark-variables:format",
-				"./packages/remark-yaml-parse:format",
 				"./packages/svelte-ui:format",
 				"./sites/hine.dev:format"
 			]
@@ -85,49 +74,28 @@
 		"lint": {
 			"dependencies": [
 				"./examples/basic:lint",
-				"./packages/content-thing:lint",
 				"./packages/eslint-config:lint",
 				"./packages/hine:lint",
-				"./packages/internal-utils:lint",
 				"./packages/prettier-config:lint",
-				"./packages/remark-attributes:lint",
-				"./packages/remark-rich-attributes:lint",
-				"./packages/remark-toc:lint",
-				"./packages/remark-variables:lint",
-				"./packages/remark-yaml-parse:lint",
 				"./packages/svelte-ui:lint",
 				"./sites/hine.dev:lint"
 			]
 		},
 		"package": {
 			"dependencies": [
-				"./packages/content-thing:package",
 				"./packages/eslint-config:package",
 				"./packages/hine:package",
 				"./packages/svelte-ui:package",
-				"./packages/internal-utils:package",
-				"./packages/prettier-config:package",
-				"./packages/remark-attributes:package",
-				"./packages/remark-rich-attributes:package",
-				"./packages/remark-toc:package",
-				"./packages/remark-variables:package",
-				"./packages/remark-yaml-parse:package"
+				"./packages/prettier-config:package"
 			]
 		},
 		"pre-commit": {
 			"dependencies": [
 				"build:readme",
 				"./examples/basic:pre-commit",
-				"./packages/content-thing:pre-commit",
 				"./packages/eslint-config:pre-commit",
 				"./packages/hine:pre-commit",
-				"./packages/internal-utils:pre-commit",
 				"./packages/prettier-config:pre-commit",
-				"./packages/remark-attributes:pre-commit",
-				"./packages/remark-rich-attributes:pre-commit",
-				"./packages/remark-toc:pre-commit",
-				"./packages/remark-variables:lint",
-				"./packages/remark-yaml-parse:pre-commit",
 				"./packages/svelte-ui:pre-commit",
 				"./sites/hine.dev:pre-commit"
 			]
@@ -140,12 +108,7 @@
 		},
 		"test": {
 			"dependencies": [
-				"./packages/hine:test",
-				"./packages/internal-utils:test",
-				"./packages/remark-attributes:test",
-				"./packages/remark-rich-attributes:test",
-				"./packages/remark-variables:test",
-				"./packages/remark-yaml-parse:test"
+				"./packages/hine:test"
 			]
 		},
 		"version": {

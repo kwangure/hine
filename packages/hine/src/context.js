@@ -30,6 +30,6 @@ export class Context {
 	 * @param {any} value
 	 */
 	set(key, value) {
-		return this.#data.set(key, value);
+		this.#data.set(key, value);
 	}
 }

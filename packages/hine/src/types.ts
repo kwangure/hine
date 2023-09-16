@@ -1,5 +1,6 @@
 import type { Action } from './action.js';
 import type { Condition } from './condition.js';
+import type { Context as ContextClass } from './context.js';
 
 interface RunnerConfig {
 	name?: string;
@@ -46,4 +47,11 @@ export interface CompoundResolveConfig extends BaseResolveConfig {
 export interface EventOptions {
 	name: string;
 	value?: string;
+}
+
+export interface Context<T extends Record<string, any> = Record<string, any>> extends ContextClass {
+	get: <K extends keyof T>(key: K) => T[K];
+	has: (key: keyof T) => boolean;
+	set: <K extends keyof T>(key: K, value: T[K]) => void;
+	__type: T;
 }

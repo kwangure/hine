@@ -24,9 +24,14 @@ export function condition(config) {
 	return new Condition(config);
 }
 
-/** @param {Record<string, any>} data */
+/**
+ * @template {Record<string, any>} T
+ * @param {T} data
+ */
 export function context(data) {
-	return new Context(data);
+	return /** @type {import('./types.js').Context<T>} */ (
+		/** @type {unknown} */(new Context(data))
+	);
 }
 
 export { handler } from './handler/helper.js';

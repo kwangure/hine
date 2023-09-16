@@ -1,5 +1,13 @@
 # hine
 
+## 0.0.18
+
+### Patch Changes
+
+- 65d725e: Rename the `states` used to define child states in a state config to `children`.
+- 65d725e: Consolidate `h.effect()` and `h.transition()` into a unified helper `h.handler()`.
+- 65d725e: Consolidate `h.compound()` and `h.atomic()` into a unified helper `h.state()`.
+
 ## 0.0.17
 
 ### Patch Changes

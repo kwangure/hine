@@ -1,6 +1,6 @@
 {
 	"name": "hine.dev",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"private": true,
 	"scripts": {
 		"build": "wireit",
@@ -80,7 +80,7 @@
 	},
 	"dependencies": {
 		"@mdi/js": "^7.2.96",
-		"hine": "workspace:^0.0.17",
+		"hine": "workspace:^0.0.18",
 		"simple-icons": "^9.9.0",
 		"svelte-ui": "workspace:^0.0.0"
 	},

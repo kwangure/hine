@@ -113,10 +113,10 @@
 		},
 		"version": {
 			"#comment": [
-				"Changesets doesn't bump package-lock.json so we run `npm install`",
+				"Changesets doesn't bump package-lock.json so we run `pnpm install`",
 				"to do it for us"
 			],
-			"command": "changeset version && npm install",
+			"command": "changeset version && pnpm install",
 			"files": [
 				"./changeset/*.md",
 				"./packages/**/package.json",

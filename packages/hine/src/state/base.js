@@ -389,7 +389,11 @@ export class BaseState {
 	}
 	/** @returns {StateEvent | null} */
 	get event() {
-		return this.#event ?? this.__parent?.event ?? null;
+		const event = this.#event ?? this.__parent?.event;
+		if (!event) {
+			throw Error(`Attempted to access event outside event lifecycle.`);
+		}
+		return event;
 	}
 	get handler() {
 		return this.__handler;

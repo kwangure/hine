@@ -39,6 +39,7 @@ export class Action {
 				`Attempted to read 'action.event' at '${path}' before calling 'state.resolve()'.`,
 			);
 		}
+
 		return this.__ownerState?.event;
 	}
 	get name() {

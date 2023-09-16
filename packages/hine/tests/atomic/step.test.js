@@ -119,7 +119,6 @@ describe('step', () => {
 	it('displays emitted event', () => {
 		const state = new AtomicState();
 		state.resolve();
-		expect(state.event).toBe(null);
 		const event = 'my-event';
 		let initial = true;
 		state.subscribe((machine) => {

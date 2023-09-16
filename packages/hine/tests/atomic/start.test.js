@@ -27,7 +27,6 @@ describe('start', () => {
 	});
 	it('emits start event', () => {
 		const machine = new AtomicState();
-		expect(machine.event).toBe(null);
 		let initial = true;
 		machine.subscribe((machine) => {
 			if (initial) {

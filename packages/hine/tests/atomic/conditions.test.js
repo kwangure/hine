@@ -19,7 +19,7 @@ describe('conditions', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				do: new Action({
 					run() {},
@@ -37,7 +37,6 @@ describe('conditions', () => {
 				cond2,
 			},
 		});
-		state.start();
 	});
 	it('calls condition in machine context', () => {
 		const condition = new Condition({
@@ -55,7 +54,7 @@ describe('conditions', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					run() {},
@@ -65,7 +64,6 @@ describe('conditions', () => {
 				condition,
 			},
 		});
-		state.start();
 	});
 	it('calls subscribers before condition', () => {
 		/** @type {string[]} */
@@ -80,7 +78,7 @@ describe('conditions', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
@@ -94,7 +92,6 @@ describe('conditions', () => {
 				}),
 			},
 		});
-		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -117,7 +114,7 @@ describe('conditions', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
@@ -131,7 +128,6 @@ describe('conditions', () => {
 				}),
 			},
 		});
-		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -154,7 +150,7 @@ describe('conditions', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
@@ -170,7 +166,6 @@ describe('conditions', () => {
 				}),
 			},
 		});
-		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -201,7 +196,7 @@ describe('conditions', () => {
 				}),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			conditionConfig: {
 				notifyBefore: true,
 			},
@@ -225,7 +220,6 @@ describe('conditions', () => {
 				},
 			},
 		});
-		state.start();
 		state.subscribe(() => {
 			log.push('sub');
 		});
@@ -250,7 +244,7 @@ describe('conditions', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
@@ -267,7 +261,6 @@ describe('conditions', () => {
 				}),
 			},
 		});
-		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -284,20 +277,21 @@ describe('conditions', () => {
 				],
 			},
 		});
-		state1.monitor({
-			actions: {
-				action: new Action({ run() {} }),
-			},
-			conditions: {
-				condition: new Condition({
-					name: 'other-condition',
-					run() {
-						return true;
-					},
-				}),
-			},
-		});
-		expect(() => state1.start()).toThrow(/unknown condition/);
+		expect(() =>
+			state1.resolve({
+				actions: {
+					action: new Action({ run() {} }),
+				},
+				conditions: {
+					condition: new Condition({
+						name: 'other-condition',
+						run() {
+							return true;
+						},
+					}),
+				},
+			}),
+		).toThrow(/unknown condition/);
 		const state2 = new AtomicState({
 			on: {
 				event: [
@@ -308,20 +302,21 @@ describe('conditions', () => {
 				],
 			},
 		});
-		state2.monitor({
-			actions: {
-				action: new Action({ run() {} }),
-			},
-			conditions: {
-				condition: new Condition({
-					name: 'other-condition',
-					run() {
-						return true;
-					},
-				}),
-			},
-		});
-		expect(() => state2.start()).not.toThrow();
+		expect(() =>
+			state2.resolve({
+				actions: {
+					action: new Action({ run() {} }),
+				},
+				conditions: {
+					condition: new Condition({
+						name: 'other-condition',
+						run() {
+							return true;
+						},
+					}),
+				},
+			}),
+		).not.toThrow();
 	});
 	it('sets state condition during condition', () => {
 		const condition = new Condition({
@@ -339,7 +334,7 @@ describe('conditions', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
@@ -347,8 +342,6 @@ describe('conditions', () => {
 				condition,
 			},
 		});
-		expect(state.condition).toBe(null);
-		state.start();
 		expect(state.condition).toBe(null);
 	});
 	it('ignores falsy handlers on entry', () => {
@@ -362,7 +355,7 @@ describe('conditions', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					run() {
@@ -378,7 +371,6 @@ describe('conditions', () => {
 				}),
 			},
 		});
-		state.start();
 		expect(actions).toEqual([]);
 	});
 	it('runs truthy handlers on entry', () => {
@@ -392,7 +384,7 @@ describe('conditions', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					run() {
@@ -408,7 +400,6 @@ describe('conditions', () => {
 				}),
 			},
 		});
-		state.start();
 		expect(actions).toEqual(['action']);
 	});
 	it('ignores falsy handlers on exit', () => {
@@ -432,7 +423,7 @@ describe('conditions', () => {
 				s2: new AtomicState(),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			children: {
 				s1: {
 					actions: {
@@ -452,7 +443,6 @@ describe('conditions', () => {
 				},
 			},
 		});
-		state.start();
 		expect(actions).toEqual([]);
 	});
 	it('runs truthy handlers on exit', () => {
@@ -476,7 +466,7 @@ describe('conditions', () => {
 				s2: new AtomicState(),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			children: {
 				s1: {
 					actions: {
@@ -496,7 +486,6 @@ describe('conditions', () => {
 				},
 			},
 		});
-		state.start();
 		expect(actions).toEqual(['action']);
 	});
 	it('ignores falsy handlers on dispatch', () => {
@@ -519,7 +508,7 @@ describe('conditions', () => {
 				}),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			children: {
 				s1: {
 					actions: {
@@ -539,7 +528,6 @@ describe('conditions', () => {
 				},
 			},
 		});
-		state.start();
 		state.dispatch('myEvent');
 		expect(actions).toEqual([]);
 	});
@@ -563,7 +551,7 @@ describe('conditions', () => {
 				}),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			children: {
 				s1: {
 					actions: {
@@ -583,7 +571,6 @@ describe('conditions', () => {
 				},
 			},
 		});
-		state.start();
 		state.dispatch('myEvent');
 		expect(actions).toEqual(['action']);
 	});
@@ -598,7 +585,7 @@ describe('conditions', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					run() {
@@ -614,7 +601,6 @@ describe('conditions', () => {
 				}),
 			},
 		});
-		state.start();
 		expect(actions).toEqual([]);
 	});
 	it('runs truthy handlers on always', () => {
@@ -628,7 +614,7 @@ describe('conditions', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					run() {
@@ -644,7 +630,6 @@ describe('conditions', () => {
 				}),
 			},
 		});
-		state.start();
 		expect(actions).toEqual(['action']);
 	});
 });

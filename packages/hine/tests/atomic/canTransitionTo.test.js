@@ -20,7 +20,7 @@ describe('canTransitionTo', () => {
 				s2: new AtomicState(),
 			},
 		});
-		state.start();
+		state.resolve();
 		expect(state.canTransitionTo('s0.s2')).toBe(true);
 		expect(state.canTransitionTo('s0.s1')).toBe(false);
 		expect(state.canTransitionTo('s0.random')).toBe(false);

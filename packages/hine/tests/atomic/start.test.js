@@ -14,7 +14,7 @@ describe('start', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				always: new Action({
 					run() {
@@ -23,10 +23,7 @@ describe('start', () => {
 				}),
 			},
 		});
-		state.start();
 		expect(log).toEqual(['always']);
-		state.start();
-		expect(log).toEqual(['always', 'always']);
 	});
 	it('emits start event', () => {
 		const machine = new AtomicState();
@@ -39,6 +36,6 @@ describe('start', () => {
 			}
 			expect(machine.event?.name).toBe('_start');
 		});
-		machine.start();
+		machine.resolve();
 	});
 });

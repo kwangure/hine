@@ -17,7 +17,7 @@ const toggle = h.state({
 	},
 });
 
-toggle.start();
+toggle.resolve();
 
 toggle.matches('inactive'); // true
 

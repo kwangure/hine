@@ -19,8 +19,7 @@ describe('path', () => {
 		const state = new AtomicState({
 			name: 'state',
 		});
-		state.monitor({});
-		state.start();
+		state.resolve({});
 		// TODO: Update now that handlers are user accessible
 		// Previously the only way the end user ever reached a handler object was `step`
 		const eventIterator = state.step('event');

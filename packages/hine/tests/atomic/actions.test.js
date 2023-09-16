@@ -22,7 +22,7 @@ describe('actions', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				always0: new Action({
 					run() {
@@ -36,7 +36,6 @@ describe('actions', () => {
 				}),
 			},
 		});
-		state.start();
 		expect(log).toEqual(['entry0', 'always0']);
 	});
 
@@ -68,7 +67,7 @@ describe('actions', () => {
 				}),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			children: {
 				b: {
 					actions: {
@@ -86,7 +85,6 @@ describe('actions', () => {
 				},
 			},
 		});
-		state.start();
 		state.dispatch('event');
 		expect(log).toEqual(['entry0', 'always0']);
 	});
@@ -118,7 +116,7 @@ describe('actions', () => {
 				s2: new AtomicState(),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				exit0: new Action({
 					run() {
@@ -138,7 +136,6 @@ describe('actions', () => {
 				},
 			},
 		});
-		state.start();
 		log.length = 0;
 
 		state.dispatch('event');
@@ -157,7 +154,7 @@ describe('actions', () => {
 				],
 			},
 		});
-		machine.monitor({
+		machine.resolve({
 			actions: {
 				on0: new Action({
 					run() {
@@ -166,7 +163,6 @@ describe('actions', () => {
 				}),
 			},
 		});
-		machine.start();
 		log.length = 0;
 
 		machine.dispatch('event');
@@ -190,7 +186,7 @@ describe('actions', () => {
 				],
 			},
 		});
-		machine.monitor({
+		machine.resolve({
 			actions: {
 				always0: new Action({
 					run() {
@@ -204,7 +200,6 @@ describe('actions', () => {
 				}),
 			},
 		});
-		machine.start();
 		log.length = 0;
 
 		machine.dispatch('event');
@@ -245,7 +240,7 @@ describe('actions', () => {
 				}),
 			},
 		});
-		machine.monitor({
+		machine.resolve({
 			children: {
 				s1: {
 					actions: {
@@ -282,7 +277,6 @@ describe('actions', () => {
 				},
 			},
 		});
-		machine.start();
 		log.length = 0;
 
 		machine.dispatch('event');
@@ -298,7 +292,7 @@ describe('actions', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				always: new Action({
 					run() {
@@ -307,7 +301,6 @@ describe('actions', () => {
 				}),
 			},
 		});
-		state.start();
 		expect(alwaysCount).toBe(1);
 
 		state.dispatch('non-existent');
@@ -352,7 +345,7 @@ describe('actions', () => {
 				}),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				always: new Action({
 					run() {
@@ -376,7 +369,6 @@ describe('actions', () => {
 				}),
 			},
 		});
-		state.start();
 
 		state.dispatch('event');
 		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
@@ -416,7 +408,7 @@ describe('actions', () => {
 				s2: new AtomicState(),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				always: new Action({
 					run() {
@@ -466,7 +458,6 @@ describe('actions', () => {
 				},
 			},
 		});
-		state.start();
 
 		state.dispatch('event');
 		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
@@ -485,12 +476,11 @@ describe('actions', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action,
 			},
 		});
-		state.start();
 	});
 	it('calls subscribers before action', () => {
 		/** @type {string[]} */
@@ -504,7 +494,7 @@ describe('actions', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					notifyBefore: true,
@@ -514,7 +504,6 @@ describe('actions', () => {
 				}),
 			},
 		});
-		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -536,7 +525,7 @@ describe('actions', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					notifyAfter: true,
@@ -546,7 +535,6 @@ describe('actions', () => {
 				}),
 			},
 		});
-		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -568,7 +556,7 @@ describe('actions', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actionConfig: {
 				notifyBefore: true,
 			},
@@ -580,7 +568,6 @@ describe('actions', () => {
 				}),
 			},
 		});
-		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -602,7 +589,7 @@ describe('actions', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actionConfig: {
 				notifyBefore: true,
 			},
@@ -615,7 +602,6 @@ describe('actions', () => {
 				}),
 			},
 		});
-		state.start();
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
@@ -641,7 +627,7 @@ describe('actions', () => {
 				}),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actionConfig: {
 				notifyBefore: true,
 			},
@@ -661,7 +647,6 @@ describe('actions', () => {
 				},
 			},
 		});
-		state.start();
 		state.subscribe(() => {
 			log.push('sub');
 		});
@@ -683,15 +668,17 @@ describe('actions', () => {
 				],
 			},
 		});
-		state.monitor({
-			actions: {
-				action: new Action({
-					name: 'other-action',
-					run() {},
-				}),
-			},
-		});
-		expect(() => state.start()).toThrow(/unknown action/);
+
+		expect(() =>
+			state.resolve({
+				actions: {
+					action: new Action({
+						name: 'other-action',
+						run() {},
+					}),
+				},
+			}),
+		).toThrow(/unknown action/);
 		const state2 = new AtomicState({
 			on: {
 				event: [
@@ -701,15 +688,17 @@ describe('actions', () => {
 				],
 			},
 		});
-		state2.monitor({
-			actions: {
-				action: new Action({
-					name: 'other-action',
-					run() {},
-				}),
-			},
-		});
-		expect(() => state2.start()).not.toThrow();
+
+		expect(() =>
+			state2.resolve({
+				actions: {
+					action: new Action({
+						name: 'other-action',
+						run() {},
+					}),
+				},
+			}),
+		).not.toThrow();
 	});
 	it('sets state action during action', () => {
 		const action = new Action({
@@ -725,13 +714,11 @@ describe('actions', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action,
 			},
 		});
-		expect(state.action).toBe(null);
-		state.start();
 		expect(state.action).toBe(null);
 	});
 	it('exposes actions inside actions', () => {
@@ -745,7 +732,7 @@ describe('actions', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action1: new Action({
 					run({ ownerState }) {
@@ -758,7 +745,6 @@ describe('actions', () => {
 				action2,
 			},
 		});
-		state.start();
 	});
 	it('calls actions with value', () => {
 		const state = new AtomicState({
@@ -766,7 +752,7 @@ describe('actions', () => {
 				event: [new EffectHandler({ run: ['action'] })],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					run({ event }) {
@@ -775,7 +761,6 @@ describe('actions', () => {
 				}),
 			},
 		});
-		state.start();
 
 		state.dispatch('event', 'my-value');
 	});
@@ -787,7 +772,7 @@ describe('actions', () => {
 				}),
 			],
 		});
-		expect(() => state.start()).toThrow("'missing'");
+		expect(() => state.resolve()).toThrow("'missing'");
 	});
 	it('throws on missing exit actions', () => {
 		const state = new AtomicState({
@@ -797,7 +782,7 @@ describe('actions', () => {
 				}),
 			],
 		});
-		expect(() => state.start()).toThrow("'missing'");
+		expect(() => state.resolve()).toThrow("'missing'");
 	});
 	it('throws on missing always actions', () => {
 		const state = new AtomicState({
@@ -807,6 +792,6 @@ describe('actions', () => {
 				}),
 			],
 		});
-		expect(() => state.start()).toThrow("'missing'");
+		expect(() => state.resolve()).toThrow("'missing'");
 	});
 });

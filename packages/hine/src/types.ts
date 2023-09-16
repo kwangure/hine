@@ -30,17 +30,17 @@ export interface ConditionJSON extends BaseRunnerJSON {
 	type: 'condition';
 }
 
-export interface BaseMonitorConfig {
+export interface BaseResolveConfig {
 	actions?: Record<string, Action>;
 	actionConfig?: RunnerConfig;
 	conditions?: Record<string, Condition>;
 	conditionConfig?: RunnerConfig;
 }
 
-export interface AtomicMonitorConfig extends BaseMonitorConfig {}
+export interface AtomicResolveConfig extends BaseResolveConfig {}
 
-export interface CompoundMonitorConfig extends BaseMonitorConfig {
-	children?: Record<string, AtomicMonitorConfig | CompoundMonitorConfig>;
+export interface CompoundResolveConfig extends BaseResolveConfig {
+	children?: Record<string, AtomicResolveConfig | CompoundResolveConfig>;
 }
 
 export interface EventOptions {

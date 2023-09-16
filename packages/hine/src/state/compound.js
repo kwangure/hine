@@ -109,7 +109,7 @@ export class CompoundState extends BaseState {
 		// No active child state implies state is not initialized
 		if (!this.__state) {
 			throw Error(
-				"Attempted to call 'state.isActiveEvent()' before calling 'state.start()'",
+				"Attempted to call 'state.isActiveEvent()' before calling 'state.resolve()'",
 			);
 		}
 		if (name in this.__onHandler && this.__onHandler[name].length) return true;
@@ -129,11 +129,16 @@ export class CompoundState extends BaseState {
 				this.__state.matches(path.slice(this.name.length + 1)))
 		);
 	}
-	/** @param {import('../types.js').CompoundMonitorConfig} config */
-	monitor(config) {
-		super.monitor(config);
+	/** @param {import('../types.js').CompoundResolveConfig} [config] */
+	resolve(config) {
+		this.__resolve(config);
+		this.__start();
+	}
+	/** @param {import('../types.js').CompoundResolveConfig} [config] */
+	__resolve(config) {
+		super.__resolve(config);
 		if (!config?.children) return;
-		for (const [name, monitorConfig] of Object.entries(config.children)) {
+		for (const [name, resolveConfig] of Object.entries(config.children)) {
 			const state = this.__children.get(name);
 			if (!state) {
 				const parentPath = this.parent?.path || [];
@@ -146,7 +151,7 @@ export class CompoundState extends BaseState {
 					].join(', ')}`,
 				);
 			}
-			state.monitor(monitorConfig);
+			state.__resolve(resolveConfig);
 		}
 	}
 	/** @param {(arg: this) => any} fn */

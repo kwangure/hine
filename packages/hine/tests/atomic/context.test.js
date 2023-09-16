@@ -8,7 +8,7 @@ describe('context', () => {
 		const state = new AtomicState({
 			context: new Context({ key: 'value' }),
 		});
-		state.start();
+		state.resolve();
 		expect(state.context?.get('key')).toBe('value');
 	});
 
@@ -19,7 +19,7 @@ describe('context', () => {
 			children: {
 				state,
 			},
-		}).start();
+		}).resolve();
 		expect(state.context?.get('key')).toBe('value');
 	});
 
@@ -35,7 +35,7 @@ describe('context', () => {
 					children: { state },
 				}),
 			},
-		}).start();
+		}).resolve();
 		expect(state.context?.get('key')).toBe('value1');
 	});
 });

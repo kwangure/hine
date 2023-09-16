@@ -19,7 +19,7 @@ describe('subscribe', () => {
 		state.subscribe(() => count++);
 		expect(count).toBe(1);
 
-		state.start();
+		state.resolve();
 		expect(count).toBe(2);
 	});
 	it('calls subscribers on disptach', () => {
@@ -39,7 +39,7 @@ describe('subscribe', () => {
 				}),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			children: {
 				s1: {
 					actions: {
@@ -50,7 +50,6 @@ describe('subscribe', () => {
 				},
 			},
 		});
-		state.start();
 		let count = 0;
 		state.subscribe(() => count++);
 		expect(count).toBe(1);

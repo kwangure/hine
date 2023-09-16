@@ -9,7 +9,7 @@ describe('context', () => {
 			context: new Context({ key: 'value' }),
 			children: { s1: new AtomicState() },
 		});
-		state.start();
+		state.resolve();
 		expect(state.context?.get('key')).toBe('value');
 	});
 
@@ -22,7 +22,7 @@ describe('context', () => {
 			children: {
 				state,
 			},
-		}).start();
+		}).resolve();
 		expect(state.context?.get('key')).toBe('value');
 	});
 
@@ -40,7 +40,7 @@ describe('context', () => {
 					children: { state },
 				}),
 			},
-		}).start();
+		}).resolve();
 		expect(state.context?.get('key')).toBe('value1');
 	});
 });

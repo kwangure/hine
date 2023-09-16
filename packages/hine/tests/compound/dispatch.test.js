@@ -44,8 +44,7 @@ describe('dispatch', () => {
 				}),
 			},
 		});
-		state.monitor({});
-		state.start();
+		state.resolve();
 		state.dispatch('event');
 		expect(state.matches('.s2')).toBe(true);
 		state.dispatch('event');
@@ -61,7 +60,7 @@ describe('dispatch', () => {
 				s2: new AtomicState(),
 			},
 		});
-		state.start();
+		state.resolve();
 		expect(() => {
 			state.dispatch('random');
 		}).not.toThrow();

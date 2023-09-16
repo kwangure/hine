@@ -22,7 +22,7 @@ describe('matches', () => {
 				s1: new AtomicState(),
 			},
 		});
-		state.start();
+		state.resolve();
 		expect(state.matches('machine')).toBe(true);
 	});
 	it('matches nested states', () => {
@@ -41,7 +41,7 @@ describe('matches', () => {
 				}),
 			},
 		});
-		state.start();
+		state.resolve();
 		expect(state.matches('machine.s1')).toBe(true);
 		expect(state.matches('machine.s1.s11')).toBe(true);
 		expect(state.matches('machine.s2')).toBe(false);
@@ -57,7 +57,7 @@ describe('matches', () => {
 				}),
 			},
 		});
-		state.start();
+		state.resolve();
 		expect(state.matches('.s1')).toBe(true);
 		expect(state.matches('.s1.s11')).toBe(true);
 	});
@@ -82,7 +82,7 @@ describe('matches', () => {
 			}
 			count += 1;
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					notifyBefore: true,
@@ -90,7 +90,6 @@ describe('matches', () => {
 				}),
 			},
 		});
-		state.start();
 	});
 	it('matches conditions', () => {
 		const state = new CompoundState({
@@ -114,7 +113,7 @@ describe('matches', () => {
 			}
 			count += 1;
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
@@ -125,7 +124,6 @@ describe('matches', () => {
 				}),
 			},
 		});
-		state.start();
 	});
 	it('matches handler', () => {
 		const state = new CompoundState({
@@ -155,7 +153,7 @@ describe('matches', () => {
 			}
 			count += 1;
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					notifyBefore: true,
@@ -169,6 +167,5 @@ describe('matches', () => {
 				}),
 			},
 		});
-		state.start();
 	});
 });

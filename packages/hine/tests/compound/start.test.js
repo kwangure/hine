@@ -19,7 +19,7 @@ describe('start', () => {
 				s1: new AtomicState(),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				always: new Action({
 					run() {
@@ -28,10 +28,7 @@ describe('start', () => {
 				}),
 			},
 		});
-		state.start();
 		expect(log).toEqual(['always']);
-		state.start();
-		expect(log).toEqual(['always', 'always']);
 	});
 	it('sets initial state', () => {
 		const machine = new CompoundState({
@@ -40,7 +37,7 @@ describe('start', () => {
 			},
 		});
 		expect(machine.matches('.s1')).toBe(false);
-		machine.start();
+		machine.resolve();
 		expect(machine.matches('.s1')).toBe(true);
 	});
 	it('is resets to initial state', () => {
@@ -54,11 +51,11 @@ describe('start', () => {
 				s2: new AtomicState(),
 			},
 		});
-		state.start();
+		state.resolve();
 		expect(state.matches('.s1')).toBe(true);
 		state.dispatch('event');
 		expect(state.matches('.s2')).toBe(true);
-		state.start();
+		state.resolve();
 		expect(state.matches('.s1')).toBe(true);
 	});
 });

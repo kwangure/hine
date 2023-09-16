@@ -2,6 +2,11 @@ import { BaseState } from './base.js';
 
 export class AtomicState extends BaseState {
 	#type = /** @type {const} */ ('atomic');
+	/** @param {import('../types.js').BaseResolveConfig} [config] */
+	resolve(config) {
+		this.__resolve(config);
+		this.__start();
+	}
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
 		fn(this);

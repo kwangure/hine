@@ -21,14 +21,13 @@ describe('step', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					run() {},
 				}),
 			},
 		});
-		state.start();
 
 		let count = 0;
 		state.subscribe(() => count++);
@@ -67,11 +66,10 @@ describe('step', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: { action },
 			conditions: { condition },
 		});
-		state.start();
 
 		const expected = [EffectHandler, condition, action, EffectHandler, action];
 		const expectedIterator = expected[Symbol.iterator]();
@@ -97,15 +95,8 @@ describe('step', () => {
 				}),
 			],
 		});
-		state.monitor({
-			actions: {
-				action: new Action({
-					run() {},
-				}),
-			},
-		});
 		const iterator = state.step('event');
-		expect(() => iterator.next()).toThrow(/start\(\)/);
+		expect(() => iterator.next()).toThrow(/resolve\(\)/);
 	});
 	it('throws if step is already in progress', () => {
 		const state = new AtomicState({
@@ -115,20 +106,19 @@ describe('step', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					run() {},
 				}),
 			},
 		});
-		state.start();
 		state.step('event').next();
 		expect(() => state.step('event').next()).toThrow(/in progress/);
 	});
 	it('displays emitted event', () => {
 		const state = new AtomicState();
-		state.start();
+		state.resolve();
 		expect(state.event).toBe(null);
 		const event = 'my-event';
 		let initial = true;

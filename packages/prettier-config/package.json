@@ -1,5 +1,5 @@
 {
-	"name": "@hinejs/prettier-config",
+	"name": "prettier-config",
 	"version": "0.0.0",
 	"scripts": {
 		"check": "wireit",
@@ -69,16 +69,16 @@
 	},
 	"module": "./prettier.config.mjs",
 	"devDependencies": {
-		"@hinejs/eslint-config": "*",
 		"eslint": "^8.47.0",
+		"eslint-config": "workspace:*",
 		"prettier": "^3.0.2",
+		"publint": "^0.2.2",
 		"typescript": "^5.1.6"
 	},
 	"files": [
 		"prettier.config.mjs",
 		"types"
 	],
-	"prettier": "@hinejs/prettier-config",
 	"license": "MIT",
 	"type": "module"
 }

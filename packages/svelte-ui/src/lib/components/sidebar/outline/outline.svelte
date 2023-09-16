@@ -1,7 +1,7 @@
 <script>
 	import { afterNavigate } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { isPartiallyHidden } from '@hinejs/svelte-ui/dom';
+	import { isPartiallyHidden } from '../../../dom/dom.js';
 	import List from './list.svelte';
 	import { page } from '$app/stores';
 
@@ -14,7 +14,7 @@
 	/**
 	 * Set the first visible heading as active
 	 *
-	 * @param {import('@hinejs/content-thing').TocEntry[]} tree
+	 * @param {import('./types.js').TocEntry[]} tree
 	 */
 	function updateActiveSlug(tree) {
 		for (const heading of tree) {

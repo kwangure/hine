@@ -15,8 +15,7 @@
 			"command": "vite build",
 			"dependencies": [
 				"../../packages/hine:package",
-				"../../packages/svelte-ui:package",
-				"../../packages/content-thing:package"
+				"../../packages/svelte-ui:package"
 			],
 			"files": [
 				"src/**/*.{js,ts,svelte}",
@@ -32,8 +31,7 @@
 			"command": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 			"dependencies": [
 				"../../packages/hine:package",
-				"../../packages/svelte-ui:package",
-				"../../packages/content-thing:package"
+				"../../packages/svelte-ui:package"
 			],
 			"files": [
 				"{src,test}/**/*.{js,ts,svelte}",
@@ -81,33 +79,25 @@
 		}
 	},
 	"dependencies": {
-		"@fig/lezer-bash": "^1.2.5",
-		"@hinejs/svelte-ui": "^0.0.0",
-		"@lezer/cpp": "^1.0.0",
-		"@lezer/css": "^1.0.1",
-		"@lezer/highlight": "^1.1.2",
-		"@lezer/html": "^1.0.1",
-		"@lezer/javascript": "^1.0.2",
-		"@lezer/json": "^1.0.0",
-		"@lezer/python": "^1.1.1",
-		"@lezer/rust": "^1.0.0",
 		"@mdi/js": "^7.2.96",
-		"@replit/codemirror-lang-svelte": "^6.0.0",
-		"simple-icons": "^9.9.0"
+		"hine": "workspace:^0.0.17",
+		"simple-icons": "^9.9.0",
+		"svelte-ui": "workspace:^0.0.0"
 	},
 	"devDependencies": {
-		"@hinejs/content-thing": "*",
-		"@hinejs/eslint-config": "*",
-		"@hinejs/prettier-config": "*",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-vercel": "^3.0.3",
 		"@sveltejs/kit": "^1.22.4",
 		"@types/eslint": "^8.44.2",
 		"autoprefixer": "^10.4.14",
+		"content-thing": "^0.0.1",
+		"drizzle-kit": "^0.19.13",
 		"eslint": "^8.47.0",
+		"eslint-config": "workspace:*",
 		"husky": "^8.0.3",
 		"postcss": "^8.4.27",
 		"prettier": "^3.0.2",
+		"prettier-config": "workspace:*",
 		"prettier-plugin-svelte": "^3.0.3",
 		"prettier-plugin-tailwindcss": "^0.5.3",
 		"svelte": "^4.0.5",
@@ -116,7 +106,7 @@
 		"typescript": "^5.1.6",
 		"vite": "^4.4.2",
 		"vitest": "^0.33.0",
-		"wireit": "^0.9.3"
+		"wireit": "^0.13.0"
 	},
 	"license": "MIT",
 	"type": "module"

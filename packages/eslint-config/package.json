@@ -1,5 +1,5 @@
 {
-	"name": "@hinejs/eslint-config",
+	"name": "eslint-config",
 	"version": "0.0.0",
 	"scripts": {
 		"check": "wireit",
@@ -54,6 +54,9 @@
 		},
 		"publint": {
 			"command": "publint",
+			"dependencies": [
+				"package"
+			],
 			"files": [
 				"*.{js,ts,mjs}",
 				"package.json"
@@ -75,17 +78,20 @@
 	"devDependencies": {
 		"@eslint/js": "^8.47.0",
 		"@types/eslint": "^8.44.2",
-		"@types/eslint__js": "^8.42.0",
 		"@types/eslint-config-prettier": "^6.11.0",
+		"@types/eslint__js": "^8.42.0",
 		"eslint": "^8.47.0",
+		"globals": "^13.21.0",
 		"prettier": "^3.0.2",
+		"prettier-config": "workspace:*",
+		"publint": "^0.2.2",
 		"typescript": "^5.1.6"
 	},
 	"files": [
 		"./eslint.config.js",
 		"types"
 	],
-	"prettier": "@hinejs/prettier-config",
+	"prettier": "prettier-config",
 	"license": "MIT",
 	"type": "module"
 }

@@ -6,9 +6,9 @@ import { EffectHandler } from '../../src/handler/effect.js';
 describe('ownerState', () => {
 	it('returns parent state', () => {
 		const state = new AtomicState({
-			entry: [new EffectHandler({ run: ['ownerState'] })],
+			entry: [new EffectHandler({ run: ['action'] })],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					run({ ownerState }) {

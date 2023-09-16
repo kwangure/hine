@@ -16,8 +16,8 @@
 		multiHighlight(code, language, options),
 	);
 	$: copyRanges = parseRanges(
-		typeof node.data?.attributes.copy === 'string'
-			? node.data.attributes.copy
+		typeof /** @type {any} */(node.data?.attributes).copy === 'string'
+			? /** @type {{ copy: string }} */(node.data?.attributes).copy
 			: '',
 	);
 	$: lines = enrichLineRanges(highlightedLines, copyRanges);

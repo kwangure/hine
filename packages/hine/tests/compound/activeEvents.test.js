@@ -29,12 +29,11 @@ describe('activeEvents', () => {
 				}),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
 		});
-		state.start();
 		expect(state.activeEvents).toEqual(['EVENT1', 'EVENT2']);
 	});
 	it('returns unique handlable events', () => {
@@ -58,12 +57,11 @@ describe('activeEvents', () => {
 				}),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
 		});
-		state.start();
 		expect(state.activeEvents).toEqual(['EVENT']);
 	});
 	it('returns no events when not initialized', () => {
@@ -79,11 +77,6 @@ describe('activeEvents', () => {
 				s1: new AtomicState(),
 			},
 		});
-		state.monitor({
-			actions: {
-				action: new Action({ run() {} }),
-			},
-		});
 		expect(state.activeEvents).toEqual([]);
 	});
 	it('returns no events when handler list is empty', () => {
@@ -95,12 +88,11 @@ describe('activeEvents', () => {
 				s1: new AtomicState(),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
 		});
-		state.start();
 		expect(state.activeEvents).toEqual([]);
 	});
 });

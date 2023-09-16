@@ -14,12 +14,11 @@ describe('activeEvents', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
 		});
-		state.start();
 		expect(state.activeEvents).toEqual(['EVENT']);
 	});
 	it('returns no events when not initialized', () => {
@@ -32,11 +31,6 @@ describe('activeEvents', () => {
 				],
 			},
 		});
-		state.monitor({
-			actions: {
-				action: new Action({ run() {} }),
-			},
-		});
 		expect(state.activeEvents).toEqual([]);
 	});
 	it('returns no events when handler list is empty', () => {
@@ -45,12 +39,11 @@ describe('activeEvents', () => {
 				EVENT: [],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
 		});
-		state.start();
 		expect(state.activeEvents).toEqual([]);
 	});
 });

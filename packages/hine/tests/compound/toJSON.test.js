@@ -62,7 +62,7 @@ describe('toJSON', () => {
 				s1: new AtomicState(),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
@@ -70,7 +70,6 @@ describe('toJSON', () => {
 				condition: new Condition({ run: () => true }),
 			},
 		});
-		state.start();
 		const json = state.toJSON();
 		expect(json.always).toEqual([
 			{
@@ -94,7 +93,7 @@ describe('toJSON', () => {
 				s1: new AtomicState(),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
@@ -102,7 +101,6 @@ describe('toJSON', () => {
 				condition: new Condition({ run: () => true }),
 			},
 		});
-		state.start();
 		const json = state.toJSON();
 		expect(json.entry).toEqual([
 			{
@@ -126,7 +124,7 @@ describe('toJSON', () => {
 				s1: new AtomicState(),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
@@ -134,7 +132,6 @@ describe('toJSON', () => {
 				condition: new Condition({ run: () => true }),
 			},
 		});
-		state.start();
 		const json = state.toJSON();
 		expect(json.exit).toEqual([
 			{
@@ -160,7 +157,7 @@ describe('toJSON', () => {
 				s1: new AtomicState(),
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
@@ -168,7 +165,6 @@ describe('toJSON', () => {
 				condition: new Condition({ run: () => true }),
 			},
 		});
-		state.start();
 		const json = state.toJSON();
 		expect(json.on).toEqual({
 			event: [

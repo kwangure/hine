@@ -10,7 +10,7 @@ describe('subscribe', () => {
 		machine.subscribe(() => count++);
 		expect(count).toBe(1);
 
-		machine.start();
+		machine.resolve();
 		expect(count).toBe(2);
 	});
 	it('calls subscribers on disptach', () => {
@@ -23,14 +23,13 @@ describe('subscribe', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				noop: new Action({
 					run() {},
 				}),
 			},
 		});
-		state.start();
 		let count = 0;
 		state.subscribe(() => count++);
 		expect(count).toBe(1);

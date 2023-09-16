@@ -1,4 +1,4 @@
-import sharedConfig from '@hinejs/prettier-config';
+import sharedConfig from 'prettier-config';
 
 /** @type {import("prettier").Config} */
 const config = {

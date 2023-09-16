@@ -36,7 +36,7 @@ export class Action {
 		if (!this.__ownerState) {
 			const path = this.path.join('.');
 			throw Error(
-				`Attempted to read 'action.event' at '${path}' before calling 'state.start()'.`,
+				`Attempted to read 'action.event' at '${path}' before calling 'state.resolve()'.`,
 			);
 		}
 		return this.__ownerState?.event;
@@ -46,7 +46,9 @@ export class Action {
 	}
 	get ownerState() {
 		if (!this.__ownerState) {
-			throw Error('Attempted to read ownerState before calling state.start().');
+			throw Error(
+				'Attempted to read ownerState before calling state.resolve().',
+			);
 		}
 		return /** @type {import('./state/types').StateNode} */ (this.__ownerState);
 	}

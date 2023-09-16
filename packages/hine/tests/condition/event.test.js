@@ -14,7 +14,7 @@ describe('event', () => {
 				}),
 			],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					run: () => {},
@@ -29,12 +29,11 @@ describe('event', () => {
 				}),
 			},
 		});
-		state.start();
 	});
 	it('throws when accessed before initialisation', () => {
 		const condition = new Condition({ name: 'condition', run: () => true });
 		expect(() => condition.event).toThrow(
-			"Attempted to read 'condition.event' at '?condition' before calling 'state.start()'",
+			"Attempted to read 'condition.event' at '?condition' before calling 'state.resolve()'",
 		);
 	});
 });

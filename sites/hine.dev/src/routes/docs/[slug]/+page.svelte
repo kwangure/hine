@@ -1,9 +1,9 @@
 <script>
-	import { Icon, Markdown, Shell, Sidebar } from '@hinejs/svelte-ui/components';
+	import { Icon, Markdown, Shell, Sidebar } from 'svelte-ui/components';
 	import { mdiWeatherNight, mdiWhiteBalanceSunny } from '@mdi/js';
 	import { page } from '$app/stores';
 	import { siGithub, siNpm } from 'simple-icons';
-	import { createDarkModeButton } from '@hinejs/svelte-ui/creators';
+	import { createDarkModeButton } from 'svelte-ui/creators';
 
 	export let data;
 
@@ -22,6 +22,14 @@
 			darkModeLabel  = 'Switch to dark mode';
 		}
 	}
+
+	/** @type {string} */
+	let title;
+	$: {
+		if (data.content.data) {
+			title = /** @type {{ title: string }} */(data.content.data.frontmatter).title
+		}
+	}
 </script>
 
 <Shell.Root>
@@ -35,14 +43,14 @@
 	</Shell.Navbar>
 	<Sidebar.Root>
 		{#each data.groups as group}
-			<Sidebar.Section title={group.data.title}>
-				{#each group.entries as entry}
+			<Sidebar.Section title={group.data_title}>
+				{#each group.docs as entry}
 					<Sidebar.Item>
-						<Sidebar.Link href={entry.path}>
-							{entry.title}
+						<Sidebar.Link href="/docs/{entry.id}">
+							{entry.data_title}
 						</Sidebar.Link>
-						{#if $page.url.pathname === entry.path}
-							<Sidebar.Outline toc={entry.children} />
+						{#if $page.url.pathname === `/docs/${entry.id}`}
+							<Sidebar.Outline toc={entry.headingTree} />
 						{/if}
 					</Sidebar.Item>
 				{/each}
@@ -52,8 +60,8 @@
 	<Shell.Main>
 		<div class="mb-40 lg:px-6">
 			<h1 class="mb-2 mt-4 flex scroll-mt-[var(--svui-navbar-height)] text-3xl font-semibold tracking-tight text-neutral-900 dark:text-slate-200 sm:text-4xl">
-			{data.content.data?.frontmatter.title}
-	</h1>
+				{title}
+			</h1>
 			<Markdown.Children node={data.content} />
 		</div>
 	</Shell.Main>

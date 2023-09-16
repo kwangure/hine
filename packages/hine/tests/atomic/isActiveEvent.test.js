@@ -14,12 +14,11 @@ describe('isActiveEvent', () => {
 				],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
 		});
-		state.start();
 		expect(state.isActiveEvent('EVENT')).toEqual(true);
 		expect(state.isActiveEvent('RANDOM-EVENT')).toEqual(false);
 	});
@@ -33,13 +32,8 @@ describe('isActiveEvent', () => {
 				],
 			},
 		});
-		state.monitor({
-			actions: {
-				action: new Action({ run() {} }),
-			},
-		});
 		expect(() => state.isActiveEvent('EVENT')).toThrow(
-			"Attempted to call 'state.isActiveEvent()' before calling 'state.start()'",
+			"Attempted to call 'state.isActiveEvent()' before calling 'state.resolve()'",
 		);
 	});
 	it('returns false when handler list is empty', () => {
@@ -48,12 +42,11 @@ describe('isActiveEvent', () => {
 				EVENT: [],
 			},
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
 		});
-		state.start();
 		expect(state.isActiveEvent('EVENT')).toBe(false);
 	});
 });

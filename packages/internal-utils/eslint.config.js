@@ -1,1 +1,0 @@
-export { default } from '@hinejs/eslint-config';

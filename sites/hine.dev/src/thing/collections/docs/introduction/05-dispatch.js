@@ -4,7 +4,7 @@ const checkboxState = h.state({
 	// omitted for brevity
 });
 
-checkboxState.start();
+checkboxState.resolve();
 
 console.log(checkboxState.matches('checkbox.unchecked'));
 // true

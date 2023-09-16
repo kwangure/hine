@@ -225,6 +225,44 @@ export class BaseState {
 			this.__handlerQueue.push(...this.__onHandler[eventName]);
 		}
 	}
+	/** @param {import('../types.js').BaseResolveConfig} [config] */
+	__resolve(config) {
+		if (config?.actionConfig) {
+			if ('name' in config.actionConfig) {
+				this.#actionConfig['name'] = config.actionConfig['name'];
+			}
+			if ('notifyAfter' in config.actionConfig) {
+				this.#actionConfig['notifyAfter'] = config.actionConfig['notifyAfter'];
+			}
+			if ('notifyBefore' in config.actionConfig) {
+				this.#actionConfig['notifyBefore'] =
+					config.actionConfig['notifyBefore'];
+			}
+		}
+		if (config?.actions) {
+			for (const [name, action] of Object.entries(config.actions)) {
+				this.#actions[name] = action;
+			}
+		}
+		if (config?.conditionConfig) {
+			if ('name' in config.conditionConfig) {
+				this.#conditionConfig['name'] = config.conditionConfig['name'];
+			}
+			if ('notifyAfter' in config.conditionConfig) {
+				this.#conditionConfig['notifyAfter'] =
+					config.conditionConfig['notifyAfter'];
+			}
+			if ('notifyBefore' in config.conditionConfig) {
+				this.#conditionConfig['notifyBefore'] =
+					config.conditionConfig['notifyBefore'];
+			}
+		}
+		if (config?.conditions) {
+			for (const [name, condition] of Object.entries(config.conditions)) {
+				this.#conditions[name] = condition;
+			}
+		}
+	}
 	__resolveConfig() {
 		this.__allActions = this.__actions;
 		this.__allConditions = this.__conditions;
@@ -251,6 +289,21 @@ export class BaseState {
 			handler.__resolve({ name: String(index), ownerState: this });
 			this.#exit.push(handler);
 		}
+	}
+	__start() {
+		if (!this.#initialized) {
+			this.__resolveConfig();
+		}
+		this.__initialize();
+
+		const event = new StateEvent({ name: '_start' });
+		this.#event = event;
+		this.__queueEntryHandlers();
+		this.__executeHandlersRootFirst();
+		this.__queueAlwaysHandlers();
+		this.__executeHandlersRootFirst();
+		this.__callSubscribers();
+		this.#event = null;
 	}
 	__toJSON() {
 		const onEntries = Object.entries(this.__onHandler);
@@ -307,7 +360,9 @@ export class BaseState {
 	}
 	get context() {
 		if (!this.#initialized) {
-			throw Error("Attempted to read context before calling 'state.start()'.");
+			throw Error(
+				"Attempted to read context before calling 'state.resolve()'.",
+			);
 		}
 		return this.#context;
 	}
@@ -343,7 +398,7 @@ export class BaseState {
 	isActiveEvent(name) {
 		if (!this.#initialized) {
 			throw Error(
-				"Attempted to call 'state.isActiveEvent()' before calling 'state.start()'",
+				"Attempted to call 'state.isActiveEvent()' before calling 'state.resolve()'",
 			);
 		}
 		return name in this.__onHandler && Boolean(this.__onHandler[name].length);
@@ -361,44 +416,6 @@ export class BaseState {
 				(this.__handler && path === this.__handler.path.join('.')),
 		);
 	}
-	/** @param {import('../types.js').BaseMonitorConfig} config */
-	monitor(config) {
-		if (config.actionConfig) {
-			if ('name' in config.actionConfig) {
-				this.#actionConfig['name'] = config.actionConfig['name'];
-			}
-			if ('notifyAfter' in config.actionConfig) {
-				this.#actionConfig['notifyAfter'] = config.actionConfig['notifyAfter'];
-			}
-			if ('notifyBefore' in config.actionConfig) {
-				this.#actionConfig['notifyBefore'] =
-					config.actionConfig['notifyBefore'];
-			}
-		}
-		if (config.actions) {
-			for (const [name, action] of Object.entries(config.actions)) {
-				this.#actions[name] = action;
-			}
-		}
-		if (config.conditionConfig) {
-			if ('name' in config.conditionConfig) {
-				this.#conditionConfig['name'] = config.conditionConfig['name'];
-			}
-			if ('notifyAfter' in config.conditionConfig) {
-				this.#conditionConfig['notifyAfter'] =
-					config.conditionConfig['notifyAfter'];
-			}
-			if ('notifyBefore' in config.conditionConfig) {
-				this.#conditionConfig['notifyBefore'] =
-					config.conditionConfig['notifyBefore'];
-			}
-		}
-		if (config.conditions) {
-			for (const [name, condition] of Object.entries(config.conditions)) {
-				this.#conditions[name] = condition;
-			}
-		}
-	}
 	get name() {
 		return this.__name;
 	}
@@ -409,28 +426,13 @@ export class BaseState {
 	get path() {
 		return this.__parent ? [...this.__parent.path, this.__name] : [this.__name];
 	}
-	start() {
-		if (!this.#initialized) {
-			this.__resolveConfig();
-		}
-		this.__initialize();
-
-		const event = new StateEvent({ name: '_start' });
-		this.#event = event;
-		this.__queueEntryHandlers();
-		this.__executeHandlersRootFirst();
-		this.__queueAlwaysHandlers();
-		this.__executeHandlersRootFirst();
-		this.__callSubscribers();
-		this.#event = null;
-	}
 	/**
 	 * @param {string} eventName
 	 * @param {any} [eventValue]
 	 */
 	*step(eventName, eventValue) {
 		if (!this.#initialized) {
-			throw Error("Attempted to step before calling 'state.start()'.");
+			throw Error("Attempted to step before calling 'state.resolve()'.");
 		}
 		if (this.#isStepping) {
 			throw Error('Stepping is aleady in progress.');

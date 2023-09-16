@@ -8,4 +8,4 @@ checkboxState.subscribe((state) => {
 	console.log(checkboxState === state); // true
 });
 
-checkboxState.start();
+checkboxState.resolve();

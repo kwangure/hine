@@ -50,11 +50,13 @@
 		"hine": "^0.0.17"
 	},
 	"devDependencies": {
-		"@hinejs/eslint-config": "*",
 		"eslint": "^8.47.0",
-		"prettier": "^3.0.2"
+		"eslint-config": "workspace:*",
+		"prettier": "^3.0.2",
+		"prettier-config": "workspace:*",
+		"typescript": "^5.1.6"
 	},
-	"prettier": "@hinejs/prettier-config",
+	"prettier": "prettier-config",
 	"license": "MIT",
 	"type": "module"
 }

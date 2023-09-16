@@ -34,8 +34,7 @@ describe('dispatch', () => {
 				}),
 			},
 		});
-		compound.monitor({});
-		compound.start();
+		compound.resolve();
 		compound.dispatch('event');
 		expect(compound.matches('.s2')).toBe(true);
 		compound.dispatch('event');
@@ -46,14 +45,14 @@ describe('dispatch', () => {
 
 	it('ignores invalid events', () => {
 		const state = new AtomicState();
-		state.start();
+		state.resolve();
 		expect(() => {
 			state.dispatch('random');
 		}).not.toThrow();
 	});
 	it('displays emitted event', () => {
 		const state = new AtomicState();
-		state.start();
+		state.resolve();
 		expect(state.event).toBe(null);
 		const event = 'my-event';
 		let initial = true;

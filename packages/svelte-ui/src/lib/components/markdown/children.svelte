@@ -15,7 +15,7 @@
 	/**
 	 * Return empty strings to skip rendering nodes
 	 *
-	 * @type {(node: import('mdast').Node) => string}
+	 * @type {(node: { type: string }) => string}
 	 */
 	function notImplemented(node) {
 		if (ignore.includes(node.type)) return '';

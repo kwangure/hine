@@ -15,12 +15,12 @@ describe('matches', () => {
 		const state = new AtomicState({
 			name: 'machine',
 		});
-		state.start();
+		state.resolve();
 		expect(state.matches('machine')).toBe(true);
 	});
 	it('matches anonymous states', () => {
 		const state = new AtomicState();
-		state.start();
+		state.resolve();
 		expect(state.matches('')).toBe(true);
 	});
 	it('matches actions', () => {
@@ -41,7 +41,7 @@ describe('matches', () => {
 			}
 			count += 1;
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					notifyBefore: true,
@@ -49,7 +49,6 @@ describe('matches', () => {
 				}),
 			},
 		});
-		state.start();
 	});
 	it('matches conditions', () => {
 		const state = new AtomicState({
@@ -70,7 +69,7 @@ describe('matches', () => {
 			}
 			count += 1;
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({ run() {} }),
 			},
@@ -81,7 +80,6 @@ describe('matches', () => {
 				}),
 			},
 		});
-		state.start();
 	});
 	it('matches handler', () => {
 		const state = new AtomicState({
@@ -103,7 +101,7 @@ describe('matches', () => {
 			}
 			count += 1;
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					notifyBefore: true,
@@ -111,6 +109,5 @@ describe('matches', () => {
 				}),
 			},
 		});
-		state.start();
 	});
 });

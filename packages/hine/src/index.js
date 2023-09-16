@@ -5,8 +5,8 @@
  * @typedef {import('./state/compound.js').CompoundState}
  * @typedef {import('./state/types').AtomicStateConfig} AtomicStateConfig
  * @typedef {import('./state/types').CompoundStateConfig} CompoundStateConfig
- * @typedef {import('./types').AtomicMonitorConfig} AtomicMonitorConfig
- * @typedef {import('./types').CompoundMonitorConfig} CompoundMonitorConfig
+ * @typedef {import('./types').AtomicResolveConfig} AtomicMonitorConfig
+ * @typedef {import('./types').CompoundResolveConfig} CompoundMonitorConfig
  * @typedef {import('./state/types').AtomicStateJSON} AtomicStateJSON
  * @typedef {import('./state/types').CompoundStateJSON} CompoundStateJSON
  * @typedef {import('./state/types').StateNode} StateNode

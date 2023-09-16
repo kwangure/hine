@@ -8,7 +8,7 @@ describe('event', () => {
 		const state = new AtomicState({
 			entry: [new EffectHandler({ run: ['action'] })],
 		});
-		state.monitor({
+		state.resolve({
 			actions: {
 				action: new Action({
 					run({ ownerState, event }) {
@@ -17,12 +17,11 @@ describe('event', () => {
 				}),
 			},
 		});
-		state.start();
 	});
 	it('throws when accessed before initialisation', () => {
 		const action = new Action({ name: 'action', run() {} });
 		expect(() => action.event).toThrow(
-			"Attempted to read 'action.event' at '(action)' before calling 'state.start()'",
+			"Attempted to read 'action.event' at '(action)' before calling 'state.resolve()'",
 		);
 	});
 });

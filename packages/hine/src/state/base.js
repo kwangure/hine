@@ -26,7 +26,7 @@ export class BaseState {
 	 * @type {Record<string, import('../condition.js').Condition>}
 	 */
 	#conditions = {};
-	#context;
+	#context = new Context();
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#entry = [];
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
@@ -76,7 +76,6 @@ export class BaseState {
 	 */
 	constructor(stateConfig) {
 		this.#alwaysConfig = stateConfig?.always || [];
-		this.#context = stateConfig?.context || new Context();
 		this.__name = stateConfig?.name || '';
 		this.#onConfig = stateConfig?.on || {};
 
@@ -227,6 +226,9 @@ export class BaseState {
 	}
 	/** @param {import('../types.js').BaseResolveConfig} [config] */
 	__resolve(config) {
+		if (config?.context) {
+			this.#context = config?.context;
+		}
 		if (config?.actionConfig) {
 			if ('name' in config.actionConfig) {
 				this.#actionConfig['name'] = config.actionConfig['name'];

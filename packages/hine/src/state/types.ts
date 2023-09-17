@@ -9,7 +9,6 @@ export type StateNode = AtomicState | CompoundState;
 
 export interface BaseStateConfig {
 	always?: (EffectHandler | TransitionHandler)[];
-	context?: Context;
 	entry?: EffectHandler[];
 	exit?: EffectHandler[];
 	name?: string;

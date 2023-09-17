@@ -36,6 +36,7 @@ export interface BaseResolveConfig {
 	actionConfig?: RunnerConfig;
 	conditions?: Record<string, Condition>;
 	conditionConfig?: RunnerConfig;
+	context?: Context;
 }
 
 export interface AtomicResolveConfig extends BaseResolveConfig {}
@@ -49,9 +50,9 @@ export interface EventOptions {
 	value?: string;
 }
 
-export interface Context<T extends Record<string, any> = Record<string, any>> extends ContextClass {
+export interface Context<T extends Record<string, any> = Record<string, any>>
+	extends ContextClass {
 	get: <K extends keyof T>(key: K) => T[K];
 	has: (key: keyof T) => boolean;
 	set: <K extends keyof T>(key: K, value: T[K]) => void;
-	__type: T;
 }

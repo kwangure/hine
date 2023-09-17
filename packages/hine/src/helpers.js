@@ -29,8 +29,8 @@ export function condition(config) {
  * @param {T} data
  */
 export function context(data) {
-	return /** @type {import('./types.js').Context<T>} */ (
-		/** @type {unknown} */(new Context(data))
+	return /** @type {import('./types.js').Context<T> & { __type?: T; }} */ (
+		/** @type {unknown} */ (new Context(data))
 	);
 }
 

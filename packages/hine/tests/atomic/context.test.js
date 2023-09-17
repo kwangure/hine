@@ -5,37 +5,43 @@ import { Context } from '../../src/context.js';
 
 describe('context', () => {
 	it('should return the context value for a given key', () => {
-		const state = new AtomicState({
+		const state = new AtomicState();
+		state.resolve({
 			context: new Context({ key: 'value' }),
 		});
-		state.resolve();
 		expect(state.context?.get('key')).toBe('value');
 	});
 
 	it('should return the parent context value for a given key', () => {
 		const state = new AtomicState();
 		new CompoundState({
-			context: new Context({ key: 'value' }),
 			children: {
 				state,
 			},
-		}).resolve();
+		}).resolve({
+			context: new Context({ key: 'value' }),
+		});
 		expect(state.context?.get('key')).toBe('value');
 	});
 
 	it('should return the closest context ancestor value for a given key', () => {
 		const state = new AtomicState();
 		new CompoundState({
-			context: new Context({ key: 'value0' }),
 			children: {
 				s1: new CompoundState({
-					context: new Context({
-						key: 'value1',
-					}),
 					children: { state },
 				}),
 			},
-		}).resolve();
+		}).resolve({
+			context: new Context({ key: 'value0' }),
+			children: {
+				s1: {
+					context: new Context({
+						key: 'value1',
+					}),
+				},
+			},
+		});
 		expect(state.context?.get('key')).toBe('value1');
 	});
 });

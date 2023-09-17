@@ -6,10 +6,11 @@ import { Context } from '../../src/context.js';
 describe('context', () => {
 	it('should return the context value for a given key', () => {
 		const state = new CompoundState({
-			context: new Context({ key: 'value' }),
 			children: { s1: new AtomicState() },
 		});
-		state.resolve();
+		state.resolve({
+			context: new Context({ key: 'value' }),
+		});
 		expect(state.context?.get('key')).toBe('value');
 	});
 
@@ -18,11 +19,12 @@ describe('context', () => {
 			children: { s1: new AtomicState() },
 		});
 		new CompoundState({
-			context: new Context({ key: 'value' }),
 			children: {
 				state,
 			},
-		}).resolve();
+		}).resolve({
+			context: new Context({ key: 'value' }),
+		});
 		expect(state.context?.get('key')).toBe('value');
 	});
 
@@ -31,16 +33,21 @@ describe('context', () => {
 			children: { s1: new AtomicState() },
 		});
 		new CompoundState({
-			context: new Context({ key: 'value0' }),
 			children: {
 				s1: new CompoundState({
-					context: new Context({
-						key: 'value1',
-					}),
 					children: { state },
 				}),
 			},
-		}).resolve();
+		}).resolve({
+			context: new Context({ key: 'value0' }),
+			children: {
+				s1: {
+					context: new Context({
+						key: 'value1',
+					}),
+				},
+			},
+		});
 		expect(state.context?.get('key')).toBe('value1');
 	});
 });

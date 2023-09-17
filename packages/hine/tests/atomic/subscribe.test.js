@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { ActionRunner } from '../../src/runner/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
@@ -25,9 +24,7 @@ describe('subscribe', () => {
 		});
 		state.resolve({
 			actions: {
-				noop: new ActionRunner({
-					run() {},
-				}),
+				noop() {},
 			},
 		});
 		let count = 0;

@@ -1,3 +1,5 @@
+import { ActionRunner } from '../runner/action.js';
+import { ConditionRunner } from '../runner/condition.js';
 import { Context } from '../context.js';
 import { StateEvent } from '../event.js';
 import { TransitionHandler } from '../handler/transition.js';
@@ -125,7 +127,6 @@ export class BaseState {
 				if (typeof action.__notifyBefore !== 'boolean') {
 					action.__notifyBefore = this.__actionConfig.notifyBefore;
 				}
-				action.__ownerState = this;
 				actions[action.name] = action;
 			}
 		}
@@ -173,7 +174,6 @@ export class BaseState {
 				if (typeof condition.__notifyBefore !== 'boolean') {
 					condition.__notifyBefore = this.__conditionConfig.notifyBefore;
 				}
-				condition.__ownerState = this;
 				conditions[condition.name] = condition;
 			}
 		}
@@ -243,7 +243,10 @@ export class BaseState {
 		}
 		if (config?.actions) {
 			for (const [name, action] of Object.entries(config.actions)) {
-				this.#actions[name] = action;
+				this.#actions[name] =
+					typeof action === 'function'
+						? new ActionRunner({ run: action, ownerState: this })
+						: new ActionRunner({ ...action, ownerState: this });
 			}
 		}
 		if (config?.conditionConfig) {
@@ -261,7 +264,10 @@ export class BaseState {
 		}
 		if (config?.conditions) {
 			for (const [name, condition] of Object.entries(config.conditions)) {
-				this.#conditions[name] = condition;
+				this.#conditions[name] =
+					typeof condition === 'function'
+						? new ConditionRunner({ run: condition, ownerState: this })
+						: new ConditionRunner({ ...condition, ownerState: this });
 			}
 		}
 	}

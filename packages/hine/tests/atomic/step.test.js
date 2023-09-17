@@ -23,9 +23,7 @@ describe('step', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({
-					run() {},
-				}),
+				action() {},
 			},
 		});
 
@@ -45,12 +43,6 @@ describe('step', () => {
 		expect(count).toBe(2);
 	});
 	it('respects iterator protocol', () => {
-		const action = new ActionRunner({
-			run() {},
-		});
-		const condition = new ConditionRunner({
-			run: () => true,
-		});
 		const state = new AtomicState({
 			always: [
 				new EffectHandler({
@@ -67,24 +59,21 @@ describe('step', () => {
 			},
 		});
 		state.resolve({
-			actions: { action },
-			conditions: { condition },
+			actions: { action() {} },
+			conditions: { condition: () => true },
 		});
 
-		const expected = [EffectHandler, condition, action, EffectHandler, action];
+		const expected = [
+			EffectHandler,
+			ConditionRunner,
+			ActionRunner,
+			EffectHandler,
+			ActionRunner,
+		];
 		const expectedIterator = expected[Symbol.iterator]();
 		const eventIterator = state.step('event');
 		for (const [expected, actual] of zip(expectedIterator, eventIterator)) {
-			switch (typeof expected) {
-				case 'object':
-					expect(actual).toBe(expected);
-					break;
-				case 'function':
-					expect(actual).toBeInstanceOf(expected);
-					break;
-				default:
-					throw Error('Not implemented.');
-			}
+			expect(actual).toBeInstanceOf(expected);
 		}
 	});
 	it('throws if state is not initialized', () => {
@@ -108,9 +97,7 @@ describe('step', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({
-					run() {},
-				}),
+				action() {},
 			},
 		});
 		state.step('event').next();

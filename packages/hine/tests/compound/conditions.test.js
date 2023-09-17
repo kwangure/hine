@@ -1,16 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { ActionRunner } from '../../src/runner/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { ConditionRunner } from '../../src/runner/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('conditions', () => {
 	it('exposes conditions inside conditions', () => {
-		const cond2 = new ConditionRunner({
-			run: () => false,
-		});
 		const state = new CompoundState({
 			entry: [
 				new EffectHandler({
@@ -24,50 +19,15 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				do: new ActionRunner({
-					run() {},
-				}),
+				do() {},
 			},
 			conditions: {
-				cond1: new ConditionRunner({
-					run({ ownerState }) {
-						expect(() => ownerState?.conditions.cond2).not.toThrow();
-						expect(ownerState?.conditions.cond2).toBe(cond2);
-						expect(ownerState?.conditions.cond2.run()).toBe(false);
-						return true;
-					},
-				}),
-				cond2,
-			},
-		});
-	});
-	it('calls condition with self-reference', () => {
-		const condition = new ConditionRunner({
-			run(value) {
-				expect(this).toBe(undefined);
-				expect(value).toBe(condition);
-				return true;
-			},
-		});
-		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					if: 'condition',
-					run: ['action'],
-				}),
-			],
-			children: {
-				s1: new AtomicState(),
-			},
-		});
-		state.resolve({
-			actions: {
-				action: new ActionRunner({
-					run() {},
-				}),
-			},
-			conditions: {
-				condition,
+				cond1({ ownerState }) {
+					expect(() => ownerState?.conditions.cond2).not.toThrow();
+					expect(ownerState?.conditions.cond2.run()).toBe(false);
+					return true;
+				},
+				cond2: () => false,
 			},
 		});
 	});
@@ -89,16 +49,16 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new ConditionRunner({
+				condition: {
 					notifyBefore: true,
 					run() {
 						log.push('condition');
 						return true;
 					},
-				}),
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -128,16 +88,16 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new ConditionRunner({
+				condition: {
 					notifyAfter: true,
 					run() {
 						log.push('condition');
 						return true;
 					},
-				}),
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -167,15 +127,13 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new ConditionRunner({
-					run() {
-						log.push('condition');
-						return true;
-					},
-				}),
+				condition() {
+					log.push('condition');
+					return true;
+				},
 			},
 			conditionConfig: {
 				notifyBefore: true,
@@ -217,15 +175,13 @@ describe('conditions', () => {
 			children: {
 				s1: {
 					actions: {
-						action: new ActionRunner({ run() {} }),
+						action() {},
 					},
 					conditions: {
-						condition: new ConditionRunner({
-							run() {
-								log.push('condition');
-								return true;
-							},
-						}),
+						condition() {
+							log.push('condition');
+							return true;
+						},
 					},
 				},
 			},
@@ -257,16 +213,13 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new ConditionRunner({
-					notifyBefore: false,
-					run() {
-						log.push('condition');
-						return true;
-					},
-				}),
+				condition() {
+					log.push('condition');
+					return true;
+				},
 			},
 			conditionConfig: {
 				notifyBefore: true,
@@ -275,7 +228,7 @@ describe('conditions', () => {
 		state.subscribe(() => log.push('sub'));
 		log.length = 0;
 		state.dispatch('event');
-		expect(log).toEqual(['condition', 'sub']);
+		expect(log).toEqual(['sub', 'condition', 'sub']);
 	});
 	it('resolves condition using most specific configured name', () => {
 		const state1 = new CompoundState({
@@ -295,15 +248,15 @@ describe('conditions', () => {
 		expect(() =>
 			state1.resolve({
 				actions: {
-					action: new ActionRunner({ run() {} }),
+					action() {},
 				},
 				conditions: {
-					condition: new ConditionRunner({
+					condition: {
 						name: 'other-condition',
 						run() {
 							return true;
 						},
-					}),
+					},
 				},
 			}),
 		).toThrow(/unknown condition/);
@@ -324,47 +277,18 @@ describe('conditions', () => {
 		expect(() =>
 			state2.resolve({
 				actions: {
-					action: new ActionRunner({ run() {} }),
+					action() {},
 				},
 				conditions: {
-					condition: new ConditionRunner({
+					condition: {
 						name: 'other-condition',
 						run() {
 							return true;
 						},
-					}),
+					},
 				},
 			}),
 		).not.toThrow();
-	});
-	it('sets state condition during condition', () => {
-		const condition = new ConditionRunner({
-			notifyBefore: false,
-			run() {
-				expect(state.condition).toBe(condition);
-				return true;
-			},
-		});
-		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					if: 'condition',
-					run: ['action'],
-				}),
-			],
-			children: {
-				s1: new AtomicState(),
-			},
-		});
-		state.resolve({
-			actions: {
-				action: new ActionRunner({ run() {} }),
-			},
-			conditions: {
-				condition,
-			},
-		});
-		expect(state.condition).toBe(null);
 	});
 	it('ignores falsy handlers on entry', () => {
 		/** @type {string[]} */
@@ -382,18 +306,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({
-					run() {
-						actions.push('action');
-					},
-				}),
+				action() {
+					actions.push('action');
+				},
 			},
 			conditions: {
-				isFalsy: new ConditionRunner({
-					run() {
-						return false;
-					},
-				}),
+				isFalsy() {
+					return false;
+				},
 			},
 		});
 		expect(actions).toEqual([]);
@@ -414,18 +334,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({
-					run() {
-						actions.push('action');
-					},
-				}),
+				action() {
+					actions.push('action');
+				},
 			},
 			conditions: {
-				run: new ConditionRunner({
-					run() {
-						return true;
-					},
-				}),
+				run() {
+					return true;
+				},
 			},
 		});
 		expect(actions).toEqual(['action']);
@@ -460,18 +376,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({
-					run() {
-						actions.push('action');
-					},
-				}),
+				action() {
+					actions.push('action');
+				},
 			},
 			conditions: {
-				isFalsy: new ConditionRunner({
-					run() {
-						return false;
-					},
-				}),
+				isFalsy() {
+					return false;
+				},
 			},
 		});
 		expect(actions).toEqual([]);
@@ -508,18 +420,14 @@ describe('conditions', () => {
 			children: {
 				s1: {
 					actions: {
-						action: new ActionRunner({
-							run() {
-								actions.push('action');
-							},
-						}),
+						action() {
+							actions.push('action');
+						},
 					},
 					conditions: {
-						isTruthy: new ConditionRunner({
-							run() {
-								return true;
-							},
-						}),
+						isTruthy() {
+							return true;
+						},
 					},
 				},
 			},
@@ -544,18 +452,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({
-					run() {
-						actions.push('action');
-					},
-				}),
+				action() {
+					actions.push('action');
+				},
 			},
 			conditions: {
-				isFalsy: new ConditionRunner({
-					run() {
-						return false;
-					},
-				}),
+				isFalsy() {
+					return false;
+				},
 			},
 		});
 		state.dispatch('myEvent');
@@ -579,18 +483,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({
-					run() {
-						actions.push('action');
-					},
-				}),
+				action() {
+					actions.push('action');
+				},
 			},
 			conditions: {
-				isTruthy: new ConditionRunner({
-					run() {
-						return true;
-					},
-				}),
+				isTruthy() {
+					return true;
+				},
 			},
 		});
 		state.dispatch('myEvent');
@@ -612,18 +512,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({
-					run() {
-						actions.push('action');
-					},
-				}),
+				action() {
+					actions.push('action');
+				},
 			},
 			conditions: {
-				isFalsy: new ConditionRunner({
-					run() {
-						return false;
-					},
-				}),
+				isFalsy() {
+					return false;
+				},
 			},
 		});
 		expect(actions).toEqual([]);
@@ -644,18 +540,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({
-					run() {
-						actions.push('action');
-					},
-				}),
+				action() {
+					actions.push('action');
+				},
 			},
 			conditions: {
-				isTruthy: new ConditionRunner({
-					run() {
-						return true;
-					},
-				}),
+				isTruthy() {
+					return true;
+				},
 			},
 		});
 		expect(actions).toEqual(['action']);

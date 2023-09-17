@@ -5,7 +5,9 @@ export class ActionRunner extends BaseRunner {
 	#run;
 	#type = /** @type {const} */ ('action');
 	/**
-	 * @param {import('./types.js').ActionRunnerConfig} options
+	 * @param {import('./types.js').ActionRunnerConfig & {
+	 *     ownerState: import('../state/base.js').BaseState
+	 * }} options
 	 */
 	constructor(options) {
 		super(options);
@@ -31,11 +33,6 @@ export class ActionRunner extends BaseRunner {
 	}
 
 	get ownerState() {
-		if (!this.__ownerState) {
-			throw Error(
-				'Attempted to read ownerState before calling state.resolve().',
-			);
-		}
 		return /** @type {import('../state/types.js').StateNode} */ (
 			this.__ownerState
 		);

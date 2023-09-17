@@ -6,7 +6,9 @@ export class ConditionRunner extends BaseRunner {
 	#type = /** @type {const} */ ('condition');
 
 	/**
-	 * @param {import('./types.js').ConditionRunnerConfig} options
+	 * @param {import('./types.js').ConditionRunnerConfig & {
+	 *     ownerState: import('../state/base.js').BaseState
+	 * }} options
 	 */
 	constructor(options) {
 		super(options);
@@ -31,11 +33,6 @@ export class ConditionRunner extends BaseRunner {
 		return this.__ownerState?.event;
 	}
 	get ownerState() {
-		if (!this.__ownerState) {
-			throw Error(
-				'Attempted to read ownerState before calling state.resolve().',
-			);
-		}
 		return /** @type {import('../state/types.js').StateNode} */ (
 			this.__ownerState
 		);

@@ -31,6 +31,7 @@ describe.skip('toJSON', () => {
 			// @ts-expect-error
 			name,
 			actions: [
+				// @ts-ignore
 				new ActionRunner({
 					name: 'action',
 					run() {},
@@ -46,6 +47,7 @@ describe.skip('toJSON', () => {
 		const state = new TransitionHandler({
 			// @ts-expect-error
 			name,
+			// @ts-ignore
 			condition: new ConditionRunner({
 				name: 'condition',
 				run: () => true,

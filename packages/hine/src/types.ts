@@ -1,7 +1,9 @@
-import type { ActionRunner } from './runner/action.js';
-import type { BaseRunnerConfig } from './runner/types.js';
-import type { ConditionRunner } from './runner/condition.js';
-import type { Context as ContextClass } from './context.js';
+import type {
+	ActionRunnerConfig,
+	BaseRunnerConfig,
+	ConditionRunnerConfig,
+} from './runner/types.js';
+import type { Context } from './context.js';
 
 interface BaseRunnerJSON {
 	name: string;
@@ -19,11 +21,14 @@ export interface ConditionJSON extends BaseRunnerJSON {
 }
 
 export interface BaseResolveConfig {
-	actions?: Record<string, ActionRunner>;
+	actions?: Record<string, ActionRunnerConfig | ActionRunnerConfig['run']>;
 	actionConfig?: BaseRunnerConfig;
-	conditions?: Record<string, ConditionRunner>;
+	conditions?: Record<
+		string,
+		ConditionRunnerConfig | ConditionRunnerConfig['run']
+	>;
 	conditionConfig?: BaseRunnerConfig;
-	context?: Context;
+	context?: Context<any>;
 }
 
 export interface AtomicResolveConfig extends BaseResolveConfig {}
@@ -35,11 +40,4 @@ export interface CompoundResolveConfig extends BaseResolveConfig {
 export interface EventOptions {
 	name: string;
 	value?: string;
-}
-
-export interface Context<T extends Record<string, any> = Record<string, any>>
-	extends ContextClass {
-	get: <K extends keyof T>(key: K) => T[K];
-	has: (key: keyof T) => boolean;
-	set: <K extends keyof T>(key: K, value: T[K]) => void;
 }

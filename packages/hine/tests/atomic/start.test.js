@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { ActionRunner } from '../../src/runner/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
@@ -16,11 +15,9 @@ describe('start', () => {
 		});
 		state.resolve({
 			actions: {
-				always: new ActionRunner({
-					run() {
-						log.push('always');
-					},
-				}),
+				always() {
+					log.push('always');
+				},
 			},
 		});
 		expect(log).toEqual(['always']);

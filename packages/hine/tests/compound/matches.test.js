@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ActionRunner } from '../../src/runner/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { ConditionRunner } from '../../src/runner/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('matches', () => {
@@ -84,10 +82,10 @@ describe('matches', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({
+				action: {
 					notifyBefore: true,
 					run() {},
-				}),
+				},
 			},
 		});
 	});
@@ -115,13 +113,13 @@ describe('matches', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new ConditionRunner({
+				condition: {
 					notifyBefore: true,
 					run: () => true,
-				}),
+				},
 			},
 		});
 	});
@@ -155,16 +153,16 @@ describe('matches', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new ActionRunner({
+				action: {
 					notifyBefore: true,
 					run() {},
-				}),
+				},
 			},
 			conditions: {
-				condition: new ConditionRunner({
+				condition: {
 					notifyBefore: true,
 					run: () => true,
-				}),
+				},
 			},
 		});
 	});

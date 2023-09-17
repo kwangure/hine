@@ -1,33 +1,46 @@
+/**
+ * @template {Record<string, unknown>} [T=Record<string, unknown>]
+ */
 export class Context {
-	/** @type {Map<string, unknown>} */
+	/** @type {Map<keyof T, T[keyof T]>} */
 	#data = new Map();
 	/** @type {import('./state/base.js').BaseState | null} */
 	__ownerState = null;
-	/** @param {Record<string, unknown>} [data] */
+	/** @param {T} [data] */
 	constructor(data) {
 		if (data) {
 			for (const [key, value] of Object.entries(data)) {
-				this.#data.set(key, value);
+				this.#data.set(key, /** @type {T[keyof T]} */ (value));
 			}
 		}
 	}
 	/**
-	 * @param {string} key
-	 * @returns {unknown}
+	 * @template K
+	 * @param {K extends keyof T ? K : never} key
+	 * @returns {K extends keyof T ? T[K] : never}
 	 */
 	get(key) {
-		if (this.#data.has(key)) {
-			return this.#data.get(key);
+		if (this.#data.has(/** @type {keyof T} */ (key))) {
+			return /** @type {K extends keyof T ? T[K] : never} */ (
+				this.#data.get(/** @type {keyof T} */ (key))
+			);
 		}
-		return this.__ownerState?.parent?.context?.get(key);
+		return /** @type {K extends keyof T ? T[K] : never} */ (
+			this.__ownerState?.parent?.context?.get(/** @type {any} */ (key))
+		);
 	}
-	/** @param {string} key */
+	/**
+	 * @template K
+	 * @param {K extends keyof T ? K : never} key
+	 * @returns {boolean}
+	 */
 	has(key) {
 		return this.#data.has(key);
 	}
 	/**
-	 * @param {string} key
-	 * @param {any} value
+	 * @template K
+	 * @param {K extends keyof T ? K : never} key
+	 * @param {K extends keyof T ? T[K] : never} value
 	 */
 	set(key, value) {
 		this.#data.set(key, value);

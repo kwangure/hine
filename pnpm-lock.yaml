@@ -121,12 +121,6 @@ importers:
 
   packages/prettier-config:
     devDependencies:
-      eslint:
-        specifier: ^8.47.0
-        version: 8.47.0
-      eslint-config:
-        specifier: workspace:*
-        version: link:../eslint-config
       prettier:
         specifier: ^3.0.2
         version: 3.0.2

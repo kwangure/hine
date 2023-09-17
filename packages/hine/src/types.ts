@@ -1,5 +1,5 @@
-import type { Action } from './action.js';
-import type { Condition } from './condition.js';
+import type { Action } from './runner/action.js';
+import type { Condition } from './runner/condition.js';
 import type { Context as ContextClass } from './context.js';
 
 interface RunnerConfig {

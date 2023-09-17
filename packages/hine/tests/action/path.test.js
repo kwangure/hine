@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
-import { Action } from '../../src/action.js';
+import { Action } from '../../src/runner/action.js';
 
 describe('path', () => {
 	it('returns path with name', () => {

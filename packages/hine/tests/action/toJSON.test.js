@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
+import { Action } from '../../src/runner/action.js';
 
 describe('toJSON', () => {
 	it('includes name', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
-import { Condition } from '../../src/condition.js';
+import { Action } from '../../src/runner/action.js';
+import { Condition } from '../../src/runner/condition.js';
 import { TransitionHandler } from '../../src/handler/transition.js';
 
 // TODO: Update to the new TransitionHandler API

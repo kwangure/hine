@@ -4,7 +4,7 @@ export class Action {
 	/** @type {(arg: any) => any} */
 	#run = noop;
 	#type = /** @type {const} */ ('action');
-	/** @type {import('./state/base.js').BaseState | null} */
+	/** @type {import('../state/base.js').BaseState | null} */
 	__ownerState = null;
 	__name = '';
 	/** @type {boolean | undefined} */
@@ -12,7 +12,7 @@ export class Action {
 	/** @type {boolean | undefined} */
 	__notifyBefore = undefined;
 	/**
-	 * @param {import('./types').ActionConfig} options
+	 * @param {import('../types.js').ActionConfig} options
 	 */
 	constructor(options) {
 		this.__name = options.name || '';
@@ -51,7 +51,9 @@ export class Action {
 				'Attempted to read ownerState before calling state.resolve().',
 			);
 		}
-		return /** @type {import('./state/types').StateNode} */ (this.__ownerState);
+		return /** @type {import('../state/types.js').StateNode} */ (
+			this.__ownerState
+		);
 	}
 	/** @type {string[]} */
 	get path() {
@@ -69,7 +71,7 @@ export class Action {
 		return result;
 	}
 	/**
-	 * @returns {import('./types').ActionJSON}
+	 * @returns {import('../types.js').ActionJSON}
 	 */
 	toJSON() {
 		return {

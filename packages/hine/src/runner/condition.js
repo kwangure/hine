@@ -2,7 +2,7 @@ export class Condition {
 	/** @type {(arg: any) => boolean} */
 	#run;
 	#type = /** @type {const} */ ('condition');
-	/** @type {import('./state/base.js').BaseState | null} */
+	/** @type {import('../state/base.js').BaseState | null} */
 	__ownerState = null;
 	__name = '';
 	/** @type {boolean | undefined} */
@@ -11,7 +11,7 @@ export class Condition {
 	__notifyBefore = undefined;
 
 	/**
-	 * @param {import('./types').ConditionConfig} options
+	 * @param {import('../types.js').ConditionConfig} options
 	 */
 	constructor(options) {
 		this.__name = options.name || '';
@@ -49,7 +49,9 @@ export class Condition {
 				'Attempted to read ownerState before calling state.resolve().',
 			);
 		}
-		return /** @type {import('./state/types').StateNode} */ (this.__ownerState);
+		return /** @type {import('../state/types.js').StateNode} */ (
+			this.__ownerState
+		);
 	}
 	/** @type {string[]} */
 	get path() {
@@ -67,7 +69,7 @@ export class Condition {
 		return result;
 	}
 	/**
-	 * @returns {import('./types').ConditionJSON}
+	 * @returns {import('../types.js').ConditionJSON}
 	 */
 	toJSON() {
 		return {

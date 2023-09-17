@@ -1,9 +1,9 @@
 export class BaseHandler {
 	/** @type {string[]} */
 	__actionConfig;
-	/** @type {import('../action').Action[]} */
+	/** @type {import('../runner/action').Action[]} */
 	__actions = [];
-	/** @type {import('../condition').Condition | null} */
+	/** @type {import('../runner/condition').Condition | null} */
 	__condition = null;
 	/** @type {string | null} */
 	__ifConfig;

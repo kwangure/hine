@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
-import { Condition } from '../../src/condition.js';
+import { Condition } from '../../src/runner/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
-import { Action } from '../../src/action.js';
+import { Action } from '../../src/runner/action.js';
 
 describe('ownerState', () => {
 	it('returns parent state', () => {

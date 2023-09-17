@@ -10,7 +10,7 @@ export class BaseState {
 	#actionConfig = {};
 	/**
 	 * Actions from the user config
-	 * @type {Record<string, import('../action.js').Action>}
+	 * @type {Record<string, import('../runner/action.js').Action>}
 	 */
 	#actions = {};
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
@@ -23,7 +23,7 @@ export class BaseState {
 	#conditionConfig = {};
 	/**
 	 * Conditions from the user config
-	 * @type {Record<string, import('../condition.js').Condition>}
+	 * @type {Record<string, import('../runner/condition.js').Condition>}
 	 */
 	#conditions = {};
 	#context = new Context();
@@ -42,18 +42,18 @@ export class BaseState {
 	#onConfig;
 	/**
 	 * Actions from all ancestor states and the config
-	 * @type {Record<string, import('../action.js').Action>}
+	 * @type {Record<string, import('../runner/action.js').Action>}
 	 */
 	__allActions = {};
 	/**
 	 * Conditions from all ancestor states and the config
-	 * @type {Record<string, import('../condition.js').Condition>}
+	 * @type {Record<string, import('../runner/condition.js').Condition>}
 	 */
 	__allConditions = {};
 
-	/** @type {import('../action.js').Action | null} */
+	/** @type {import('../runner/action.js').Action | null} */
 	__action = null;
-	/** @type {import('../condition.js').Condition | null} */
+	/** @type {import('../runner/condition.js').Condition | null} */
 	__condition = null;
 	/**
 	 * The active handler that is currently executing
@@ -109,7 +109,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @returns {Record<string, import('../action.js').Action>}
+	 * @returns {Record<string, import('../runner/action.js').Action>}
 	 */
 	get __actions() {
 		const actions = this.__parent?.__actions || {};
@@ -157,7 +157,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @returns {Record<string, import('../condition.js').Condition>}
+	 * @returns {Record<string, import('../runner/condition.js').Condition>}
 	 */
 	get __conditions() {
 		const conditions = this.__parent?.__conditions || {};

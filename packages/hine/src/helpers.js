@@ -1,5 +1,5 @@
-import { Action } from './action.js';
-import { Condition } from './condition.js';
+import { Action } from './runner/action.js';
+import { Condition } from './runner/condition.js';
 import { Context } from './context.js';
 
 /**

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Condition } from '../../src/condition.js';
+import { Condition } from '../../src/runner/condition.js';
 
 describe('toJSON', () => {
 	it('includes name', () => {

@@ -1,6 +1,6 @@
 /**
- * @typedef {import('./action.js').Action}
- * @typedef {import('./condition.js').Condition}
+ * @typedef {import('./runner/action.js').Action}
+ * @typedef {import('./runner/condition.js').Condition}
  * @typedef {import('./state/atomic.js').AtomicState}
  * @typedef {import('./state/compound.js').CompoundState}
  * @typedef {import('./state/types').AtomicStateConfig} AtomicStateConfig

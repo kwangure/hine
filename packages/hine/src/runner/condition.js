@@ -1,27 +1,16 @@
-export class Condition {
+import { BaseRunner } from './base.js';
+
+export class ConditionRunner extends BaseRunner {
 	/** @type {(arg: any) => boolean} */
 	#run;
 	#type = /** @type {const} */ ('condition');
-	/** @type {import('../state/base.js').BaseState | null} */
-	__ownerState = null;
-	__name = '';
-	/** @type {boolean | undefined} */
-	__notifyAfter = undefined;
-	/** @type {boolean | undefined} */
-	__notifyBefore = undefined;
 
 	/**
-	 * @param {import('../types.js').ConditionConfig} options
+	 * @param {import('./types.js').ConditionRunnerConfig} options
 	 */
 	constructor(options) {
-		this.__name = options.name || '';
-		if (typeof options.notifyAfter === 'boolean') {
-			this.__notifyAfter = options.notifyAfter;
-		}
-		if (typeof options.notifyBefore === 'boolean') {
-			this.__notifyBefore = options.notifyBefore;
-		}
-		this.#run = options.run || (() => true);
+		super(options);
+		this.#run = options.run;
 	}
 	#notifyAfter() {
 		if (!this.__notifyAfter) return;
@@ -38,10 +27,8 @@ export class Condition {
 				`Attempted to read 'condition.event' at '${path}' before calling 'state.resolve()'.`,
 			);
 		}
+
 		return this.__ownerState?.event;
-	}
-	get name() {
-		return this.__name;
 	}
 	get ownerState() {
 		if (!this.__ownerState) {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
-import { Condition } from '../../src/runner/condition.js';
+import { ConditionRunner } from '../../src/runner/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
-import { Action } from '../../src/runner/action.js';
+import { ActionRunner } from '../../src/runner/action.js';
 
 describe('ownerState', () => {
 	it('returns parent state', () => {
@@ -16,7 +16,7 @@ describe('ownerState', () => {
 		});
 		state.resolve({
 			conditions: {
-				condition: new Condition({
+				condition: new ConditionRunner({
 					run({ ownerState }) {
 						expect(ownerState).toBe(state);
 						return true;
@@ -24,7 +24,7 @@ describe('ownerState', () => {
 				}),
 			},
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run({ ownerState }) {
 						expect(ownerState).toBe(state);
 					},
@@ -33,7 +33,7 @@ describe('ownerState', () => {
 		});
 	});
 	it('throws when accessed before initialisation', () => {
-		const action = new Condition({
+		const action = new ConditionRunner({
 			run({ ownerState }) {
 				return Boolean(ownerState);
 			},

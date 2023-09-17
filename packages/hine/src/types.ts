@@ -1,20 +1,7 @@
-import type { Action } from './runner/action.js';
-import type { Condition } from './runner/condition.js';
+import type { ActionRunner } from './runner/action.js';
+import type { BaseRunnerConfig } from './runner/types.js';
+import type { ConditionRunner } from './runner/condition.js';
 import type { Context as ContextClass } from './context.js';
-
-interface RunnerConfig {
-	name?: string;
-	notifyAfter?: boolean;
-	notifyBefore?: boolean;
-}
-
-export interface ActionConfig extends RunnerConfig {
-	run: (this: undefined, arg: Action) => any;
-}
-
-export interface ConditionConfig extends RunnerConfig {
-	run: (this: undefined, arg: Condition) => boolean;
-}
 
 interface BaseRunnerJSON {
 	name: string;
@@ -32,10 +19,10 @@ export interface ConditionJSON extends BaseRunnerJSON {
 }
 
 export interface BaseResolveConfig {
-	actions?: Record<string, Action>;
-	actionConfig?: RunnerConfig;
-	conditions?: Record<string, Condition>;
-	conditionConfig?: RunnerConfig;
+	actions?: Record<string, ActionRunner>;
+	actionConfig?: BaseRunnerConfig;
+	conditions?: Record<string, ConditionRunner>;
+	conditionConfig?: BaseRunnerConfig;
 	context?: Context;
 }
 

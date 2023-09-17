@@ -5,12 +5,12 @@ import { TransitionHandler } from '../handler/transition.js';
 export class BaseState {
 	/**
 	 * Action configuration from the user that is propagated to children
-	 * @type {Omit<import('../types.js').ActionConfig, 'run'>}
+	 * @type {import('../runner/types.js').BaseRunnerConfig}
 	 */
 	#actionConfig = {};
 	/**
 	 * Actions from the user config
-	 * @type {Record<string, import('../runner/action.js').Action>}
+	 * @type {Record<string, import('../runner/action.js').ActionRunner>}
 	 */
 	#actions = {};
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
@@ -18,12 +18,12 @@ export class BaseState {
 	#alwaysConfig;
 	/**
 	 * Condition configuration from the user that is propagated to children
-	 * @type {Omit<import('../types.js').ConditionConfig, 'run'>}
+	 * @type {import('../runner/types.js').BaseRunnerConfig}
 	 */
 	#conditionConfig = {};
 	/**
 	 * Conditions from the user config
-	 * @type {Record<string, import('../runner/condition.js').Condition>}
+	 * @type {Record<string, import('../runner/condition.js').ConditionRunner>}
 	 */
 	#conditions = {};
 	#context = new Context();
@@ -42,18 +42,18 @@ export class BaseState {
 	#onConfig;
 	/**
 	 * Actions from all ancestor states and the config
-	 * @type {Record<string, import('../runner/action.js').Action>}
+	 * @type {Record<string, import('../runner/action.js').ActionRunner>}
 	 */
 	__allActions = {};
 	/**
 	 * Conditions from all ancestor states and the config
-	 * @type {Record<string, import('../runner/condition.js').Condition>}
+	 * @type {Record<string, import('../runner/condition.js').ConditionRunner>}
 	 */
 	__allConditions = {};
 
-	/** @type {import('../runner/action.js').Action | null} */
+	/** @type {import('../runner/action.js').ActionRunner | null} */
 	__action = null;
-	/** @type {import('../runner/condition.js').Condition | null} */
+	/** @type {import('../runner/condition.js').ConditionRunner | null} */
 	__condition = null;
 	/**
 	 * The active handler that is currently executing
@@ -109,7 +109,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @returns {Record<string, import('../runner/action.js').Action>}
+	 * @returns {Record<string, import('../runner/action.js').ActionRunner>}
 	 */
 	get __actions() {
 		const actions = this.__parent?.__actions || {};
@@ -157,7 +157,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @returns {Record<string, import('../runner/condition.js').Condition>}
+	 * @returns {Record<string, import('../runner/condition.js').ConditionRunner>}
 	 */
 	get __conditions() {
 		const conditions = this.__parent?.__conditions || {};

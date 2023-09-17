@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/runner/action.js';
+import { ActionRunner } from '../../src/runner/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { Condition } from '../../src/runner/condition.js';
+import { ConditionRunner } from '../../src/runner/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('toJSON', () => {
@@ -64,10 +64,10 @@ describe('toJSON', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action: new ActionRunner({ run() {} }),
 			},
 			conditions: {
-				condition: new Condition({ run: () => true }),
+				condition: new ConditionRunner({ run: () => true }),
 			},
 		});
 		const json = state.toJSON();
@@ -95,10 +95,10 @@ describe('toJSON', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action: new ActionRunner({ run() {} }),
 			},
 			conditions: {
-				condition: new Condition({ run: () => true }),
+				condition: new ConditionRunner({ run: () => true }),
 			},
 		});
 		const json = state.toJSON();
@@ -126,10 +126,10 @@ describe('toJSON', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action: new ActionRunner({ run() {} }),
 			},
 			conditions: {
-				condition: new Condition({ run: () => true }),
+				condition: new ConditionRunner({ run: () => true }),
 			},
 		});
 		const json = state.toJSON();
@@ -159,10 +159,10 @@ describe('toJSON', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action: new ActionRunner({ run() {} }),
 			},
 			conditions: {
-				condition: new Condition({ run: () => true }),
+				condition: new ConditionRunner({ run: () => true }),
 			},
 		});
 		const json = state.toJSON();

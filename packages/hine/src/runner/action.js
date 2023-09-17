@@ -1,27 +1,14 @@
-function noop() {}
+import { BaseRunner } from './base.js';
 
-export class Action {
+export class ActionRunner extends BaseRunner {
 	/** @type {(arg: any) => any} */
-	#run = noop;
+	#run;
 	#type = /** @type {const} */ ('action');
-	/** @type {import('../state/base.js').BaseState | null} */
-	__ownerState = null;
-	__name = '';
-	/** @type {boolean | undefined} */
-	__notifyAfter = undefined;
-	/** @type {boolean | undefined} */
-	__notifyBefore = undefined;
 	/**
-	 * @param {import('../types.js').ActionConfig} options
+	 * @param {import('./types.js').ActionRunnerConfig} options
 	 */
 	constructor(options) {
-		this.__name = options.name || '';
-		if (typeof options.notifyAfter === 'boolean') {
-			this.__notifyAfter = options.notifyAfter;
-		}
-		if (typeof options.notifyBefore === 'boolean') {
-			this.__notifyBefore = options.notifyBefore;
-		}
+		super(options);
 		this.#run = options.run;
 	}
 	#notifyAfter() {
@@ -42,9 +29,7 @@ export class Action {
 
 		return this.__ownerState?.event;
 	}
-	get name() {
-		return this.__name;
-	}
+
 	get ownerState() {
 		if (!this.__ownerState) {
 			throw Error(

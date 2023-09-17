@@ -1,27 +1,27 @@
-import { Action } from './runner/action.js';
-import { Condition } from './runner/condition.js';
+import { ActionRunner } from './runner/action.js';
+import { ConditionRunner } from './runner/condition.js';
 import { Context } from './context.js';
 
 /**
- * @param {import('./types.js').ActionConfig | import('./types.js').ActionConfig['run']} config
+ * @param {import('./runner/types.js').ActionRunnerConfig | import('./runner/types.js').ActionRunnerConfig['run']} config
  */
 export function action(config) {
 	if (typeof config === 'function') {
-		return new Action({ run: config });
+		return new ActionRunner({ run: config });
 	}
 
-	return new Action(config);
+	return new ActionRunner(config);
 }
 
 /**
- * @param {import('./types.js').ConditionConfig | import('./types.js').ConditionConfig['run']} config
+ * @param {import('./runner/types.js').ConditionRunnerConfig | import('./runner/types.js').ConditionRunnerConfig['run']} config
  */
 export function condition(config) {
 	if (typeof config === 'function') {
-		return new Condition({ run: config });
+		return new ConditionRunner({ run: config });
 	}
 
-	return new Condition(config);
+	return new ConditionRunner(config);
 }
 
 /**

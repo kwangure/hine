@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/runner/action.js';
+import { ActionRunner } from '../../src/runner/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { Condition } from '../../src/runner/condition.js';
+import { ConditionRunner } from '../../src/runner/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('conditions', () => {
 	it('exposes conditions inside conditions', () => {
-		const cond2 = new Condition({
+		const cond2 = new ConditionRunner({
 			run: () => false,
 		});
 		const state = new CompoundState({
@@ -24,12 +24,12 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				do: new Action({
+				do: new ActionRunner({
 					run() {},
 				}),
 			},
 			conditions: {
-				cond1: new Condition({
+				cond1: new ConditionRunner({
 					run({ ownerState }) {
 						expect(() => ownerState?.conditions.cond2).not.toThrow();
 						expect(ownerState?.conditions.cond2).toBe(cond2);
@@ -42,7 +42,7 @@ describe('conditions', () => {
 		});
 	});
 	it('calls condition with self-reference', () => {
-		const condition = new Condition({
+		const condition = new ConditionRunner({
 			run(value) {
 				expect(this).toBe(undefined);
 				expect(value).toBe(condition);
@@ -62,7 +62,7 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run() {},
 				}),
 			},
@@ -89,10 +89,10 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action: new ActionRunner({ run() {} }),
 			},
 			conditions: {
-				condition: new Condition({
+				condition: new ConditionRunner({
 					notifyBefore: true,
 					run() {
 						log.push('condition');
@@ -128,10 +128,10 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action: new ActionRunner({ run() {} }),
 			},
 			conditions: {
-				condition: new Condition({
+				condition: new ConditionRunner({
 					notifyAfter: true,
 					run() {
 						log.push('condition');
@@ -167,10 +167,10 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action: new ActionRunner({ run() {} }),
 			},
 			conditions: {
-				condition: new Condition({
+				condition: new ConditionRunner({
 					run() {
 						log.push('condition');
 						return true;
@@ -217,10 +217,10 @@ describe('conditions', () => {
 			children: {
 				s1: {
 					actions: {
-						action: new Action({ run() {} }),
+						action: new ActionRunner({ run() {} }),
 					},
 					conditions: {
-						condition: new Condition({
+						condition: new ConditionRunner({
 							run() {
 								log.push('condition');
 								return true;
@@ -257,10 +257,10 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action: new ActionRunner({ run() {} }),
 			},
 			conditions: {
-				condition: new Condition({
+				condition: new ConditionRunner({
 					notifyBefore: false,
 					run() {
 						log.push('condition');
@@ -295,10 +295,10 @@ describe('conditions', () => {
 		expect(() =>
 			state1.resolve({
 				actions: {
-					action: new Action({ run() {} }),
+					action: new ActionRunner({ run() {} }),
 				},
 				conditions: {
-					condition: new Condition({
+					condition: new ConditionRunner({
 						name: 'other-condition',
 						run() {
 							return true;
@@ -324,10 +324,10 @@ describe('conditions', () => {
 		expect(() =>
 			state2.resolve({
 				actions: {
-					action: new Action({ run() {} }),
+					action: new ActionRunner({ run() {} }),
 				},
 				conditions: {
-					condition: new Condition({
+					condition: new ConditionRunner({
 						name: 'other-condition',
 						run() {
 							return true;
@@ -338,7 +338,7 @@ describe('conditions', () => {
 		).not.toThrow();
 	});
 	it('sets state condition during condition', () => {
-		const condition = new Condition({
+		const condition = new ConditionRunner({
 			notifyBefore: false,
 			run() {
 				expect(state.condition).toBe(condition);
@@ -358,7 +358,7 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action: new ActionRunner({ run() {} }),
 			},
 			conditions: {
 				condition,
@@ -382,14 +382,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run() {
 						actions.push('action');
 					},
 				}),
 			},
 			conditions: {
-				isFalsy: new Condition({
+				isFalsy: new ConditionRunner({
 					run() {
 						return false;
 					},
@@ -414,14 +414,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run() {
 						actions.push('action');
 					},
 				}),
 			},
 			conditions: {
-				run: new Condition({
+				run: new ConditionRunner({
 					run() {
 						return true;
 					},
@@ -460,14 +460,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run() {
 						actions.push('action');
 					},
 				}),
 			},
 			conditions: {
-				isFalsy: new Condition({
+				isFalsy: new ConditionRunner({
 					run() {
 						return false;
 					},
@@ -508,14 +508,14 @@ describe('conditions', () => {
 			children: {
 				s1: {
 					actions: {
-						action: new Action({
+						action: new ActionRunner({
 							run() {
 								actions.push('action');
 							},
 						}),
 					},
 					conditions: {
-						isTruthy: new Condition({
+						isTruthy: new ConditionRunner({
 							run() {
 								return true;
 							},
@@ -544,14 +544,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run() {
 						actions.push('action');
 					},
 				}),
 			},
 			conditions: {
-				isFalsy: new Condition({
+				isFalsy: new ConditionRunner({
 					run() {
 						return false;
 					},
@@ -579,14 +579,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run() {
 						actions.push('action');
 					},
 				}),
 			},
 			conditions: {
-				isTruthy: new Condition({
+				isTruthy: new ConditionRunner({
 					run() {
 						return true;
 					},
@@ -612,14 +612,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run() {
 						actions.push('action');
 					},
 				}),
 			},
 			conditions: {
-				isFalsy: new Condition({
+				isFalsy: new ConditionRunner({
 					run() {
 						return false;
 					},
@@ -644,14 +644,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run() {
 						actions.push('action');
 					},
 				}),
 			},
 			conditions: {
-				isTruthy: new Condition({
+				isTruthy: new ConditionRunner({
 					run() {
 						return true;
 					},

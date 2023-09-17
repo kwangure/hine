@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/runner/action.js';
+import { ActionRunner } from '../../src/runner/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
 import { EffectHandler } from '../../src/handler/effect.js';
@@ -24,12 +24,12 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				always0: new Action({
+				always0: new ActionRunner({
 					run() {
 						log.push('always0');
 					},
 				}),
-				entry0: new Action({
+				entry0: new ActionRunner({
 					run() {
 						log.push('entry0');
 					},
@@ -71,12 +71,12 @@ describe('actions', () => {
 			children: {
 				b: {
 					actions: {
-						always0: new Action({
+						always0: new ActionRunner({
 							run() {
 								log.push('always0');
 							},
 						}),
-						entry0: new Action({
+						entry0: new ActionRunner({
 							run() {
 								log.push('entry0');
 							},
@@ -118,7 +118,7 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				exit0: new Action({
+				exit0: new ActionRunner({
 					run() {
 						log.push('exit0');
 					},
@@ -127,7 +127,7 @@ describe('actions', () => {
 			children: {
 				s1: {
 					actions: {
-						exit1: new Action({
+						exit1: new ActionRunner({
 							run() {
 								log.push('exit1');
 							},
@@ -156,7 +156,7 @@ describe('actions', () => {
 		});
 		machine.resolve({
 			actions: {
-				on0: new Action({
+				on0: new ActionRunner({
 					run() {
 						log.push('on0');
 					},
@@ -188,12 +188,12 @@ describe('actions', () => {
 		});
 		machine.resolve({
 			actions: {
-				always0: new Action({
+				always0: new ActionRunner({
 					run() {
 						log.push('always0');
 					},
 				}),
-				on0: new Action({
+				on0: new ActionRunner({
 					run() {
 						log.push('on0');
 					},
@@ -244,12 +244,12 @@ describe('actions', () => {
 			children: {
 				s1: {
 					actions: {
-						exit1: new Action({
+						exit1: new ActionRunner({
 							run() {
 								log.push('exit1');
 							},
 						}),
-						on1: new Action({
+						on1: new ActionRunner({
 							run() {
 								log.push('on1');
 							},
@@ -258,17 +258,17 @@ describe('actions', () => {
 				},
 				s2: {
 					actions: {
-						always2: new Action({
+						always2: new ActionRunner({
 							run() {
 								log.push('always2');
 							},
 						}),
-						entry2: new Action({
+						entry2: new ActionRunner({
 							run() {
 								log.push('entry2');
 							},
 						}),
-						on2: new Action({
+						on2: new ActionRunner({
 							run() {
 								log.push('on2');
 							},
@@ -294,7 +294,7 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				always: new Action({
+				always: new ActionRunner({
 					run() {
 						alwaysCount++;
 					},
@@ -347,22 +347,22 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				always: new Action({
+				always: new ActionRunner({
 					run() {
 						log.push('always');
 					},
 				}),
-				entry: new Action({
+				entry: new ActionRunner({
 					run() {
 						log.push('entry');
 					},
 				}),
-				exit: new Action({
+				exit: new ActionRunner({
 					run() {
 						log.push('exit');
 					},
 				}),
-				on: new Action({
+				on: new ActionRunner({
 					run() {
 						log.push('on');
 					},
@@ -410,22 +410,22 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				always: new Action({
+				always: new ActionRunner({
 					run() {
 						log.push('not always');
 					},
 				}),
-				entry: new Action({
+				entry: new ActionRunner({
 					run() {
 						log.push('not entry');
 					},
 				}),
-				exit: new Action({
+				exit: new ActionRunner({
 					run() {
 						log.push('not exit');
 					},
 				}),
-				on: new Action({
+				on: new ActionRunner({
 					run() {
 						log.push('not on');
 					},
@@ -434,22 +434,22 @@ describe('actions', () => {
 			children: {
 				s1: {
 					actions: {
-						always: new Action({
+						always: new ActionRunner({
 							run() {
 								log.push('always');
 							},
 						}),
-						entry: new Action({
+						entry: new ActionRunner({
 							run() {
 								log.push('entry');
 							},
 						}),
-						exit: new Action({
+						exit: new ActionRunner({
 							run() {
 								log.push('exit');
 							},
 						}),
-						on: new Action({
+						on: new ActionRunner({
 							run() {
 								log.push('on');
 							},
@@ -463,7 +463,7 @@ describe('actions', () => {
 		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
 	});
 	it('calls actions with self-reference', () => {
-		const action = new Action({
+		const action = new ActionRunner({
 			run(value) {
 				expect(this).toBe(undefined);
 				expect(value).toBe(action);
@@ -496,7 +496,7 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					notifyBefore: true,
 					run() {
 						log.push('action');
@@ -527,7 +527,7 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					notifyAfter: true,
 					run() {
 						log.push('action');
@@ -561,7 +561,7 @@ describe('actions', () => {
 				notifyBefore: true,
 			},
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run() {
 						log.push('action');
 					},
@@ -594,7 +594,7 @@ describe('actions', () => {
 				notifyBefore: true,
 			},
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					notifyBefore: false,
 					run() {
 						log.push('action');
@@ -636,7 +636,7 @@ describe('actions', () => {
 					children: {
 						s11: {
 							actions: {
-								action: new Action({
+								action: new ActionRunner({
 									run() {
 										log.push('action');
 									},
@@ -672,7 +672,7 @@ describe('actions', () => {
 		expect(() =>
 			state.resolve({
 				actions: {
-					action: new Action({
+					action: new ActionRunner({
 						name: 'other-action',
 						run() {},
 					}),
@@ -692,7 +692,7 @@ describe('actions', () => {
 		expect(() =>
 			state2.resolve({
 				actions: {
-					action: new Action({
+					action: new ActionRunner({
 						name: 'other-action',
 						run() {},
 					}),
@@ -701,7 +701,7 @@ describe('actions', () => {
 		).not.toThrow();
 	});
 	it('sets state action during action', () => {
-		const action = new Action({
+		const action = new ActionRunner({
 			notifyBefore: false,
 			run() {
 				expect(state.action).toBe(action);
@@ -722,7 +722,7 @@ describe('actions', () => {
 		expect(state.action).toBe(null);
 	});
 	it('exposes actions inside actions', () => {
-		const action2 = new Action({
+		const action2 = new ActionRunner({
 			run: () => 'test',
 		});
 		const state = new AtomicState({
@@ -734,7 +734,7 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				action1: new Action({
+				action1: new ActionRunner({
 					run({ ownerState }) {
 						expect(() => ownerState?.actions.action2).not.toThrow();
 						expect(ownerState?.actions.action2).toBe(action2);
@@ -754,7 +754,7 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run({ event }) {
 						expect(event?.value).toBe('my-value');
 					},

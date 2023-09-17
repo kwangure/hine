@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/runner/action.js';
-import { Condition } from '../../src/runner/condition.js';
+import { ActionRunner } from '../../src/runner/action.js';
+import { ConditionRunner } from '../../src/runner/condition.js';
 import { TransitionHandler } from '../../src/handler/transition.js';
 
 // TODO: Update to the new TransitionHandler API
@@ -31,7 +31,7 @@ describe.skip('toJSON', () => {
 			// @ts-expect-error
 			name,
 			actions: [
-				new Action({
+				new ActionRunner({
 					name: 'action',
 					run() {},
 				}),
@@ -46,7 +46,7 @@ describe.skip('toJSON', () => {
 		const state = new TransitionHandler({
 			// @ts-expect-error
 			name,
-			condition: new Condition({
+			condition: new ConditionRunner({
 				name: 'condition',
 				run: () => true,
 			}),

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/runner/action.js';
+import { ActionRunner } from '../../src/runner/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
@@ -10,7 +10,7 @@ describe('ownerState', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run({ ownerState }) {
 						expect(ownerState).toBe(state);
 					},
@@ -19,7 +19,7 @@ describe('ownerState', () => {
 		});
 	});
 	it('throws when accessed before initialisation', () => {
-		const action = new Action({ run() {} });
+		const action = new ActionRunner({ run() {} });
 		expect(() => action.ownerState).toThrow('Attempted to read ownerState');
 	});
 });

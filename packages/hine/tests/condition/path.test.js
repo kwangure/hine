@@ -1,23 +1,23 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/runner/action.js';
+import { ActionRunner } from '../../src/runner/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 
 describe('path', () => {
 	it('returns path with name', () => {
-		const action = new Action({
+		const action = new ActionRunner({
 			name: 'action',
 			run() {},
 		});
 		expect(action.path).toEqual(['(action)']);
 	});
 	it('returns path with empty string when missing name', () => {
-		const action = new Action({
+		const action = new ActionRunner({
 			run() {},
 		});
 		expect(action.path).toEqual(['()']);
 	});
 	it('includes ownerState path', () => {
-		const action = new Action({
+		const action = new ActionRunner({
 			name: 'action',
 			run() {},
 		});

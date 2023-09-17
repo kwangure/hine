@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/runner/action.js';
+import { ActionRunner } from '../../src/runner/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
-import { Condition } from '../../src/runner/condition.js';
+import { ConditionRunner } from '../../src/runner/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 import { zip } from '../../src/utils/iterator.js';
 
@@ -23,7 +23,7 @@ describe('step', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run() {},
 				}),
 			},
@@ -45,10 +45,10 @@ describe('step', () => {
 		expect(count).toBe(2);
 	});
 	it('respects iterator protocol', () => {
-		const action = new Action({
+		const action = new ActionRunner({
 			run() {},
 		});
-		const condition = new Condition({
+		const condition = new ConditionRunner({
 			run: () => true,
 		});
 		const state = new AtomicState({
@@ -108,7 +108,7 @@ describe('step', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: new ActionRunner({
 					run() {},
 				}),
 			},

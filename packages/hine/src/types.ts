@@ -3,7 +3,6 @@ import type {
 	BaseRunnerConfig,
 	ConditionRunnerConfig,
 } from './runner/types.js';
-import type { Context } from './context.js';
 
 interface BaseRunnerJSON {
 	name: string;
@@ -28,7 +27,7 @@ export interface BaseResolveConfig {
 		ConditionRunnerConfig | ConditionRunnerConfig['run']
 	>;
 	conditionConfig?: BaseRunnerConfig;
-	context?: Context<any>;
+	context?: Record<string, unknown>;
 }
 
 export interface AtomicResolveConfig extends BaseResolveConfig {}

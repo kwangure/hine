@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { Context } from '../../src/context.js';
 
 describe('context', () => {
 	it('should return the context value for a given key', () => {
@@ -9,7 +8,7 @@ describe('context', () => {
 			children: { s1: new AtomicState() },
 		});
 		state.resolve({
-			context: new Context({ key: 'value' }),
+			context: { key: 'value' },
 		});
 		expect(state.context?.get('key')).toBe('value');
 	});
@@ -23,7 +22,7 @@ describe('context', () => {
 				state,
 			},
 		}).resolve({
-			context: new Context({ key: 'value' }),
+			context: { key: 'value' },
 		});
 		expect(state.context?.get('key')).toBe('value');
 	});
@@ -39,12 +38,12 @@ describe('context', () => {
 				}),
 			},
 		}).resolve({
-			context: new Context({ key: 'value0' }),
+			context: { key: 'value0' },
 			children: {
 				s1: {
-					context: new Context({
+					context: {
 						key: 'value1',
-					}),
+					},
 				},
 			},
 		});

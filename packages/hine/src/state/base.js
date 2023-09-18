@@ -227,7 +227,9 @@ export class BaseState {
 	/** @param {import('../types.js').BaseResolveConfig} [config] */
 	__resolve(config) {
 		if (config?.context) {
-			this.#context = config?.context;
+			for (const [key, value] of Object.entries(config.context)) {
+				this.#context.set(key, value);
+			}
 		}
 		if (config?.actionConfig) {
 			if ('name' in config.actionConfig) {

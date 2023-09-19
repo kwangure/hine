@@ -225,7 +225,7 @@ export class BaseState {
 			this.__handlerQueue.push(...this.__onHandler[eventName]);
 		}
 	}
-	/** @param {import('../types.js').BaseResolveConfig} [config] */
+	/** @param {import('./types.js').BaseResolveConfig} [config] */
 	__resolve(config) {
 		if (config?.context) {
 			for (const [key, value] of Object.entries(config.context)) {

@@ -129,12 +129,12 @@ export class CompoundState extends BaseState {
 				this.__state.matches(path.slice(this.name.length + 1)))
 		);
 	}
-	/** @param {import('../types.js').CompoundResolveConfig} [config] */
+	/** @param {import('./types.js').CompoundResolveConfig} [config] */
 	resolve(config) {
 		this.__resolve(config);
 		this.__start();
 	}
-	/** @param {import('../types.js').CompoundResolveConfig} [config] */
+	/** @param {import('./types.js').CompoundResolveConfig} [config] */
 	__resolve(config) {
 		super.__resolve(config);
 		if (!config?.children) return;

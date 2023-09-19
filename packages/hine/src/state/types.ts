@@ -1,3 +1,8 @@
+import type {
+	ActionRunnerConfig,
+	BaseRunnerConfig,
+	ConditionRunnerConfig,
+} from '../runner/types.js';
 import type { AtomicState } from './atomic.js';
 import type { CompoundState } from './compound.js';
 import type { EffectHandler } from '../handler/effect.js';
@@ -22,6 +27,23 @@ export interface CompoundStateConfig extends BaseStateConfig {
 
 export interface StateConfig extends BaseStateConfig {
 	children?: Record<string, StateNode>;
+}
+
+export interface BaseResolveConfig {
+	actions?: Record<string, ActionRunnerConfig | ActionRunnerConfig['run']>;
+	actionConfig?: BaseRunnerConfig;
+	conditions?: Record<
+		string,
+		ConditionRunnerConfig | ConditionRunnerConfig['run']
+	>;
+	conditionConfig?: BaseRunnerConfig;
+	context?: Record<string, unknown>;
+}
+
+export interface AtomicResolveConfig extends BaseResolveConfig {}
+
+export interface CompoundResolveConfig extends BaseResolveConfig {
+	children?: Record<string, AtomicResolveConfig | CompoundResolveConfig>;
 }
 
 export interface BaseStateJSON {

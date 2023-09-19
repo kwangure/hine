@@ -28,7 +28,7 @@ export class BaseState {
 	 * @type {Record<string, import('../runner/condition.js').ConditionRunner>}
 	 */
 	#conditions = {};
-	#context = new Context();
+	#context;
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#entry = [];
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
@@ -77,6 +77,7 @@ export class BaseState {
 	 * @param {import('./types.js').BaseStateConfig} [stateConfig]
 	 */
 	constructor(stateConfig) {
+		this.#context = new Context(this);
 		this.#alwaysConfig = stateConfig?.always || [];
 		this.__name = stateConfig?.name || '';
 		this.#onConfig = stateConfig?.on || {};

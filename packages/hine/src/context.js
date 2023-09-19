@@ -4,15 +4,10 @@
 export class Context {
 	/** @type {Map<keyof T, T[keyof T]>} */
 	#data = new Map();
-	/** @type {import('./state/base.js').BaseState | null} */
-	__ownerState = null;
-	/** @param {T} [data] */
-	constructor(data) {
-		if (data) {
-			for (const [key, value] of Object.entries(data)) {
-				this.#data.set(key, /** @type {T[keyof T]} */ (value));
-			}
-		}
+	__ownerState;
+	/** @param {import('./state/base.js').BaseState} owner */
+	constructor(owner) {
+		this.__ownerState = owner;
 	}
 	/**
 	 * @template K

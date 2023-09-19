@@ -53,7 +53,7 @@ export class ActionRunner extends BaseRunner {
 		return result;
 	}
 	/**
-	 * @returns {import('../types.js').ActionJSON}
+	 * @returns {import('./types.js').ActionJSON}
 	 */
 	toJSON() {
 		return {

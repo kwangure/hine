@@ -53,7 +53,7 @@ export class ConditionRunner extends BaseRunner {
 		return result;
 	}
 	/**
-	 * @returns {import('../types.js').ConditionJSON}
+	 * @returns {import('./types.js').ConditionJSON}
 	 */
 	toJSON() {
 		return {

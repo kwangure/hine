@@ -1,14 +1,14 @@
 export class BaseHandler {
 	/** @type {string[]} */
 	__actionConfig;
-	/** @type {import('../runner/action').ActionRunner<any>[]} */
+	/** @type {import('../runner/action').ActionRunner<any, any>[]} */
 	__actions = [];
-	/** @type {import('../runner/condition').ConditionRunner<any> | null} */
+	/** @type {import('../runner/condition').ConditionRunner<any, any> | null} */
 	__condition = null;
 	/** @type {string | null} */
 	__ifConfig;
 	__name = '';
-	/** @type {import('../state/base.js').BaseState<any> | null} */
+	/** @type {import('../state/base.js').BaseState<any, any> | null} */
 	__ownerState = null;
 	/** @type {boolean | undefined} */
 	__shouldNotifyBefore = undefined;
@@ -38,7 +38,7 @@ export class BaseHandler {
 	/**
 	 * @param {{
 	 *   name: string;
-	 *   ownerState: import("../state/base.js").BaseState<any>;
+	 *   ownerState: import("../state/base.js").BaseState<any, any>;
 	 * }} options
 	 */
 	__resolve(options) {

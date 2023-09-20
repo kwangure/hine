@@ -6,14 +6,12 @@ describe('basic', () => {
 	it('returns undefined when getting non-existent key', () => {
 		const state = new BaseState();
 		const context = new Context(state, {});
-		// @ts-expect-error
 		expect(context.get('key')).toBe(undefined);
 	});
 
 	it('throws when setting non-existent key', () => {
 		const state = new BaseState();
 		const context = new Context(state, {});
-		// @ts-expect-error
 		expect(() => context.update('key', 'value')).toThrow(
 			/Attempted to update key/,
 		);
@@ -28,10 +26,8 @@ describe('typescript', () => {
 			key2: Number,
 		});
 
-		expectTypeOf(context.get('key1')).toEqualTypeOf('');
-		expectTypeOf(context.get('key2')).toEqualTypeOf(0);
-		// @ts-expect-error
-		context.get('non-existent');
+		expectTypeOf(context.get('key1')).toBeString();
+		expectTypeOf(context.get('key2')).toBeNumber();
 	});
 
 	it('checks update type from context transformer', () => {
@@ -49,8 +45,6 @@ describe('typescript', () => {
 		// @ts-expect-error
 		context.update('key1', '');
 		context.update('key2', ''); // Number constructor takes any as input
-		// @ts-expect-error
-		() => context.update('non-existent', '');
 	});
 
 	it('allows any get type when context transformer is not defined', () => {

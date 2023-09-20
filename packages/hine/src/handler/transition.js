@@ -16,7 +16,7 @@ export class TransitionHandler extends BaseHandler {
 	/**
 	 * @param {{
 	 *   name: string;
-	 *   ownerState: import("../state/base.js").BaseState<any>;
+	 *   ownerState: import("../state/base.js").BaseState<any, any>;
 	 * }} options
 	 */
 	__resolve(options) {

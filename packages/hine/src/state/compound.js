@@ -6,7 +6,8 @@ import { BaseState } from './base.js';
 
 /**
  * @template {import('./types.js').StateConfig} TStateConfig
- * @extends {BaseState<TStateConfig>}
+ * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
+ * @extends {BaseState<TStateConfig, TContextAncestor>}
  */
 export class CompoundState extends BaseState {
 	/** @type {StateNode | null} */
@@ -133,12 +134,12 @@ export class CompoundState extends BaseState {
 				this.__state.matches(path.slice(this.name.length + 1)))
 		);
 	}
-	/** @param {import('./types.js').CompoundResolveConfig<TStateConfig>} [config] */
+	/** @param {import('./types.js').CompoundResolveConfig<TStateConfig, TContextAncestor>} [config] */
 	resolve(config) {
 		this.__resolve(config);
 		this.__start();
 	}
-	/** @param {import('./types.js').CompoundResolveConfig<TStateConfig>} [config] */
+	/** @param {import('./types.js').CompoundResolveConfig<TStateConfig, TContextAncestor>} [config] */
 	__resolve(config) {
 		super.__resolve(config);
 		if (!config?.children) return;
@@ -162,11 +163,15 @@ export class CompoundState extends BaseState {
 	subscribe(fn) {
 		fn(this);
 		this.__subscribers.add(
-			/** @type {(arg: BaseState<TStateConfig>) => any} */ (fn),
+			/** @type {(arg: BaseState<TStateConfig, TContextAncestor>) => any} */ (
+				fn
+			),
 		);
 		return () => {
 			this.__subscribers.delete(
-				/** @type {(arg: BaseState<TStateConfig>) => any} */ (fn),
+				/** @type {(arg: BaseState<TStateConfig, TContextAncestor>) => any} */ (
+					fn
+				),
 			);
 		};
 	}

@@ -6,6 +6,7 @@ import { TransitionHandler } from '../handler/transition.js';
 
 /**
  * @template {import('./types.js').StateConfig} TStateConfig
+ * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
  */
 export class BaseState {
 	/**
@@ -15,7 +16,7 @@ export class BaseState {
 	#actionConfig = {};
 	/**
 	 * Actions from the user config
-	 * @type {Record<string, import('../runner/action.js').ActionRunner<TStateConfig>>}
+	 * @type {Record<string, import('../runner/action.js').ActionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	#actions = {};
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
@@ -28,7 +29,7 @@ export class BaseState {
 	#conditionConfig = {};
 	/**
 	 * Conditions from the user config
-	 * @type {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig>>}
+	 * @type {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	#conditions = {};
 	#context;
@@ -47,18 +48,18 @@ export class BaseState {
 	#onConfig;
 	/**
 	 * Actions from all ancestor states and the config
-	 * @type {Record<string, import('../runner/action.js').ActionRunner<TStateConfig>>}
+	 * @type {Record<string, import('../runner/action.js').ActionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	__allActions = {};
 	/**
 	 * Conditions from all ancestor states and the config
-	 * @type {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig>>}
+	 * @type {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	__allConditions = {};
 
-	/** @type {import('../runner/action.js').ActionRunner<TStateConfig> | null} */
+	/** @type {import('../runner/action.js').ActionRunner<TStateConfig, TContextAncestor> | null} */
 	__action = null;
-	/** @type {import('../runner/condition.js').ConditionRunner<TStateConfig> | null} */
+	/** @type {import('../runner/condition.js').ConditionRunner<TStateConfig, TContextAncestor> | null} */
 	__condition = null;
 	/**
 	 * The active handler that is currently executing
@@ -69,11 +70,11 @@ export class BaseState {
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	__handlerQueue = [];
 	__name = '';
-	/** @type {import('./compound.js').CompoundState<any> | null} */
+	/** @type {import('./compound.js').CompoundState<any, any> | null} */
 	__parent = null;
 	/** @type {Record<string, (import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]>} */
 	__onHandler = {};
-	/** @type {Set<(arg: BaseState<TStateConfig>) => any>} */
+	/** @type {Set<(arg: BaseState<TStateConfig, TContextAncestor>) => any>} */
 	__subscribers = new Set();
 
 	/**
@@ -81,7 +82,7 @@ export class BaseState {
 	 */
 	constructor(stateConfig) {
 		this.#context =
-			/** @type {Context<NonNullable<TStateConfig['context']>>} */ (
+			/** @type {Context<NonNullable<TStateConfig['context']>, TContextAncestor>} */ (
 				new Context(this, stateConfig?.context)
 			);
 		this.#alwaysConfig = stateConfig?.always || [];
@@ -118,7 +119,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @returns {Record<string, import('../runner/action.js').ActionRunner<TStateConfig>>}
+	 * @returns {Record<string, import('../runner/action.js').ActionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	get __actions() {
 		const actions = this.__parent?.__actions || {};
@@ -165,7 +166,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @returns {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig>>}
+	 * @returns {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	get __conditions() {
 		const conditions = this.__parent?.__conditions || {};

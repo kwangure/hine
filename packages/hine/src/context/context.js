@@ -1,15 +1,16 @@
 /**
- * @template {Record<string, import('./types.js').ContextTransformer>} [T=Record<string, import('./types.js').ContextTransformer>]
+ * @template {Record<string, import('./types.js').ContextTransformer>} TContextOwnerState
+ * @template {Record<string, import('./types.js').ContextTransformer>} TContextAncestor
  */
 export class Context {
-	/** @type {Map<keyof T, T[keyof T]>} */
+	/** @type {Map<keyof TContextOwnerState, TContextOwnerState[keyof TContextOwnerState]>} */
 	#data = new Map();
 	__ownerState;
-	__transformers = /** @type {T|undefined} */ (undefined);
+	__transformers = /** @type {TContextOwnerState|undefined} */ (undefined);
 
 	/**
-	 * @param {import('../state/base.js').BaseState<any>} owner
-	 * @param {T} [transformers]
+	 * @param {import('../state/base.js').BaseState<any, any>} owner
+	 * @param {TContextOwnerState} [transformers]
 	 */
 	constructor(owner, transformers) {
 		this.__ownerState = owner;
@@ -17,8 +18,8 @@ export class Context {
 	}
 	/**
 	 * @template K
-	 * @param {K extends keyof T ? K : never} key
-	 * @param {K extends keyof T ? Parameters<T[K]>[0]: never} value
+	 * @param {K extends keyof TContextOwnerState ? K : never} key
+	 * @param {K extends keyof TContextOwnerState ? Parameters<TContextOwnerState[K]>[0]: never} value
 	 */
 	__set(key, value) {
 		if (!this.__transformers) {
@@ -38,22 +39,22 @@ export class Context {
 	}
 	/**
 	 * @template K
-	 * @param {K extends keyof T ? K : keyof T} key
-	 * @returns {K extends keyof T ? ReturnType<T[K]> : never}
+	 * @param {K extends keyof (TContextAncestor & TContextOwnerState) ? K : keyof (TContextAncestor & TContextOwnerState)} key
+	 * @returns {K extends keyof (TContextAncestor & TContextOwnerState) ? ReturnType<(TContextAncestor & TContextOwnerState)[K]> : never}
 	 */
 	get(key) {
-		if (this.#data.has(/** @type {keyof T} */ (key))) {
-			return /** @type {K extends keyof T ? ReturnType<T[K]> : never} */ (
-				this.#data.get(/** @type {keyof T} */ (key))
+		if (this.#data.has(/** @type {keyof TContextOwnerState} */ (key))) {
+			return /** @type {K extends keyof (TContextAncestor & TContextOwnerState) ? ReturnType<(TContextAncestor & TContextOwnerState)[K]> : never} */ (
+				this.#data.get(/** @type {keyof (TContextOwnerState)} */ (key))
 			);
 		}
-		return /** @type {K extends keyof T ? ReturnType<T[K]> : never} */ (
+		return /** @type {K extends keyof (TContextAncestor & TContextOwnerState) ? ReturnType<(TContextAncestor & TContextOwnerState)[K]> : never} */ (
 			this.__ownerState?.parent?.context.get(/** @type {any} */ (key))
 		);
 	}
 	/**
 	 * @template K
-	 * @param {K extends keyof T ? K : never} key
+	 * @param {K extends keyof TContextOwnerState ? K : never} key
 	 * @returns {boolean}
 	 */
 	has(key) {
@@ -61,12 +62,15 @@ export class Context {
 	}
 	/**
 	 * @template K
-	 * @param {K extends keyof T ? K : never} key
-	 * @param {K extends keyof T ? Parameters<T[K]>[0]: never} value
+	 * @param {K extends keyof (TContextAncestor & TContextOwnerState) ? K : never} key
+	 * @param {K extends keyof (TContextAncestor & TContextOwnerState) ? Parameters<(TContextAncestor & TContextOwnerState)[K]>[0]: never} value
 	 */
 	update(key, value) {
-		if (this.#data.has(/** @type {keyof T} */ (key))) {
-			this.__set(/** @type {keyof T} */ (key), /** @type {any} */ (value));
+		if (this.#data.has(/** @type {keyof TContextOwnerState} */ (key))) {
+			this.__set(
+				/** @type {keyof TContextOwnerState} */ (key),
+				/** @type {any} */ (value),
+			);
 			return true;
 		}
 		const updateSucessful = this.__ownerState?.parent?.context.update(

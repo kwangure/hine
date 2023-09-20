@@ -2,7 +2,8 @@ import { BaseRunner } from './base.js';
 
 /**
  * @template {import('../state/types.js').StateConfig} TStateConfig
- * @extends {BaseRunner<TStateConfig>}
+ * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
+ * @extends {BaseRunner<TStateConfig, TContextAncestor>}
  */
 export class ConditionRunner extends BaseRunner {
 	/** @type {(arg: any) => boolean} */
@@ -10,8 +11,8 @@ export class ConditionRunner extends BaseRunner {
 	#type = /** @type {const} */ ('condition');
 
 	/**
-	 * @param {import('./types.js').ConditionRunnerConfig<TStateConfig> & {
-	 *     ownerState: import('../state/base.js').BaseState<TStateConfig>
+	 * @param {import('./types.js').ConditionRunnerConfig<TStateConfig, TContextAncestor> & {
+	 *     ownerState: import('../state/base.js').BaseState<TStateConfig, TContextAncestor>
 	 * }} options
 	 */
 	constructor(options) {

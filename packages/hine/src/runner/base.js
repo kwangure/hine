@@ -1,8 +1,9 @@
 /**
  * @template {import('../state/types.js').StateConfig} TStateConfig
+ * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
  */
 export class BaseRunner {
-	/** @type {import('../state/base.js').BaseState<TStateConfig>} */
+	/** @type {import('../state/base.js').BaseState<TStateConfig, TContextAncestor>} */
 	__ownerState;
 	__name = '';
 	/** @type {boolean | undefined} */
@@ -12,7 +13,7 @@ export class BaseRunner {
 
 	/**
 	 * @param {import('./types.js').BaseRunnerConfig & {
-	 *     ownerState: import('../state/base.js').BaseState<TStateConfig>
+	 *     ownerState: import('../state/base.js').BaseState<TStateConfig, TContextAncestor>
 	 * }} options
 	 */
 	constructor(options) {

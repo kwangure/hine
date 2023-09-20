@@ -3,7 +3,7 @@ import { CompoundState } from './compound.js';
 
 /**
  * @template {import('./types.js').StateConfig} TConfig
- * @template {TConfig extends { children: Record<string, import('./types.js').StateNode> } ? CompoundState<TConfig> : AtomicState<TConfig>} U
+ * @template {TConfig extends { children: Record<string, import('./types.js').StateNode> } ? CompoundState<TConfig, {}> : AtomicState<TConfig, {}>} U
  * @param {TConfig} [config]
  * @returns {U}
  */

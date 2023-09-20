@@ -1,5 +1,6 @@
 import type { ActionRunner } from './action.js';
 import type { ConditionRunner } from './condition.js';
+import type { StateConfig } from '../state/types.js';
 
 export interface BaseRunnerConfig {
 	name?: string;
@@ -7,12 +8,14 @@ export interface BaseRunnerConfig {
 	notifyBefore?: boolean;
 }
 
-export interface ActionRunnerConfig extends BaseRunnerConfig {
-	run: (this: undefined, arg: ActionRunner) => any;
+export interface ActionRunnerConfig<TStateConfig extends StateConfig>
+	extends BaseRunnerConfig {
+	run: (this: undefined, arg: ActionRunner<TStateConfig>) => any;
 }
 
-export interface ConditionRunnerConfig extends BaseRunnerConfig {
-	run: (this: undefined, arg: ConditionRunner) => boolean;
+export interface ConditionRunnerConfig<TStateConfig extends StateConfig>
+	extends BaseRunnerConfig {
+	run: (this: undefined, arg: ConditionRunner<TStateConfig>) => boolean;
 }
 
 interface BaseRunnerJSON {

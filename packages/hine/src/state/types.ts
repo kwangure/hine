@@ -5,14 +5,16 @@ import type {
 } from '../runner/types.js';
 import type { AtomicState } from './atomic.js';
 import type { CompoundState } from './compound.js';
+import type { ContextTransformer } from '../context/types.js';
 import type { EffectHandler } from '../handler/effect.js';
-import type { TransitionHandler } from '../handler/transition.js';
 import type { HandlerJSON } from '../handler/types.js';
+import type { TransitionHandler } from '../handler/transition.js';
 
-export type StateNode = AtomicState | CompoundState;
+export type StateNode = AtomicState<any> | CompoundState<any>;
 
 export interface BaseStateConfig {
 	always?: (EffectHandler | TransitionHandler)[];
+	context?: Record<string, ContextTransformer>;
 	entry?: EffectHandler[];
 	exit?: EffectHandler[];
 	name?: string;
@@ -30,21 +32,61 @@ export interface StateConfig extends BaseStateConfig {
 }
 
 export interface BaseResolveConfig {
-	actions?: Record<string, ActionRunnerConfig | ActionRunnerConfig['run']>;
+	actions?: Record<
+		string,
+		ActionRunnerConfig<any> | ActionRunnerConfig<any>['run']
+	>;
 	actionConfig?: BaseRunnerConfig;
 	conditions?: Record<
 		string,
-		ConditionRunnerConfig | ConditionRunnerConfig['run']
+		ConditionRunnerConfig<any> | ConditionRunnerConfig<any>['run']
 	>;
 	conditionConfig?: BaseRunnerConfig;
 	context?: Record<string, unknown>;
 }
 
-export interface AtomicResolveConfig extends BaseResolveConfig {}
-
-export interface CompoundResolveConfig extends BaseResolveConfig {
-	children?: Record<string, AtomicResolveConfig | CompoundResolveConfig>;
+export interface AtomicResolveConfig<TStateConfig extends StateConfig>
+	extends BaseResolveConfig {
+	actions?: Record<
+		string,
+		ActionRunnerConfig<TStateConfig> | ActionRunnerConfig<TStateConfig>['run']
+	>;
+	context?: {
+		[key in keyof TStateConfig['context']]: TStateConfig['context'][key] extends ContextTransformer
+			? ReturnType<TStateConfig['context'][key]>
+			: never;
+	};
 }
+
+export interface CompoundResolveConfig<TStateConfig extends StateConfig>
+	extends BaseResolveConfig {
+	actions?: Record<
+		string,
+		ActionRunnerConfig<TStateConfig> | ActionRunnerConfig<TStateConfig>['run']
+	>;
+	context?: {
+		[key in keyof TStateConfig['context']]: TStateConfig['context'][key] extends ContextTransformer
+			? ReturnType<TStateConfig['context'][key]>
+			: never;
+	};
+	children?: {
+		[child in keyof TStateConfig['children']]: TStateConfig['children'][child] extends CompoundState<
+			infer TCompoundStateConfig
+		>
+			? CompoundResolveConfig<TCompoundStateConfig>
+			: TStateConfig['children'][child] extends AtomicState<
+					infer TAtomicStateConfig
+			  >
+			? AtomicResolveConfig<TAtomicStateConfig>
+			: TStateConfig['children'][child];
+	};
+}
+
+export type StateConfigToContext<TStateConfig extends StateConfig> = {
+	[key in keyof TStateConfig['context']]: TStateConfig['context'][key] extends ContextTransformer
+		? ReturnType<TStateConfig['context'][key]>
+		: never;
+};
 
 export interface BaseStateJSON {
 	always: HandlerJSON[] | undefined;

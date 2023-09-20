@@ -10,7 +10,7 @@ describe('context', () => {
 		state.resolve({
 			context: { key: 'value' },
 		});
-		expect(state.context?.get('key')).toBe('value');
+		expect(state.context.get('key')).toBe('value');
 	});
 
 	it('should return the parent context value for a given key', () => {
@@ -24,7 +24,7 @@ describe('context', () => {
 		}).resolve({
 			context: { key: 'value' },
 		});
-		expect(state.context?.get('key')).toBe('value');
+		expect(state.context.get('key')).toBe('value');
 	});
 
 	it('should return the closest context ancestor value for a given key', () => {
@@ -47,6 +47,6 @@ describe('context', () => {
 				},
 			},
 		});
-		expect(state.context?.get('key')).toBe('value1');
+		expect(state.context.get('key')).toBe('value1');
 	});
 });

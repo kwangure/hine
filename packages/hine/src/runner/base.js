@@ -1,5 +1,8 @@
+/**
+ * @template {import('../state/types.js').StateConfig} TStateConfig
+ */
 export class BaseRunner {
-	/** @type {import('../state/base.js').BaseState} */
+	/** @type {import('../state/base.js').BaseState<TStateConfig>} */
 	__ownerState;
 	__name = '';
 	/** @type {boolean | undefined} */
@@ -9,7 +12,7 @@ export class BaseRunner {
 
 	/**
 	 * @param {import('./types.js').BaseRunnerConfig & {
-	 *     ownerState: import('../state/base.js').BaseState
+	 *     ownerState: import('../state/base.js').BaseState<TStateConfig>
 	 * }} options
 	 */
 	constructor(options) {

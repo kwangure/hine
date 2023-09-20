@@ -1,12 +1,16 @@
 import { BaseRunner } from './base.js';
 
+/**
+ * @template {import('../state/types.js').StateConfig} TStateConfig
+ * @extends {BaseRunner<TStateConfig>}
+ */
 export class ActionRunner extends BaseRunner {
 	/** @type {(arg: any) => any} */
 	#run;
 	#type = /** @type {const} */ ('action');
 	/**
-	 * @param {import('./types.js').ActionRunnerConfig & {
-	 *     ownerState: import('../state/base.js').BaseState
+	 * @param {import('./types.js').ActionRunnerConfig<TStateConfig> & {
+	 *     ownerState: import('../state/base.js').BaseState<TStateConfig>
 	 * }} options
 	 */
 	constructor(options) {
@@ -33,9 +37,7 @@ export class ActionRunner extends BaseRunner {
 	}
 
 	get ownerState() {
-		return /** @type {import('../state/types.js').StateNode} */ (
-			this.__ownerState
-		);
+		return this.__ownerState;
 	}
 	/** @type {string[]} */
 	get path() {

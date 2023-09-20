@@ -1,9 +1,12 @@
 import { ActionRunner } from '../runner/action.js';
 import { ConditionRunner } from '../runner/condition.js';
-import { Context } from '../context.js';
+import { Context } from '../context/context.js';
 import { StateEvent } from '../event.js';
 import { TransitionHandler } from '../handler/transition.js';
 
+/**
+ * @template {import('./types.js').StateConfig} TStateConfig
+ */
 export class BaseState {
 	/**
 	 * Action configuration from the user that is propagated to children
@@ -12,7 +15,7 @@ export class BaseState {
 	#actionConfig = {};
 	/**
 	 * Actions from the user config
-	 * @type {Record<string, import('../runner/action.js').ActionRunner>}
+	 * @type {Record<string, import('../runner/action.js').ActionRunner<TStateConfig>>}
 	 */
 	#actions = {};
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
@@ -25,7 +28,7 @@ export class BaseState {
 	#conditionConfig = {};
 	/**
 	 * Conditions from the user config
-	 * @type {Record<string, import('../runner/condition.js').ConditionRunner>}
+	 * @type {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig>>}
 	 */
 	#conditions = {};
 	#context;
@@ -44,18 +47,18 @@ export class BaseState {
 	#onConfig;
 	/**
 	 * Actions from all ancestor states and the config
-	 * @type {Record<string, import('../runner/action.js').ActionRunner>}
+	 * @type {Record<string, import('../runner/action.js').ActionRunner<TStateConfig>>}
 	 */
 	__allActions = {};
 	/**
 	 * Conditions from all ancestor states and the config
-	 * @type {Record<string, import('../runner/condition.js').ConditionRunner>}
+	 * @type {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig>>}
 	 */
 	__allConditions = {};
 
-	/** @type {import('../runner/action.js').ActionRunner | null} */
+	/** @type {import('../runner/action.js').ActionRunner<TStateConfig> | null} */
 	__action = null;
-	/** @type {import('../runner/condition.js').ConditionRunner | null} */
+	/** @type {import('../runner/condition.js').ConditionRunner<TStateConfig> | null} */
 	__condition = null;
 	/**
 	 * The active handler that is currently executing
@@ -66,18 +69,21 @@ export class BaseState {
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	__handlerQueue = [];
 	__name = '';
-	/** @type {import('./compound.js').CompoundState | null} */
+	/** @type {import('./compound.js').CompoundState<any> | null} */
 	__parent = null;
 	/** @type {Record<string, (import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]>} */
 	__onHandler = {};
-	/** @type {Set<(arg: BaseState) => any>} */
+	/** @type {Set<(arg: BaseState<TStateConfig>) => any>} */
 	__subscribers = new Set();
 
 	/**
 	 * @param {import('./types.js').BaseStateConfig} [stateConfig]
 	 */
 	constructor(stateConfig) {
-		this.#context = new Context(this);
+		this.#context =
+			/** @type {Context<NonNullable<TStateConfig['context']>>} */ (
+				new Context(this)
+			);
 		this.#alwaysConfig = stateConfig?.always || [];
 		this.__name = stateConfig?.name || '';
 		this.#onConfig = stateConfig?.on || {};
@@ -112,7 +118,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @returns {Record<string, import('../runner/action.js').ActionRunner>}
+	 * @returns {Record<string, import('../runner/action.js').ActionRunner<TStateConfig>>}
 	 */
 	get __actions() {
 		const actions = this.__parent?.__actions || {};
@@ -159,7 +165,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @returns {Record<string, import('../runner/condition.js').ConditionRunner>}
+	 * @returns {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig>>}
 	 */
 	get __conditions() {
 		const conditions = this.__parent?.__conditions || {};
@@ -229,7 +235,7 @@ export class BaseState {
 	__resolve(config) {
 		if (config?.context) {
 			for (const [key, value] of Object.entries(config.context)) {
-				this.#context.set(key, value);
+				this.#context.set(/** @type {any} */ (key), /** @type {any} */ (value));
 			}
 		}
 		if (config?.actionConfig) {

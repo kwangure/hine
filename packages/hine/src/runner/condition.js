@@ -37,9 +37,7 @@ export class ConditionRunner extends BaseRunner {
 		return this.__ownerState?.event;
 	}
 	get ownerState() {
-		return /** @type {import('../state/types.js').StateNode} */ (
-			this.__ownerState
-		);
+		return this.__ownerState;
 	}
 	/** @type {string[]} */
 	get path() {

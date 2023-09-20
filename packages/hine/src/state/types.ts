@@ -51,6 +51,11 @@ export interface AtomicResolveConfig<TStateConfig extends StateConfig>
 		string,
 		ActionRunnerConfig<TStateConfig> | ActionRunnerConfig<TStateConfig>['run']
 	>;
+	conditions?: Record<
+		string,
+		| ConditionRunnerConfig<TStateConfig>
+		| ConditionRunnerConfig<TStateConfig>['run']
+	>;
 	context?: {
 		[key in keyof TStateConfig['context']]: TStateConfig['context'][key] extends ContextTransformer
 			? ReturnType<TStateConfig['context'][key]>
@@ -63,6 +68,11 @@ export interface CompoundResolveConfig<TStateConfig extends StateConfig>
 	actions?: Record<
 		string,
 		ActionRunnerConfig<TStateConfig> | ActionRunnerConfig<TStateConfig>['run']
+	>;
+	conditions?: Record<
+		string,
+		| ConditionRunnerConfig<TStateConfig>
+		| ConditionRunnerConfig<TStateConfig>['run']
 	>;
 	context?: {
 		[key in keyof TStateConfig['context']]: TStateConfig['context'][key] extends ContextTransformer

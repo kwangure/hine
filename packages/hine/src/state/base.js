@@ -82,7 +82,7 @@ export class BaseState {
 	constructor(stateConfig) {
 		this.#context =
 			/** @type {Context<NonNullable<TStateConfig['context']>>} */ (
-				new Context(this)
+				new Context(this, stateConfig?.context)
 			);
 		this.#alwaysConfig = stateConfig?.always || [];
 		this.__name = stateConfig?.name || '';

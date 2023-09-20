@@ -5,11 +5,15 @@ export class Context {
 	/** @type {Map<keyof T, T[keyof T]>} */
 	#data = new Map();
 	__ownerState;
-	__transformers = /** @type {T|null} */ (null);
+	__transformers = /** @type {T|undefined} */ (undefined);
 
-	/** @param {import('../state/base.js').BaseState<any>} owner */
-	constructor(owner) {
+	/**
+	 * @param {import('../state/base.js').BaseState<any>} owner
+	 * @param {T} [transformers]
+	 */
+	constructor(owner, transformers) {
 		this.__ownerState = owner;
+		this.__transformers = transformers;
 	}
 	/**
 	 * @template K
@@ -37,7 +41,7 @@ export class Context {
 	/**
 	 * @template K
 	 * @param {K extends keyof T ? K : never} key
-	 * @param {K extends keyof T ? Parameters<T[K]>: never} value
+	 * @param {K extends keyof T ? Parameters<T[K]>[0]: never} value
 	 */
 	set(key, value) {
 		if (!this.__transformers) {
@@ -47,13 +51,14 @@ export class Context {
 		if (Object.hasOwn(this.__transformers, key)) {
 			this.#data.set(key, this.__transformers[key](value));
 		} else {
-			throw Error(
-				`Attempted to set key '${String(
-					key,
-				)}' for a non-existent context value. Expected one of: ${Object.keys(
-					this.__transformers,
-				)}.`,
-			);
+			let message = `Attempted to set key '${String(
+				key,
+			)}' for a non-existent context value.`;
+			const keys = Object.keys(this.__transformers);
+			if (keys.length) {
+				message += ` Expected one of: ${keys}.`;
+			}
+			throw Error(message);
 		}
 	}
 }

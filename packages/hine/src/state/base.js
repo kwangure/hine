@@ -235,7 +235,10 @@ export class BaseState {
 	__resolve(config) {
 		if (config?.context) {
 			for (const [key, value] of Object.entries(config.context)) {
-				this.#context.set(/** @type {any} */ (key), /** @type {any} */ (value));
+				this.#context.__set(
+					/** @type {any} */ (key),
+					/** @type {any} */ (value),
+				);
 			}
 		}
 		if (config?.actionConfig) {

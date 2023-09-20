@@ -14,7 +14,9 @@ describe('basic', () => {
 		const state = new BaseState();
 		const context = new Context(state, {});
 		// @ts-expect-error
-		expect(() => context.set('key', 'value')).toThrow(/Attempted to set key/);
+		expect(() => context.update('key', 'value')).toThrow(
+			/Attempted to update key/,
+		);
 	});
 });
 
@@ -32,7 +34,7 @@ describe('typescript', () => {
 		context.get('non-existent');
 	});
 
-	it('checks set type from context transformer', () => {
+	it('checks update type from context transformer', () => {
 		const state = new BaseState();
 		const context = new Context(state, {
 			/** @param {number} x */
@@ -40,12 +42,15 @@ describe('typescript', () => {
 			key2: Number,
 		});
 
-		context.set('key1', 0);
+		context.__set('key1', 0);
+		context.__set('key2', '104');
+
+		context.update('key1', 1);
 		// @ts-expect-error
-		context.set('key1', '');
-		context.set('key2', ''); // Number constructor takes any as input
+		context.update('key1', '');
+		context.update('key2', ''); // Number constructor takes any as input
 		// @ts-expect-error
-		() => context.set('non-existent', '');
+		() => context.update('non-existent', '');
 	});
 
 	it('allows any get type when context transformer is not defined', () => {
@@ -55,10 +60,10 @@ describe('typescript', () => {
 		context.get('possibly-non-existent');
 	});
 
-	it('allows any set type when context transformer is not defined', () => {
+	it('allows any update type when context transformer is not defined', () => {
 		const state = new BaseState();
 		const context = new Context(state);
 
-		context.set('possibly-non-existent', 1000);
+		() => context.update('possibly-non-existent', 1000);
 	});
 });

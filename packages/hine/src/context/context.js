@@ -17,6 +17,27 @@ export class Context {
 	}
 	/**
 	 * @template K
+	 * @param {K extends keyof T ? K : never} key
+	 * @param {K extends keyof T ? Parameters<T[K]>[0]: never} value
+	 */
+	__set(key, value) {
+		if (!this.__transformers) {
+			this.#data.set(key, /** @type {any} */ (value));
+		} else if (Object.hasOwn(this.__transformers, key)) {
+			this.#data.set(key, this.__transformers[key](value));
+		} else {
+			let message = `Attempted to set key '${String(
+				key,
+			)}' for a non-existent context value.`;
+			const keys = Object.keys(this.__transformers);
+			if (keys.length) {
+				message += ` Expected one of: ${keys}.`;
+			}
+			throw Error(message);
+		}
+	}
+	/**
+	 * @template K
 	 * @param {K extends keyof T ? K : keyof T} key
 	 * @returns {K extends keyof T ? ReturnType<T[K]> : never}
 	 */
@@ -43,22 +64,22 @@ export class Context {
 	 * @param {K extends keyof T ? K : never} key
 	 * @param {K extends keyof T ? Parameters<T[K]>[0]: never} value
 	 */
-	set(key, value) {
-		if (!this.__transformers) {
-			this.#data.set(key, /** @type {any} */ (value));
-			return;
+	update(key, value) {
+		if (this.#data.has(/** @type {keyof T} */ (key))) {
+			this.__set(/** @type {keyof T} */ (key), /** @type {any} */ (value));
+			return true;
 		}
-		if (Object.hasOwn(this.__transformers, key)) {
-			this.#data.set(key, this.__transformers[key](value));
-		} else {
-			let message = `Attempted to set key '${String(
-				key,
-			)}' for a non-existent context value.`;
-			const keys = Object.keys(this.__transformers);
-			if (keys.length) {
-				message += ` Expected one of: ${keys}.`;
-			}
-			throw Error(message);
+		const updateSucessful = this.__ownerState?.parent?.context.update(
+			key,
+			value,
+		);
+		if (!updateSucessful) {
+			throw Error(
+				`Attempted to update key '${String(
+					key,
+				)}' for a non-existent context value.`,
+			);
 		}
+		return true;
 	}
 }

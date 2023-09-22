@@ -85,7 +85,7 @@ export interface CompoundResolveConfig<
 			? ReturnType<TStateConfig['context'][key]>
 			: never;
 	};
-	children?: {
+	children?: Partial<{
 		[child in keyof TStateConfig['children']]: TStateConfig['children'][child] extends CompoundState<
 			infer TCompoundStateConfig,
 			Record<string, ContextTransformer>
@@ -107,7 +107,7 @@ export interface CompoundResolveConfig<
 						: {}
 			  >
 			: TStateConfig['children'][child];
-	};
+	}>;
 }
 
 export type StateConfigToContext<TStateConfig extends StateConfig> = {

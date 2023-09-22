@@ -1,5 +1,77 @@
 # hine
 
+## 0.0.19
+
+### Patch Changes
+
+- b66039f: Changed the semantics of `Context.set()` to match the semantics of `Context.get()`.
+  Instead of creating a new key on the current state, if the key is missing it walks
+  up the tree to find the closest ancestor state with that key and updates. It throws
+  an error if the key is not found. Therefore, you can not create new keys in context.
+
+  To match this shift in behaviour to the name, `Context.set()` has been renamed to
+  `Context.update()`. Use an object as a value to store arbitrary key-value data.
+
+  This change brings type safety to `Context.get()` and `Context.update()`.
+
+- b66039f: Change Hine to accept an action config instead of an action runner.
+
+  Before:
+
+  ```javascript
+  import { h } from 'hine';
+
+  state.resolve({
+  	context: h.context({
+  		foo: 'bar',
+  		baz: 10,
+  	}),
+  });
+  ```
+
+  After:
+
+  ```javascript
+  state.resolve({
+  	context: {
+  		foo: 'bar',
+  		baz: 10,
+  	},
+  });
+  ```
+
+  You no longer need the helper. Only the data you'd previously pass to it.
+
+- b66039f: Change Hine to accept an action config instead of an action runner.
+
+  Before:
+
+  ```javascript
+  import { h } from 'hine';
+
+  state.resolve({
+  	actions: {
+  		action: h.action(({ context }) => {
+  			console.log({ context });
+  		}),
+  	},
+  });
+  ```
+
+  After:
+
+  ```javascript
+  state.resolve({
+  	actions: {
+  		action: ({ context }) => {
+  			console.log({ context });
+  		},
+  	},
+  });
+  ```
+
+  You no longer need the helper. Only the config, you'd previously pass to it.
+
 ## 0.0.18
 
 ### Patch Changes

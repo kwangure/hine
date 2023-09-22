@@ -1,5 +1,14 @@
 # @hine-examples/basic
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [b66039f]
+- Updated dependencies [b66039f]
+- Updated dependencies [b66039f]
+  - hine@0.0.19
+
 ## 0.0.2
 
 ### Patch Changes

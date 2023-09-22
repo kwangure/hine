@@ -78,7 +78,7 @@ export class BaseState {
 	__subscribers = new Set();
 
 	/**
-	 * @param {import('./types.js').BaseStateConfig} [stateConfig]
+	 * @param {TStateConfig} [stateConfig]
 	 */
 	constructor(stateConfig) {
 		this.#context =

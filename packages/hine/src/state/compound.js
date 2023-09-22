@@ -18,7 +18,7 @@ export class CompoundState extends BaseState {
 	/** @type {StateNode | null} */
 	__state = null;
 	/**
-	 * @param {import('./types.js').CompoundStateConfig} stateConfig
+	 * @param {TStateConfig} stateConfig
 	 */
 	constructor(stateConfig) {
 		super(stateConfig);

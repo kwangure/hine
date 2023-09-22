@@ -110,12 +110,6 @@ export interface CompoundResolveConfig<
 	}>;
 }
 
-export type StateConfigToContext<TStateConfig extends StateConfig> = {
-	[key in keyof TStateConfig['context']]: TStateConfig['context'][key] extends ContextTransformer
-		? ReturnType<TStateConfig['context'][key]>
-		: never;
-};
-
 export interface BaseStateJSON {
 	always: HandlerJSON[] | undefined;
 	entry: HandlerJSON[] | undefined;

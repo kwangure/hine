@@ -1,10 +1,10 @@
-import { h } from 'hine';
+import { state } from 'hine';
 
-const checkboxState = h.state({
+const checkboxState = state({
 	name: 'checkbox',
 	children: {
-		unchecked: h.state(),
-		checked: h.state(),
+		unchecked: state(),
+		checked: state(),
 	},
 });
 

@@ -1,7 +1,7 @@
-import { h } from 'hine';
+import { state } from 'hine';
 
 // details omitted for brevity
-const checkboxState = h.state({
+const checkboxState = state({
 	on: {
 		toggle: [],
 	},

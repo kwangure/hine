@@ -15,20 +15,20 @@ npm install hine
 ### Getting started
 
 ```javascript
-import { h } from 'hine';
+import { handler, state } from 'hine';
 
-const toggle = h.state({
+const toggle = state({
 	// The first state is the default initial state
 	children: {
-		inactive: h.state({
+		inactive: state({
 			on: {
 				// Transitions change the current state after an event
-				toggle: [h.handler({ goto: 'active' })],
+				toggle: [handler({ goto: 'active' })],
 			},
 		}),
-		active: h.state({
+		active: state({
 			on: {
-				toggle: [h.handler({ goto: 'inactive' })],
+				toggle: [handler({ goto: 'inactive' })],
 			},
 		}),
 	},

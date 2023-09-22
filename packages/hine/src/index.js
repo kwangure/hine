@@ -7,5 +7,5 @@
  * @typedef {import('./state/types').StateNodeJSON} StateNodeJSON
  */
 
-export * as h from './helpers.js';
+export * from './helpers.js';
 export { activePath } from './utils/state.js';

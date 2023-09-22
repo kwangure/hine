@@ -10,6 +10,7 @@ describe('dispatch', () => {
 				s1: new AtomicState({}),
 			},
 		});
+		// @ts-expect-error
 		expect(() => state.dispatch('test')).toThrow(
 			'Attempted dispatch before resolving state',
 		);
@@ -62,6 +63,7 @@ describe('dispatch', () => {
 		});
 		state.resolve();
 		expect(() => {
+			// @ts-expect-error
 			state.dispatch('random');
 		}).not.toThrow();
 		expect(state.matches('.s1')).toBe(true);

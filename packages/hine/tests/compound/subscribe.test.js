@@ -54,6 +54,7 @@ describe('subscribe', () => {
 		state.dispatch('event');
 		expect(count).toBe(2);
 
+		// @ts-expect-error
 		state.dispatch('useless');
 		expect(count).toBe(3);
 	});

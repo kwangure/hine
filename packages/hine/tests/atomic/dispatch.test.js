@@ -6,6 +6,7 @@ import { TransitionHandler } from '../../src/handler/transition.js';
 describe('dispatch', () => {
 	it('throws on unresolved dispatch', () => {
 		const machine = new AtomicState({});
+		// @ts-expect-error
 		expect(() => machine.dispatch('test')).toThrow(
 			'Attempted dispatch before resolving state',
 		);
@@ -47,6 +48,7 @@ describe('dispatch', () => {
 		const state = new AtomicState({});
 		state.resolve();
 		expect(() => {
+			// @ts-expect-error
 			state.dispatch('random');
 		}).not.toThrow();
 	});
@@ -62,6 +64,7 @@ describe('dispatch', () => {
 			}
 			expect(machine.event?.name).toBe(event);
 		});
+		// @ts-expect-error
 		state.dispatch(event);
 	});
 });

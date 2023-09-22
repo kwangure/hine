@@ -691,6 +691,7 @@ describe('actions', () => {
 		});
 		expect(alwaysCount).toBe(1);
 
+		// @ts-expect-error
 		state.dispatch('non-existent');
 		expect(alwaysCount).toBe(2);
 	});

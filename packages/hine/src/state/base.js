@@ -388,7 +388,7 @@ export class BaseState {
 		return this.#context;
 	}
 	/**
-	 * @param {string} eventName
+	 * @param {import('./types.js').CollectStateConfigs<TStateConfig>} eventName
 	 * @param {any} [value]
 	 */
 	dispatch(eventName, value) {
@@ -399,9 +399,12 @@ export class BaseState {
 			throw Error('Attempted to dispatch while stepping is in progress.');
 		}
 
-		const event = new StateEvent({ name: eventName, value });
+		const event = new StateEvent({
+			name: /** @type {string} */ (eventName),
+			value,
+		});
 		this.#event = event;
-		this.__queueOnHandlers(eventName);
+		this.__queueOnHandlers(/** @type {string} */ (eventName));
 		this.__queueAlwaysHandlers();
 		this.__executeHandlersLeafFirst();
 

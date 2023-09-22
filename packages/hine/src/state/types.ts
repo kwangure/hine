@@ -9,6 +9,7 @@ import type { ContextTransformer } from '../context/types.js';
 import type { EffectHandler } from '../handler/effect.js';
 import type { HandlerJSON } from '../handler/types.js';
 import type { TransitionHandler } from '../handler/transition.js';
+import { BaseState } from './base.js';
 
 export type StateNode = AtomicState<any, any> | CompoundState<any, any>;
 
@@ -129,3 +130,19 @@ export interface CompoundStateJSON extends BaseStateJSON {
 }
 
 export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
+
+export type CollectStateConfigs<TStateConfig> = TStateConfig extends StateConfig
+	?
+			| keyof TStateConfig['on']
+			| {
+					[child in keyof TStateConfig['children']]: TStateConfig['children'][child] extends BaseState<
+						infer TChildStateConfig,
+						any
+					>
+						? CollectStateConfigs<TChildStateConfig>
+						: never;
+			  }[keyof TStateConfig['children']]
+	: never;
+
+export type StateChildren<TStateConfig extends StateConfig> =
+	CollectStateConfigs<TStateConfig>;

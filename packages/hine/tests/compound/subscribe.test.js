@@ -9,7 +9,7 @@ describe('subscribe', () => {
 			children: {
 				s1: new CompoundState({
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
@@ -33,7 +33,7 @@ describe('subscribe', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},

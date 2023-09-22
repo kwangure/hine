@@ -14,7 +14,7 @@ describe('path', () => {
 		expect(action.path).toEqual(['state', '(action)']);
 	});
 	it('returns path with empty string when missing name', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		const action = new ActionRunner({
 			run() {},
 			ownerState: state,

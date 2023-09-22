@@ -7,7 +7,7 @@ describe('dispatch', () => {
 	it('throws on unresolved dispatch', () => {
 		const state = new CompoundState({
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(() => state.dispatch('test')).toThrow(
@@ -27,7 +27,7 @@ describe('dispatch', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
@@ -39,7 +39,7 @@ describe('dispatch', () => {
 						],
 					},
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},
@@ -56,8 +56,8 @@ describe('dispatch', () => {
 	it('ignores invalid events', () => {
 		const state = new CompoundState({
 			children: {
-				s1: new AtomicState(),
-				s2: new AtomicState(),
+				s1: new AtomicState({}),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve();

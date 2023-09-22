@@ -4,7 +4,7 @@ import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('subscribe', () => {
 	it('calls subscribers on start', () => {
-		const machine = new AtomicState();
+		const machine = new AtomicState({});
 		let count = 0;
 		machine.subscribe(() => count++);
 		expect(count).toBe(1);

@@ -6,7 +6,9 @@ import { CompoundState } from './compound.js';
  * @param {TConfig} [config]
  */
 export function atomic(config) {
-	return /** @type {AtomicState<TConfig, {}>} */ (new AtomicState(config));
+	return /** @type {AtomicState<TConfig, {}>} */ (
+		new AtomicState(config ?? /** @type {TConfig} */ ({}))
+	);
 }
 
 /**
@@ -28,5 +30,5 @@ export function state(config) {
 		return /** @type {U} */ (new CompoundState(config));
 	}
 
-	return /** @type {U} */ (new AtomicState(config));
+	return /** @type {U} */ (new AtomicState(config ?? {}));
 }

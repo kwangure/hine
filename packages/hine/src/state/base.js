@@ -78,23 +78,23 @@ export class BaseState {
 	__subscribers = new Set();
 
 	/**
-	 * @param {TStateConfig} [stateConfig]
+	 * @param {TStateConfig} stateConfig
 	 */
 	constructor(stateConfig) {
 		this.#context =
 			/** @type {Context<NonNullable<TStateConfig['context']>, TContextAncestor>} */ (
-				new Context(this, stateConfig?.context)
+				new Context(this, stateConfig.context)
 			);
-		this.#alwaysConfig = stateConfig?.always || [];
-		this.__name = stateConfig?.name || '';
-		this.#onConfig = stateConfig?.on || {};
+		this.#alwaysConfig = stateConfig.always || [];
+		this.__name = stateConfig.name || '';
+		this.#onConfig = stateConfig.on || {};
 
-		if (stateConfig?.entry) {
+		if (stateConfig.entry) {
 			for (const handler of stateConfig.entry) {
 				this.#entryConfig.push(handler);
 			}
 		}
-		if (stateConfig?.exit) {
+		if (stateConfig.exit) {
 			for (const handler of stateConfig.exit) {
 				this.#exitConfig.push(handler);
 			}

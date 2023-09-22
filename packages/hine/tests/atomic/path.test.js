@@ -9,7 +9,7 @@ describe('path', () => {
 		expect(state.path).toEqual(['state']);
 	});
 	it('returns path with empty string when missing name', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		expect(state.path).toEqual(['']);
 	});
 });

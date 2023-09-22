@@ -8,7 +8,7 @@ describe('matches', () => {
 		const machine = new CompoundState({
 			name: 'machine',
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(machine.matches('machine')).toBe(false);
@@ -17,7 +17,7 @@ describe('matches', () => {
 		const state = new CompoundState({
 			name: 'machine',
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve();
@@ -29,12 +29,12 @@ describe('matches', () => {
 			children: {
 				s1: new CompoundState({
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},
@@ -50,7 +50,7 @@ describe('matches', () => {
 			children: {
 				s1: new CompoundState({
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
@@ -68,7 +68,7 @@ describe('matches', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		let count = 1;
@@ -99,7 +99,7 @@ describe('matches', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		let count = 1;
@@ -133,7 +133,7 @@ describe('matches', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		let count = 1;

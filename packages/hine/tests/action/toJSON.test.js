@@ -4,7 +4,7 @@ import { AtomicState } from '../../src/state/atomic.js';
 
 describe('toJSON', () => {
 	it('includes name', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		const name = 'action';
 		const action = new ActionRunner({
 			name,
@@ -15,7 +15,7 @@ describe('toJSON', () => {
 		expect(json.name).toBe(name);
 	});
 	it('default to empty string when missing name', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		const action = new ActionRunner({
 			run() {},
 			ownerState: state,
@@ -24,7 +24,7 @@ describe('toJSON', () => {
 		expect(json.name).toBe('');
 	});
 	it('includes type', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		const action = new ActionRunner({
 			run() {},
 			ownerState: state,

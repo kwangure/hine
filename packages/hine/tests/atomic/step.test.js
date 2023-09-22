@@ -104,7 +104,7 @@ describe('step', () => {
 		expect(() => state.step('event').next()).toThrow(/in progress/);
 	});
 	it('displays emitted event', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		state.resolve();
 		const event = 'my-event';
 		let initial = true;

@@ -370,7 +370,7 @@ describe('conditions', () => {
 						}),
 					],
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -409,7 +409,7 @@ describe('conditions', () => {
 						}),
 					],
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -445,7 +445,7 @@ describe('conditions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
@@ -484,7 +484,7 @@ describe('conditions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},

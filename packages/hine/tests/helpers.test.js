@@ -14,7 +14,7 @@ test('atomic state respects context types in actions and conditions', () => {
 	});
 
 	expectTypeOf(stateMachine).toMatchTypeOf(
-		/** @type {AtomicState<any, any>} */ (new AtomicState()),
+		/** @type {AtomicState<any, any>} */ (new AtomicState({})),
 	);
 
 	stateMachine.resolve({
@@ -82,7 +82,7 @@ test('compound state respects context types in actions and conditions', () => {
 		/** @type {CompoundState<any, any>} */ (
 			new CompoundState({
 				children: {
-					s1: new AtomicState(),
+					s1: new AtomicState({}),
 				},
 			})
 		),

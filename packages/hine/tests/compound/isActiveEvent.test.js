@@ -46,7 +46,7 @@ describe('isActiveEvent', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(() => state.isActiveEvent('EVENT')).toThrow(
@@ -59,7 +59,7 @@ describe('isActiveEvent', () => {
 				EVENT: [],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({

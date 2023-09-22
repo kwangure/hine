@@ -17,7 +17,7 @@ describe('matches', () => {
 		expect(state.matches('machine')).toBe(true);
 	});
 	it('matches anonymous states', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		state.resolve();
 		expect(state.matches('')).toBe(true);
 	});

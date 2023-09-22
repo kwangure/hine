@@ -241,7 +241,7 @@ describe('actions', () => {
 						}),
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -327,7 +327,7 @@ describe('actions', () => {
 						}),
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -433,7 +433,7 @@ describe('actions', () => {
 						}),
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -540,7 +540,7 @@ describe('actions', () => {
 								}),
 							],
 							children: {
-								s111: new AtomicState(),
+								s111: new AtomicState({}),
 							},
 						}),
 					},
@@ -569,7 +569,7 @@ describe('actions', () => {
 								}),
 							],
 							children: {
-								s211: new AtomicState(),
+								s211: new AtomicState({}),
 							},
 						}),
 					},
@@ -673,7 +673,7 @@ describe('actions', () => {
 						}),
 					],
 					children: {
-						s: new AtomicState(),
+						s: new AtomicState({}),
 					},
 				}),
 			},
@@ -726,12 +726,12 @@ describe('actions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},
@@ -788,12 +788,12 @@ describe('actions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},
@@ -859,7 +859,7 @@ describe('actions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
@@ -870,7 +870,7 @@ describe('actions', () => {
 						}),
 					],
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},
@@ -914,7 +914,7 @@ describe('actions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -948,7 +948,7 @@ describe('actions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -982,7 +982,7 @@ describe('actions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -1016,7 +1016,7 @@ describe('actions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -1051,7 +1051,7 @@ describe('actions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
@@ -1090,7 +1090,7 @@ describe('actions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 
@@ -1113,7 +1113,7 @@ describe('actions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 
@@ -1136,7 +1136,7 @@ describe('actions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -1159,7 +1159,7 @@ describe('actions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -1179,7 +1179,7 @@ describe('actions', () => {
 				event: [new EffectHandler({ run: ['action'] })],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -1200,7 +1200,7 @@ describe('actions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(() => state.resolve()).toThrow("'missing'");
@@ -1213,7 +1213,7 @@ describe('actions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(() => state.resolve()).toThrow("'missing'");
@@ -1226,7 +1226,7 @@ describe('actions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(() => state.resolve()).toThrow("'missing'");

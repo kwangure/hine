@@ -104,7 +104,7 @@ describe('actions', () => {
 						],
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -309,7 +309,7 @@ describe('actions', () => {
 								],
 							},
 						}),
-						s12: new AtomicState(),
+						s12: new AtomicState({}),
 					},
 				}),
 			},
@@ -366,7 +366,7 @@ describe('actions', () => {
 						],
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({

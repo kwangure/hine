@@ -7,7 +7,7 @@ describe('path', () => {
 		const state = new CompoundState({
 			name: 'state',
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(state.path).toEqual(['state']);
@@ -15,10 +15,10 @@ describe('path', () => {
 	it('creates path for nested states', () => {
 		const s2 = new CompoundState({
 			children: {
-				s21: new AtomicState(),
+				s21: new AtomicState({}),
 			},
 		});
-		const s11 = new AtomicState();
+		const s11 = new AtomicState({});
 		const state = new CompoundState({
 			name: 'state',
 			children: {
@@ -38,10 +38,10 @@ describe('path', () => {
 	it('creates path for anonymous states', () => {
 		const s2 = new CompoundState({
 			children: {
-				s21: new AtomicState(),
+				s21: new AtomicState({}),
 			},
 		});
-		const s11 = new AtomicState();
+		const s11 = new AtomicState({});
 		const state = new CompoundState({
 			children: {
 				s1: new CompoundState({

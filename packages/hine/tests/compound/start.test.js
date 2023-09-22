@@ -15,7 +15,7 @@ describe('start', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -30,7 +30,7 @@ describe('start', () => {
 	it('sets initial state', () => {
 		const machine = new CompoundState({
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(machine.matches('.s1')).toBe(false);
@@ -45,7 +45,7 @@ describe('start', () => {
 						event: [new TransitionHandler({ goto: 's2' })],
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve();

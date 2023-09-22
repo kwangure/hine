@@ -23,7 +23,7 @@ describe('activeEvents', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
@@ -73,7 +73,7 @@ describe('activeEvents', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(state.activeEvents).toEqual([]);
@@ -84,7 +84,7 @@ describe('activeEvents', () => {
 				EVENT: [],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({

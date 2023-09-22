@@ -5,7 +5,7 @@ import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('dispatch', () => {
 	it('throws on unresolved dispatch', () => {
-		const machine = new AtomicState();
+		const machine = new AtomicState({});
 		expect(() => machine.dispatch('test')).toThrow(
 			'Attempted dispatch before resolving state',
 		);
@@ -44,14 +44,14 @@ describe('dispatch', () => {
 	});
 
 	it('ignores invalid events', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		state.resolve();
 		expect(() => {
 			state.dispatch('random');
 		}).not.toThrow();
 	});
 	it('displays emitted event', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		state.resolve();
 		const event = 'my-event';
 		let initial = true;

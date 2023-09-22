@@ -17,7 +17,7 @@ describe('canTransitionTo', () => {
 						],
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve();

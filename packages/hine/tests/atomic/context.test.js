@@ -4,7 +4,7 @@ import { CompoundState } from '../../src/state/compound.js';
 
 describe('context', () => {
 	it('should return the context value for a given key', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		state.resolve({
 			context: { key: 'value' },
 		});
@@ -12,7 +12,7 @@ describe('context', () => {
 	});
 
 	it('should return the parent context value for a given key', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		new CompoundState({
 			children: {
 				state,
@@ -24,7 +24,7 @@ describe('context', () => {
 	});
 
 	it('should return the closest context ancestor value for a given key', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		new CompoundState({
 			children: {
 				s1: new CompoundState({

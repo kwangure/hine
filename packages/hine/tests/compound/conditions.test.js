@@ -14,7 +14,7 @@ describe('conditions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -44,7 +44,7 @@ describe('conditions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -83,7 +83,7 @@ describe('conditions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -122,7 +122,7 @@ describe('conditions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -163,7 +163,7 @@ describe('conditions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
@@ -208,7 +208,7 @@ describe('conditions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -241,7 +241,7 @@ describe('conditions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 
@@ -270,7 +270,7 @@ describe('conditions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 
@@ -301,7 +301,7 @@ describe('conditions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -329,7 +329,7 @@ describe('conditions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -364,12 +364,12 @@ describe('conditions', () => {
 						}),
 					],
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},
@@ -406,12 +406,12 @@ describe('conditions', () => {
 						}),
 					],
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},
@@ -447,7 +447,7 @@ describe('conditions', () => {
 				],
 			},
 			children: {
-				s11: new AtomicState(),
+				s11: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -478,7 +478,7 @@ describe('conditions', () => {
 				],
 			},
 			children: {
-				s11: new AtomicState(),
+				s11: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -507,7 +507,7 @@ describe('conditions', () => {
 				}),
 			],
 			children: {
-				s11: new AtomicState(),
+				s11: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -535,7 +535,7 @@ describe('conditions', () => {
 				}),
 			],
 			children: {
-				s11: new AtomicState(),
+				s11: new AtomicState({}),
 			},
 		});
 		state.resolve({

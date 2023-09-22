@@ -23,7 +23,7 @@ describe('start', () => {
 		expect(log).toEqual(['always']);
 	});
 	it('emits start event', () => {
-		const machine = new AtomicState();
+		const machine = new AtomicState({});
 		let initial = true;
 		machine.subscribe((machine) => {
 			if (initial) {

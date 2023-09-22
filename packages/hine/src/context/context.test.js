@@ -4,13 +4,13 @@ import { Context } from './context.js';
 
 describe('basic', () => {
 	it('returns undefined when getting non-existent key', () => {
-		const state = new BaseState();
+		const state = new BaseState({});
 		const context = new Context(state, {});
 		expect(context.get('key')).toBe(undefined);
 	});
 
 	it('throws when setting non-existent key', () => {
-		const state = new BaseState();
+		const state = new BaseState({});
 		const context = new Context(state, {});
 		expect(() => context.update('key', 'value')).toThrow(
 			/Attempted to update key/,
@@ -20,7 +20,7 @@ describe('basic', () => {
 
 describe('typescript', () => {
 	it('checks get type from context transformer', () => {
-		const state = new BaseState();
+		const state = new BaseState({});
 		const context = new Context(state, {
 			key1: String,
 			key2: Number,
@@ -31,7 +31,7 @@ describe('typescript', () => {
 	});
 
 	it('checks update type from context transformer', () => {
-		const state = new BaseState();
+		const state = new BaseState({});
 		const context = new Context(state, {
 			/** @param {number} x */
 			key1: (x) => String(x),
@@ -48,14 +48,14 @@ describe('typescript', () => {
 	});
 
 	it('allows any get type when context transformer is not defined', () => {
-		const state = new BaseState();
+		const state = new BaseState({});
 		const context = new Context(state);
 
 		context.get('possibly-non-existent');
 	});
 
 	it('allows any update type when context transformer is not defined', () => {
-		const state = new BaseState();
+		const state = new BaseState({});
 		const context = new Context(state);
 
 		() => context.update('possibly-non-existent', 1000);

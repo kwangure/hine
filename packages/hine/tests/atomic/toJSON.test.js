@@ -9,12 +9,12 @@ describe('toJSON', () => {
 		expect(json.name).toBe(name);
 	});
 	it('default to empty string when missing name', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		const json = state.toJSON();
 		expect(json.name).toBe('');
 	});
 	it('includes type', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		const json = state.toJSON();
 		expect(json.type).toEqual('atomic');
 	});

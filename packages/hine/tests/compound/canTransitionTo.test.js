@@ -17,12 +17,12 @@ describe('canTransitionTo', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},

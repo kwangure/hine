@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
-import { Condition } from '../../src/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('matches', () => {
@@ -19,7 +17,7 @@ describe('matches', () => {
 		expect(state.matches('machine')).toBe(true);
 	});
 	it('matches anonymous states', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		state.resolve();
 		expect(state.matches('')).toBe(true);
 	});
@@ -43,10 +41,10 @@ describe('matches', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: {
 					notifyBefore: true,
 					run() {},
-				}),
+				},
 			},
 		});
 	});
@@ -71,13 +69,13 @@ describe('matches', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new Condition({
+				condition: {
 					notifyBefore: true,
 					run: () => true,
-				}),
+				},
 			},
 		});
 	});
@@ -103,10 +101,10 @@ describe('matches', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: {
 					notifyBefore: true,
 					run() {},
-				}),
+				},
 			},
 		});
 	});

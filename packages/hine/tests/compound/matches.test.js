@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { Condition } from '../../src/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('matches', () => {
@@ -10,7 +8,7 @@ describe('matches', () => {
 		const machine = new CompoundState({
 			name: 'machine',
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(machine.matches('machine')).toBe(false);
@@ -19,7 +17,7 @@ describe('matches', () => {
 		const state = new CompoundState({
 			name: 'machine',
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve();
@@ -31,12 +29,12 @@ describe('matches', () => {
 			children: {
 				s1: new CompoundState({
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},
@@ -52,7 +50,7 @@ describe('matches', () => {
 			children: {
 				s1: new CompoundState({
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
@@ -70,7 +68,7 @@ describe('matches', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		let count = 1;
@@ -84,10 +82,10 @@ describe('matches', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: {
 					notifyBefore: true,
 					run() {},
-				}),
+				},
 			},
 		});
 	});
@@ -101,7 +99,7 @@ describe('matches', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		let count = 1;
@@ -115,13 +113,13 @@ describe('matches', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new Condition({
+				condition: {
 					notifyBefore: true,
 					run: () => true,
-				}),
+				},
 			},
 		});
 	});
@@ -135,7 +133,7 @@ describe('matches', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		let count = 1;
@@ -155,16 +153,16 @@ describe('matches', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: {
 					notifyBefore: true,
 					run() {},
-				}),
+				},
 			},
 			conditions: {
-				condition: new Condition({
+				condition: {
 					notifyBefore: true,
 					run: () => true,
-				}),
+				},
 			},
 		});
 	});

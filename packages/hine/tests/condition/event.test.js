@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
-import { Condition } from '../../src/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('event', () => {
@@ -16,24 +14,14 @@ describe('event', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
-					run: () => {},
-				}),
+				action() {},
 			},
 			conditions: {
-				condition: new Condition({
-					run({ ownerState, event }) {
-						expect(ownerState.event).toBe(event);
-						return true;
-					},
-				}),
+				condition({ ownerState, event }) {
+					expect(ownerState.event).toBe(event);
+					return true;
+				},
 			},
 		});
-	});
-	it('throws when accessed before initialisation', () => {
-		const condition = new Condition({ name: 'condition', run: () => true });
-		expect(() => condition.event).toThrow(
-			"Attempted to read 'condition.event' at '?condition' before calling 'state.resolve()'",
-		);
 	});
 });

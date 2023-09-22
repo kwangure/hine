@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
+import { ActionRunner } from '../../src/runner/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
-import { Condition } from '../../src/condition.js';
+import { ConditionRunner } from '../../src/runner/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 import { zip } from '../../src/utils/iterator.js';
 
@@ -23,9 +23,7 @@ describe('step', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
-					run() {},
-				}),
+				action() {},
 			},
 		});
 
@@ -45,12 +43,6 @@ describe('step', () => {
 		expect(count).toBe(2);
 	});
 	it('respects iterator protocol', () => {
-		const action = new Action({
-			run() {},
-		});
-		const condition = new Condition({
-			run: () => true,
-		});
 		const state = new AtomicState({
 			always: [
 				new EffectHandler({
@@ -67,24 +59,21 @@ describe('step', () => {
 			},
 		});
 		state.resolve({
-			actions: { action },
-			conditions: { condition },
+			actions: { action() {} },
+			conditions: { condition: () => true },
 		});
 
-		const expected = [EffectHandler, condition, action, EffectHandler, action];
+		const expected = [
+			EffectHandler,
+			ConditionRunner,
+			ActionRunner,
+			EffectHandler,
+			ActionRunner,
+		];
 		const expectedIterator = expected[Symbol.iterator]();
 		const eventIterator = state.step('event');
 		for (const [expected, actual] of zip(expectedIterator, eventIterator)) {
-			switch (typeof expected) {
-				case 'object':
-					expect(actual).toBe(expected);
-					break;
-				case 'function':
-					expect(actual).toBeInstanceOf(expected);
-					break;
-				default:
-					throw Error('Not implemented.');
-			}
+			expect(actual).toBeInstanceOf(expected);
 		}
 	});
 	it('throws if state is not initialized', () => {
@@ -108,18 +97,15 @@ describe('step', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
-					run() {},
-				}),
+				action() {},
 			},
 		});
 		state.step('event').next();
 		expect(() => state.step('event').next()).toThrow(/in progress/);
 	});
 	it('displays emitted event', () => {
-		const state = new AtomicState();
+		const state = new AtomicState({});
 		state.resolve();
-		expect(state.event).toBe(null);
 		const event = 'my-event';
 		let initial = true;
 		state.subscribe((machine) => {

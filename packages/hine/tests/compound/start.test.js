@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
 import { EffectHandler } from '../../src/handler/effect.js';
@@ -16,16 +15,14 @@ describe('start', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				always: new Action({
-					run() {
-						log.push('always');
-					},
-				}),
+				always() {
+					log.push('always');
+				},
 			},
 		});
 		expect(log).toEqual(['always']);
@@ -33,7 +30,7 @@ describe('start', () => {
 	it('sets initial state', () => {
 		const machine = new CompoundState({
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(machine.matches('.s1')).toBe(false);
@@ -48,7 +45,7 @@ describe('start', () => {
 						event: [new TransitionHandler({ goto: 's2' })],
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve();

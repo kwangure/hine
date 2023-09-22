@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
@@ -16,18 +15,15 @@ describe('start', () => {
 		});
 		state.resolve({
 			actions: {
-				always: new Action({
-					run() {
-						log.push('always');
-					},
-				}),
+				always() {
+					log.push('always');
+				},
 			},
 		});
 		expect(log).toEqual(['always']);
 	});
 	it('emits start event', () => {
-		const machine = new AtomicState();
-		expect(machine.event).toBe(null);
+		const machine = new AtomicState({});
 		let initial = true;
 		machine.subscribe((machine) => {
 			if (initial) {

@@ -1,8 +1,15 @@
 import { BaseState } from './base.js';
 
+/**
+ * @template {import('./types.js').StateConfig} TStateConfig
+ * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
+ * @extends {BaseState<TStateConfig, TContextAncestor>}
+ */
 export class AtomicState extends BaseState {
 	#type = /** @type {const} */ ('atomic');
-	/** @param {import('../types.js').BaseResolveConfig} [config] */
+	/**
+	 * @param {import('./types.js').AtomicResolveConfig<TStateConfig, TContextAncestor>} [config]
+	 */
 	resolve(config) {
 		this.__resolve(config);
 		this.__start();
@@ -10,9 +17,17 @@ export class AtomicState extends BaseState {
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
 		fn(this);
-		this.__subscribers.add(/** @type {(arg: BaseState) => any} */ (fn));
+		this.__subscribers.add(
+			/** @type {(arg: BaseState<TStateConfig, TContextAncestor>) => any} */ (
+				fn
+			),
+		);
 		return () => {
-			this.__subscribers.delete(/** @type {(arg: BaseState) => any} */ (fn));
+			this.__subscribers.delete(
+				/** @type {(arg: BaseState<TStateConfig, TContextAncestor>) => any} */ (
+					fn
+				),
+			);
 		};
 	}
 	toJSON() {

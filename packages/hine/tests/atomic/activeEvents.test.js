@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
@@ -16,7 +15,7 @@ describe('activeEvents', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 		});
 		expect(state.activeEvents).toEqual(['EVENT']);
@@ -41,7 +40,7 @@ describe('activeEvents', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 		});
 		expect(state.activeEvents).toEqual([]);

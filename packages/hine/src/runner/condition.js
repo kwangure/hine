@@ -1,27 +1,23 @@
-export class Condition {
+import { BaseRunner } from './base.js';
+
+/**
+ * @template {import('../state/types.js').StateConfig} TStateConfig
+ * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
+ * @extends {BaseRunner<TStateConfig, TContextAncestor>}
+ */
+export class ConditionRunner extends BaseRunner {
 	/** @type {(arg: any) => boolean} */
 	#run;
 	#type = /** @type {const} */ ('condition');
-	/** @type {import('./state/base.js').BaseState | null} */
-	__ownerState = null;
-	__name = '';
-	/** @type {boolean | undefined} */
-	__notifyAfter = undefined;
-	/** @type {boolean | undefined} */
-	__notifyBefore = undefined;
 
 	/**
-	 * @param {import('./types').ConditionConfig} options
+	 * @param {import('./types.js').ConditionRunnerConfig<TStateConfig, TContextAncestor> & {
+	 *     ownerState: import('../state/base.js').BaseState<TStateConfig, TContextAncestor>
+	 * }} options
 	 */
 	constructor(options) {
-		this.__name = options.name || '';
-		if (typeof options.notifyAfter === 'boolean') {
-			this.__notifyAfter = options.notifyAfter;
-		}
-		if (typeof options.notifyBefore === 'boolean') {
-			this.__notifyBefore = options.notifyBefore;
-		}
-		this.#run = options.run || (() => true);
+		super(options);
+		this.#run = options.run;
 	}
 	#notifyAfter() {
 		if (!this.__notifyAfter) return;
@@ -38,18 +34,11 @@ export class Condition {
 				`Attempted to read 'condition.event' at '${path}' before calling 'state.resolve()'.`,
 			);
 		}
+
 		return this.__ownerState?.event;
 	}
-	get name() {
-		return this.__name;
-	}
 	get ownerState() {
-		if (!this.__ownerState) {
-			throw Error(
-				'Attempted to read ownerState before calling state.resolve().',
-			);
-		}
-		return /** @type {import('./state/types').StateNode} */ (this.__ownerState);
+		return this.__ownerState;
 	}
 	/** @type {string[]} */
 	get path() {
@@ -67,7 +56,7 @@ export class Condition {
 		return result;
 	}
 	/**
-	 * @returns {import('./types').ConditionJSON}
+	 * @returns {import('./types.js').ConditionJSON}
 	 */
 	toJSON() {
 		return {

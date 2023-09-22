@@ -1,16 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { Condition } from '../../src/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('conditions', () => {
 	it('exposes conditions inside conditions', () => {
-		const cond2 = new Condition({
-			run: () => false,
-		});
 		const state = new AtomicState({
 			entry: [
 				new EffectHandler({
@@ -21,47 +16,15 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				do: new Action({
-					run() {},
-				}),
+				do() {},
 			},
 			conditions: {
-				cond1: new Condition({
-					run({ ownerState }) {
-						expect(() => ownerState?.conditions.cond2).not.toThrow();
-						expect(ownerState?.conditions.cond2).toBe(cond2);
-						expect(ownerState?.conditions.cond2.run()).toBe(false);
-						return true;
-					},
-				}),
-				cond2,
-			},
-		});
-	});
-	it('calls condition in machine context', () => {
-		const condition = new Condition({
-			run(value) {
-				expect(this).toBe(undefined);
-				expect(value).toBe(condition);
-				return true;
-			},
-		});
-		const state = new AtomicState({
-			entry: [
-				new EffectHandler({
-					if: 'condition',
-					run: ['action'],
-				}),
-			],
-		});
-		state.resolve({
-			actions: {
-				action: new Action({
-					run() {},
-				}),
-			},
-			conditions: {
-				condition,
+				cond1({ ownerState }) {
+					expect(() => ownerState?.conditions.cond2).not.toThrow();
+					expect(ownerState?.conditions.cond2.run()).toBe(false);
+					return true;
+				},
+				cond2: () => false,
 			},
 		});
 	});
@@ -80,16 +43,16 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new Condition({
+				condition: {
 					notifyBefore: true,
 					run() {
 						log.push('condition');
 						return true;
 					},
-				}),
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -116,16 +79,16 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new Condition({
+				condition: {
 					notifyAfter: true,
 					run() {
 						log.push('condition');
 						return true;
 					},
-				}),
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -152,18 +115,16 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 			conditionConfig: {
 				notifyBefore: true,
 			},
 			conditions: {
-				condition: new Condition({
-					run() {
-						log.push('condition');
-						return true;
-					},
-				}),
+				condition() {
+					log.push('condition');
+					return true;
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -205,15 +166,13 @@ describe('conditions', () => {
 					children: {
 						s11: {
 							actions: {
-								action: new Action({ run() {} }),
+								action() {},
 							},
 							conditions: {
-								condition: new Condition({
-									run() {
-										log.push('condition');
-										return true;
-									},
-								}),
+								condition() {
+									log.push('condition');
+									return true;
+								},
 							},
 						},
 					},
@@ -246,19 +205,19 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 			conditionConfig: {
 				notifyBefore: true,
 			},
 			conditions: {
-				condition: new Condition({
+				condition: {
 					notifyBefore: false,
 					run() {
 						log.push('condition');
 						return true;
 					},
-				}),
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -280,15 +239,15 @@ describe('conditions', () => {
 		expect(() =>
 			state1.resolve({
 				actions: {
-					action: new Action({ run() {} }),
+					action() {},
 				},
 				conditions: {
-					condition: new Condition({
+					condition: {
 						name: 'other-condition',
 						run() {
 							return true;
 						},
-					}),
+					},
 				},
 			}),
 		).toThrow(/unknown condition/);
@@ -305,27 +264,20 @@ describe('conditions', () => {
 		expect(() =>
 			state2.resolve({
 				actions: {
-					action: new Action({ run() {} }),
+					action() {},
 				},
 				conditions: {
-					condition: new Condition({
+					condition: {
 						name: 'other-condition',
 						run() {
 							return true;
 						},
-					}),
+					},
 				},
 			}),
 		).not.toThrow();
 	});
 	it('sets state condition during condition', () => {
-		const condition = new Condition({
-			notifyBefore: false,
-			run() {
-				expect(state.condition).toBe(condition);
-				return true;
-			},
-		});
 		const state = new AtomicState({
 			entry: [
 				new EffectHandler({
@@ -336,10 +288,16 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition,
+				condition: {
+					notifyBefore: false,
+					run(condition) {
+						expect(state.condition).toBe(condition);
+						return true;
+					},
+				},
 			},
 		});
 		expect(state.condition).toBe(null);
@@ -357,18 +315,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
-					run() {
-						actions.push('action');
-					},
-				}),
+				action() {
+					actions.push('action');
+				},
 			},
 			conditions: {
-				isFalsy: new Condition({
-					run() {
-						return false;
-					},
-				}),
+				isFalsy() {
+					return false;
+				},
 			},
 		});
 		expect(actions).toEqual([]);
@@ -386,18 +340,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
-					run() {
-						actions.push('action');
-					},
-				}),
+				action() {
+					actions.push('action');
+				},
 			},
 			conditions: {
-				isTruthy: new Condition({
-					run() {
-						return true;
-					},
-				}),
+				isTruthy() {
+					return true;
+				},
 			},
 		});
 		expect(actions).toEqual(['action']);
@@ -420,25 +370,21 @@ describe('conditions', () => {
 						}),
 					],
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			children: {
 				s1: {
 					actions: {
-						action: new Action({
-							run() {
-								actions.push('action');
-							},
-						}),
+						action() {
+							actions.push('action');
+						},
 					},
 					conditions: {
-						isFalsy: new Condition({
-							run() {
-								return false;
-							},
-						}),
+						isFalsy() {
+							return false;
+						},
 					},
 				},
 			},
@@ -463,25 +409,21 @@ describe('conditions', () => {
 						}),
 					],
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			children: {
 				s1: {
 					actions: {
-						action: new Action({
-							run() {
-								actions.push('action');
-							},
-						}),
+						action() {
+							actions.push('action');
+						},
 					},
 					conditions: {
-						isTruthy: new Condition({
-							run() {
-								return true;
-							},
-						}),
+						isTruthy() {
+							return true;
+						},
 					},
 				},
 			},
@@ -503,7 +445,7 @@ describe('conditions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
@@ -512,18 +454,14 @@ describe('conditions', () => {
 			children: {
 				s1: {
 					actions: {
-						action: new Action({
-							run() {
-								actions.push('action');
-							},
-						}),
+						action() {
+							actions.push('action');
+						},
 					},
 					conditions: {
-						isFalsy: new Condition({
-							run() {
-								return false;
-							},
-						}),
+						isFalsy() {
+							return false;
+						},
 					},
 				},
 			},
@@ -546,7 +484,7 @@ describe('conditions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
@@ -555,18 +493,14 @@ describe('conditions', () => {
 			children: {
 				s1: {
 					actions: {
-						action: new Action({
-							run() {
-								actions.push('action');
-							},
-						}),
+						action() {
+							actions.push('action');
+						},
 					},
 					conditions: {
-						isTruthy: new Condition({
-							run() {
-								return true;
-							},
-						}),
+						isTruthy() {
+							return true;
+						},
 					},
 				},
 			},
@@ -587,18 +521,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
-					run() {
-						actions.push('action');
-					},
-				}),
+				action() {
+					actions.push('action');
+				},
 			},
 			conditions: {
-				isFalsy: new Condition({
-					run() {
-						return false;
-					},
-				}),
+				isFalsy() {
+					return false;
+				},
 			},
 		});
 		expect(actions).toEqual([]);
@@ -616,18 +546,14 @@ describe('conditions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
-					run() {
-						actions.push('action');
-					},
-				}),
+				action() {
+					actions.push('action');
+				},
 			},
 			conditions: {
-				isFalsy: new Condition({
-					run() {
-						return true;
-					},
-				}),
+				isFalsy() {
+					return true;
+				},
 			},
 		});
 		expect(actions).toEqual(['action']);

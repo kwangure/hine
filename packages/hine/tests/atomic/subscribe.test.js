@@ -1,11 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('subscribe', () => {
 	it('calls subscribers on start', () => {
-		const machine = new AtomicState();
+		const machine = new AtomicState({});
 		let count = 0;
 		machine.subscribe(() => count++);
 		expect(count).toBe(1);
@@ -25,9 +24,7 @@ describe('subscribe', () => {
 		});
 		state.resolve({
 			actions: {
-				noop: new Action({
-					run() {},
-				}),
+				noop() {},
 			},
 		});
 		let count = 0;
@@ -37,6 +34,7 @@ describe('subscribe', () => {
 		state.dispatch('event');
 		expect(count).toBe(2);
 
+		// @ts-expect-error
 		state.dispatch('useless');
 		expect(count).toBe(3);
 	});

@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
 import { EffectHandler } from '../../src/handler/effect.js';
@@ -52,44 +51,32 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				always0: new Action({
-					run() {
-						log.push('always0');
-					},
-				}),
-				entry0: new Action({
-					run() {
-						log.push('entry0');
-					},
-				}),
+				always0() {
+					log.push('always0');
+				},
+				entry0() {
+					log.push('entry0');
+				},
 			},
 			children: {
 				s1: {
 					actions: {
-						always1: new Action({
-							run() {
-								log.push('always1');
-							},
-						}),
-						entry1: new Action({
-							run() {
-								log.push('entry1');
-							},
-						}),
+						always1() {
+							log.push('always1');
+						},
+						entry1() {
+							log.push('entry1');
+						},
 					},
 					children: {
 						s2: {
 							actions: {
-								always2: new Action({
-									run() {
-										log.push('always2');
-									},
-								}),
-								entry2: new Action({
-									run() {
-										log.push('entry2');
-									},
-								}),
+								always2() {
+									log.push('always2');
+								},
+								entry2() {
+									log.push('entry2');
+								},
 							},
 						},
 					},
@@ -166,44 +153,33 @@ describe('actions', () => {
 			children: {
 				b: {
 					actions: {
-						always0: new Action({
-							run() {
-								log.push('always0');
-							},
-						}),
-						entry0: new Action({
-							run() {
-								log.push('entry0');
-							},
-						}),
+						always0() {
+							log.push('always0');
+						},
+
+						entry0() {
+							log.push('entry0');
+						},
 					},
 					children: {
 						s1: {
 							actions: {
-								always1: new Action({
-									run() {
-										log.push('always1');
-									},
-								}),
-								entry1: new Action({
-									run() {
-										log.push('entry1');
-									},
-								}),
+								always1() {
+									log.push('always1');
+								},
+								entry1() {
+									log.push('entry1');
+								},
 							},
 							children: {
 								s2: {
 									actions: {
-										always2: new Action({
-											run() {
-												log.push('always2');
-											},
-										}),
-										entry2: new Action({
-											run() {
-												log.push('entry2');
-											},
-										}),
+										always2() {
+											log.push('always2');
+										},
+										entry2() {
+											log.push('entry2');
+										},
 									},
 								},
 							},
@@ -265,43 +241,35 @@ describe('actions', () => {
 						}),
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				exit0: new Action({
-					run() {
-						log.push('exit0');
-					},
-				}),
+				exit0() {
+					log.push('exit0');
+				},
 			},
 			children: {
 				s1: {
 					actions: {
-						exit1: new Action({
-							run() {
-								log.push('exit1');
-							},
-						}),
+						exit1() {
+							log.push('exit1');
+						},
 					},
 					children: {
 						s11: {
 							actions: {
-								exit11: new Action({
-									run() {
-										log.push('exit11');
-									},
-								}),
+								exit11() {
+									log.push('exit11');
+								},
 							},
 							children: {
 								s111: {
 									actions: {
-										exit111: new Action({
-											run() {
-												log.push('exit111');
-											},
-										}),
+										exit111() {
+											log.push('exit111');
+										},
 									},
 								},
 							},
@@ -359,43 +327,35 @@ describe('actions', () => {
 						}),
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				on0: new Action({
-					run() {
-						log.push('on0');
-					},
-				}),
+				on0() {
+					log.push('on0');
+				},
 			},
 			children: {
 				s1: {
 					actions: {
-						on1: new Action({
-							run() {
-								log.push('on1');
-							},
-						}),
+						on1() {
+							log.push('on1');
+						},
 					},
 					children: {
 						s11: {
 							actions: {
-								on11: new Action({
-									run() {
-										log.push('on11');
-									},
-								}),
+								on11() {
+									log.push('on11');
+								},
 							},
 							children: {
 								s111: {
 									actions: {
-										on111: new Action({
-											run() {
-												log.push('on111');
-											},
-										}),
+										on111() {
+											log.push('on111');
+										},
 									},
 								},
 							},
@@ -473,63 +433,48 @@ describe('actions', () => {
 						}),
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				always0: new Action({
-					run() {
-						log.push('always0');
-					},
-				}),
-				on0: new Action({
-					run() {
-						log.push('on0');
-					},
-				}),
+				always0() {
+					log.push('always0');
+				},
+				on0() {
+					log.push('on0');
+				},
 			},
 			children: {
 				s1: {
 					actions: {
-						always1: new Action({
-							run() {
-								log.push('always1');
-							},
-						}),
-						on1: new Action({
-							run() {
-								log.push('on1');
-							},
-						}),
+						always1() {
+							log.push('always1');
+						},
+
+						on1() {
+							log.push('on1');
+						},
 					},
 					children: {
 						s11: {
 							actions: {
-								always11: new Action({
-									run() {
-										log.push('always11');
-									},
-								}),
-								on11: new Action({
-									run() {
-										log.push('on11');
-									},
-								}),
+								always11() {
+									log.push('always11');
+								},
+								on11() {
+									log.push('on11');
+								},
 							},
 							children: {
 								s111: {
 									actions: {
-										always111: new Action({
-											run() {
-												log.push('always111');
-											},
-										}),
-										on111: new Action({
-											run() {
-												log.push('on111');
-											},
-										}),
+										always111() {
+											log.push('always111');
+										},
+										on111() {
+											log.push('on111');
+										},
 									},
 								},
 							},
@@ -595,7 +540,7 @@ describe('actions', () => {
 								}),
 							],
 							children: {
-								s111: new AtomicState(),
+								s111: new AtomicState({}),
 							},
 						}),
 					},
@@ -624,7 +569,7 @@ describe('actions', () => {
 								}),
 							],
 							children: {
-								s211: new AtomicState(),
+								s211: new AtomicState({}),
 							},
 						}),
 					},
@@ -633,94 +578,69 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				always0: new Action({
-					run() {
-						log.push('always0');
-					},
-				}),
-				entry0: new Action({
-					run() {
-						log.push('entry0');
-					},
-				}),
-				exit0: new Action({
-					run() {
-						log.push('exit0');
-					},
-				}),
-				on1: new Action({
-					run() {
-						log.push('on1');
-					},
-				}),
+				always0() {
+					log.push('always0');
+				},
+				entry0() {
+					log.push('entry0');
+				},
+				exit0() {
+					log.push('exit0');
+				},
+				on1() {
+					log.push('on1');
+				},
 			},
 			children: {
 				s1: {
 					actions: {
-						exit1: new Action({
-							run() {
-								log.push('exit1');
-							},
-						}),
-						on1: new Action({
-							run() {
-								log.push('on1');
-							},
-						}),
+						exit1() {
+							log.push('exit1');
+						},
+
+						on1() {
+							log.push('on1');
+						},
 					},
 					children: {
 						s11: {
 							actions: {
-								exit11: new Action({
-									run() {
-										log.push('exit11');
-									},
-								}),
-								on11: new Action({
-									run() {
-										log.push('on11');
-									},
-								}),
+								exit11() {
+									log.push('exit11');
+								},
+								on11() {
+									log.push('on11');
+								},
 							},
 						},
 					},
 				},
 				s2: {
 					actions: {
-						always2: new Action({
-							run() {
-								log.push('always2');
-							},
-						}),
-						entry2: new Action({
-							run() {
-								log.push('entry2');
-							},
-						}),
-						on2: new Action({
-							run() {
-								log.push('on2');
-							},
-						}),
+						always2() {
+							log.push('always2');
+						},
+
+						entry2() {
+							log.push('entry2');
+						},
+
+						on2() {
+							log.push('on2');
+						},
 					},
 					children: {
 						s21: {
 							actions: {
-								always21: new Action({
-									run() {
-										log.push('always21');
-									},
-								}),
-								entry21: new Action({
-									run() {
-										log.push('entry21');
-									},
-								}),
-								on21: new Action({
-									run() {
-										log.push('on21');
-									},
-								}),
+								always21() {
+									log.push('always21');
+								},
+								entry21() {
+									log.push('entry21');
+								},
+								on21() {
+									log.push('on21');
+								},
 							},
 						},
 					},
@@ -753,7 +673,7 @@ describe('actions', () => {
 						}),
 					],
 					children: {
-						s: new AtomicState(),
+						s: new AtomicState({}),
 					},
 				}),
 			},
@@ -762,17 +682,16 @@ describe('actions', () => {
 			children: {
 				current: {
 					actions: {
-						always: new Action({
-							run() {
-								alwaysCount++;
-							},
-						}),
+						always() {
+							alwaysCount++;
+						},
 					},
 				},
 			},
 		});
 		expect(alwaysCount).toBe(1);
 
+		// @ts-expect-error
 		state.dispatch('non-existent');
 		expect(alwaysCount).toBe(2);
 	});
@@ -808,38 +727,30 @@ describe('actions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},
 		});
 		state.resolve({
 			actions: {
-				always: new Action({
-					run() {
-						log.push('always');
-					},
-				}),
-				entry: new Action({
-					run() {
-						log.push('entry');
-					},
-				}),
-				exit: new Action({
-					run() {
-						log.push('exit');
-					},
-				}),
-				on: new Action({
-					run() {
-						log.push('on');
-					},
-				}),
+				always() {
+					log.push('always');
+				},
+				entry() {
+					log.push('entry');
+				},
+				exit() {
+					log.push('exit');
+				},
+				on() {
+					log.push('on');
+				},
 			},
 		});
 
@@ -878,62 +789,49 @@ describe('actions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},
 		});
 		state.resolve({
 			actions: {
-				always: new Action({
-					run() {
-						log.push('not always');
-					},
-				}),
-				entry: new Action({
-					run() {
-						log.push('not entry');
-					},
-				}),
-				exit: new Action({
-					run() {
-						log.push('not exit');
-					},
-				}),
-				on: new Action({
-					run() {
-						log.push('not on');
-					},
-				}),
+				always() {
+					log.push('not always');
+				},
+				entry() {
+					log.push('not entry');
+				},
+				exit() {
+					log.push('not exit');
+				},
+				on() {
+					log.push('not on');
+				},
 			},
 			children: {
 				s1: {
 					actions: {
-						always: new Action({
-							run() {
-								log.push('always');
-							},
-						}),
-						entry: new Action({
-							run() {
-								log.push('entry');
-							},
-						}),
-						exit: new Action({
-							run() {
-								log.push('exit');
-							},
-						}),
-						on: new Action({
-							run() {
-								log.push('on');
-							},
-						}),
+						always() {
+							log.push('always');
+						},
+
+						entry() {
+							log.push('entry');
+						},
+
+						exit() {
+							log.push('exit');
+						},
+
+						on() {
+							log.push('on');
+						},
 					},
 				},
 			},
@@ -962,7 +860,7 @@ describe('actions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
@@ -973,7 +871,7 @@ describe('actions', () => {
 						}),
 					],
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},
@@ -982,25 +880,20 @@ describe('actions', () => {
 			children: {
 				s1: {
 					actions: {
-						entry1: new Action({
-							run() {
-								log.push('entry1');
-							},
-						}),
-						transition1: new Action({
-							run() {
-								log.push('transition1');
-							},
-						}),
+						entry1() {
+							log.push('entry1');
+						},
+
+						transition1() {
+							log.push('transition1');
+						},
 					},
 				},
 				s2: {
 					actions: {
-						always2: new Action({
-							run() {
-								log.push('always2');
-							},
-						}),
+						always2() {
+							log.push('always2');
+						},
 					},
 				},
 			},
@@ -1009,29 +902,6 @@ describe('actions', () => {
 		state.dispatch('event');
 		expect(state.matches('.s1')).toBe(true);
 		expect(log).toEqual(['entry1', 'transition1', 'always2', 'entry1']);
-	});
-	it('calls actions with self reference', () => {
-		const action = new Action({
-			run(value) {
-				expect(this).toBe(undefined);
-				expect(value).toBe(action);
-			},
-		});
-		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
-			children: {
-				s1: new AtomicState(),
-			},
-		});
-		state.resolve({
-			actions: {
-				action,
-			},
-		});
 	});
 	it('calls subscribers before action', () => {
 		/** @type {string[]} */
@@ -1045,17 +915,17 @@ describe('actions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: {
 					notifyBefore: true,
 					run() {
 						log.push('action');
 					},
-				}),
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -1079,17 +949,17 @@ describe('actions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: {
 					notifyAfter: true,
 					run() {
 						log.push('action');
 					},
-				}),
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -1113,7 +983,7 @@ describe('actions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -1121,11 +991,9 @@ describe('actions', () => {
 				notifyBefore: true,
 			},
 			actions: {
-				action: new Action({
-					run() {
-						log.push('action');
-					},
-				}),
+				action() {
+					log.push('action');
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -1149,7 +1017,7 @@ describe('actions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
@@ -1157,12 +1025,12 @@ describe('actions', () => {
 				notifyBefore: true,
 			},
 			actions: {
-				action: new Action({
+				action: {
 					notifyBefore: false,
 					run() {
 						log.push('action');
 					},
-				}),
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -1184,7 +1052,7 @@ describe('actions', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
@@ -1196,12 +1064,10 @@ describe('actions', () => {
 			children: {
 				s1: {
 					actions: {
-						action: new Action({
-							run() {
-								log.push('action');
-								return true;
-							},
-						}),
+						action() {
+							log.push('action');
+							return true;
+						},
 					},
 				},
 			},
@@ -1225,17 +1091,17 @@ describe('actions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 
 		expect(() =>
 			state.resolve({
 				actions: {
-					action: new Action({
+					action: {
 						name: 'other-action',
 						run() {},
-					}),
+					},
 				},
 			}),
 		).toThrow(/unknown action/);
@@ -1248,28 +1114,22 @@ describe('actions', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 
 		expect(() =>
 			state2.resolve({
 				actions: {
-					action: new Action({
+					action: {
 						name: 'other-action',
 						run() {},
-					}),
+					},
 				},
 			}),
 		).not.toThrow();
 	});
 	it('sets state action during action', () => {
-		const action = new Action({
-			notifyBefore: false,
-			run() {
-				expect(state.action).toBe(action);
-			},
-		});
 		const state = new CompoundState({
 			entry: [
 				new EffectHandler({
@@ -1277,20 +1137,22 @@ describe('actions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				action,
+				action: {
+					notifyBefore: false,
+					run(action) {
+						expect(state.action).toBe(action);
+					},
+				},
 			},
 		});
 		expect(state.action).toBe(null);
 	});
 	it('exposes actions inside actions', () => {
-		const action2 = new Action({
-			run: () => 'test',
-		});
 		const state = new CompoundState({
 			entry: [
 				new EffectHandler({
@@ -1298,20 +1160,17 @@ describe('actions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				action1: new Action({
-					run({ ownerState }) {
-						expect(() => ownerState?.actions.action2).not.toThrow();
-						expect(ownerState?.actions.action2).toBe(action2);
-						expect(ownerState?.actions.action2.run()).toBe('test');
-						return true;
-					},
-				}),
-				action2,
+				action1({ ownerState }) {
+					expect(() => ownerState?.actions.action2).not.toThrow();
+					expect(ownerState?.actions.action2.run()).toBe('test');
+					return true;
+				},
+				action2: () => 'test',
 			},
 		});
 	});
@@ -1321,16 +1180,14 @@ describe('actions', () => {
 				event: [new EffectHandler({ run: ['action'] })],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
-					run({ event }) {
-						expect(event?.value).toBe('my-value');
-					},
-				}),
+				action({ event }) {
+					expect(event?.value).toBe('my-value');
+				},
 			},
 		});
 
@@ -1344,7 +1201,7 @@ describe('actions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(() => state.resolve()).toThrow("'missing'");
@@ -1357,7 +1214,7 @@ describe('actions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(() => state.resolve()).toThrow("'missing'");
@@ -1370,7 +1227,7 @@ describe('actions', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(() => state.resolve()).toThrow("'missing'");

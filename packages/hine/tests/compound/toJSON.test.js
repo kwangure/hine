@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { Condition } from '../../src/condition.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('toJSON', () => {
@@ -11,7 +9,7 @@ describe('toJSON', () => {
 		const state = new CompoundState({
 			name,
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		const json = state.toJSON();
@@ -20,7 +18,7 @@ describe('toJSON', () => {
 	it('defaults to empty string when missing name', () => {
 		const state = new CompoundState({
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		const json = state.toJSON();
@@ -29,7 +27,7 @@ describe('toJSON', () => {
 	it('includes type', () => {
 		const state = new CompoundState({
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		const json = state.toJSON();
@@ -39,7 +37,7 @@ describe('toJSON', () => {
 		const state = new CompoundState({
 			name: 'state',
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		const json = state.toJSON();
@@ -59,15 +57,15 @@ describe('toJSON', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new Condition({ run: () => true }),
+				condition: () => true,
 			},
 		});
 		const json = state.toJSON();
@@ -90,15 +88,15 @@ describe('toJSON', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new Condition({ run: () => true }),
+				condition: () => true,
 			},
 		});
 		const json = state.toJSON();
@@ -121,15 +119,15 @@ describe('toJSON', () => {
 				}),
 			],
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new Condition({ run: () => true }),
+				condition: () => true,
 			},
 		});
 		const json = state.toJSON();
@@ -154,15 +152,15 @@ describe('toJSON', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 			conditions: {
-				condition: new Condition({ run: () => true }),
+				condition: () => true,
 			},
 		});
 		const json = state.toJSON();
@@ -182,7 +180,7 @@ describe('toJSON', () => {
 	it('includes path', () => {
 		const s1 = new CompoundState({
 			children: {
-				s11: new AtomicState(),
+				s11: new AtomicState({}),
 			},
 		});
 		new CompoundState({

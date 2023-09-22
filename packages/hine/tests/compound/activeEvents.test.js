@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
 import { EffectHandler } from '../../src/handler/effect.js';
@@ -24,14 +23,14 @@ describe('activeEvents', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 		});
 		expect(state.activeEvents).toEqual(['EVENT1', 'EVENT2']);
@@ -59,7 +58,7 @@ describe('activeEvents', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 		});
 		expect(state.activeEvents).toEqual(['EVENT']);
@@ -74,7 +73,7 @@ describe('activeEvents', () => {
 				],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		expect(state.activeEvents).toEqual([]);
@@ -85,12 +84,12 @@ describe('activeEvents', () => {
 				EVENT: [],
 			},
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				action: new Action({ run() {} }),
+				action() {},
 			},
 		});
 		expect(state.activeEvents).toEqual([]);

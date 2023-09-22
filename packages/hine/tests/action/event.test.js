@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { EffectHandler } from '../../src/handler/effect.js';
 
@@ -10,18 +9,10 @@ describe('event', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
-					run({ ownerState, event }) {
-						expect(ownerState.event).toBe(event);
-					},
-				}),
+				action({ ownerState, event }) {
+					expect(ownerState.event).toBe(event);
+				},
 			},
 		});
-	});
-	it('throws when accessed before initialisation', () => {
-		const action = new Action({ name: 'action', run() {} });
-		expect(() => action.event).toThrow(
-			"Attempted to read 'action.event' at '(action)' before calling 'state.resolve()'",
-		);
 	});
 });

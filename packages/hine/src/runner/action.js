@@ -1,27 +1,21 @@
-function noop() {}
+import { BaseRunner } from './base.js';
 
-export class Action {
+/**
+ * @template {import('../state/types.js').StateConfig} TStateConfig
+ * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
+ * @extends {BaseRunner<TStateConfig, TContextAncestor>}
+ */
+export class ActionRunner extends BaseRunner {
 	/** @type {(arg: any) => any} */
-	#run = noop;
+	#run;
 	#type = /** @type {const} */ ('action');
-	/** @type {import('./state/base.js').BaseState | null} */
-	__ownerState = null;
-	__name = '';
-	/** @type {boolean | undefined} */
-	__notifyAfter = undefined;
-	/** @type {boolean | undefined} */
-	__notifyBefore = undefined;
 	/**
-	 * @param {import('./types').ActionConfig} options
+	 * @param {import('./types.js').ActionRunnerConfig<TStateConfig, TContextAncestor> & {
+	 *     ownerState: import('../state/base.js').BaseState<TStateConfig, TContextAncestor>
+	 * }} options
 	 */
 	constructor(options) {
-		this.__name = options.name || '';
-		if (typeof options.notifyAfter === 'boolean') {
-			this.__notifyAfter = options.notifyAfter;
-		}
-		if (typeof options.notifyBefore === 'boolean') {
-			this.__notifyBefore = options.notifyBefore;
-		}
+		super(options);
 		this.#run = options.run;
 	}
 	#notifyAfter() {
@@ -39,18 +33,12 @@ export class Action {
 				`Attempted to read 'action.event' at '${path}' before calling 'state.resolve()'.`,
 			);
 		}
+
 		return this.__ownerState?.event;
 	}
-	get name() {
-		return this.__name;
-	}
+
 	get ownerState() {
-		if (!this.__ownerState) {
-			throw Error(
-				'Attempted to read ownerState before calling state.resolve().',
-			);
-		}
-		return /** @type {import('./state/types').StateNode} */ (this.__ownerState);
+		return this.__ownerState;
 	}
 	/** @type {string[]} */
 	get path() {
@@ -68,7 +56,7 @@ export class Action {
 		return result;
 	}
 	/**
-	 * @returns {import('./types').ActionJSON}
+	 * @returns {import('./types.js').ActionJSON}
 	 */
 	toJSON() {
 		return {

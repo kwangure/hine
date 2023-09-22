@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
 import { EffectHandler } from '../../src/handler/effect.js';
@@ -10,7 +9,7 @@ describe('subscribe', () => {
 			children: {
 				s1: new CompoundState({
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
@@ -34,7 +33,7 @@ describe('subscribe', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 			},
@@ -43,9 +42,7 @@ describe('subscribe', () => {
 			children: {
 				s1: {
 					actions: {
-						noop: new Action({
-							run() {},
-						}),
+						noop() {},
 					},
 				},
 			},
@@ -57,6 +54,7 @@ describe('subscribe', () => {
 		state.dispatch('event');
 		expect(count).toBe(2);
 
+		// @ts-expect-error
 		state.dispatch('useless');
 		expect(count).toBe(3);
 	});

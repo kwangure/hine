@@ -1,7 +1,10 @@
-import { h } from 'hine';
+import { state } from 'hine';
 
-const checkboxState = h.state({
-	// omitted for brevity
+// details omitted for brevity
+const checkboxState = state({
+	on: {
+		toggle: [],
+	},
 });
 
 checkboxState.resolve();

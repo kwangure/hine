@@ -7,9 +7,10 @@ describe('dispatch', () => {
 	it('throws on unresolved dispatch', () => {
 		const state = new CompoundState({
 			children: {
-				s1: new AtomicState(),
+				s1: new AtomicState({}),
 			},
 		});
+		// @ts-expect-error
 		expect(() => state.dispatch('test')).toThrow(
 			'Attempted dispatch before resolving state',
 		);
@@ -27,7 +28,7 @@ describe('dispatch', () => {
 						],
 					},
 					children: {
-						s11: new AtomicState(),
+						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
@@ -39,7 +40,7 @@ describe('dispatch', () => {
 						],
 					},
 					children: {
-						s21: new AtomicState(),
+						s21: new AtomicState({}),
 					},
 				}),
 			},
@@ -56,12 +57,13 @@ describe('dispatch', () => {
 	it('ignores invalid events', () => {
 		const state = new CompoundState({
 			children: {
-				s1: new AtomicState(),
-				s2: new AtomicState(),
+				s1: new AtomicState({}),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve();
 		expect(() => {
+			// @ts-expect-error
 			state.dispatch('random');
 		}).not.toThrow();
 		expect(state.matches('.s1')).toBe(true);

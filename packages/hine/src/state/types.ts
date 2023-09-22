@@ -1,15 +1,21 @@
+import type {
+	ActionRunnerConfig,
+	BaseRunnerConfig,
+	ConditionRunnerConfig,
+} from '../runner/types.js';
 import type { AtomicState } from './atomic.js';
 import type { CompoundState } from './compound.js';
-import type { Context } from '../context.js';
+import type { ContextTransformer } from '../context/types.js';
 import type { EffectHandler } from '../handler/effect.js';
-import type { TransitionHandler } from '../handler/transition.js';
 import type { HandlerJSON } from '../handler/types.js';
+import type { TransitionHandler } from '../handler/transition.js';
+import { BaseState } from './base.js';
 
-export type StateNode = AtomicState | CompoundState;
+export type StateNode = AtomicState<any, any> | CompoundState<any, any>;
 
 export interface BaseStateConfig {
 	always?: (EffectHandler | TransitionHandler)[];
-	context?: Context;
+	context?: Record<string, ContextTransformer>;
 	entry?: EffectHandler[];
 	exit?: EffectHandler[];
 	name?: string;
@@ -24,6 +30,85 @@ export interface CompoundStateConfig extends BaseStateConfig {
 
 export interface StateConfig extends BaseStateConfig {
 	children?: Record<string, StateNode>;
+}
+
+export interface BaseResolveConfig {
+	actions?: Record<
+		string,
+		ActionRunnerConfig<any, any> | ActionRunnerConfig<any, any>['run']
+	>;
+	actionConfig?: BaseRunnerConfig;
+	conditions?: Record<
+		string,
+		ConditionRunnerConfig<any, any> | ConditionRunnerConfig<any, any>['run']
+	>;
+	conditionConfig?: BaseRunnerConfig;
+	context?: Record<string, unknown>;
+}
+
+export interface AtomicResolveConfig<
+	TStateConfig extends StateConfig,
+	TContextAncestor extends Record<string, ContextTransformer>,
+> extends BaseResolveConfig {
+	actions?: Record<
+		string,
+		| ActionRunnerConfig<TStateConfig, TContextAncestor>
+		| ActionRunnerConfig<TStateConfig, TContextAncestor>['run']
+	>;
+	conditions?: Record<
+		string,
+		| ConditionRunnerConfig<TStateConfig, TContextAncestor>
+		| ConditionRunnerConfig<TStateConfig, TContextAncestor>['run']
+	>;
+	context?: {
+		[key in keyof TStateConfig['context']]: TStateConfig['context'][key] extends ContextTransformer
+			? ReturnType<TStateConfig['context'][key]>
+			: never;
+	};
+}
+
+export interface CompoundResolveConfig<
+	TStateConfig extends StateConfig,
+	TContextAncestor extends Record<string, ContextTransformer>,
+> extends BaseResolveConfig {
+	actions?: Record<
+		string,
+		| ActionRunnerConfig<TStateConfig, TContextAncestor>
+		| ActionRunnerConfig<TStateConfig, TContextAncestor>['run']
+	>;
+	conditions?: Record<
+		string,
+		| ConditionRunnerConfig<TStateConfig, TContextAncestor>
+		| ConditionRunnerConfig<TStateConfig, TContextAncestor>['run']
+	>;
+	context?: {
+		[key in keyof TStateConfig['context']]: TStateConfig['context'][key] extends ContextTransformer
+			? ReturnType<TStateConfig['context'][key]>
+			: never;
+	};
+	children?: Partial<{
+		[child in keyof TStateConfig['children']]: TStateConfig['children'][child] extends CompoundState<
+			infer TCompoundStateConfig,
+			Record<string, ContextTransformer>
+		>
+			? CompoundResolveConfig<
+					TCompoundStateConfig,
+					TStateConfig['context'] extends Record<string, ContextTransformer>
+						? TStateConfig['context']
+						: {}
+			  >
+			: TStateConfig['children'][child] extends AtomicState<
+					infer TAtomicStateConfig,
+					Record<string, ContextTransformer>
+			  >
+			? AtomicResolveConfig<
+					TAtomicStateConfig,
+					TStateConfig['context'] extends Record<string, ContextTransformer>
+						? TStateConfig['context']
+						: {}
+			  >
+			: TStateConfig['children'][child];
+	}>;
 }
 
 export interface BaseStateJSON {
@@ -45,3 +130,19 @@ export interface CompoundStateJSON extends BaseStateJSON {
 }
 
 export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
+
+export type CollectStateConfigs<TStateConfig> = TStateConfig extends StateConfig
+	?
+			| keyof TStateConfig['on']
+			| {
+					[child in keyof TStateConfig['children']]: TStateConfig['children'][child] extends BaseState<
+						infer TChildStateConfig,
+						any
+					>
+						? CollectStateConfigs<TChildStateConfig>
+						: never;
+			  }[keyof TStateConfig['children']]
+	: never;
+
+export type StateChildren<TStateConfig extends StateConfig> =
+	CollectStateConfigs<TStateConfig>;

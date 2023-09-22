@@ -1,16 +1,22 @@
-import { Context } from '../context.js';
+import { ActionRunner } from '../runner/action.js';
+import { ConditionRunner } from '../runner/condition.js';
+import { Context } from '../context/context.js';
 import { StateEvent } from '../event.js';
 import { TransitionHandler } from '../handler/transition.js';
 
+/**
+ * @template {import('./types.js').StateConfig} TStateConfig
+ * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
+ */
 export class BaseState {
 	/**
 	 * Action configuration from the user that is propagated to children
-	 * @type {Omit<import('../types.js').ActionConfig, 'run'>}
+	 * @type {import('../runner/types.js').BaseRunnerConfig}
 	 */
 	#actionConfig = {};
 	/**
 	 * Actions from the user config
-	 * @type {Record<string, import('../action.js').Action>}
+	 * @type {Record<string, import('../runner/action.js').ActionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	#actions = {};
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
@@ -18,12 +24,12 @@ export class BaseState {
 	#alwaysConfig;
 	/**
 	 * Condition configuration from the user that is propagated to children
-	 * @type {Omit<import('../types.js').ConditionConfig, 'run'>}
+	 * @type {import('../runner/types.js').BaseRunnerConfig}
 	 */
 	#conditionConfig = {};
 	/**
 	 * Conditions from the user config
-	 * @type {Record<string, import('../condition.js').Condition>}
+	 * @type {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	#conditions = {};
 	#context;
@@ -42,18 +48,18 @@ export class BaseState {
 	#onConfig;
 	/**
 	 * Actions from all ancestor states and the config
-	 * @type {Record<string, import('../action.js').Action>}
+	 * @type {Record<string, import('../runner/action.js').ActionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	__allActions = {};
 	/**
 	 * Conditions from all ancestor states and the config
-	 * @type {Record<string, import('../condition.js').Condition>}
+	 * @type {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	__allConditions = {};
 
-	/** @type {import('../action.js').Action | null} */
+	/** @type {import('../runner/action.js').ActionRunner<TStateConfig, TContextAncestor> | null} */
 	__action = null;
-	/** @type {import('../condition.js').Condition | null} */
+	/** @type {import('../runner/condition.js').ConditionRunner<TStateConfig, TContextAncestor> | null} */
 	__condition = null;
 	/**
 	 * The active handler that is currently executing
@@ -64,28 +70,31 @@ export class BaseState {
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	__handlerQueue = [];
 	__name = '';
-	/** @type {import('./compound.js').CompoundState | null} */
+	/** @type {import('./compound.js').CompoundState<any, any> | null} */
 	__parent = null;
 	/** @type {Record<string, (import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]>} */
 	__onHandler = {};
-	/** @type {Set<(arg: BaseState) => any>} */
+	/** @type {Set<(arg: BaseState<TStateConfig, TContextAncestor>) => any>} */
 	__subscribers = new Set();
 
 	/**
-	 * @param {import('./types.js').BaseStateConfig} [stateConfig]
+	 * @param {TStateConfig} stateConfig
 	 */
 	constructor(stateConfig) {
-		this.#alwaysConfig = stateConfig?.always || [];
-		this.#context = stateConfig?.context || new Context();
-		this.__name = stateConfig?.name || '';
-		this.#onConfig = stateConfig?.on || {};
+		this.#context =
+			/** @type {Context<NonNullable<TStateConfig['context']>, TContextAncestor>} */ (
+				new Context(this, stateConfig.context)
+			);
+		this.#alwaysConfig = stateConfig.always || [];
+		this.__name = stateConfig.name || '';
+		this.#onConfig = stateConfig.on || {};
 
-		if (stateConfig?.entry) {
+		if (stateConfig.entry) {
 			for (const handler of stateConfig.entry) {
 				this.#entryConfig.push(handler);
 			}
 		}
-		if (stateConfig?.exit) {
+		if (stateConfig.exit) {
 			for (const handler of stateConfig.exit) {
 				this.#exitConfig.push(handler);
 			}
@@ -110,7 +119,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @returns {Record<string, import('../action.js').Action>}
+	 * @returns {Record<string, import('../runner/action.js').ActionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	get __actions() {
 		const actions = this.__parent?.__actions || {};
@@ -126,7 +135,6 @@ export class BaseState {
 				if (typeof action.__notifyBefore !== 'boolean') {
 					action.__notifyBefore = this.__actionConfig.notifyBefore;
 				}
-				action.__ownerState = this;
 				actions[action.name] = action;
 			}
 		}
@@ -158,7 +166,7 @@ export class BaseState {
 		};
 	}
 	/**
-	 * @returns {Record<string, import('../condition.js').Condition>}
+	 * @returns {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	get __conditions() {
 		const conditions = this.__parent?.__conditions || {};
@@ -174,7 +182,6 @@ export class BaseState {
 				if (typeof condition.__notifyBefore !== 'boolean') {
 					condition.__notifyBefore = this.__conditionConfig.notifyBefore;
 				}
-				condition.__ownerState = this;
 				conditions[condition.name] = condition;
 			}
 		}
@@ -225,8 +232,16 @@ export class BaseState {
 			this.__handlerQueue.push(...this.__onHandler[eventName]);
 		}
 	}
-	/** @param {import('../types.js').BaseResolveConfig} [config] */
+	/** @param {import('./types.js').BaseResolveConfig} [config] */
 	__resolve(config) {
+		if (config?.context) {
+			for (const [key, value] of Object.entries(config.context)) {
+				this.#context.__set(
+					/** @type {any} */ (key),
+					/** @type {any} */ (value),
+				);
+			}
+		}
 		if (config?.actionConfig) {
 			if ('name' in config.actionConfig) {
 				this.#actionConfig['name'] = config.actionConfig['name'];
@@ -241,7 +256,10 @@ export class BaseState {
 		}
 		if (config?.actions) {
 			for (const [name, action] of Object.entries(config.actions)) {
-				this.#actions[name] = action;
+				this.#actions[name] =
+					typeof action === 'function'
+						? new ActionRunner({ run: action, ownerState: this })
+						: new ActionRunner({ ...action, ownerState: this });
 			}
 		}
 		if (config?.conditionConfig) {
@@ -259,7 +277,10 @@ export class BaseState {
 		}
 		if (config?.conditions) {
 			for (const [name, condition] of Object.entries(config.conditions)) {
-				this.#conditions[name] = condition;
+				this.#conditions[name] =
+					typeof condition === 'function'
+						? new ConditionRunner({ run: condition, ownerState: this })
+						: new ConditionRunner({ ...condition, ownerState: this });
 			}
 		}
 	}
@@ -367,7 +388,7 @@ export class BaseState {
 		return this.#context;
 	}
 	/**
-	 * @param {string} eventName
+	 * @param {import('./types.js').CollectStateConfigs<TStateConfig>} eventName
 	 * @param {any} [value]
 	 */
 	dispatch(eventName, value) {
@@ -378,9 +399,12 @@ export class BaseState {
 			throw Error('Attempted to dispatch while stepping is in progress.');
 		}
 
-		const event = new StateEvent({ name: eventName, value });
+		const event = new StateEvent({
+			name: /** @type {string} */ (eventName),
+			value,
+		});
 		this.#event = event;
-		this.__queueOnHandlers(eventName);
+		this.__queueOnHandlers(/** @type {string} */ (eventName));
 		this.__queueAlwaysHandlers();
 		this.__executeHandlersLeafFirst();
 
@@ -389,7 +413,11 @@ export class BaseState {
 	}
 	/** @returns {StateEvent | null} */
 	get event() {
-		return this.#event ?? this.__parent?.event ?? null;
+		const event = this.#event ?? this.__parent?.event;
+		if (!event) {
+			throw Error(`Attempted to access event outside event lifecycle.`);
+		}
+		return event;
 	}
 	get handler() {
 		return this.__handler;

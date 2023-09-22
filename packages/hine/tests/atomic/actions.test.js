@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { Action } from '../../src/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
 import { EffectHandler } from '../../src/handler/effect.js';
@@ -24,16 +23,12 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				always0: new Action({
-					run() {
-						log.push('always0');
-					},
-				}),
-				entry0: new Action({
-					run() {
-						log.push('entry0');
-					},
-				}),
+				always0() {
+					log.push('always0');
+				},
+				entry0() {
+					log.push('entry0');
+				},
 			},
 		});
 		expect(log).toEqual(['entry0', 'always0']);
@@ -71,16 +66,12 @@ describe('actions', () => {
 			children: {
 				b: {
 					actions: {
-						always0: new Action({
-							run() {
-								log.push('always0');
-							},
-						}),
-						entry0: new Action({
-							run() {
-								log.push('entry0');
-							},
-						}),
+						always0() {
+							log.push('always0');
+						},
+						entry0() {
+							log.push('entry0');
+						},
 					},
 				},
 			},
@@ -113,25 +104,21 @@ describe('actions', () => {
 						],
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				exit0: new Action({
-					run() {
-						log.push('exit0');
-					},
-				}),
+				exit0() {
+					log.push('exit0');
+				},
 			},
 			children: {
 				s1: {
 					actions: {
-						exit1: new Action({
-							run() {
-								log.push('exit1');
-							},
-						}),
+						exit1() {
+							log.push('exit1');
+						},
 					},
 				},
 			},
@@ -156,11 +143,9 @@ describe('actions', () => {
 		});
 		machine.resolve({
 			actions: {
-				on0: new Action({
-					run() {
-						log.push('on0');
-					},
-				}),
+				on0() {
+					log.push('on0');
+				},
 			},
 		});
 		log.length = 0;
@@ -188,16 +173,12 @@ describe('actions', () => {
 		});
 		machine.resolve({
 			actions: {
-				always0: new Action({
-					run() {
-						log.push('always0');
-					},
-				}),
-				on0: new Action({
-					run() {
-						log.push('on0');
-					},
-				}),
+				always0() {
+					log.push('always0');
+				},
+				on0() {
+					log.push('on0');
+				},
 			},
 		});
 		log.length = 0;
@@ -244,35 +225,25 @@ describe('actions', () => {
 			children: {
 				s1: {
 					actions: {
-						exit1: new Action({
-							run() {
-								log.push('exit1');
-							},
-						}),
-						on1: new Action({
-							run() {
-								log.push('on1');
-							},
-						}),
+						exit1() {
+							log.push('exit1');
+						},
+						on1() {
+							log.push('on1');
+						},
 					},
 				},
 				s2: {
 					actions: {
-						always2: new Action({
-							run() {
-								log.push('always2');
-							},
-						}),
-						entry2: new Action({
-							run() {
-								log.push('entry2');
-							},
-						}),
-						on2: new Action({
-							run() {
-								log.push('on2');
-							},
-						}),
+						always2() {
+							log.push('always2');
+						},
+						entry2() {
+							log.push('entry2');
+						},
+						on2() {
+							log.push('on2');
+						},
 					},
 				},
 			},
@@ -294,15 +265,14 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				always: new Action({
-					run() {
-						alwaysCount++;
-					},
-				}),
+				always() {
+					alwaysCount++;
+				},
 			},
 		});
 		expect(alwaysCount).toBe(1);
 
+		// @ts-expect-error
 		state.dispatch('non-existent');
 		expect(alwaysCount).toBe(2);
 	});
@@ -340,33 +310,25 @@ describe('actions', () => {
 								],
 							},
 						}),
-						s12: new AtomicState(),
+						s12: new AtomicState({}),
 					},
 				}),
 			},
 		});
 		state.resolve({
 			actions: {
-				always: new Action({
-					run() {
-						log.push('always');
-					},
-				}),
-				entry: new Action({
-					run() {
-						log.push('entry');
-					},
-				}),
-				exit: new Action({
-					run() {
-						log.push('exit');
-					},
-				}),
-				on: new Action({
-					run() {
-						log.push('on');
-					},
-				}),
+				always() {
+					log.push('always');
+				},
+				entry() {
+					log.push('entry');
+				},
+				exit() {
+					log.push('exit');
+				},
+				on() {
+					log.push('on');
+				},
 			},
 		});
 
@@ -405,55 +367,39 @@ describe('actions', () => {
 						],
 					},
 				}),
-				s2: new AtomicState(),
+				s2: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				always: new Action({
-					run() {
-						log.push('not always');
-					},
-				}),
-				entry: new Action({
-					run() {
-						log.push('not entry');
-					},
-				}),
-				exit: new Action({
-					run() {
-						log.push('not exit');
-					},
-				}),
-				on: new Action({
-					run() {
-						log.push('not on');
-					},
-				}),
+				always() {
+					log.push('not always');
+				},
+				entry() {
+					log.push('not entry');
+				},
+				exit() {
+					log.push('not exit');
+				},
+				on() {
+					log.push('not on');
+				},
 			},
 			children: {
 				s1: {
 					actions: {
-						always: new Action({
-							run() {
-								log.push('always');
-							},
-						}),
-						entry: new Action({
-							run() {
-								log.push('entry');
-							},
-						}),
-						exit: new Action({
-							run() {
-								log.push('exit');
-							},
-						}),
-						on: new Action({
-							run() {
-								log.push('on');
-							},
-						}),
+						always() {
+							log.push('always');
+						},
+						entry() {
+							log.push('entry');
+						},
+						exit() {
+							log.push('exit');
+						},
+						on() {
+							log.push('on');
+						},
 					},
 				},
 			},
@@ -461,26 +407,6 @@ describe('actions', () => {
 
 		state.dispatch('event');
 		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
-	});
-	it('calls actions with self-reference', () => {
-		const action = new Action({
-			run(value) {
-				expect(this).toBe(undefined);
-				expect(value).toBe(action);
-			},
-		});
-		const state = new AtomicState({
-			entry: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
-		});
-		state.resolve({
-			actions: {
-				action,
-			},
-		});
 	});
 	it('calls subscribers before action', () => {
 		/** @type {string[]} */
@@ -496,12 +422,12 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: {
 					notifyBefore: true,
 					run() {
 						log.push('action');
 					},
-				}),
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -527,12 +453,12 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
+				action: {
 					notifyAfter: true,
 					run() {
 						log.push('action');
 					},
-				}),
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -561,11 +487,9 @@ describe('actions', () => {
 				notifyBefore: true,
 			},
 			actions: {
-				action: new Action({
-					run() {
-						log.push('action');
-					},
-				}),
+				action() {
+					log.push('action');
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -594,12 +518,12 @@ describe('actions', () => {
 				notifyBefore: true,
 			},
 			actions: {
-				action: new Action({
+				action: {
 					notifyBefore: false,
 					run() {
 						log.push('action');
 					},
-				}),
+				},
 			},
 		});
 		state.subscribe(() => log.push('sub'));
@@ -636,11 +560,9 @@ describe('actions', () => {
 					children: {
 						s11: {
 							actions: {
-								action: new Action({
-									run() {
-										log.push('action');
-									},
-								}),
+								action() {
+									log.push('action');
+								},
 							},
 						},
 					},
@@ -672,10 +594,10 @@ describe('actions', () => {
 		expect(() =>
 			state.resolve({
 				actions: {
-					action: new Action({
+					action: {
 						name: 'other-action',
 						run() {},
-					}),
+					},
 				},
 			}),
 		).toThrow(/unknown action/);
@@ -692,21 +614,15 @@ describe('actions', () => {
 		expect(() =>
 			state2.resolve({
 				actions: {
-					action: new Action({
+					action: {
 						name: 'other-action',
 						run() {},
-					}),
+					},
 				},
 			}),
 		).not.toThrow();
 	});
 	it('sets state action during action', () => {
-		const action = new Action({
-			notifyBefore: false,
-			run() {
-				expect(state.action).toBe(action);
-			},
-		});
 		const state = new AtomicState({
 			entry: [
 				new EffectHandler({
@@ -716,15 +632,17 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				action,
+				action: {
+					notifyBefore: false,
+					run(action) {
+						expect(state.action).toBe(action);
+					},
+				},
 			},
 		});
 		expect(state.action).toBe(null);
 	});
 	it('exposes actions inside actions', () => {
-		const action2 = new Action({
-			run: () => 'test',
-		});
 		const state = new AtomicState({
 			entry: [
 				new EffectHandler({
@@ -734,15 +652,12 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				action1: new Action({
-					run({ ownerState }) {
-						expect(() => ownerState?.actions.action2).not.toThrow();
-						expect(ownerState?.actions.action2).toBe(action2);
-						expect(ownerState?.actions.action2.run()).toBe('test');
-						return true;
-					},
-				}),
-				action2,
+				action1({ ownerState }) {
+					expect(() => ownerState?.actions.action2).not.toThrow();
+					expect(ownerState?.actions.action2.run()).toBe('test');
+					return true;
+				},
+				action2: () => 'test',
 			},
 		});
 	});
@@ -754,11 +669,9 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: new Action({
-					run({ event }) {
-						expect(event?.value).toBe('my-value');
-					},
-				}),
+				action({ event }) {
+					expect(event?.value).toBe('my-value');
+				},
 			},
 		});
 

@@ -6,19 +6,19 @@ import * as groups from '../../../../.svelte-kit/content-thing/generated/collect
 // @ts-ignore
 import dbPath from './sqlite.db';
 
-const normalizedDBPath = dbPath.replace(/^[a-zA-Z]+:\/\//, '');
+const normalizedDBPath = dbPath.replace(/^[a-zA-Z]+:\/\/\/?/, '');
 console.warn({ dbPath, normalizedDBPath });
 console.error({ url: import.meta.url });
 const sqlite = new Database(normalizedDBPath);
 console.warn({ sqlite });
-const statement = sqlite.prepare('SELECT * from docs');
-console.log({ statement });
-const result = statement.run();
-console.log({ result });
 const collections = drizzle(sqlite, { schema: { ...docs, ...groups } });
 
 export async function load({ params }) {
 	const { slug } = params;
+	const statement = sqlite.prepare('SELECT * from docs');
+	console.log({ statement });
+	const result = statement.run();
+	console.log({ result });
 	const data = await collections.query.docs.findFirst({
 		where: (docs, { eq }) => eq(docs._id, slug),
 	});

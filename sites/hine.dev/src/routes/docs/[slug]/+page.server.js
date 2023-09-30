@@ -1,22 +1,30 @@
 import { Database } from 'content-thing/better-sqlite3';
+import { drizzle } from 'content-thing/drizzle-orm/better-sqlite3';
+import * as docs from '../../../../.svelte-kit/content-thing/generated/collections/docs/schema.config.js';
+import * as groups from '../../../../.svelte-kit/content-thing/generated/collections/groups/schema.config.js';
 // import { error } from '@sveltejs/kit';
 // @ts-ignore
 import dbPath from './sqlite.db';
 
 const normalizedDBPath = dbPath.replace(/^[a-zA-Z]+:\/\//, '');
 console.warn({ dbPath, normalizedDBPath });
+console.error({ url: import.meta.url });
 const sqlite = new Database(normalizedDBPath);
 console.warn({ sqlite });
+const collections = drizzle(sqlite, { schema: { docs, groups } });
 
-export async function load() {
+export async function load({ params }) {
+	const { slug } = params;
+	// @ts-ignore
+	const data = await collections.query.docs.findFirst({
+		// @ts-ignore
+		where: (docs, { eq }) => eq(docs._id, slug),
+	});
+	console.log({ data });
 	return {
 		groups: /** @type {any} */ ([]),
 		content: /** @type {any} */ ({ children: [] }),
 	};
-	// const { slug } = params;
-	// const data = await collections.query.docs.findFirst({
-	// 	where: (docs, { eq }) => eq(docs._id, slug),
-	// });
 	// if (!data) {
 	// 	throw error(404, 'Page not found.');
 	// }

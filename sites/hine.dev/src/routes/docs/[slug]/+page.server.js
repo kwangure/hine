@@ -4,7 +4,7 @@ import { error } from '@sveltejs/kit';
 export async function load({ params }) {
 	const { slug } = params;
 	const data = await collections.query.docs.findFirst({
-		where: (docs, { eq }) => eq(docs.id, slug),
+		where: (docs, { eq }) => eq(docs._id, slug),
 	});
 	if (!data) {
 		throw error(404, 'Page not found.');
@@ -14,15 +14,15 @@ export async function load({ params }) {
 		with: {
 			docs: {
 				columns: {
-					id: true,
-					data_title: true,
-					content: true,
-					headingTree: true,
+					title: true,
+					_id: true,
+					_content: true,
+					_headingTree: true,
 				},
-				orderBy: (docs, { asc }) => [asc(docs.data_order)],
+				orderBy: (docs, { asc }) => [asc(docs.order)],
 			},
 		},
 	});
 
-	return { groups, content: data.content };
+	return { groups, content: data._content };
 }

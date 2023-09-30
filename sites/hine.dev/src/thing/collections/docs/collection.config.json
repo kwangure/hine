@@ -1,5 +1,5 @@
 {
-	"$schema": "../../../../../../packages/content-thing/config/schema.json",
+	"$schema": "../../../../node_modules/content-thing/config/schema.json",
 	"type": "markdown",
 	"schema": {
 		"data": {
@@ -19,7 +19,7 @@
 		"group": {
 			"type": "one",
 			"collection": "groups",
-			"reference": "id",
+			"reference": "_id",
 			"field": "group"
 		}
 	}

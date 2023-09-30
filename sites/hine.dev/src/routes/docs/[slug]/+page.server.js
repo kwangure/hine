@@ -11,13 +11,11 @@ console.warn({ dbPath, normalizedDBPath });
 console.error({ url: import.meta.url });
 const sqlite = new Database(normalizedDBPath);
 console.warn({ sqlite });
-const collections = drizzle(sqlite, { schema: { docs, groups } });
+const collections = drizzle(sqlite, { schema: { ...docs, ...groups } });
 
 export async function load({ params }) {
 	const { slug } = params;
-	// @ts-ignore
 	const data = await collections.query.docs.findFirst({
-		// @ts-ignore
 		where: (docs, { eq }) => eq(docs._id, slug),
 	});
 	console.log({ data });

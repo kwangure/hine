@@ -4,9 +4,9 @@ import { Database } from 'content-thing/better-sqlite3';
 import dbPath from './sqlite.db';
 
 const normalizedDBPath = dbPath.replace(/^[a-zA-Z]+:\/\//, '');
-console.log({ dbPath, normalizedDBPath });
+console.warn({ dbPath, normalizedDBPath });
 const sqlite = new Database(normalizedDBPath);
-console.log({ sqlite });
+console.warn({ sqlite });
 
 export async function load() {
 	return {

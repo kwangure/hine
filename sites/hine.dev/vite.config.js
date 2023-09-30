@@ -1,5 +1,5 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import { content } from 'content-thing';
+import { content } from 'content-thing2';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({

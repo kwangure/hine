@@ -1,5 +1,5 @@
 import adapter from '@sveltejs/adapter-auto';
-import { extendSvelteConfig } from 'content-thing';
+import { extendSvelteConfig } from 'content-thing2';
 import { vitePreprocess } from '@sveltejs/kit/vite';
 
 const config = extendSvelteConfig({

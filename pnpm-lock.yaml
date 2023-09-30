@@ -261,9 +261,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
-      content-thing:
-        specifier: ^0.0.1
-        version: 0.0.1(@sveltejs/kit@1.22.4)(drizzle-kit@0.19.13)
+      content-thing2:
+        specifier: ^0.0.2
+        version: 0.0.2(@sveltejs/kit@1.22.4)(drizzle-kit@0.19.13)
       drizzle-kit:
         specifier: ^0.19.13
         version: 0.19.13
@@ -632,37 +632,37 @@ packages:
     resolution: {integrity: sha512-0VjGDaLJs5qhggqMVMcxtgdQJRVL/JulGWuyh4pknroP1u5uMdjqxRTQzCaX/lQ1PptFd3Ya11usEzuno+4K2w==}
     dev: true
 
-  /@content-thing/remark-attributes@0.0.0:
-    resolution: {integrity: sha512-ck44xJPu0nSXcK4t8Axf6IZXyeHyUqqhu0Tq89fi+MISKJ+O4uWSThp6RKb4g7dWcJ9LXcN0Q6BN/iNHjmCeyw==}
+  /@content-thing/remark-attributes@0.0.1:
+    resolution: {integrity: sha512-oddNBCI4Rq1G+MlyU+B3KkOycN8SQEOAxYMlgWADgBrjwZ7tMuZsB8MDMWzQ/trdfXzHSwY0djkzDImSxYYE1g==}
     dependencies:
       md-attr-parser: 1.3.0
-      unist-util-visit: 4.0.0
+      unist-util-visit: 5.0.0
     dev: true
 
-  /@content-thing/remark-rich-attributes@0.0.0:
-    resolution: {integrity: sha512-cqvzLLGWT7STT7JOhFTy7c8aSWtBXM0ZiZTAbuXmXTkA4ROVFIRBQUbAdI3yNJ9gVZshX8b8vh0mKBnqitmY0Q==}
+  /@content-thing/remark-rich-attributes@0.0.1:
+    resolution: {integrity: sha512-OUvnXD3aA2pEv/QFckWPDORd2AJVTxpTX/VlJBnw0raWPFWnBMcub1ZVpYdJrAtGJk8ZFt8ZBizBtX7LXGHvvA==}
     dependencies:
-      unist-util-visit: 4.0.0
+      unist-util-visit: 5.0.0
     dev: true
 
-  /@content-thing/remark-toc@0.0.0:
-    resolution: {integrity: sha512-M41KzbAJTrvbRaQApados3P/Z3PF0YTqTp3oaOc4cS8crVR7vqJvuSQKMVpqqur28tZPIxvkJSrzXwx70ykULQ==}
+  /@content-thing/remark-toc@0.0.1:
+    resolution: {integrity: sha512-7si+7yIvGQ0kncf4jo6MU1w6rXh6F1kwMCJZfe+hKcGScVkFdh3LwcF3Bi5GCzaXvasdyZ/Q0AiQnVihuMNxQA==}
     dependencies:
-      unist-util-visit: 4.0.0
+      unist-util-visit: 5.0.0
     dev: true
 
-  /@content-thing/remark-variables@0.0.0:
-    resolution: {integrity: sha512-YakqrBbOphupikMGOnEqpK//shylV8/lMYQwSysslv22zW2B0zo5a7XJxEqQwqxtJVrvcD5NhmmhUs9/QU3a1A==}
+  /@content-thing/remark-variables@0.0.2:
+    resolution: {integrity: sha512-nah6L0jUmuIJK50eu5sk/QXJxE6Zyk3F4x8CbF03cvMAyN7OTVV5e2N76nlOfKnV2lHIWpORKTQtd7x7ZWZOww==}
     dependencies:
       dlv: 1.1.3
-      unist-util-visit: 4.0.0
+      unist-util-visit: 5.0.0
     dev: true
 
-  /@content-thing/remark-yaml-parse@0.0.0:
-    resolution: {integrity: sha512-v71AqAzfkuF+KqLj9mHChfEsJFMbV3yQ9xdxDRymrTYPTMIg176bvbNdfki5JUILCBzXV8mtBsCbEwVmxxJ7yA==}
+  /@content-thing/remark-yaml-parse@0.0.1:
+    resolution: {integrity: sha512-LL4FvmDqMRTN3ATZIuoNc3828QpNIGBjr8uaEU++J1lHWc5d6j9+4WrhLykzSQUcFEe1qYocAUds6fpxOs2zoQ==}
     dependencies:
       js-yaml: 4.1.0
-      unist-util-visit: 4.0.0
+      unist-util-visit: 5.0.0
     dev: true
 
   /@drizzle-team/studio@0.0.5:
@@ -1369,6 +1369,10 @@ packages:
     resolution: {integrity: sha512-d0XxK3YTObnWVp6rZuev3c49+j4Lo8g4L1ZRm9z5L0xpoZycUPshHgczK5gsUMaZOstjVYYi09p5gYvUtfChYw==}
     dev: true
 
+  /@types/unist@3.0.0:
+    resolution: {integrity: sha512-MFETx3tbTjE7Uk6vvnWINA/1iJ7LuMdO4fcq8UfF0pRbj01aGLduVvQcRyswuACJdpnHgg8E3rQLhaRdNEJS0w==}
+    dev: true
+
   /@vercel/nft@0.23.1:
     resolution: {integrity: sha512-NE0xSmGWVhgHF1OIoir71XAd0W0C1UE3nzFyhpFiMr3rVhetww7NvM1kc41trBsPG37Bh+dE5FYCTMzM/gBu0w==}
     engines: {node: '>=14'}
@@ -1926,25 +1930,25 @@ packages:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
     dev: true
 
-  /content-thing@0.0.1(@sveltejs/kit@1.22.4)(drizzle-kit@0.19.13):
-    resolution: {integrity: sha512-QRmrCIQv5YMNcYNni/jkHDVU2JYUFvOVk3oIYxeyrTXtHiRS/QvUnk56cqMLrwP6nCVMQ8jzzZtCrHGJyZHZSQ==}
+  /content-thing2@0.0.2(@sveltejs/kit@1.22.4)(drizzle-kit@0.19.13):
+    resolution: {integrity: sha512-6My0oLd6a6F3cr1m6/IFzsy+ICiTRpd7pDlYpnxuQopx3Ax/4lF1GWztjGLHZwAwgYgpayPCwoQ71i7a/ujzUw==}
     peerDependencies:
       '@sveltejs/kit': ^1.22.0
       drizzle-kit: ^0.19.13
     dependencies:
       '@content-thing/internal-utils': 0.0.0
-      '@content-thing/remark-attributes': 0.0.0
-      '@content-thing/remark-rich-attributes': 0.0.0
-      '@content-thing/remark-toc': 0.0.0
-      '@content-thing/remark-variables': 0.0.0
-      '@content-thing/remark-yaml-parse': 0.0.0
+      '@content-thing/remark-attributes': 0.0.1
+      '@content-thing/remark-rich-attributes': 0.0.1
+      '@content-thing/remark-toc': 0.0.1
+      '@content-thing/remark-variables': 0.0.2
+      '@content-thing/remark-yaml-parse': 0.0.1
       '@sveltejs/kit': 1.22.4(svelte@4.0.5)(vite@4.4.9)
       '@types/mdast': 3.0.12
       better-sqlite3: 8.5.2
       drizzle-kit: 0.19.13
       drizzle-orm: 0.28.5(better-sqlite3@8.5.2)
       drizzle-zod: 0.5.1(drizzle-orm@0.28.5)(zod@3.22.2)
-      glob: 10.3.3
+      glob: 10.3.10
       js-yaml: 4.1.0
       remark-frontmatter: 4.0.1
       remark-parse: 10.0.2
@@ -2877,15 +2881,15 @@ packages:
     dependencies:
       is-glob: 4.0.3
 
-  /glob@10.3.3:
-    resolution: {integrity: sha512-92vPiMb/iqpmEgsOoIDvTjc50wf9CCCvMzsi6W0JLPeUKE8TWP1a73PgqSrqy7iAZxaSD1YdzU7QZR5LF51MJw==}
+  /glob@10.3.10:
+    resolution: {integrity: sha512-fa46+tv1Ak0UPK1TOy/pZrIybNNt4HCv7SDzwyfiOZkvZLEbjsZkJBPtDHVshZjbecAoAGSC20MjLDG/qr679g==}
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
     dependencies:
       foreground-child: 3.1.1
-      jackspeak: 2.3.1
+      jackspeak: 2.3.6
       minimatch: 9.0.3
-      minipass: 7.0.3
+      minipass: 5.0.0
       path-scurry: 1.10.1
     dev: true
 
@@ -3293,8 +3297,8 @@ packages:
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  /jackspeak@2.3.1:
-    resolution: {integrity: sha512-4iSY3Bh1Htv+kLhiiZunUhQ+OYXIn0ze3ulq8JeWrFKmhPAJSySV2+kdtRh2pGcCeF0s6oR8Oc+pYZynJj4t8A==}
+  /jackspeak@2.3.6:
+    resolution: {integrity: sha512-N3yCS/NegsOBokc8GAdM8UcmfsKiSS8cipheD/nivzr700H+nsMOxJjQnvwOcRYVuFkdH0wGUvW2WbXGmrZGbQ==}
     engines: {node: '>=14'}
     dependencies:
       '@isaacs/cliui': 8.0.2
@@ -3860,11 +3864,6 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /minipass@7.0.3:
-    resolution: {integrity: sha512-LhbbwCfz3vsb12j/WkWQPZfKTsgqIe1Nf/ti1pKjYESGLHIVjWU96G9/ljLH4F9mWNVhlQOm0VySdAWzf05dpg==}
-    engines: {node: '>=16 || 14 >=14.17'}
-    dev: true
-
   /minizlib@2.1.2:
     resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
     engines: {node: '>= 8'}
@@ -4183,7 +4182,7 @@ packages:
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
       lru-cache: 10.0.1
-      minipass: 7.0.3
+      minipass: 5.0.0
     dev: true
 
   /path-type@4.0.0:
@@ -5465,6 +5464,12 @@ packages:
       '@types/unist': 2.0.8
     dev: true
 
+  /unist-util-is@6.0.0:
+    resolution: {integrity: sha512-2qCTHimwdxLfz+YzdGfkqNlH0tLi9xjTnHddPmJwtIG9MGsdbutfTc4P+haPD7l7Cjxf/WZj+we5qfVPvvxfYw==}
+    dependencies:
+      '@types/unist': 3.0.0
+    dev: true
+
   /unist-util-stringify-position@3.0.3:
     resolution: {integrity: sha512-k5GzIBZ/QatR8N5X2y+drfpWG8IDBzdnVj6OInRNWm1oXrzydiaAT2OQiA8DPRRZyAKb9b6I2a6PxYklZD0gKg==}
     dependencies:
@@ -5478,12 +5483,27 @@ packages:
       unist-util-is: 5.2.1
     dev: true
 
+  /unist-util-visit-parents@6.0.1:
+    resolution: {integrity: sha512-L/PqWzfTP9lzzEa6CKs0k2nARxTdZduw3zyh8d2NVBnsyvHjSX4TWse388YrrQKbvI8w20fGjGlhgT96WwKykw==}
+    dependencies:
+      '@types/unist': 3.0.0
+      unist-util-is: 6.0.0
+    dev: true
+
   /unist-util-visit@4.0.0:
     resolution: {integrity: sha512-3HWTvrtU10/E7qgPznBfiOyG0TXj9W8c1GSfaI8L9GkaG1pLePiQPZ7E35a0R3ToQ/zcy4Im6aZ9WBgOTnv1MQ==}
     dependencies:
       '@types/unist': 2.0.8
       unist-util-is: 5.2.1
       unist-util-visit-parents: 5.1.3
+    dev: true
+
+  /unist-util-visit@5.0.0:
+    resolution: {integrity: sha512-MR04uvD+07cwl/yhVuVWAtw+3GOR/knlL55Nd/wAdblk27GCVt3lqpTivy/tkJcZoNPzTwS1Y+KMojlLDhoTzg==}
+    dependencies:
+      '@types/unist': 3.0.0
+      unist-util-is: 6.0.0
+      unist-util-visit-parents: 6.0.1
     dev: true
 
   /universalify@0.1.2:

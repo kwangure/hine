@@ -11,6 +11,10 @@ console.warn({ dbPath, normalizedDBPath });
 console.error({ url: import.meta.url });
 const sqlite = new Database(normalizedDBPath);
 console.warn({ sqlite });
+const statement = sqlite.prepare('SELECT * from docs');
+console.log({ statement });
+const result = statement.run();
+console.log({ result });
 const collections = drizzle(sqlite, { schema: { ...docs, ...groups } });
 
 export async function load({ params }) {

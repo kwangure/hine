@@ -10,8 +10,8 @@ console.warn({ sqlite });
 
 export async function load() {
 	return {
-		groups: /** @type {any[]} */ ([]),
-		content: /** @type {any} */ ({}),
+		groups: /** @type {any} */ ([]),
+		content: /** @type {any} */ ({ children: [] }),
 	};
 	// const { slug } = params;
 	// const data = await collections.query.docs.findFirst({

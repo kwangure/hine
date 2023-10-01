@@ -43,14 +43,14 @@
 	</Shell.Navbar>
 	<Sidebar.Root>
 		{#each data.groups as group}
-			<Sidebar.Section title={group.data_title}>
+			<Sidebar.Section title={group.title}>
 				{#each group.docs as entry}
 					<Sidebar.Item>
-						<Sidebar.Link href="/docs/{entry.id}">
-							{entry.data_title}
+						<Sidebar.Link href="/docs/{entry._id}">
+							{entry.title}
 						</Sidebar.Link>
-						{#if $page.url.pathname === `/docs/${entry.id}`}
-							<Sidebar.Outline toc={entry.headingTree} />
+						{#if $page.url.pathname === `/docs/${entry._id}`}
+							<Sidebar.Outline toc={entry._headingTree} />
 						{/if}
 					</Sidebar.Item>
 				{/each}

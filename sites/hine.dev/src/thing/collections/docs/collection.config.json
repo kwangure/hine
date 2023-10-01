@@ -19,7 +19,7 @@
 		"group": {
 			"type": "one",
 			"collection": "groups",
-			"reference": "id",
+			"reference": "_id",
 			"field": "group"
 		}
 	}

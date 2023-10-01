@@ -262,8 +262,8 @@ importers:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
       content-thing2:
-        specifier: ^0.0.2
-        version: 0.0.2(@sveltejs/kit@1.22.4)(drizzle-kit@0.19.13)
+        specifier: ^0.0.3
+        version: 0.0.3(@sveltejs/kit@1.22.4)(drizzle-kit@0.19.13)
       drizzle-kit:
         specifier: ^0.19.13
         version: 0.19.13
@@ -1915,8 +1915,8 @@ packages:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
     dev: true
 
-  /content-thing2@0.0.2(@sveltejs/kit@1.22.4)(drizzle-kit@0.19.13):
-    resolution: {integrity: sha512-6My0oLd6a6F3cr1m6/IFzsy+ICiTRpd7pDlYpnxuQopx3Ax/4lF1GWztjGLHZwAwgYgpayPCwoQ71i7a/ujzUw==}
+  /content-thing2@0.0.3(@sveltejs/kit@1.22.4)(drizzle-kit@0.19.13):
+    resolution: {integrity: sha512-ItHf140yC6NsNTiyxm85QSptlWqfiAZmxnxs7fZW7YN0kstx2VSnbTMLd3Oi9Nwgq7ZKlZs9FtVxs1YVAhuUlQ==}
     peerDependencies:
       '@sveltejs/kit': ^1.22.0
       drizzle-kit: ^0.19.13

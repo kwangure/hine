@@ -6,7 +6,7 @@ import { BaseState } from './base.js';
 
 /**
  * @template {import('./types.js').StateConfig} TStateConfig
- * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
+ * @template {Record<string, any>} TContextAncestor
  * @extends {BaseState<TStateConfig, TContextAncestor>}
  */
 export class CompoundState extends BaseState {
@@ -134,12 +134,12 @@ export class CompoundState extends BaseState {
 				this.__state.matches(path.slice(this.name.length + 1)))
 		);
 	}
-	/** @param {import('./types.js').CompoundResolveConfig<TStateConfig, TContextAncestor>} [config] */
+	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').CompoundResolveConfig<TStateConfig, TContextAncestor>>} [config] */
 	resolve(config) {
 		this.__resolve(config);
 		this.__start();
 	}
-	/** @param {import('./types.js').CompoundResolveConfig<TStateConfig, TContextAncestor>} [config] */
+	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').CompoundResolveConfig<TStateConfig, TContextAncestor>>} [config] */
 	__resolve(config) {
 		super.__resolve(config);
 		if (!config?.children) return;

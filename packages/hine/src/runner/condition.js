@@ -2,7 +2,7 @@ import { BaseRunner } from './base.js';
 
 /**
  * @template {import('../state/types.js').StateConfig} TStateConfig
- * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
+ * @template {Record<string, any>} TContextAncestor
  * @extends {BaseRunner<TStateConfig, TContextAncestor>}
  */
 export class ConditionRunner extends BaseRunner {

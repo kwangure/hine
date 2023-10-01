@@ -1,6 +1,6 @@
 /**
  * @template {import('../state/types.js').StateConfig} TStateConfig
- * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
+ * @template {Record<string, any>} TContextAncestor
  */
 export class BaseRunner {
 	/** @type {import('../state/base.js').BaseState<TStateConfig, TContextAncestor>} */

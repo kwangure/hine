@@ -6,7 +6,7 @@ import { TransitionHandler } from '../handler/transition.js';
 
 /**
  * @template {import('./types.js').StateConfig} TStateConfig
- * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
+ * @template {Record<string, any>} TContextAncestor
  */
 export class BaseState {
 	/**
@@ -82,8 +82,8 @@ export class BaseState {
 	 */
 	constructor(stateConfig) {
 		this.#context =
-			/** @type {Context<NonNullable<TStateConfig['context']>, TContextAncestor>} */ (
-				new Context(this, stateConfig.context)
+			/** @type {Context<import('../context/types.js').ContextType<TStateConfig, Record<string, any>>, TContextAncestor>} */ (
+				new Context(this)
 			);
 		this.#alwaysConfig = stateConfig.always || [];
 		this.__name = stateConfig.name || '';

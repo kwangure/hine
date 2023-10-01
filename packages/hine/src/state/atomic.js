@@ -2,13 +2,13 @@ import { BaseState } from './base.js';
 
 /**
  * @template {import('./types.js').StateConfig} TStateConfig
- * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
+ * @template {Record<string, any>} TContextAncestor
  * @extends {BaseState<TStateConfig, TContextAncestor>}
  */
 export class AtomicState extends BaseState {
 	#type = /** @type {const} */ ('atomic');
 	/**
-	 * @param {import('./types.js').AtomicResolveConfig<TStateConfig, TContextAncestor>} [config]
+	 * @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').AtomicResolveConfig<TStateConfig, TContextAncestor>>} [config]
 	 */
 	resolve(config) {
 		this.__resolve(config);

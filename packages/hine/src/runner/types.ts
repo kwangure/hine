@@ -1,7 +1,6 @@
 import type { ActionRunner } from './action.js';
 import type { ConditionRunner } from './condition.js';
 import type { StateConfig } from '../state/types.js';
-import { ContextTransformer } from '../context/types.js';
 
 export interface BaseRunnerConfig {
 	name?: string;
@@ -11,7 +10,7 @@ export interface BaseRunnerConfig {
 
 export interface ActionRunnerConfig<
 	TStateConfig extends StateConfig,
-	TContextAncestor extends Record<string, ContextTransformer>,
+	TContextAncestor extends Record<string, any>,
 > extends BaseRunnerConfig {
 	run: (
 		this: undefined,
@@ -21,7 +20,7 @@ export interface ActionRunnerConfig<
 
 export interface ConditionRunnerConfig<
 	TStateConfig extends StateConfig,
-	TContextAncestor extends Record<string, ContextTransformer>,
+	TContextAncestor extends Record<string, any>,
 > extends BaseRunnerConfig {
 	run: (
 		this: undefined,

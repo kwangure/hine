@@ -62,7 +62,6 @@ export class TransitionHandler extends BaseHandler {
 		if (!to) throw Error('Missing handler transitionTo');
 
 		from.__handler = this;
-		this.__notifyBefore();
 		const shouldExecute = !this.condition || this.condition.run();
 		if (shouldExecute) {
 			from.__handlerQueue.length = 0;
@@ -86,7 +85,6 @@ export class TransitionHandler extends BaseHandler {
 			to.__queueAlwaysHandlers();
 			to.__executeHandlersRootFirst();
 		}
-		this.__notifyAfter();
 		from.__handler = null;
 		return shouldExecute;
 	}
@@ -98,7 +96,6 @@ export class TransitionHandler extends BaseHandler {
 		if (!to) throw Error('Missing handler transitionTo');
 
 		from.__handler = this;
-		this.__notifyBefore();
 		let shouldExecute = false;
 		if (this.condition) {
 			yield this.condition;
@@ -128,7 +125,6 @@ export class TransitionHandler extends BaseHandler {
 			to.__queueAlwaysHandlers();
 			to.__executeHandlersRootFirst();
 		}
-		this.__notifyAfter();
 		from.__handler = null;
 		return shouldExecute;
 	}

@@ -7,19 +7,16 @@ export class EffectHandler extends BaseHandler {
 		if (!this.__ownerState) throw Error('Missing handler ownerState');
 
 		this.__ownerState.__handler = this;
-		this.__notifyBefore();
 		const shouldExecute = !this.condition || this.condition.run();
 		if (shouldExecute) {
 			for (const action of this.__actions) {
 				action.run();
 			}
 		}
-		this.__notifyAfter();
 		this.__ownerState.__handler = null;
 		return shouldExecute;
 	}
 	*step() {
-		this.__notifyBefore();
 		let shouldExecute = false;
 		if (this.condition) {
 			yield this.condition;
@@ -31,7 +28,6 @@ export class EffectHandler extends BaseHandler {
 				action.run();
 			}
 		}
-		this.__notifyAfter();
 	}
 	/**
 	 * @returns {import('./types.js').EffectHandlerJSON}

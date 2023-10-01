@@ -1,6 +1,4 @@
 export class BaseHandler {
-	/** @type {string[]} */
-	__actionConfig;
 	/** @type {import('../runner/action').ActionRunner<any, any>[]} */
 	__actions = [];
 	/** @type {import('../runner/condition').ConditionRunner<any, any> | null} */
@@ -10,30 +8,14 @@ export class BaseHandler {
 	__name = '';
 	/** @type {import('../state/base.js').BaseState<any, any> | null} */
 	__ownerState = null;
-	/** @type {boolean | undefined} */
-	__shouldNotifyBefore = undefined;
-	/** @type {boolean | undefined} */
-	__shouldNotifyAfter = undefined;
+	/** @type {string[]} */
+	__runConfig;
 	/**
 	 * @param {import('./types').BaseHandlerConfig} options
 	 */
 	constructor(options) {
-		if (typeof options.notifyAfter === 'boolean') {
-			this.__shouldNotifyAfter = options.notifyAfter;
-		}
-		if (typeof options.notifyBefore === 'boolean') {
-			this.__shouldNotifyBefore = options.notifyBefore;
-		}
-		this.__actionConfig = options.run || [];
 		this.__ifConfig = options.if || null;
-	}
-	__notifyAfter() {
-		if (!this.__shouldNotifyAfter) return;
-		this.__ownerState?.__callSubscribers();
-	}
-	__notifyBefore() {
-		if (!this.__shouldNotifyBefore) return;
-		this.__ownerState?.__callSubscribers();
+		this.__runConfig = options.run || [];
 	}
 	/**
 	 * @param {{
@@ -48,7 +30,7 @@ export class BaseHandler {
 		this.__resolveCondition();
 	}
 	__resolveActions() {
-		for (const name of this.__actionConfig) {
+		for (const name of this.__runConfig) {
 			const action = this.__ownerState?.__allActions[name];
 			if (!action) {
 				let message = '';

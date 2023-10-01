@@ -4,8 +4,6 @@ import type { StateConfig } from '../state/types.js';
 
 export interface BaseRunnerConfig {
 	name?: string;
-	notifyAfter?: boolean;
-	notifyBefore?: boolean;
 }
 
 export interface ActionRunnerConfig<

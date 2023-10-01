@@ -19,14 +19,6 @@ export class ConditionRunner extends BaseRunner {
 		super(options);
 		this.#run = options.run;
 	}
-	#notifyAfter() {
-		if (!this.__notifyAfter) return;
-		this.__ownerState?.__callSubscribers();
-	}
-	#notifyBefore() {
-		if (!this.__notifyBefore) return;
-		this.__ownerState?.__callSubscribers();
-	}
 	get event() {
 		if (!this.__ownerState) {
 			const path = this.path.join('.');
@@ -49,9 +41,7 @@ export class ConditionRunner extends BaseRunner {
 	run() {
 		if (!this.__ownerState) return false;
 		this.__ownerState.__condition = this;
-		this.#notifyBefore();
 		const result = this.#run.call(undefined, this);
-		this.#notifyAfter();
 		this.__ownerState.__condition = null;
 		return result;
 	}

@@ -101,24 +101,6 @@ export class BaseState {
 		}
 	}
 	/**
-	 * @returns {{
-	 *     notifyBefore: boolean;
-	 *     notifyAfter: boolean;
-	 * }}
-	 */
-	get __actionConfig() {
-		return {
-			notifyAfter:
-				this.#actionConfig.notifyAfter ??
-				this.__parent?.__actionConfig.notifyAfter ??
-				false,
-			notifyBefore:
-				this.#actionConfig.notifyBefore ??
-				this.__parent?.__actionConfig.notifyBefore ??
-				false,
-		};
-	}
-	/**
 	 * @returns {Record<string, import('../runner/action.js').ActionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	get __actions() {
@@ -128,12 +110,6 @@ export class BaseState {
 				const action = this.#actions[name];
 				if (!action.name) {
 					action.__name = name;
-				}
-				if (typeof action.__notifyAfter !== 'boolean') {
-					action.__notifyAfter = this.__actionConfig.notifyAfter;
-				}
-				if (typeof action.__notifyBefore !== 'boolean') {
-					action.__notifyBefore = this.__actionConfig.notifyBefore;
 				}
 				actions[action.name] = action;
 			}
@@ -148,24 +124,6 @@ export class BaseState {
 		this.__parent?.__callSubscribers();
 	}
 	/**
-	 * @returns {{
-	 *     notifyBefore: boolean;
-	 *     notifyAfter: boolean;
-	 * }}
-	 */
-	get __conditionConfig() {
-		return {
-			notifyAfter:
-				this.#conditionConfig.notifyAfter ??
-				this.__parent?.__conditionConfig.notifyAfter ??
-				false,
-			notifyBefore:
-				this.#conditionConfig.notifyBefore ??
-				this.__parent?.__conditionConfig.notifyBefore ??
-				false,
-		};
-	}
-	/**
 	 * @returns {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	get __conditions() {
@@ -175,12 +133,6 @@ export class BaseState {
 				const condition = this.#conditions[name];
 				if (!condition.name) {
 					condition.__name = name;
-				}
-				if (typeof condition.__notifyAfter !== 'boolean') {
-					condition.__notifyAfter = this.__conditionConfig.notifyAfter;
-				}
-				if (typeof condition.__notifyBefore !== 'boolean') {
-					condition.__notifyBefore = this.__conditionConfig.notifyBefore;
 				}
 				conditions[condition.name] = condition;
 			}
@@ -246,13 +198,6 @@ export class BaseState {
 			if ('name' in config.actionConfig) {
 				this.#actionConfig['name'] = config.actionConfig['name'];
 			}
-			if ('notifyAfter' in config.actionConfig) {
-				this.#actionConfig['notifyAfter'] = config.actionConfig['notifyAfter'];
-			}
-			if ('notifyBefore' in config.actionConfig) {
-				this.#actionConfig['notifyBefore'] =
-					config.actionConfig['notifyBefore'];
-			}
 		}
 		if (config?.actions) {
 			for (const [name, action] of Object.entries(config.actions)) {
@@ -265,14 +210,6 @@ export class BaseState {
 		if (config?.conditionConfig) {
 			if ('name' in config.conditionConfig) {
 				this.#conditionConfig['name'] = config.conditionConfig['name'];
-			}
-			if ('notifyAfter' in config.conditionConfig) {
-				this.#conditionConfig['notifyAfter'] =
-					config.conditionConfig['notifyAfter'];
-			}
-			if ('notifyBefore' in config.conditionConfig) {
-				this.#conditionConfig['notifyBefore'] =
-					config.conditionConfig['notifyBefore'];
 			}
 		}
 		if (config?.conditions) {

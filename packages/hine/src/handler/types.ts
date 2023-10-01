@@ -1,8 +1,6 @@
 export interface BaseHandlerConfig {
 	run?: string[];
 	if?: string;
-	notifyAfter?: boolean;
-	notifyBefore?: boolean;
 }
 
 export interface EffectHandlerConfig extends BaseHandlerConfig {

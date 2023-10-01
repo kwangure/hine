@@ -10,7 +10,7 @@ description: >
 
 ## What is Hine?
 
-{{ frontmatter.description }}
+{% frontmatter.description %}
 
 ## What are state machines?
 

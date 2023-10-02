@@ -1,24 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { ActionRunner } from '../../src/runner/action.js';
 import { AtomicState } from '../../src/state/atomic.js';
-import { ConditionRunner } from '../../src/runner/condition.js';
-import { EffectHandler } from '../../src/handler/effect.js';
-import { zip } from '../../src/utils/iterator.js';
 
 describe('step', () => {
 	it('call subscribers at the end', () => {
 		const state = new AtomicState({
-			always: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
+			always: {
+				run: ['action'],
+			},
 			on: {
-				event: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
+				event: {
+					run: ['action'],
+				},
 			},
 		});
 		state.resolve({
@@ -42,58 +34,20 @@ describe('step', () => {
 		eventIterator.next();
 		expect(count).toBe(2);
 	});
-	it('respects iterator protocol', () => {
-		const state = new AtomicState({
-			always: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
-			on: {
-				event: [
-					new EffectHandler({
-						if: 'condition',
-						run: ['action'],
-					}),
-				],
-			},
-		});
-		state.resolve({
-			actions: { action() {} },
-			conditions: { condition: () => true },
-		});
-
-		const expected = [
-			EffectHandler,
-			ConditionRunner,
-			ActionRunner,
-			EffectHandler,
-			ActionRunner,
-		];
-		const expectedIterator = expected[Symbol.iterator]();
-		const eventIterator = state.step('event');
-		for (const [expected, actual] of zip(expectedIterator, eventIterator)) {
-			expect(actual).toBeInstanceOf(expected);
-		}
-	});
 	it('throws if state is not initialized', () => {
 		const state = new AtomicState({
-			always: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
+			always: {
+				run: ['action'],
+			},
 		});
 		const iterator = state.step('event');
 		expect(() => iterator.next()).toThrow(/resolve\(\)/);
 	});
 	it('throws if step is already in progress', () => {
 		const state = new AtomicState({
-			always: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
+			always: {
+				run: ['action'],
+			},
 		});
 		state.resolve({
 			actions: {

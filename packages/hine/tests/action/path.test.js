@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
 import { ActionRunner } from '../../src/runner/action.js';
-import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('path', () => {
 	it('returns path with name', () => {
@@ -24,7 +23,7 @@ describe('path', () => {
 	it('includes ownerState path', () => {
 		const state = new AtomicState({
 			name: 'state',
-			always: [new EffectHandler({ run: ['action'] })],
+			always: { run: ['action'] },
 		});
 		state.resolve({
 			actions: {

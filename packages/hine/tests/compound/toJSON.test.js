@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('toJSON', () => {
 	it('includes name', () => {
@@ -51,11 +50,9 @@ describe('toJSON', () => {
 	});
 	it('serializes always handlers', () => {
 		const state = new CompoundState({
-			always: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
+			always: {
+				run: ['action'],
+			},
 			children: {
 				s1: new AtomicState({}),
 			},
@@ -72,7 +69,7 @@ describe('toJSON', () => {
 		expect(json.always).toEqual([
 			{
 				run: ['action'],
-				condition: undefined,
+				if: undefined,
 				name: '0',
 				transitionTo: undefined,
 				type: 'effect',
@@ -82,11 +79,9 @@ describe('toJSON', () => {
 	});
 	it('serializes entry handlers', () => {
 		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
+			entry: {
+				run: ['action'],
+			},
 			children: {
 				s1: new AtomicState({}),
 			},
@@ -103,7 +98,7 @@ describe('toJSON', () => {
 		expect(json.entry).toEqual([
 			{
 				run: ['action'],
-				condition: undefined,
+				if: undefined,
 				name: '0',
 				transitionTo: undefined,
 				type: 'effect',
@@ -113,11 +108,9 @@ describe('toJSON', () => {
 	});
 	it('serializes exit handlers', () => {
 		const state = new CompoundState({
-			exit: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
+			exit: {
+				run: ['action'],
+			},
 			children: {
 				s1: new AtomicState({}),
 			},
@@ -134,7 +127,7 @@ describe('toJSON', () => {
 		expect(json.exit).toEqual([
 			{
 				run: ['action'],
-				condition: undefined,
+				if: undefined,
 				name: '0',
 				transitionTo: undefined,
 				type: 'effect',
@@ -145,11 +138,9 @@ describe('toJSON', () => {
 	it('serializes on handlers', () => {
 		const state = new CompoundState({
 			on: {
-				event: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
+				event: {
+					run: ['action'],
+				},
 			},
 			children: {
 				s1: new AtomicState({}),
@@ -168,7 +159,7 @@ describe('toJSON', () => {
 			event: [
 				{
 					run: ['action'],
-					condition: undefined,
+					if: undefined,
 					name: '0',
 					transitionTo: undefined,
 					type: 'effect',

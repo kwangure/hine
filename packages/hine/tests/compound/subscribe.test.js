@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('subscribe', () => {
 	it('calls subscribers on start', () => {
@@ -26,11 +25,9 @@ describe('subscribe', () => {
 			children: {
 				s1: new CompoundState({
 					on: {
-						event: [
-							new EffectHandler({
-								run: ['noop'],
-							}),
-						],
+						event: {
+							run: ['noop'],
+						},
 					},
 					children: {
 						s11: new AtomicState({}),

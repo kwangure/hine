@@ -3,11 +3,13 @@ import type {
 	BaseRunnerConfig,
 	ConditionRunnerConfig,
 } from '../runner/types.js';
+import type {
+	EffectHandlerConfig,
+	HandlerJSON,
+	TransitionHandlerConfig,
+} from '../handler/types.js';
 import type { AtomicState } from './atomic.js';
 import type { CompoundState } from './compound.js';
-import type { EffectHandler } from '../handler/effect.js';
-import type { HandlerJSON } from '../handler/types.js';
-import type { TransitionHandler } from '../handler/transition.js';
 import { BaseState } from './base.js';
 import { ContextType } from '../context/types.js';
 
@@ -18,11 +20,21 @@ export interface BaseStateTypes {
 }
 
 export interface BaseStateConfig {
-	always?: (EffectHandler | TransitionHandler)[];
-	entry?: EffectHandler[];
-	exit?: EffectHandler[];
+	always?:
+		| string
+		| EffectHandlerConfig
+		| TransitionHandlerConfig
+		| (string | EffectHandlerConfig | TransitionHandlerConfig)[];
+	entry?: string | EffectHandlerConfig | (string | EffectHandlerConfig)[];
+	exit?: string | EffectHandlerConfig | (string | EffectHandlerConfig)[];
 	name?: string;
-	on?: Record<string, (EffectHandler | TransitionHandler)[]>;
+	on?: Record<
+		string,
+		| string
+		| EffectHandlerConfig
+		| TransitionHandlerConfig
+		| (string | EffectHandlerConfig | TransitionHandlerConfig)[]
+	>;
 	types?: BaseStateTypes;
 }
 

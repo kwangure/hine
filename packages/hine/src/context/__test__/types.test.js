@@ -1,7 +1,7 @@
 import { expect, expectTypeOf, test } from 'vitest';
-import { handler, state } from '../../helpers.js';
 import { AtomicState } from '../../state/atomic.js';
 import { CompoundState } from '../../state/compound.js';
+import { state } from '../../helpers.js';
 
 test('atomic state respects context types in actions and conditions', () => {
 	const stateMachine = state({
@@ -9,7 +9,7 @@ test('atomic state respects context types in actions and conditions', () => {
 		types: {
 			context: /** @type {{ key0: string; willChangeType: string; }} */ ({}),
 		},
-		entry: [handler({ if: 'condition0', run: ['action0'] })],
+		entry: { if: 'condition0', run: ['action0'] },
 	});
 
 	expectTypeOf(stateMachine).toMatchTypeOf(
@@ -70,14 +70,14 @@ test('compound state respects context types in actions and conditions', () => {
 		types: {
 			context: /** @type {{ key0: string; willChangeType: string; }} */ ({}),
 		},
-		entry: [handler({ if: 'condition0', run: ['action0'] })],
+		entry: { if: 'condition0', run: ['action0'] },
 		children: {
 			child1: state({
 				types: {
 					context:
 						/** @type {{ key1: number; willChangeType: boolean; }} */ ({}),
 				},
-				entry: [handler({ if: 'condition1', run: ['action1'] })],
+				entry: { if: 'condition1', run: ['action1'] },
 			}),
 		},
 	});
@@ -186,7 +186,6 @@ test('compound state respects context types in actions and conditions', () => {
 test('atomic state allows missing context types', () => {
 	const stateMachine = state({
 		name: 'child0',
-		entry: [handler({ if: 'condition0', run: ['action0'] })],
 	});
 
 	expectTypeOf(stateMachine).toMatchTypeOf(
@@ -223,11 +222,8 @@ test('atomic state allows missing context types', () => {
 test('compound allows missing context types', () => {
 	const stateMachine = state({
 		name: 'child0',
-		entry: [handler({ if: 'condition0', run: ['action0'] })],
 		children: {
-			child1: state({
-				entry: [handler({ if: 'condition1', run: ['action1'] })],
-			}),
+			child1: state(),
 		},
 	});
 

@@ -1,18 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { EffectHandler } from '../../src/handler/effect.js';
-import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('conditions', () => {
 	it('exposes conditions inside conditions', () => {
 		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					if: 'cond1',
-					run: ['do'],
-				}),
-			],
+			entry: {
+				if: 'cond1',
+				run: ['do'],
+			},
 			children: {
 				s1: new AtomicState({}),
 			},
@@ -34,12 +30,10 @@ describe('conditions', () => {
 	it('resolves condition using most specific configured name', () => {
 		const state1 = new CompoundState({
 			on: {
-				event: [
-					new EffectHandler({
-						if: 'condition',
-						run: ['action'],
-					}),
-				],
+				event: {
+					if: 'condition',
+					run: ['action'],
+				},
 			},
 			children: {
 				s1: new AtomicState({}),
@@ -63,12 +57,10 @@ describe('conditions', () => {
 		).toThrow(/unknown condition/);
 		const state2 = new CompoundState({
 			on: {
-				event: [
-					new EffectHandler({
-						if: 'other-condition',
-						run: ['action'],
-					}),
-				],
+				event: {
+					if: 'other-condition',
+					run: ['action'],
+				},
 			},
 			children: {
 				s1: new AtomicState({}),
@@ -95,12 +87,10 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					run: ['action'],
-					if: 'isFalsy',
-				}),
-			],
+			entry: {
+				run: ['action'],
+				if: 'isFalsy',
+			},
 			children: {
 				s1: new AtomicState({}),
 			},
@@ -123,12 +113,10 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					run: ['action'],
-					if: 'run',
-				}),
-			],
+			entry: {
+				run: ['action'],
+				if: 'run',
+			},
 			children: {
 				s1: new AtomicState({}),
 			},
@@ -153,17 +141,13 @@ describe('conditions', () => {
 		const state = new CompoundState({
 			children: {
 				s1: new CompoundState({
-					always: [
-						new TransitionHandler({
-							goto: 's2',
-						}),
-					],
-					exit: [
-						new EffectHandler({
-							run: ['action'],
-							if: 'isFalsy',
-						}),
-					],
+					always: {
+						goto: 's2',
+					},
+					exit: {
+						run: ['action'],
+						if: 'isFalsy',
+					},
 					children: {
 						s11: new AtomicState({}),
 					},
@@ -195,17 +179,13 @@ describe('conditions', () => {
 		const state = new CompoundState({
 			children: {
 				s1: new CompoundState({
-					always: [
-						new TransitionHandler({
-							goto: 's2',
-						}),
-					],
-					exit: [
-						new EffectHandler({
-							run: ['action'],
-							if: 'isTruthy',
-						}),
-					],
+					always: {
+						goto: 's2',
+					},
+					exit: {
+						run: ['action'],
+						if: 'isTruthy',
+					},
 					children: {
 						s11: new AtomicState({}),
 					},
@@ -240,12 +220,10 @@ describe('conditions', () => {
 		const actions = [];
 		const state = new CompoundState({
 			on: {
-				myEvent: [
-					new EffectHandler({
-						run: ['action'],
-						if: 'isFalsy',
-					}),
-				],
+				myEvent: {
+					run: ['action'],
+					if: 'isFalsy',
+				},
 			},
 			children: {
 				s11: new AtomicState({}),
@@ -271,12 +249,10 @@ describe('conditions', () => {
 		const actions = [];
 		const state = new CompoundState({
 			on: {
-				myEvent: [
-					new EffectHandler({
-						run: ['action'],
-						if: 'isTruthy',
-					}),
-				],
+				myEvent: {
+					run: ['action'],
+					if: 'isTruthy',
+				},
 			},
 			children: {
 				s11: new AtomicState({}),
@@ -301,12 +277,10 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			always: [
-				new EffectHandler({
-					run: ['action'],
-					if: 'isFalsy',
-				}),
-			],
+			always: {
+				run: ['action'],
+				if: 'isFalsy',
+			},
 			children: {
 				s11: new AtomicState({}),
 			},
@@ -329,12 +303,10 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			always: [
-				new EffectHandler({
-					run: ['action'],
-					if: 'isTruthy',
-				}),
-			],
+			always: {
+				run: ['action'],
+				if: 'isTruthy',
+			},
 			children: {
 				s11: new AtomicState({}),
 			},

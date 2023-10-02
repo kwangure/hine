@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { ActionRunner } from '../../src/runner/action.js';
 import { ConditionRunner } from '../../src/runner/condition.js';
 import { TransitionHandler } from '../../src/handler/transition.js';
 
@@ -27,16 +26,10 @@ describe.skip('toJSON', () => {
 	});
 	it('serializes nested actions', () => {
 		const name = 'handler';
+		// @ts-expect-error
 		const state = new TransitionHandler({
-			// @ts-expect-error
 			name,
-			actions: [
-				// @ts-ignore
-				new ActionRunner({
-					name: 'action',
-					run() {},
-				}),
-			],
+			run: [],
 		});
 		const json = state.toJSON();
 		// @ts-expect-error
@@ -45,7 +38,6 @@ describe.skip('toJSON', () => {
 	it('serializes nested condition', () => {
 		const name = 'handler';
 		const state = new TransitionHandler({
-			// @ts-expect-error
 			name,
 			// @ts-ignore
 			condition: new ConditionRunner({

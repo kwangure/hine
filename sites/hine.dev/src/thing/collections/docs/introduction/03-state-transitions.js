@@ -1,24 +1,16 @@
-import { handler, state } from 'hine';
+import { state } from 'hine';
 
 const checkboxState = state({
 	name: 'checkbox',
 	children: {
 		unchecked: state({
 			on: {
-				toggle: [
-					handler({
-						goto: 'checked',
-					}),
-				],
+				toggle: { goto: 'checked' },
 			},
 		}),
 		checked: state({
 			on: {
-				toggle: [
-					handler({
-						goto: 'unchecked',
-					}),
-				],
+				toggle: { goto: 'unchecked' },
 			},
 		}),
 	},

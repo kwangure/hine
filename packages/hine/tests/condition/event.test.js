@@ -1,16 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
-import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('event', () => {
 	it('is an alias to ownerState.event', () => {
 		const state = new AtomicState({
-			entry: [
-				new EffectHandler({
-					if: 'condition',
-					run: ['action'],
-				}),
-			],
+			entry: {
+				if: 'condition',
+				run: ['action'],
+			},
 		});
 		state.resolve({
 			actions: {

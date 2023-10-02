@@ -7,20 +7,12 @@ export class TransitionHandler extends BaseHandler {
 	__gotoName;
 
 	/**
-	 * @param {import('./types.js').TransitionHandlerConfig} options
+	 * @param {import('./types.js').TransitionHandlerConfig & { name: string; ownerState: import('../state/base.js').BaseState<any, any>}} options
+	 *
 	 */
 	constructor(options) {
 		super(options);
 		this.__gotoName = options.goto;
-	}
-	/**
-	 * @param {{
-	 *   name: string;
-	 *   ownerState: import("../state/base.js").BaseState<any, any>;
-	 * }} options
-	 */
-	__resolve(options) {
-		super.__resolve(options);
 		this.__resolveTransition();
 	}
 	__resolveTransition() {

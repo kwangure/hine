@@ -1,3 +1,4 @@
+import { createHandler, normalizeHandlerConfig } from './util.js';
 import { ActionRunner } from '../runner/action.js';
 import { ConditionRunner } from '../runner/condition.js';
 import { Context } from '../context/context.js';
@@ -35,14 +36,12 @@ export class BaseState {
 	#context;
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#entry = [];
-	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
-	#entryConfig = [];
+	#entryConfig;
 	/** @type {StateEvent | null} */
 	#event = null;
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#exit = [];
-	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
-	#exitConfig = [];
+	#exitConfig;
 	#initialized = false;
 	#isStepping = false;
 	#onConfig;
@@ -85,20 +84,18 @@ export class BaseState {
 			/** @type {Context<import('../context/types.js').ContextType<TStateConfig, Record<string, any>>, TContextAncestor>} */ (
 				new Context(this)
 			);
-		this.#alwaysConfig = stateConfig.always || [];
 		this.__name = stateConfig.name || '';
-		this.#onConfig = stateConfig.on || {};
 
-		if (stateConfig.entry) {
-			for (const handler of stateConfig.entry) {
-				this.#entryConfig.push(handler);
-			}
-		}
-		if (stateConfig.exit) {
-			for (const handler of stateConfig.exit) {
-				this.#exitConfig.push(handler);
-			}
-		}
+		this.#alwaysConfig = stateConfig.always
+			? normalizeHandlerConfig(stateConfig.always)
+			: [];
+		this.#entryConfig = stateConfig.entry
+			? normalizeHandlerConfig(stateConfig.entry)
+			: [];
+		this.#exitConfig = stateConfig.exit
+			? normalizeHandlerConfig(stateConfig.exit)
+			: [];
+		this.#onConfig = stateConfig.on || {};
 	}
 	/**
 	 * @returns {Record<string, import('../runner/action.js').ActionRunner<TStateConfig, TContextAncestor>>}
@@ -226,25 +223,42 @@ export class BaseState {
 		this.__allConditions = this.__conditions;
 		this.#context.__ownerState = this;
 
-		for (const [index, handler] of this.#alwaysConfig.entries()) {
-			handler.__resolve({ name: String(index), ownerState: this });
+		for (const [index, handlerConfig] of this.#alwaysConfig.entries()) {
+			const handler = createHandler({
+				...handlerConfig,
+				name: String(index),
+				ownerState: this,
+			});
 			this.#always.push(handler);
 		}
 
 		for (const [event, handlers] of Object.entries(this.#onConfig)) {
-			this.__onHandler[event] = handlers.map((handler, i) => {
-				handler.__resolve({ name: String(i), ownerState: this });
-				return handler;
-			});
+			this.__onHandler[event] = normalizeHandlerConfig(handlers).map(
+				(handlerConfig, i) => {
+					return createHandler({
+						...handlerConfig,
+						name: String(i),
+						ownerState: this,
+					});
+				},
+			);
 		}
 
-		for (const [index, handler] of this.#entryConfig.entries()) {
-			handler.__resolve({ name: String(index), ownerState: this });
+		for (const [index, handlerConfig] of this.#entryConfig.entries()) {
+			const handler = createHandler({
+				...handlerConfig,
+				name: String(index),
+				ownerState: this,
+			});
 			this.#entry.push(handler);
 		}
 
-		for (const [index, handler] of this.#exitConfig.entries()) {
-			handler.__resolve({ name: String(index), ownerState: this });
+		for (const [index, handlerConfig] of this.#exitConfig.entries()) {
+			const handler = createHandler({
+				...handlerConfig,
+				name: String(index),
+				ownerState: this,
+			});
 			this.#exit.push(handler);
 		}
 	}

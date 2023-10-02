@@ -6,32 +6,22 @@ export class BaseHandler {
 	/** @type {string | null} */
 	__ifConfig;
 	__name = '';
-	/** @type {import('../state/base.js').BaseState<any, any> | null} */
-	__ownerState = null;
 	/** @type {string[]} */
 	__runConfig;
 	/**
-	 * @param {import('./types').BaseHandlerConfig} options
+	 * @param {import('./types').BaseHandlerConfig & { name: string; ownerState: import('../state/base.js').BaseState<any, any>}} options
 	 */
 	constructor(options) {
 		this.__ifConfig = options.if || null;
 		this.__runConfig = options.run || [];
-	}
-	/**
-	 * @param {{
-	 *   name: string;
-	 *   ownerState: import("../state/base.js").BaseState<any, any>;
-	 * }} options
-	 */
-	__resolve(options) {
-		this.__ownerState = options.ownerState;
 		this.__name = options.name;
+		this.__ownerState = options.ownerState;
 		this.__resolveActions();
 		this.__resolveCondition();
 	}
 	__resolveActions() {
 		for (const name of this.__runConfig) {
-			const action = this.__ownerState?.__allActions[name];
+			const action = this.__ownerState.__allActions[name];
 			if (!action) {
 				let message = '';
 
@@ -41,7 +31,7 @@ export class BaseHandler {
 				} else {
 					message += `State references unknown action '${name}'.`;
 				}
-				if (this.__ownerState?.__allActions) {
+				if (this.__ownerState.__allActions) {
 					const actions = Object.keys(this.__ownerState.__allActions);
 					if (actions.length) {
 						message += ` Expected one of: ${actions.join(', ')}`;
@@ -55,7 +45,7 @@ export class BaseHandler {
 	}
 	__resolveCondition() {
 		if (!this.__ifConfig) return;
-		const condition = this.__ownerState?.__allConditions[this.__ifConfig];
+		const condition = this.__ownerState.__allConditions[this.__ifConfig];
 		if (!condition) {
 			let message = '';
 			if (this.path.some((segment) => Boolean(segment))) {
@@ -64,7 +54,7 @@ export class BaseHandler {
 			} else {
 				message += `State references unknown condition '${this.__ifConfig}'. `;
 			}
-			if (this.__ownerState?.__allConditions) {
+			if (this.__ownerState.__allConditions) {
 				const conditions = Object.keys(this.__ownerState.__allConditions);
 				if (conditions.length) {
 					message += ` Expected one of: ${conditions.join(', ')}`;

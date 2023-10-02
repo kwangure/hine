@@ -1,16 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
-import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('isActiveEvent', () => {
 	it('returns boolean for active events', () => {
 		const state = new AtomicState({
 			on: {
-				EVENT: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
+				EVENT: {
+					run: ['action'],
+				},
 			},
 		});
 		state.resolve({
@@ -24,11 +21,9 @@ describe('isActiveEvent', () => {
 	it('throws when not initialized', () => {
 		const state = new AtomicState({
 			on: {
-				EVENT: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
+				EVENT: {
+					run: ['action'],
+				},
 			},
 		});
 		expect(() => state.isActiveEvent('EVENT')).toThrow(

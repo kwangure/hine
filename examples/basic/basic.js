@@ -1,4 +1,4 @@
-import { handler, state } from 'hine';
+import { state } from 'hine';
 
 const toggle = state({
 	// The first state is the default initial state
@@ -6,12 +6,12 @@ const toggle = state({
 		inactive: state({
 			on: {
 				// Transitions change the current state after an event
-				toggle: [handler({ goto: 'active' })],
+				toggle: { goto: 'active' },
 			},
 		}),
 		active: state({
 			on: {
-				toggle: [handler({ goto: 'inactive' })],
+				toggle: { goto: 'inactive' },
 			},
 		}),
 	},

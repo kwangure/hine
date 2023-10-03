@@ -1,20 +1,19 @@
-import { BaseState } from './base.js';
+import { ParentState } from './parent.js';
 
 /**
- * @typedef {import('../state/types.js').StateNode} StateNode
+ * @typedef {import('./types.js').StateNode} StateNode
  */
 
 /**
  * @template {import('./types.js').StateConfig} TStateConfig
  * @template {Record<string, any>} TContextAncestor
- * @extends {BaseState<TStateConfig, TContextAncestor>}
+ * @extends {ParentState<TStateConfig, TContextAncestor>}
  */
-export class CompoundState extends BaseState {
+export class CompoundState extends ParentState {
 	/** @type {StateNode | null} */
 	#initial = null;
 	#type = /** @type {const} */ ('compound');
-	/** @type {Map<string, StateNode>} */
-	__children = new Map();
+
 	/** @type {StateNode | null} */
 	__state = null;
 	/**
@@ -22,20 +21,6 @@ export class CompoundState extends BaseState {
 	 */
 	constructor(stateConfig) {
 		super(stateConfig);
-
-		const missingError = Error('Compound states require at least one child');
-		if (!stateConfig.children) throw missingError;
-
-		const children = Object.entries(stateConfig.children);
-		if (!children.length) throw missingError;
-
-		for (const [name, state] of children) {
-			if (!state.name) {
-				state.__name = name;
-			}
-			this.__children.set(state.name, state);
-			state.__parent = this;
-		}
 	}
 	__executeHandlersLeafFirst() {
 		this.__state?.__executeHandlersLeafFirst();
@@ -54,8 +39,7 @@ export class CompoundState extends BaseState {
 	}
 	/** @param {Set<string>} stateTreeEvents */
 	__nextEvents(stateTreeEvents) {
-		// No state, implies the machine is not intialized, return zero events
-		if (!this.__state) return;
+		if (!this.__initialized) return;
 
 		for (const [name, handlers] of Object.entries(this.__onHandler)) {
 			if (handlers.length) {
@@ -63,7 +47,7 @@ export class CompoundState extends BaseState {
 			}
 		}
 
-		this.__state.__nextEvents(stateTreeEvents);
+		this.__state?.__nextEvents(stateTreeEvents);
 	}
 	__queueAlwaysHandlers() {
 		this.__state?.__queueAlwaysHandlers();
@@ -96,6 +80,56 @@ export class CompoundState extends BaseState {
 			state.__resolveConfig();
 		}
 	}
+	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').ParentResolveConfig<TStateConfig, TContextAncestor>>} [config] */
+	__resolve(config) {
+		super.__resolve(config);
+		if (!config?.children) return;
+		for (const [name, resolveConfig] of Object.entries(config.children)) {
+			const state = this.__children.get(name);
+			if (!state) {
+				const parentPath = this.parent?.path || [];
+				const pathString = parentPath.length
+					? `${parentPath.join('.')}.${name}`
+					: name;
+				throw Error(
+					`State '${pathString}' defined on monitor does not exist in state tree. Expected one of: ${[
+						...this.__children.keys(),
+					].join(', ')}`,
+				);
+			}
+			state.__resolve(resolveConfig);
+		}
+	}
+	/**
+	 * @param {import("./types.js").StateNode} to
+	 * @param {import("../runner/action.js").ActionRunner<any, any>[]} actions
+	 */
+	__transition(to, actions) {
+		const from = this.__state;
+		// These should never happen. They're mostly to help TypeScript out
+		if (!from) throw Error('Missing handler ownerState');
+
+		from.__handlerQueue.length = 0;
+		// exit actions for the current state
+		from.__queueExitHandlers();
+		from.__executeHandlersLeafFirst();
+
+		// transition actions for the handler
+		for (const action of actions) {
+			action.run();
+		}
+		// This should never happen. They're mostly to help TypeScript out
+		if (!from.parent) throw Error('Missing state parent');
+		// change the active nested state for parent state
+		this.__state = to;
+		// set initial state from transitionTo to leaves
+		to.__initialize();
+
+		to.__queueEntryHandlers();
+		to.__executeHandlersRootFirst();
+		to.__queueAlwaysHandlers();
+		to.__executeHandlersRootFirst();
+	}
 	/**
 	 * @param {string} path
 	 * @returns {boolean}
@@ -126,50 +160,26 @@ export class CompoundState extends BaseState {
 	 * @return {boolean}
 	 */
 	matches(path) {
-		if (!this.__state) return false;
+		if (!this.__initialized) return false;
 
 		return (
 			super.matches(path) ||
 			(path.startsWith(`${this.name}.`) &&
-				this.__state.matches(path.slice(this.name.length + 1)))
+				Boolean(this.__state?.matches(path.slice(this.name.length + 1))))
 		);
 	}
-	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').CompoundResolveConfig<TStateConfig, TContextAncestor>>} [config] */
-	resolve(config) {
-		this.__resolve(config);
-		this.__start();
-	}
-	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').CompoundResolveConfig<TStateConfig, TContextAncestor>>} [config] */
-	__resolve(config) {
-		super.__resolve(config);
-		if (!config?.children) return;
-		for (const [name, resolveConfig] of Object.entries(config.children)) {
-			const state = this.__children.get(name);
-			if (!state) {
-				const parentPath = this.parent?.path || [];
-				const pathString = parentPath.length
-					? `${parentPath.join('.')}.${name}`
-					: name;
-				throw Error(
-					`State '${pathString}' defined on monitor does not exist in state tree. Expected one of: ${[
-						...this.__children.keys(),
-					].join(', ')}`,
-				);
-			}
-			state.__resolve(resolveConfig);
-		}
-	}
+
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
 		fn(this);
 		this.__subscribers.add(
-			/** @type {(arg: BaseState<TStateConfig, TContextAncestor>) => any} */ (
+			/** @type {(arg: import('./base.js').BaseState<TStateConfig, TContextAncestor>) => any} */ (
 				fn
 			),
 		);
 		return () => {
 			this.__subscribers.delete(
-				/** @type {(arg: BaseState<TStateConfig, TContextAncestor>) => any} */ (
+				/** @type {(arg: import('./base.js').BaseState<TStateConfig, TContextAncestor>) => any} */ (
 					fn
 				),
 			);

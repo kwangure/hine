@@ -12,8 +12,12 @@ import type { AtomicState } from './atomic.js';
 import type { CompoundState } from './compound.js';
 import { BaseState } from './base.js';
 import { ContextType } from '../context/types.js';
+import { ParallelState } from './parallel.js';
 
-export type StateNode = AtomicState<any, any> | CompoundState<any, any>;
+export type StateNode =
+	| AtomicState<AtomicStateConfig, any>
+	| CompoundState<CompoundStateConfig, any>
+	| ParallelState<ParallelStateConfig, any>;
 
 export interface BaseStateTypes {
 	context?: Record<string, any>;
@@ -40,8 +44,41 @@ export interface BaseStateConfig {
 
 export interface AtomicStateConfig extends BaseStateConfig {}
 
+export interface AtomicStateConfigTransitionless extends AtomicStateConfig {
+	always?: string | EffectHandlerConfig | (string | EffectHandlerConfig)[];
+	on?: Record<
+		string,
+		string | EffectHandlerConfig | (string | EffectHandlerConfig)[]
+	>;
+}
+
 export interface CompoundStateConfig extends BaseStateConfig {
 	children: Record<string, StateNode>;
+}
+
+export interface CompoundStateConfigTransitionless extends CompoundStateConfig {
+	always?: string | EffectHandlerConfig | (string | EffectHandlerConfig)[];
+	on?: Record<
+		string,
+		string | EffectHandlerConfig | (string | EffectHandlerConfig)[]
+	>;
+}
+
+export interface ParallelStateConfig extends BaseStateConfig {
+	children: Record<
+		string,
+		| AtomicState<AtomicStateConfigTransitionless, any>
+		| CompoundState<CompoundStateConfigTransitionless, any>
+		| ParallelState<ParallelStateConfigTransitionless, any>
+	>;
+}
+
+export interface ParallelStateConfigTransitionless extends ParallelStateConfig {
+	always?: string | EffectHandlerConfig | (string | EffectHandlerConfig)[];
+	on?: Record<
+		string,
+		string | EffectHandlerConfig | (string | EffectHandlerConfig)[]
+	>;
 }
 
 export interface StateConfig extends BaseStateConfig {
@@ -79,7 +116,7 @@ export interface AtomicResolveConfig<
 	context?: ContextType<TStateConfig, Record<string, any>>;
 }
 
-export interface CompoundResolveConfig<
+export interface ParentResolveConfig<
 	TStateConfig extends StateConfig,
 	TContextAncestor extends Record<string, any>,
 > extends BaseResolveConfig {
@@ -101,7 +138,7 @@ export interface CompoundResolveConfig<
 		>
 			? RequireContext<
 					TCompoundStateConfig,
-					CompoundResolveConfig<
+					ParentResolveConfig<
 						TCompoundStateConfig,
 						ContextType<TStateConfig, {}>
 					>
@@ -148,7 +185,15 @@ export interface CompoundStateJSON extends BaseStateJSON {
 	children: Record<string, StateNodeJSON>;
 }
 
-export type StateNodeJSON = AtomicStateJSON | CompoundStateJSON;
+export interface ParallelStateJSON extends BaseStateJSON {
+	type: 'parallel';
+	children: Record<string, StateNodeJSON>;
+}
+
+export type StateNodeJSON =
+	| AtomicStateJSON
+	| CompoundStateJSON
+	| ParallelStateJSON;
 
 export type CollectStateConfigs<TStateConfig> = TStateConfig extends StateConfig
 	?

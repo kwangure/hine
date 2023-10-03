@@ -42,7 +42,6 @@ export class BaseState {
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#exit = [];
 	#exitConfig;
-	#initialized = false;
 	#isStepping = false;
 	#onConfig;
 	/**
@@ -68,8 +67,9 @@ export class BaseState {
 	__handler = null;
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	__handlerQueue = [];
+	__initialized = false;
 	__name = '';
-	/** @type {import('./compound.js').CompoundState<any, any> | null} */
+	/** @type {import('./parent.js').ParentState<any, any> | null} */
 	__parent = null;
 	/** @type {Record<string, (import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]>} */
 	__onHandler = {};
@@ -152,7 +152,7 @@ export class BaseState {
 		this.__executeHandlers();
 	}
 	__initialize() {
-		this.#initialized = true;
+		this.__initialized = true;
 	}
 	/**
 	 * @param {Set<string>} stateTreeEvents
@@ -263,7 +263,7 @@ export class BaseState {
 		}
 	}
 	__start() {
-		if (!this.#initialized) {
+		if (!this.__initialized) {
 			this.__resolveConfig();
 		}
 		this.__initialize();
@@ -331,7 +331,7 @@ export class BaseState {
 		return this.__conditions;
 	}
 	get context() {
-		if (!this.#initialized) {
+		if (!this.__initialized) {
 			throw Error(
 				"Attempted to read context before calling 'state.resolve()'.",
 			);
@@ -343,7 +343,7 @@ export class BaseState {
 	 * @param {any} [value]
 	 */
 	dispatch(eventName, value) {
-		if (!this.#initialized) {
+		if (!this.__initialized) {
 			throw Error('Attempted dispatch before resolving state');
 		}
 		if (this.#isStepping) {
@@ -375,7 +375,7 @@ export class BaseState {
 	}
 	/** @param {string} name */
 	isActiveEvent(name) {
-		if (!this.#initialized) {
+		if (!this.__initialized) {
 			throw Error(
 				"Attempted to call 'state.isActiveEvent()' before calling 'state.resolve()'",
 			);
@@ -387,7 +387,7 @@ export class BaseState {
 	 * @return {boolean}
 	 */
 	matches(path) {
-		if (!this.#initialized) return false;
+		if (!this.__initialized) return false;
 		return Boolean(
 			path === this.__name ||
 				(this.__action && path === this.__action.path.join('.')) ||
@@ -410,7 +410,7 @@ export class BaseState {
 	 * @param {any} [eventValue]
 	 */
 	*step(eventName, eventValue) {
-		if (!this.#initialized) {
+		if (!this.__initialized) {
 			throw Error("Attempted to step before calling 'state.resolve()'.");
 		}
 		if (this.#isStepping) {

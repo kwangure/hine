@@ -1,8 +1,12 @@
 import { ParentState } from './parent.js';
 
 /**
- * @typedef {import('./types.js').StateNode} StateNode
+ * @template {import('./types.js').CompoundStateConfig} TConfig
+ * @param {TConfig} config
  */
+export function compound(config) {
+	return /** @type {CompoundState<TConfig, {}>} */ (new CompoundState(config));
+}
 
 /**
  * @template {import('./types.js').StateConfig} TStateConfig
@@ -10,11 +14,11 @@ import { ParentState } from './parent.js';
  * @extends {ParentState<TStateConfig, TContextAncestor>}
  */
 export class CompoundState extends ParentState {
-	/** @type {StateNode | null} */
+	/** @type {import('./types.js').StateNode | null} */
 	#initial = null;
 	#type = /** @type {const} */ ('compound');
 
-	/** @type {StateNode | null} */
+	/** @type {import('./types.js').StateNode | null} */
 	__state = null;
 	/**
 	 * @param {TStateConfig} stateConfig

@@ -1,5 +1,19 @@
 import { BaseState } from './base.js';
 
+// We use mapped types on `TConfig` to forbid additional properties
+// on the config (e.g.children),
+/**
+ * @template {import('./types.js').AtomicStateConfig} TConfig
+ * @param {{
+ *   [K in keyof TConfig]: K extends keyof TConfig ? TConfig[K] : never;
+ * }} [config]
+ */
+export function atomic(config) {
+	return /** @type {AtomicState<TConfig, {}>} */ (
+		new AtomicState(config ?? /** @type {TConfig} */ ({}))
+	);
+}
+
 /**
  * @template {import('./types.js').StateConfig} TStateConfig
  * @template {Record<string, any>} TContextAncestor

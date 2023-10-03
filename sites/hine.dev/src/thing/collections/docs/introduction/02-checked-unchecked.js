@@ -1,10 +1,10 @@
-import { state } from 'hine';
+import { atomic, compound } from 'hine';
 
-const checkboxState = state({
+const checkboxState = compound({
 	name: 'checkbox',
 	children: {
-		unchecked: state(),
-		checked: state(),
+		unchecked: atomic(),
+		checked: atomic(),
 	},
 });
 

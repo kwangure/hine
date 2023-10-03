@@ -1,8 +1,14 @@
 import { ParentState } from './parent.js';
 
 /**
- * @typedef {import('./types.js').StateNode} StateNode
+ * @template {import('./types.js').ParallelStateConfig} TConfig
+ * @param {TConfig} [config]
  */
+export function parallel(config) {
+	return /** @type {ParallelState<TConfig, {}>} */ (
+		new ParallelState(config ?? {})
+	);
+}
 
 /**
  * @template {import('./types.js').StateConfig} TStateConfig

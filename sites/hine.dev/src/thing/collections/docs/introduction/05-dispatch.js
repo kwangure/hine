@@ -1,18 +1,20 @@
-import { state } from 'hine';
+import { compound } from 'hine';
 
-// details omitted for brevity
-const checkboxState = state({
+const checkboxState = compound({
 	on: {
-		toggle: [],
+		toggle: [
+			/* ...omitted for brevity */
+		],
+	},
+	children: {
+		/* ...omitted for brevity */
 	},
 });
 
 checkboxState.resolve();
 
-console.log(checkboxState.matches('checkbox.unchecked'));
-// true
+console.log(checkboxState.matches('checkbox.unchecked')); // true
 
 checkboxState.dispatch('toggle');
 
-console.log(checkboxState.matches('checkbox.checked'));
-// true
+console.log(checkboxState.matches('checkbox.checked')); // true

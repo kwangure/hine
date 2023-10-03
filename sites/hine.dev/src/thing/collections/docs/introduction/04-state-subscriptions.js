@@ -1,7 +1,9 @@
-import { state } from 'hine';
+import { compound } from 'hine';
 
-const checkboxState = state({
-	// omitted for brevity
+const checkboxState = compound({
+	children: {
+		/* ...omitted for brevity */
+	},
 });
 
 checkboxState.subscribe((state) => {

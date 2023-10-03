@@ -237,7 +237,7 @@ importers:
         specifier: ^7.2.96
         version: 7.2.96
       hine:
-        specifier: workspace:^0.0.19
+        specifier: workspace:*
         version: link:../../packages/hine
       simple-icons:
         specifier: ^9.9.0

@@ -80,7 +80,7 @@
 	},
 	"dependencies": {
 		"@mdi/js": "^7.2.96",
-		"hine": "workspace:^0.0.19",
+		"hine": "workspace:*",
 		"simple-icons": "^9.9.0",
 		"svelte-ui": "workspace:^0.0.0"
 	},

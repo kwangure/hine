@@ -3,9 +3,6 @@ import { BaseHandler } from './base.js';
 export class EffectHandler extends BaseHandler {
 	#type = /** @type {const} */ ('effect');
 	run() {
-		// This should never happen. Its mostly to help TypeScript out
-		if (!this.__ownerState) throw Error('Missing handler ownerState');
-
 		this.__ownerState.__handler = this;
 		const shouldExecute = !this.condition || this.condition.run();
 		if (shouldExecute) {

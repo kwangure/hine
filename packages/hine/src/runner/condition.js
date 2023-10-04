@@ -20,13 +20,6 @@ export class ConditionRunner extends BaseRunner {
 		this.#run = options.run;
 	}
 	get event() {
-		if (!this.__ownerState) {
-			const path = this.path.join('.');
-			throw Error(
-				`Attempted to read 'condition.event' at '${path}' before calling 'state.resolve()'.`,
-			);
-		}
-
 		return this.__ownerState?.event;
 	}
 	get ownerState() {
@@ -39,7 +32,6 @@ export class ConditionRunner extends BaseRunner {
 			: [`?${this.__name}`];
 	}
 	run() {
-		if (!this.__ownerState) return false;
 		this.__ownerState.__condition = this;
 		const result = this.#run.call(undefined, this);
 		this.__ownerState.__condition = null;

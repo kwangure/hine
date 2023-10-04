@@ -19,16 +19,8 @@ export class ActionRunner extends BaseRunner {
 		this.#run = options.run;
 	}
 	get event() {
-		if (!this.__ownerState) {
-			const path = this.path.join('.');
-			throw Error(
-				`Attempted to read 'action.event' at '${path}' before calling 'state.resolve()'.`,
-			);
-		}
-
 		return this.__ownerState?.event;
 	}
-
 	get ownerState() {
 		return this.__ownerState;
 	}
@@ -39,7 +31,6 @@ export class ActionRunner extends BaseRunner {
 			: [`(${this.__name})`];
 	}
 	run() {
-		if (!this.__ownerState) return;
 		this.__ownerState.__action = this;
 		const result = this.#run.call(undefined, this);
 		this.__ownerState.__action = null;

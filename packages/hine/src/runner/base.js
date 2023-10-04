@@ -15,7 +15,16 @@ export class BaseRunner {
 		this.__name = options.name || '';
 		this.__ownerState = options.ownerState;
 	}
+	get context() {
+		return this.__ownerState.context;
+	}
+	get event() {
+		return this.__ownerState.event;
+	}
 	get name() {
 		return this.__name;
+	}
+	get ownerState() {
+		return this.__ownerState;
 	}
 }

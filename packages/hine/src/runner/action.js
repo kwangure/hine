@@ -18,12 +18,6 @@ export class ActionRunner extends BaseRunner {
 		super(options);
 		this.#run = options.run;
 	}
-	get event() {
-		return this.__ownerState?.event;
-	}
-	get ownerState() {
-		return this.__ownerState;
-	}
 	/** @type {string[]} */
 	get path() {
 		return this.__ownerState

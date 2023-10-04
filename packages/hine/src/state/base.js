@@ -317,7 +317,7 @@ export class BaseState {
 			for (const handler of handlers) {
 				if (
 					handler instanceof TransitionHandler &&
-					handler.transitionTo?.name === path
+					handler.transitionTo === path
 				)
 					return true;
 			}

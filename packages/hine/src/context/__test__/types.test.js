@@ -1,30 +1,28 @@
+import { atomic, compound, parallel } from '../../helpers.js';
 import { expect, expectTypeOf, test } from 'vitest';
-import { AtomicState } from '../../state/atomic.js';
-import { CompoundState } from '../../state/compound.js';
-import { atomic, compound } from '../../helpers.js';
 
 test('atomic state respects context types in actions and conditions', () => {
 	const stateMachine = atomic({
 		name: 'child0',
 		types: {
-			context: /** @type {{ key0: string; willChangeType: string; }} */ ({}),
+			context: /** @type {{ key01: string; willChangeType: string; }} */ ({}),
 		},
 		entry: { if: 'condition0', run: ['action0'] },
 	});
 
 	stateMachine.resolve({
 		context: {
-			key0: '0',
+			key01: '01',
 			willChangeType: 'foo',
 		},
 		actions: {
 			action0({ ownerState }) {
 				const context = ownerState.context;
 
-				const key0 = context.get('key0');
-				expectTypeOf(key0).toBeString();
-				expect(key0).toBe('0');
-				context.update('key0', 'foo');
+				const key01 = context.get('key01');
+				expectTypeOf(key01).toBeString();
+				expect(key01).toBe('01');
+				context.update('key01', 'foo');
 
 				const willChangeType = context.get('willChangeType');
 				expectTypeOf(willChangeType).toBeString();
@@ -41,9 +39,9 @@ test('atomic state respects context types in actions and conditions', () => {
 			condition0({ ownerState }) {
 				const context = ownerState.context;
 
-				const key0 = context.get('key0');
-				expectTypeOf(key0).toBeString();
-				expect(key0).toBe('0');
+				const key01 = context.get('key01');
+				expectTypeOf(key01).toBeString();
+				expect(key01).toBe('01');
 
 				const willChangeType = context.get('willChangeType');
 				expectTypeOf(willChangeType).toBeString();
@@ -64,14 +62,14 @@ test('compound state respects context types in actions and conditions', () => {
 	const stateMachine = compound({
 		name: 'child0',
 		types: {
-			context: /** @type {{ key0: string; willChangeType: string; }} */ ({}),
+			context: /** @type {{ key01: string; willChangeType: string; }} */ ({}),
 		},
 		entry: { if: 'condition0', run: ['action0'] },
 		children: {
 			child1: atomic({
 				types: {
 					context:
-						/** @type {{ key1: number; willChangeType: boolean; }} */ ({}),
+						/** @type {{ key11: number; willChangeType: boolean; }} */ ({}),
 				},
 				entry: { if: 'condition1', run: ['action1'] },
 			}),
@@ -80,16 +78,16 @@ test('compound state respects context types in actions and conditions', () => {
 
 	stateMachine.resolve({
 		context: {
-			key0: '0',
+			key01: '01',
 			willChangeType: 'foo',
 		},
 		actions: {
 			action0({ ownerState }) {
 				const context = ownerState.context;
 
-				const key0 = context.get('key0');
-				expectTypeOf(key0).toBeString();
-				expect(key0).toBe('0');
+				const key01 = context.get('key01');
+				expectTypeOf(key01).toBeString();
+				expect(key01).toBe('01');
 
 				const willChangeType = context.get('willChangeType');
 				expectTypeOf(willChangeType).toBeString();
@@ -103,9 +101,9 @@ test('compound state respects context types in actions and conditions', () => {
 			condition0({ ownerState }) {
 				const context = ownerState.context;
 
-				const key0 = context.get('key0');
-				expectTypeOf(key0).toBeString();
-				expect(key0).toBe('0');
+				const key01 = context.get('key01');
+				expectTypeOf(key01).toBeString();
+				expect(key01).toBe('01');
 
 				const willChangeType = context.get('willChangeType');
 				expectTypeOf(willChangeType).toBeString();
@@ -120,20 +118,20 @@ test('compound state respects context types in actions and conditions', () => {
 		children: {
 			child1: {
 				context: {
-					key1: 1,
+					key11: 1,
 					willChangeType: false,
 				},
 				actions: {
 					action1({ ownerState }) {
 						const context = ownerState.context;
 
-						const key1 = context.get('key1');
-						expectTypeOf(key1).toBeNumber();
-						expect(key1).toBe(1);
+						const key11 = context.get('key11');
+						expectTypeOf(key11).toBeNumber();
+						expect(key11).toBe(1);
 
-						const key0 = context.get('key0');
-						expectTypeOf(key0).toBeString();
-						expect(key0).toBe('0');
+						const key01 = context.get('key01');
+						expectTypeOf(key01).toBeString();
+						expect(key01).toBe('01');
 
 						const willChangeType = context.get('willChangeType');
 						expectTypeOf(willChangeType).toBeBoolean();
@@ -146,13 +144,13 @@ test('compound state respects context types in actions and conditions', () => {
 				conditions: {
 					condition1({ ownerState }) {
 						const context = ownerState.context;
-						const key1 = context.get('key1');
+						const key1 = context.get('key11');
 						expectTypeOf(key1).toBeNumber();
 						expect(key1).toBe(1);
 
-						const key0 = context.get('key0');
-						expectTypeOf(key0).toBeString();
-						expect(key0).toBe('0');
+						const key01 = context.get('key01');
+						expectTypeOf(key01).toBeString();
+						expect(key01).toBe('01');
 
 						const willChangeType = context.get('willChangeType');
 						expectTypeOf(willChangeType).toBeBoolean();
@@ -167,6 +165,237 @@ test('compound state respects context types in actions and conditions', () => {
 			},
 		},
 	});
+
+	stateMachine.append(
+		{
+			s1: compound({
+				types: {
+					context: /** @type {{ key02: string }} */ ({}),
+				},
+				children: {
+					s11: atomic({}),
+				},
+			}),
+		},
+		{
+			s1: {
+				context: {
+					key02: '02',
+				},
+				actions: {
+					action1({ ownerState }) {
+						const context = ownerState.context;
+
+						const key02 = context.get('key02');
+						expectTypeOf(key02).toBeString();
+						expect(key02).toBe('02');
+
+						const key01 = context.get('key01');
+						expectTypeOf(key01).toBeString();
+						expect(key01).toBe('01');
+
+						const willChangeType = context.get('willChangeType');
+						expectTypeOf(willChangeType).toBeString();
+						expect(willChangeType).toBe('foo');
+
+						// @ts-expect-error
+						context.get('non-existent');
+					},
+				},
+				conditions: {
+					condition1({ ownerState }) {
+						const context = ownerState.context;
+						const key02 = context.get('key02');
+						expectTypeOf(key02).toBeString();
+						expect(key02).toBe('02');
+
+						const key01 = context.get('key01');
+						expectTypeOf(key01).toBeString();
+						expect(key01).toBe('01');
+
+						const willChangeType = context.get('willChangeType');
+						expectTypeOf(willChangeType).toBeString();
+						expect(willChangeType).toBe(false);
+
+						// @ts-expect-error
+						context.get('non-existent');
+
+						return true;
+					},
+				},
+			},
+		},
+	);
+});
+
+test('parallel state respects context types in actions and conditions', () => {
+	const stateMachine = parallel({
+		name: 'child0',
+		types: {
+			context: /** @type {{ key01: string; willChangeType: string; }} */ ({}),
+		},
+		entry: { if: 'condition0', run: ['action0'] },
+		children: {
+			child1: atomic({
+				types: {
+					context:
+						/** @type {{ key11: number; willChangeType: boolean; }} */ ({}),
+				},
+				entry: { if: 'condition1', run: ['action1'] },
+			}),
+		},
+	});
+
+	stateMachine.resolve({
+		context: {
+			key01: '01',
+			willChangeType: 'foo',
+		},
+		actions: {
+			action0({ ownerState }) {
+				const context = ownerState.context;
+
+				const key01 = context.get('key01');
+				expectTypeOf(key01).toBeString();
+				expect(key01).toBe('01');
+
+				const willChangeType = context.get('willChangeType');
+				expectTypeOf(willChangeType).toBeString();
+				expect(willChangeType).toBe('foo');
+
+				// @ts-expect-error
+				context.get('non-existent');
+			},
+		},
+		conditions: {
+			condition0({ ownerState }) {
+				const context = ownerState.context;
+
+				const key01 = context.get('key01');
+				expectTypeOf(key01).toBeString();
+				expect(key01).toBe('01');
+
+				const willChangeType = context.get('willChangeType');
+				expectTypeOf(willChangeType).toBeString();
+				expect(willChangeType).toBe('foo');
+
+				// @ts-expect-error
+				context.get('non-existent');
+
+				return true;
+			},
+		},
+		children: {
+			child1: {
+				context: {
+					key11: 1,
+					willChangeType: false,
+				},
+				actions: {
+					action1({ ownerState }) {
+						const context = ownerState.context;
+
+						const key11 = context.get('key11');
+						expectTypeOf(key11).toBeNumber();
+						expect(key11).toBe(1);
+
+						const key01 = context.get('key01');
+						expectTypeOf(key01).toBeString();
+						expect(key01).toBe('01');
+
+						const willChangeType = context.get('willChangeType');
+						expectTypeOf(willChangeType).toBeBoolean();
+						expect(willChangeType).toBe(false);
+
+						// @ts-expect-error
+						context.get('non-existent');
+					},
+				},
+				conditions: {
+					condition1({ ownerState }) {
+						const context = ownerState.context;
+						const key1 = context.get('key11');
+						expectTypeOf(key1).toBeNumber();
+						expect(key1).toBe(1);
+
+						const key01 = context.get('key01');
+						expectTypeOf(key01).toBeString();
+						expect(key01).toBe('01');
+
+						const willChangeType = context.get('willChangeType');
+						expectTypeOf(willChangeType).toBeBoolean();
+						expect(willChangeType).toBe(false);
+
+						// @ts-expect-error
+						context.get('non-existent');
+
+						return true;
+					},
+				},
+			},
+		},
+	});
+
+	stateMachine.append(
+		{
+			s1: compound({
+				types: {
+					context: /** @type {{ key02: string }} */ ({}),
+				},
+				children: {
+					s11: atomic({}),
+				},
+			}),
+		},
+		{
+			s1: {
+				context: {
+					key02: '02',
+				},
+				actions: {
+					action1({ ownerState }) {
+						const context = ownerState.context;
+
+						const key02 = context.get('key02');
+						expectTypeOf(key02).toBeString();
+						expect(key02).toBe('02');
+
+						const key01 = context.get('key01');
+						expectTypeOf(key01).toBeString();
+						expect(key01).toBe('01');
+
+						const willChangeType = context.get('willChangeType');
+						expectTypeOf(willChangeType).toBeString();
+						expect(willChangeType).toBe('foo');
+
+						// @ts-expect-error
+						context.get('non-existent');
+					},
+				},
+				conditions: {
+					condition1({ ownerState }) {
+						const context = ownerState.context;
+						const key02 = context.get('key02');
+						expectTypeOf(key02).toBeString();
+						expect(key02).toBe('02');
+
+						const key01 = context.get('key01');
+						expectTypeOf(key01).toBeString();
+						expect(key01).toBe('01');
+
+						const willChangeType = context.get('willChangeType');
+						expectTypeOf(willChangeType).toBeString();
+						expect(willChangeType).toBe(false);
+
+						// @ts-expect-error
+						context.get('non-existent');
+
+						return true;
+					},
+				},
+			},
+		},
+	);
 });
 
 test('atomic state allows missing context types', () => {
@@ -176,7 +405,7 @@ test('atomic state allows missing context types', () => {
 
 	stateMachine.resolve({
 		context: {
-			key0: '0',
+			key01: '01',
 		},
 		actions: {
 			action0({ ownerState }) {
@@ -209,19 +438,9 @@ test('compound allows missing context types', () => {
 		},
 	});
 
-	expectTypeOf(stateMachine).toMatchTypeOf(
-		/** @type {CompoundState<any, any>} */ (
-			new CompoundState({
-				children: {
-					s1: new AtomicState({}),
-				},
-			})
-		),
-	);
-
 	stateMachine.resolve({
 		context: {
-			key0: '0',
+			key01: '01',
 		},
 		actions: {
 			action0({ ownerState }) {
@@ -246,7 +465,109 @@ test('compound allows missing context types', () => {
 		children: {
 			child1: {
 				context: {
-					key1: 1,
+					key11: 1,
+				},
+				actions: {
+					action1({ ownerState }) {
+						const context = ownerState.context;
+
+						context.get('non-existent');
+						context.update('non-existent', '');
+						// @ts-expect-error
+						context.get(1);
+					},
+				},
+				conditions: {
+					condition1({ ownerState }) {
+						const context = ownerState.context;
+
+						context.get('non-existent');
+						context.update('non-existent', '');
+						// @ts-expect-error
+						context.get(1);
+
+						return true;
+					},
+				},
+			},
+		},
+	});
+
+	stateMachine.append(
+		{
+			s1: compound({
+				children: {
+					s11: atomic({}),
+				},
+			}),
+		},
+		{
+			s1: {
+				context: {
+					key02: '02',
+				},
+				actions: {
+					action1({ ownerState }) {
+						const context = ownerState.context;
+
+						context.get('non-existent');
+						// @ts-expect-error
+						context.get(1);
+					},
+				},
+				conditions: {
+					condition1({ ownerState }) {
+						const context = ownerState.context;
+
+						context.get('non-existent');
+						context.update('non-existent', '');
+						// @ts-expect-error
+						context.get(1);
+
+						return true;
+					},
+				},
+			},
+		},
+	);
+});
+
+test('parallel allows missing context types', () => {
+	const stateMachine = parallel({
+		name: 'child0',
+		children: {
+			child1: atomic(),
+		},
+	});
+
+	stateMachine.resolve({
+		context: {
+			key01: '01',
+		},
+		actions: {
+			action0({ ownerState }) {
+				const context = ownerState.context;
+
+				context.get('non-existent');
+				// @ts-expect-error
+				context.get(1);
+			},
+		},
+		conditions: {
+			condition0({ ownerState }) {
+				const context = ownerState.context;
+
+				context.get('non-existent');
+				// @ts-expect-error
+				context.get(1);
+
+				return true;
+			},
+		},
+		children: {
+			child1: {
+				context: {
+					key11: 1,
 				},
 				actions: {
 					action1({ ownerState }) {
@@ -272,13 +593,51 @@ test('compound allows missing context types', () => {
 			},
 		},
 	});
+
+	stateMachine.append(
+		{
+			s1: compound({
+				children: {
+					s11: atomic({}),
+				},
+			}),
+		},
+		{
+			s1: {
+				context: {
+					key02: '02',
+				},
+				actions: {
+					action1({ ownerState }) {
+						const context = ownerState.context;
+
+						context.get('non-existent');
+						// @ts-expect-error
+						context.get(1);
+					},
+				},
+				conditions: {
+					condition1({ ownerState }) {
+						const context = ownerState.context;
+
+						context.get('non-existent');
+						context.update('non-existent', '');
+						// @ts-expect-error
+						context.get(1);
+
+						return true;
+					},
+				},
+			},
+		},
+	);
 });
 
 test('atomic state requires context if types have context', () => {
 	const stateMachine = atomic({
 		name: 'child0',
 		types: {
-			context: /** @type {{ key0: string; }} */ ({}),
+			context: /** @type {{ key01: string; }} */ ({}),
 		},
 	});
 
@@ -290,26 +649,16 @@ test('compound state requires context if types have context', () => {
 	const stateMachine = compound({
 		name: 'child0',
 		types: {
-			context: /** @type {{ key0: string; }} */ ({}),
+			context: /** @type {{ key01: string; }} */ ({}),
 		},
 		children: {
 			child1: atomic({
 				types: {
-					context: /** @type {{ key1: number; }} */ ({}),
+					context: /** @type {{ key11: number; }} */ ({}),
 				},
 			}),
 		},
 	});
-
-	expectTypeOf(stateMachine).toMatchTypeOf(
-		/** @type {CompoundState<any, any>} */ (
-			new CompoundState({
-				children: {
-					s1: new AtomicState({}),
-				},
-			})
-		),
-	);
 
 	stateMachine.resolve({
 		children: {
@@ -317,6 +666,63 @@ test('compound state requires context if types have context', () => {
 			child1: {},
 		},
 	});
+
+	stateMachine.append(
+		{
+			s1: compound({
+				types: {
+					context: /** @type {{ key01: string; }} */ ({}),
+				},
+				children: {
+					s11: atomic({}),
+				},
+			}),
+		},
+		{
+			// @ts-expect-error
+			s1: {},
+		},
+	);
+});
+
+test('parallel state requires context if types have context', () => {
+	const stateMachine = parallel({
+		name: 'child0',
+		types: {
+			context: /** @type {{ key01: string; }} */ ({}),
+		},
+		children: {
+			child1: atomic({
+				types: {
+					context: /** @type {{ key11: number; }} */ ({}),
+				},
+			}),
+		},
+	});
+
+	stateMachine.resolve({
+		children: {
+			// @ts-expect-error
+			child1: {},
+		},
+	});
+
+	stateMachine.append(
+		{
+			s1: compound({
+				types: {
+					context: /** @type {{ key01: string; }} */ ({}),
+				},
+				children: {
+					s11: atomic({}),
+				},
+			}),
+		},
+		{
+			// @ts-expect-error
+			s1: {},
+		},
+	);
 });
 
 test("atomic state doesn't require context if types don't have context", () => {
@@ -340,4 +746,45 @@ test("compound state doesn't require context if types don't have context", () =>
 			child1: {},
 		},
 	});
+
+	stateMachine.append(
+		{
+			s1: compound({
+				children: {
+					s11: atomic({}),
+				},
+			}),
+		},
+		{
+			s1: {},
+		},
+	);
+});
+
+test("parallel state doesn't require context if types don't have context", () => {
+	const stateMachine = parallel({
+		name: 'child0',
+		children: {
+			child1: atomic(),
+		},
+	});
+
+	stateMachine.resolve({
+		children: {
+			child1: {},
+		},
+	});
+
+	stateMachine.append(
+		{
+			s1: compound({
+				children: {
+					s11: atomic({}),
+				},
+			}),
+		},
+		{
+			s1: {},
+		},
+	);
 });

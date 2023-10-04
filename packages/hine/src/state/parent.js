@@ -15,13 +15,16 @@ export class ParentState extends BaseState {
 	constructor(stateConfig) {
 		super(stateConfig);
 
-		const missingError = Error('Parent states require at least one child');
-		if (!stateConfig.children) throw missingError;
+		this.__append(stateConfig.children);
+	}
+	/**
+	 * @param {Record<string, import("./types.js").StateNode> | undefined} children
+	 */
+	__append(children) {
+		if (!children) return;
 
-		const children = Object.entries(stateConfig.children);
-		if (!children.length) throw missingError;
-
-		for (const [name, state] of children) {
+		const __children = Object.entries(children);
+		for (const [name, state] of __children) {
 			if (!state.name) {
 				state.__name = name;
 			}
@@ -30,9 +33,32 @@ export class ParentState extends BaseState {
 		}
 	}
 	/**
+	 * @template {Record<string, import("./types.js").StateNode>} TChildren
+	 * @param {TChildren} children
+	 * @param {NonNullable<import('./types.js').RequireContext<import('./types.js').ReplaceChildren<TStateConfig, TChildren>, import('./types.js').ParentResolveConfig<import('./types.js').ReplaceChildren<TStateConfig, TChildren>, TContextAncestor>>['children']>} resolveConfig
+	 */
+	append(children, resolveConfig) {
+		this.__append(children);
+		for (const [name, config] of Object.entries(resolveConfig)) {
+			const state = children[name];
+			if (!state) {
+				const parentPath = this.parent?.path || [];
+				const pathString = parentPath.length
+					? `${parentPath.join('.')}.${name}`
+					: name;
+				throw Error(
+					`Resolve state '${pathString}' defined does not exist in state tree. Expected one of: ${[
+						...Object.keys(children),
+					].join(', ')}`,
+				);
+			}
+			state.__resolve(config);
+		}
+	}
+	/**
 	 * This is a noop for `ParallelState`s and implemented for `CompoundState`s
 	 *
-	 * @param {import("./types.js").StateNode} _to
+	 * @param {string} _to
 	 * @param {import("../runner/action.js").ActionRunner<any, any>[]} _actions
 	 */
 	__transition(_to, _actions) {}

@@ -105,13 +105,28 @@ export class CompoundState extends ParentState {
 		}
 	}
 	/**
-	 * @param {import("./types.js").StateNode} to
+	 * @param {string} target
 	 * @param {import("../runner/action.js").ActionRunner<any, any>[]} actions
 	 */
-	__transition(to, actions) {
+	__transition(target, actions) {
 		const from = this.__state;
+		const to = this.__children.get(target);
 		// These should never happen. They're mostly to help TypeScript out
 		if (!from) throw Error('Missing handler ownerState');
+		if (!to) {
+			let message = '';
+			if (this.path.some((segment) => Boolean(segment))) {
+				const path = this.path.join('.');
+				message += `State '${path}' references unknown transition target '${to}'.`;
+			} else {
+				message += `State references unknown transition target '${to}'.`;
+			}
+			const siblings = Array.from(this.__children.keys());
+			if (siblings.length) {
+				message += ` Expected one of: ${siblings.join(', ')}.`;
+			}
+			throw Error(message);
+		}
 
 		from.__handlerQueue.length = 0;
 		// exit actions for the current state

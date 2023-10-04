@@ -130,7 +130,7 @@ export interface ParentResolveConfig<
 		| ConditionRunnerConfig<TStateConfig, TContextAncestor>
 		| ConditionRunnerConfig<TStateConfig, TContextAncestor>['run']
 	>;
-	context: ContextType<TStateConfig, Record<string, any>>;
+	context?: ContextType<TStateConfig, Record<string, any>>;
 	children?: Partial<{
 		[child in keyof TStateConfig['children']]: TStateConfig['children'][child] extends CompoundState<
 			infer TCompoundStateConfig,
@@ -154,6 +154,11 @@ export interface ParentResolveConfig<
 			: TStateConfig['children'][child];
 	}>;
 }
+
+export type ReplaceChildren<T extends { children: any }, U> = Omit<
+	T,
+	'children'
+> & { children: U };
 
 export type Simplify<T> = { [key in keyof T]: T[key] } & {};
 

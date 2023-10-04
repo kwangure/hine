@@ -164,14 +164,8 @@ export class CompoundState extends ParentState {
 	}
 	/** @param {string} name */
 	isActiveEvent(name) {
-		// No active child state implies state is not initialized
-		if (!this.__state) {
-			throw Error(
-				"Attempted to call 'state.isActiveEvent()' before calling 'state.resolve()'",
-			);
-		}
 		if (name in this.__onHandler && this.__onHandler[name].length) return true;
-		if (this.__state.isActiveEvent(name)) return true;
+		if (this.__state?.isActiveEvent(name)) return true;
 		return false;
 	}
 	/**
@@ -180,11 +174,11 @@ export class CompoundState extends ParentState {
 	 */
 	matches(path) {
 		if (!this.__initialized) return false;
+		if (super.matches(path)) return true;
 
 		return (
-			super.matches(path) ||
-			(path.startsWith(`${this.name}.`) &&
-				Boolean(this.__state?.matches(path.slice(this.name.length + 1))))
+			path.startsWith(`${this.name}.`) &&
+			Boolean(this.__state?.matches(path.slice(this.name.length + 1)))
 		);
 	}
 

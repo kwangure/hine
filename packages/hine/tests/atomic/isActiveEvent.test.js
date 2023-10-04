@@ -18,18 +18,6 @@ describe('isActiveEvent', () => {
 		expect(state.isActiveEvent('EVENT')).toEqual(true);
 		expect(state.isActiveEvent('RANDOM-EVENT')).toEqual(false);
 	});
-	it('throws when not initialized', () => {
-		const state = new AtomicState({
-			on: {
-				EVENT: {
-					run: ['action'],
-				},
-			},
-		});
-		expect(() => state.isActiveEvent('EVENT')).toThrow(
-			"Attempted to call 'state.isActiveEvent()' before calling 'state.resolve()'",
-		);
-	});
 	it('returns false when handler list is empty', () => {
 		const state = new AtomicState({
 			on: {

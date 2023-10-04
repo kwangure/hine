@@ -31,21 +31,6 @@ describe('isActiveEvent', () => {
 		expect(state.isActiveEvent('EVENT2')).toEqual(false);
 		expect(state.isActiveEvent('RANDOM-EVENT')).toEqual(false);
 	});
-	it('throws when not initialized', () => {
-		const state = new CompoundState({
-			on: {
-				EVENT: {
-					run: ['action'],
-				},
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		expect(() => state.isActiveEvent('EVENT')).toThrow(
-			"Attempted to call 'state.isActiveEvent()' before calling 'state.resolve()'",
-		);
-	});
 	it('returns false when handler list is empty', () => {
 		const state = new CompoundState({
 			on: {

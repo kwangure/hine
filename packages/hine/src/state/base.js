@@ -362,7 +362,7 @@ export class BaseState {
 		this.__callSubscribers();
 		this.#event = null;
 	}
-	/** @returns {StateEvent | null} */
+	/** @returns {StateEvent} */
 	get event() {
 		const event = this.#event ?? this.__parent?.event;
 		if (!event) {

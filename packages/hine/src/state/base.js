@@ -100,18 +100,10 @@ export class BaseState {
 	 * @returns {Record<string, import('../runner/action.js').ActionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	get __actions() {
-		const actions = this.__parent?.__actions || {};
-		for (const name in this.#actions) {
-			if (Object.hasOwn(this.#actions, name)) {
-				const action = this.#actions[name];
-				if (!action.name) {
-					action.__name = name;
-				}
-				actions[action.name] = action;
-			}
-		}
-
-		return actions;
+		return {
+			...this.__parent?.__actions,
+			...this.#actions,
+		};
 	}
 	__callSubscribers() {
 		for (const subscriber of this.__subscribers) {
@@ -123,18 +115,10 @@ export class BaseState {
 	 * @returns {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig, TContextAncestor>>}
 	 */
 	get __conditions() {
-		const conditions = this.__parent?.__conditions || {};
-		for (const name in this.#conditions) {
-			if (Object.hasOwn(this.#conditions, name)) {
-				const condition = this.#conditions[name];
-				if (!condition.name) {
-					condition.__name = name;
-				}
-				conditions[condition.name] = condition;
-			}
-		}
-
-		return conditions;
+		return {
+			...this.__parent?.__conditions,
+			...this.#conditions,
+		};
 	}
 	__executeHandlers() {
 		for (const handler of this.__handlerQueue) {
@@ -362,10 +346,7 @@ export class BaseState {
 	matches(path) {
 		if (!this.__initialized) return false;
 		return Boolean(
-			path === this.__name ||
-				(this.__action && path === this.__action.path.join('.')) ||
-				(this.__condition && path === this.__condition.path.join('.')) ||
-				(this.__handler && path === this.__handler.path.join('.')),
+			path === this.__name || path === this.__handler?.path.join('.'),
 		);
 	}
 	get name() {

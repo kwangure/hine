@@ -797,50 +797,6 @@ describe('actions', () => {
 		expect(state.matches('.s1')).toBe(true);
 		expect(log).toEqual(['entry1', 'transition1', 'always2', 'entry1']);
 	});
-	it('resolves action using most specific configured name', () => {
-		const state = new CompoundState({
-			on: {
-				event: {
-					run: ['action'],
-				},
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-
-		expect(() =>
-			state.resolve({
-				actions: {
-					action: {
-						name: 'other-action',
-						run() {},
-					},
-				},
-			}),
-		).toThrow(/unknown action/);
-		const state2 = new CompoundState({
-			on: {
-				event: {
-					run: ['other-action'],
-				},
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-
-		expect(() =>
-			state2.resolve({
-				actions: {
-					action: {
-						name: 'other-action',
-						run() {},
-					},
-				},
-			}),
-		).not.toThrow();
-	});
 	it('exposes actions inside actions', () => {
 		const state = new CompoundState({
 			entry: {

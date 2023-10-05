@@ -15,14 +15,8 @@ export class ActionRunner extends BaseRunner {
 	 * }} options
 	 */
 	constructor(options) {
-		super(options);
+		super(options.ownerState);
 		this.#run = options.run;
-	}
-	/** @type {string[]} */
-	get path() {
-		return this.__ownerState
-			? [...this.__ownerState.path, `(${this.__name})`]
-			: [`(${this.__name})`];
 	}
 	run() {
 		this.__ownerState.__action = this;

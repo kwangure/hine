@@ -358,44 +358,6 @@ describe('actions', () => {
 		state.dispatch('event');
 		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
 	});
-	it('resolves action using most specific configured name', () => {
-		const state = new AtomicState({
-			on: {
-				event: {
-					run: ['action'],
-				},
-			},
-		});
-
-		expect(() =>
-			state.resolve({
-				actions: {
-					action: {
-						name: 'other-action',
-						run() {},
-					},
-				},
-			}),
-		).toThrow(/unknown action/);
-		const state2 = new AtomicState({
-			on: {
-				event: {
-					run: ['other-action'],
-				},
-			},
-		});
-
-		expect(() =>
-			state2.resolve({
-				actions: {
-					action: {
-						name: 'other-action',
-						run() {},
-					},
-				},
-			}),
-		).not.toThrow();
-	});
 	it('sets state action during action', () => {
 		const state = new AtomicState({
 			entry: {

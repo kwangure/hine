@@ -13,26 +13,17 @@ export class BaseRunner {
 	// The workaround is to implement all methods in child classes of `BaseState` in `BaseState`,
 	// but as a noop. This unfortuately means a user might reach for a method their state class
 	// doesn't support.
-	/** @type {import('../state/base.js').BaseState<TStateConfig, TContextAncestor>} */
-	__ownerState;
-	__name = '';
 	/**
-	 * @param {import('./types.js').BaseRunnerConfig & {
-	 *     ownerState: import('../state/base.js').BaseState<TStateConfig, TContextAncestor>
-	 * }} options
+	 * @param {import('../state/base.js').BaseState<TStateConfig, TContextAncestor>} ownerState
 	 */
-	constructor(options) {
-		this.__name = options.name || '';
-		this.__ownerState = options.ownerState;
+	constructor(ownerState) {
+		this.__ownerState = ownerState;
 	}
 	get context() {
 		return this.__ownerState.context;
 	}
 	get event() {
 		return this.__ownerState.event;
-	}
-	get name() {
-		return this.__name;
 	}
 	get ownerState() {
 		return this.__ownerState;

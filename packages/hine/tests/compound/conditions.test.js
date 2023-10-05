@@ -27,62 +27,6 @@ describe('conditions', () => {
 			},
 		});
 	});
-	it('resolves condition using most specific configured name', () => {
-		const state1 = new CompoundState({
-			on: {
-				event: {
-					if: 'condition',
-					run: ['action'],
-				},
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-
-		expect(() =>
-			state1.resolve({
-				actions: {
-					action() {},
-				},
-				conditions: {
-					condition: {
-						name: 'other-condition',
-						run() {
-							return true;
-						},
-					},
-				},
-			}),
-		).toThrow(/unknown condition/);
-		const state2 = new CompoundState({
-			on: {
-				event: {
-					if: 'other-condition',
-					run: ['action'],
-				},
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-
-		expect(() =>
-			state2.resolve({
-				actions: {
-					action() {},
-				},
-				conditions: {
-					condition: {
-						name: 'other-condition',
-						run() {
-							return true;
-						},
-					},
-				},
-			}),
-		).not.toThrow();
-	});
 	it('ignores falsy handlers on entry', () => {
 		/** @type {string[]} */
 		const actions = [];

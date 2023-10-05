@@ -276,29 +276,6 @@ export class BaseState {
 		this.__callSubscribers();
 		this.#event = null;
 	}
-	__toJSON() {
-		const onEntries = Object.entries(this.__onHandler);
-		/** @type {Record<string, import('../handler/types').HandlerJSON[]>} */
-		const on = {};
-		for (const [event, handlers] of onEntries) {
-			on[event] = handlers.map((handler) => handler.toJSON());
-		}
-
-		return {
-			always: this.#always.length
-				? this.#always.map((handler) => handler.toJSON())
-				: undefined,
-			entry: this.#entry.length
-				? this.#entry.map((handler) => handler.toJSON())
-				: undefined,
-			exit: this.#exit.length
-				? this.#exit.map((handler) => handler.toJSON())
-				: undefined,
-			name: this.__name,
-			on: onEntries.length ? on : undefined,
-			path: this.path,
-		};
-	}
 	get action() {
 		return this.__action;
 	}

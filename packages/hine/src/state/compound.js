@@ -198,19 +198,6 @@ export class CompoundState extends ParentState {
 			);
 		};
 	}
-	toJSON() {
-		/** @type {Record<string, import('./types.js').StateNodeJSON>} */
-		const children = {};
-		for (const [name, state] of this.__children) {
-			children[name] = state.toJSON();
-		}
-
-		return {
-			type: this.#type,
-			...super.__toJSON(),
-			children,
-		};
-	}
 	get type() {
 		return this.#type;
 	}

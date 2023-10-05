@@ -30,16 +30,6 @@ export class ActionRunner extends BaseRunner {
 		this.__ownerState.__action = null;
 		return result;
 	}
-	/**
-	 * @returns {import('./types.js').ActionJSON}
-	 */
-	toJSON() {
-		return {
-			name: this.__name,
-			path: this.path,
-			type: this.#type,
-		};
-	}
 	get type() {
 		return this.#type;
 	}

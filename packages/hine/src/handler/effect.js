@@ -13,18 +13,6 @@ export class EffectHandler extends BaseHandler {
 		this.__ownerState.__handler = null;
 		return shouldExecute;
 	}
-	/**
-	 * @returns {import('./types.js').EffectHandlerJSON}
-	 */
-	toJSON() {
-		return {
-			type: this.#type,
-			name: this.__name,
-			if: this.__condition?.name,
-			run: this.__actions.map((action) => action.name),
-			path: this.path,
-		};
-	}
 	get type() {
 		return this.#type;
 	}

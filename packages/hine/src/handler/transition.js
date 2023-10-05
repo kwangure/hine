@@ -23,19 +23,6 @@ export class TransitionHandler extends BaseHandler {
 		from.__handler = null;
 		return shouldExecute;
 	}
-	/**
-	 * @returns {import('./types.js').TransitionHandlerJSON}
-	 */
-	toJSON() {
-		return {
-			type: this.#type,
-			name: this.__name,
-			goto: this.#goto,
-			if: this.__condition?.name,
-			run: this.__actions.map((action) => action.name),
-			path: this.path,
-		};
-	}
 	get transitionTo() {
 		return this.#goto;
 	}

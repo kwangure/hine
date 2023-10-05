@@ -44,12 +44,6 @@ export class AtomicState extends BaseState {
 			);
 		};
 	}
-	toJSON() {
-		return {
-			type: this.#type,
-			...super.__toJSON(),
-		};
-	}
 	get type() {
 		return this.#type;
 	}

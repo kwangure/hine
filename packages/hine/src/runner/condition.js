@@ -32,16 +32,6 @@ export class ConditionRunner extends BaseRunner {
 		this.__ownerState.__condition = null;
 		return result;
 	}
-	/**
-	 * @returns {import('./types.js').ConditionJSON}
-	 */
-	toJSON() {
-		return {
-			name: this.__name,
-			path: this.path,
-			type: this.#type,
-		};
-	}
 	get type() {
 		return this.#type;
 	}

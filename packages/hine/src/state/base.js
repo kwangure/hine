@@ -42,7 +42,6 @@ export class BaseState {
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#exit = [];
 	#exitConfig;
-	#isStepping = false;
 	#onConfig;
 	/**
 	 * Actions from all ancestor states and the config
@@ -346,9 +345,6 @@ export class BaseState {
 		if (!this.__initialized) {
 			throw Error('Attempted dispatch before resolving state');
 		}
-		if (this.#isStepping) {
-			throw Error('Attempted to dispatch while stepping is in progress.');
-		}
 
 		const event = new StateEvent({
 			name: /** @type {string} */ (eventName),
@@ -404,38 +400,5 @@ export class BaseState {
 	/** @type {string[]} */
 	get path() {
 		return this.__parent ? [...this.__parent.path, this.__name] : [this.__name];
-	}
-	/**
-	 * @param {string} eventName
-	 * @param {any} [eventValue]
-	 */
-	*step(eventName, eventValue) {
-		if (!this.__initialized) {
-			throw Error("Attempted to step before calling 'state.resolve()'.");
-		}
-		if (this.#isStepping) {
-			throw Error('Stepping is aleady in progress.');
-		}
-
-		this.#isStepping = true;
-		const event = new StateEvent({ name: eventName, value: eventValue });
-		this.#event = event;
-		this.__queueOnHandlers(eventName);
-		this.__queueAlwaysHandlers();
-
-		for (const handler of this.__handlerQueue) {
-			yield handler;
-			if (handler instanceof TransitionHandler) {
-				const executed = yield* handler.step();
-				if (executed) break;
-			} else {
-				yield* handler.step();
-			}
-		}
-
-		this.__handlerQueue.length = 0;
-		this.#isStepping = false;
-		this.__callSubscribers();
-		this.#event = null;
 	}
 }

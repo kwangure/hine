@@ -13,19 +13,6 @@ export class EffectHandler extends BaseHandler {
 		this.__ownerState.__handler = null;
 		return shouldExecute;
 	}
-	*step() {
-		let shouldExecute = false;
-		if (this.condition) {
-			yield this.condition;
-			shouldExecute = this.condition.run();
-		}
-		if (shouldExecute) {
-			for (const action of this.__actions) {
-				yield action;
-				action.run();
-			}
-		}
-	}
 	/**
 	 * @returns {import('./types.js').EffectHandlerJSON}
 	 */

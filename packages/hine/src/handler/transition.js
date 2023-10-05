@@ -23,22 +23,6 @@ export class TransitionHandler extends BaseHandler {
 		from.__handler = null;
 		return shouldExecute;
 	}
-	*step() {
-		const from = this.__ownerState;
-		const to = this.#goto;
-
-		from.__handler = this;
-		let shouldExecute = false;
-		if (this.condition) {
-			yield this.condition;
-			shouldExecute = this.condition.run();
-		}
-		if (shouldExecute) {
-			from.parent?.__transition(to, this.__actions);
-		}
-		from.__handler = null;
-		return shouldExecute;
-	}
 	/**
 	 * @returns {import('./types.js').TransitionHandlerJSON}
 	 */

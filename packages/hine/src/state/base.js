@@ -13,7 +13,7 @@ export class BaseState {
 	 * @type {Record<string, import('../runner/types.js').Action<TStateConfig, TContextAncestor>>}
 	 */
 	#actions = {};
-	/** @type {(import('../handler/effect.js').EffectHandler<TStateConfig, TContextAncestor> | import('../handler/transition.js').TransitionHandler<TStateConfig, TContextAncestor>)[]} */
+	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#always = [];
 	#alwaysConfig;
 	/**
@@ -22,22 +22,22 @@ export class BaseState {
 	 */
 	#conditions = {};
 	#context;
-	/** @type {(import('../handler/effect.js').EffectHandler<TStateConfig, TContextAncestor> | import('../handler/transition.js').TransitionHandler<TStateConfig, TContextAncestor>)[]} */
+	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#entry = [];
 	#entryConfig;
 	/** @type {StateEvent | null} */
 	#event = null;
-	/** @type {(import('../handler/effect.js').EffectHandler<TStateConfig, TContextAncestor> | import('../handler/transition.js').TransitionHandler<TStateConfig, TContextAncestor>)[]} */
+	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#exit = [];
 	#exitConfig;
 	#onConfig;
-	/** @type {(import('../handler/effect.js').EffectHandler<TStateConfig, TContextAncestor> | import('../handler/transition.js').TransitionHandler<TStateConfig, TContextAncestor>)[]} */
+	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	__handlerQueue = [];
 	__initialized = false;
 	__name = '';
 	/** @type {import('./parent.js').ParentState<any, any> | null} */
 	__parent = null;
-	/** @type {Record<string, (import('../handler/effect.js').EffectHandler<TStateConfig, TContextAncestor> | import('../handler/transition.js').TransitionHandler<TStateConfig, TContextAncestor>)[]>} */
+	/** @type {Record<string, (import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]>} */
 	__onHandler = {};
 	/** @type {Set<(arg: BaseState<TStateConfig, TContextAncestor>) => any>} */
 	__subscribers = new Set();

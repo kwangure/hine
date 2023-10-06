@@ -1,14 +1,10 @@
-/**
- * @template {import('../state/types.js').StateConfig} TStateConfig
- * @template {Record<string, any>} TContextAncestor
- */
 export class BaseHandler {
 	/** @type {string | null} */
 	__ifConfig;
 	/** @type {string[]} */
 	__runConfig;
 	/**
-	 * @param {import('./types').BaseHandlerConfig & { ownerState: import('../state/base.js').BaseState<TStateConfig, TContextAncestor>}} options
+	 * @param {import('./types').BaseHandlerConfig & { ownerState: import('../state/base.js').BaseState<any, any>}} options
 	 */
 	constructor(options) {
 		this.__ifConfig = options.if || null;

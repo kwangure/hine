@@ -17,13 +17,9 @@ export class TransitionHandler extends BaseHandler {
 		this.#goto = options.goto;
 	}
 	run() {
-		const shouldExecute = !this.__condition || this.__condition(this);
+		const shouldExecute = !this.__condition || this.__condition();
 		if (shouldExecute) {
-			this.__ownerState.parent?.__transition(
-				this.#goto,
-				/** @type {any} */ (this),
-				this.__actions,
-			);
+			this.__ownerState.parent?.__transition(this.#goto, this.__actions);
 		}
 		return shouldExecute;
 	}

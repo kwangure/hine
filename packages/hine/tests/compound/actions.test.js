@@ -808,9 +808,10 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				action1({ ownerState }) {
-					expect(() => ownerState?.actions.action2).not.toThrow();
-					// expect(ownerState?.actions.action2.run()).toBe('test');
+				action1(state) {
+					const { actions } = state;
+					expect(() => actions.action2).not.toThrow();
+					expect(actions.action2(state)).toBe('test');
 					return true;
 				},
 				action2: () => 'test',

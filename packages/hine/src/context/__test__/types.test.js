@@ -16,9 +16,7 @@ test('atomic state respects context types in actions and conditions', () => {
 			willChangeType: 'foo',
 		},
 		actions: {
-			action0({ ownerState }) {
-				const context = ownerState.context;
-
+			action0({ context }) {
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
@@ -36,9 +34,7 @@ test('atomic state respects context types in actions and conditions', () => {
 			},
 		},
 		conditions: {
-			condition0({ ownerState }) {
-				const context = ownerState.context;
-
+			condition0({ context }) {
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
@@ -82,9 +78,7 @@ test('compound state respects context types in actions and conditions', () => {
 			willChangeType: 'foo',
 		},
 		actions: {
-			action0({ ownerState }) {
-				const context = ownerState.context;
-
+			action0({ context }) {
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
@@ -98,9 +92,7 @@ test('compound state respects context types in actions and conditions', () => {
 			},
 		},
 		conditions: {
-			condition0({ ownerState }) {
-				const context = ownerState.context;
-
+			condition0({ context }) {
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
@@ -122,9 +114,7 @@ test('compound state respects context types in actions and conditions', () => {
 					willChangeType: false,
 				},
 				actions: {
-					action1({ ownerState }) {
-						const context = ownerState.context;
-
+					action1({ context }) {
 						const key11 = context.get('key11');
 						expectTypeOf(key11).toBeNumber();
 						expect(key11).toBe(1);
@@ -142,8 +132,7 @@ test('compound state respects context types in actions and conditions', () => {
 					},
 				},
 				conditions: {
-					condition1({ ownerState }) {
-						const context = ownerState.context;
+					condition1({ context }) {
 						const key1 = context.get('key11');
 						expectTypeOf(key1).toBeNumber();
 						expect(key1).toBe(1);
@@ -183,9 +172,7 @@ test('compound state respects context types in actions and conditions', () => {
 					key02: '02',
 				},
 				actions: {
-					action1({ ownerState }) {
-						const context = ownerState.context;
-
+					action1({ context }) {
 						const key02 = context.get('key02');
 						expectTypeOf(key02).toBeString();
 						expect(key02).toBe('02');
@@ -203,8 +190,7 @@ test('compound state respects context types in actions and conditions', () => {
 					},
 				},
 				conditions: {
-					condition1({ ownerState }) {
-						const context = ownerState.context;
+					condition1({ context }) {
 						const key02 = context.get('key02');
 						expectTypeOf(key02).toBeString();
 						expect(key02).toBe('02');
@@ -252,9 +238,7 @@ test('parallel state respects context types in actions and conditions', () => {
 			willChangeType: 'foo',
 		},
 		actions: {
-			action0({ ownerState }) {
-				const context = ownerState.context;
-
+			action0({ context }) {
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
@@ -268,9 +252,7 @@ test('parallel state respects context types in actions and conditions', () => {
 			},
 		},
 		conditions: {
-			condition0({ ownerState }) {
-				const context = ownerState.context;
-
+			condition0({ context }) {
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
@@ -292,9 +274,7 @@ test('parallel state respects context types in actions and conditions', () => {
 					willChangeType: false,
 				},
 				actions: {
-					action1({ ownerState }) {
-						const context = ownerState.context;
-
+					action1({ context }) {
 						const key11 = context.get('key11');
 						expectTypeOf(key11).toBeNumber();
 						expect(key11).toBe(1);
@@ -312,8 +292,7 @@ test('parallel state respects context types in actions and conditions', () => {
 					},
 				},
 				conditions: {
-					condition1({ ownerState }) {
-						const context = ownerState.context;
+					condition1({ context }) {
 						const key1 = context.get('key11');
 						expectTypeOf(key1).toBeNumber();
 						expect(key1).toBe(1);
@@ -353,9 +332,7 @@ test('parallel state respects context types in actions and conditions', () => {
 					key02: '02',
 				},
 				actions: {
-					action1({ ownerState }) {
-						const context = ownerState.context;
-
+					action1({ context }) {
 						const key02 = context.get('key02');
 						expectTypeOf(key02).toBeString();
 						expect(key02).toBe('02');
@@ -373,8 +350,7 @@ test('parallel state respects context types in actions and conditions', () => {
 					},
 				},
 				conditions: {
-					condition1({ ownerState }) {
-						const context = ownerState.context;
+					condition1({ context }) {
 						const key02 = context.get('key02');
 						expectTypeOf(key02).toBeString();
 						expect(key02).toBe('02');
@@ -408,18 +384,14 @@ test('atomic state allows missing context types', () => {
 			key01: '01',
 		},
 		actions: {
-			action0({ ownerState }) {
-				const context = ownerState.context;
-
+			action0({ context }) {
 				context.get('non-existent');
 				// @ts-expect-error
 				context.get(1);
 			},
 		},
 		conditions: {
-			condition0({ ownerState }) {
-				const context = ownerState.context;
-
+			condition0({ context }) {
 				context.get('non-existent');
 				// @ts-expect-error
 				context.get(1);
@@ -443,18 +415,14 @@ test('compound allows missing context types', () => {
 			key01: '01',
 		},
 		actions: {
-			action0({ ownerState }) {
-				const context = ownerState.context;
-
+			action0({ context }) {
 				context.get('non-existent');
 				// @ts-expect-error
 				context.get(1);
 			},
 		},
 		conditions: {
-			condition0({ ownerState }) {
-				const context = ownerState.context;
-
+			condition0({ context }) {
 				context.get('non-existent');
 				// @ts-expect-error
 				context.get(1);
@@ -468,9 +436,7 @@ test('compound allows missing context types', () => {
 					key11: 1,
 				},
 				actions: {
-					action1({ ownerState }) {
-						const context = ownerState.context;
-
+					action1({ context }) {
 						context.get('non-existent');
 						context.update('non-existent', '');
 						// @ts-expect-error
@@ -478,9 +444,7 @@ test('compound allows missing context types', () => {
 					},
 				},
 				conditions: {
-					condition1({ ownerState }) {
-						const context = ownerState.context;
-
+					condition1({ context }) {
 						context.get('non-existent');
 						context.update('non-existent', '');
 						// @ts-expect-error
@@ -507,18 +471,14 @@ test('compound allows missing context types', () => {
 					key02: '02',
 				},
 				actions: {
-					action1({ ownerState }) {
-						const context = ownerState.context;
-
+					action1({ context }) {
 						context.get('non-existent');
 						// @ts-expect-error
 						context.get(1);
 					},
 				},
 				conditions: {
-					condition1({ ownerState }) {
-						const context = ownerState.context;
-
+					condition1({ context }) {
 						context.get('non-existent');
 						context.update('non-existent', '');
 						// @ts-expect-error
@@ -545,18 +505,14 @@ test('parallel allows missing context types', () => {
 			key01: '01',
 		},
 		actions: {
-			action0({ ownerState }) {
-				const context = ownerState.context;
-
+			action0({ context }) {
 				context.get('non-existent');
 				// @ts-expect-error
 				context.get(1);
 			},
 		},
 		conditions: {
-			condition0({ ownerState }) {
-				const context = ownerState.context;
-
+			condition0({ context }) {
 				context.get('non-existent');
 				// @ts-expect-error
 				context.get(1);
@@ -570,18 +526,14 @@ test('parallel allows missing context types', () => {
 					key11: 1,
 				},
 				actions: {
-					action1({ ownerState }) {
-						const context = ownerState.context;
-
+					action1({ context }) {
 						context.get('non-existent');
 						// @ts-expect-error
 						context.get(1);
 					},
 				},
 				conditions: {
-					condition1({ ownerState }) {
-						const context = ownerState.context;
-
+					condition1({ context }) {
 						context.get('non-existent');
 						context.update('non-existent', '');
 						// @ts-expect-error
@@ -608,18 +560,14 @@ test('parallel allows missing context types', () => {
 					key02: '02',
 				},
 				actions: {
-					action1({ ownerState }) {
-						const context = ownerState.context;
-
+					action1({ context }) {
 						context.get('non-existent');
 						// @ts-expect-error
 						context.get(1);
 					},
 				},
 				conditions: {
-					condition1({ ownerState }) {
-						const context = ownerState.context;
-
+					condition1({ context }) {
 						context.get('non-existent');
 						context.update('non-existent', '');
 						// @ts-expect-error

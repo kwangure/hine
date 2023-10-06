@@ -106,10 +106,9 @@ export class CompoundState extends ParentState {
 	}
 	/**
 	 * @param {string} target
-	 * @param {import('../handler/base.js').BaseHandler<TStateConfig, TContextAncestor>} handler
-	 * @param {import('../runner/types.js').Action<any, any>[]} actions
+	 * @param {(() => any)[]} actions
 	 */
-	__transition(target, handler, actions) {
+	__transition(target, actions) {
 		const from = this.__state;
 		const to = this.__children.get(target);
 		// These should never happen. They're mostly to help TypeScript out
@@ -136,7 +135,7 @@ export class CompoundState extends ParentState {
 
 		// transition actions for the handler
 		for (const action of actions) {
-			action(handler);
+			action();
 		}
 		// This should never happen. They're mostly to help TypeScript out
 		if (!from.parent) throw Error('Missing state parent');

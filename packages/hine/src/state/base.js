@@ -103,21 +103,21 @@ export class BaseState {
 	}
 	/**
 	 * @param {string} name
-	 * @returns {import('../runner/types.js').Action<TStateConfig, TContextAncestor> | undefined}
+	 * @returns {(() => any) | undefined}
 	 */
 	__getAction(name) {
 		if (name in this.#actions) {
-			return this.#actions[name];
+			return this.#actions[name].bind(undefined, this);
 		}
 		return this.__parent?.__getAction(name);
 	}
 	/**
 	 * @param {string} name
-	 * @returns {import('../runner/types.js').Condition<TStateConfig, TContextAncestor> | undefined}
+	 * @returns {(() => boolean) | undefined}
 	 */
 	__getCondition(name) {
 		if (name in this.#conditions) {
-			return this.#conditions[name];
+			return this.#conditions[name].bind(undefined, this);
 		}
 		return this.__parent?.__getCondition(name);
 	}

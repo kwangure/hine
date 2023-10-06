@@ -18,9 +18,10 @@ describe('conditions', () => {
 				do() {},
 			},
 			conditions: {
-				cond1({ ownerState }) {
-					expect(() => ownerState?.conditions.cond2).not.toThrow();
-					// expect(ownerState?.conditions.cond2.run()).toBe(false);
+				cond1(state) {
+					const { conditions } = state;
+					expect(() => conditions.cond2).not.toThrow();
+					expect(conditions.cond2(state)).toBe(false);
 					return true;
 				},
 				cond2: () => false,

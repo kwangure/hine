@@ -60,7 +60,7 @@ export class ParentState extends BaseState {
 	 *
 	 * @param {string} _to
 	 * @param {import('../handler/base.js').BaseHandler<TStateConfig, TContextAncestor>} _handler
-	 * @param {import("../runner/base.js").BaseRunner<any, any>[]} _actions
+	 * @param {import('../runner/types.js').Action<any, any>[]} _actions
 	 */
 	__transition(_to, _handler, _actions) {}
 	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').ParentResolveConfig<TStateConfig, TContextAncestor>>} [config] */

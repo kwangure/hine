@@ -7,11 +7,10 @@ import { BaseHandler } from './base.js';
  */
 export class EffectHandler extends BaseHandler {
 	run() {
-		const shouldExecute = !this.__condition || this.__condition.run(this);
+		const shouldExecute = !this.__condition || this.__condition(this);
 		if (shouldExecute) {
 			for (const action of this.__actions) {
-				// @ts-expect-error
-				action.run(this);
+				action(this);
 			}
 		}
 		return shouldExecute;

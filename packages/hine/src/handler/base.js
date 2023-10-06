@@ -17,7 +17,7 @@ export class BaseHandler {
 		this.__name = options.name;
 		this.__ownerState = options.ownerState;
 	}
-	/** @type {import('../runner/base').BaseRunner<any, any>[]} */
+	/** @type {import('../runner/types.js').Action<TStateConfig, TContextAncestor>[]} */
 	get __actions() {
 		const actions = [];
 		for (const name of this.__runConfig) {

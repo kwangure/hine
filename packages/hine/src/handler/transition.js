@@ -17,10 +17,13 @@ export class TransitionHandler extends BaseHandler {
 		this.#goto = options.goto;
 	}
 	run() {
-		const shouldExecute = !this.__condition || this.__condition.run(this);
+		const shouldExecute = !this.__condition || this.__condition(this);
 		if (shouldExecute) {
-			// @ts-expect-error
-			this.__ownerState.parent?.__transition(this.#goto, this, this.__actions);
+			this.__ownerState.parent?.__transition(
+				this.#goto,
+				/** @type {any} */ (this),
+				this.__actions,
+			);
 		}
 		return shouldExecute;
 	}

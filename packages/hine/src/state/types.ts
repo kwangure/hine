@@ -1,7 +1,4 @@
-import type {
-	ActionRunnerConfig,
-	ConditionRunnerConfig,
-} from '../runner/types.js';
+import type { Action, Condition } from '../runner/types.js';
 import type {
 	EffectHandlerConfig,
 	HandlerJSON,
@@ -85,8 +82,8 @@ export interface StateConfig extends BaseStateConfig {
 }
 
 export interface BaseResolveConfig {
-	actions?: Record<string, ActionRunnerConfig<any, any>>;
-	conditions?: Record<string, ConditionRunnerConfig<any, any>>;
+	actions?: Record<string, Action<any, any>>;
+	conditions?: Record<string, Condition<any, any>>;
 	context?: Record<string, unknown>;
 }
 
@@ -94,11 +91,8 @@ export interface AtomicResolveConfig<
 	TStateConfig extends StateConfig,
 	TContextAncestor extends Record<string, any>,
 > extends BaseResolveConfig {
-	actions?: Record<string, ActionRunnerConfig<TStateConfig, TContextAncestor>>;
-	conditions?: Record<
-		string,
-		ConditionRunnerConfig<TStateConfig, TContextAncestor>
-	>;
+	actions?: Record<string, Action<TStateConfig, TContextAncestor>>;
+	conditions?: Record<string, Condition<TStateConfig, TContextAncestor>>;
 	context?: ContextType<TStateConfig, Record<string, any>>;
 }
 
@@ -106,11 +100,8 @@ export interface ParentResolveConfig<
 	TStateConfig extends StateConfig,
 	TContextAncestor extends Record<string, any>,
 > extends BaseResolveConfig {
-	actions?: Record<string, ActionRunnerConfig<TStateConfig, TContextAncestor>>;
-	conditions?: Record<
-		string,
-		ConditionRunnerConfig<TStateConfig, TContextAncestor>
-	>;
+	actions?: Record<string, Action<TStateConfig, TContextAncestor>>;
+	conditions?: Record<string, Condition<TStateConfig, TContextAncestor>>;
 	context?: ContextType<TStateConfig, Record<string, any>>;
 	children?: Partial<{
 		[child in keyof TStateConfig['children']]: TStateConfig['children'][child] extends CompoundState<

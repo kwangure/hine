@@ -1,5 +1,4 @@
 import { createHandler, normalizeHandlerConfig } from './util.js';
-import { BaseRunner } from '../runner/base.js';
 import { Context } from '../context/context.js';
 import { StateEvent } from '../event.js';
 import { TransitionHandler } from '../handler/transition.js';
@@ -11,7 +10,7 @@ import { TransitionHandler } from '../handler/transition.js';
 export class BaseState {
 	/**
 	 * Actions from the user config
-	 * @type {Record<string, BaseRunner<TStateConfig, TContextAncestor>>}
+	 * @type {Record<string, import('../runner/types.js').Action<TStateConfig, TContextAncestor>>}
 	 */
 	#actions = {};
 	/** @type {(import('../handler/effect.js').EffectHandler<TStateConfig, TContextAncestor> | import('../handler/transition.js').TransitionHandler<TStateConfig, TContextAncestor>)[]} */
@@ -19,7 +18,7 @@ export class BaseState {
 	#alwaysConfig;
 	/**
 	 * Conditions from the user config
-	 * @type {Record<string, BaseRunner<TStateConfig, TContextAncestor>>}
+	 * @type {Record<string, import('../runner/types.js').Condition<TStateConfig, TContextAncestor>>}
 	 */
 	#conditions = {};
 	#context;
@@ -32,21 +31,6 @@ export class BaseState {
 	#exit = [];
 	#exitConfig;
 	#onConfig;
-	/**
-	 * Actions from all ancestor states and the config
-	 * @type {Record<string, BaseRunner<TStateConfig, TContextAncestor>>}
-	 */
-	__allActions = {};
-	/**
-	 * Conditions from all ancestor states and the config
-	 * @type {Record<string, BaseRunner<TStateConfig, TContextAncestor>>}
-	 */
-	__allConditions = {};
-
-	/** @type {BaseRunner<TStateConfig, TContextAncestor> | null} */
-	__action = null;
-	/** @type {BaseRunner<TStateConfig, TContextAncestor> | null} */
-	__condition = null;
 	/** @type {(import('../handler/effect.js').EffectHandler<TStateConfig, TContextAncestor> | import('../handler/transition.js').TransitionHandler<TStateConfig, TContextAncestor>)[]} */
 	__handlerQueue = [];
 	__initialized = false;
@@ -80,7 +64,7 @@ export class BaseState {
 		this.#onConfig = stateConfig.on || {};
 	}
 	/**
-	 * @returns {Record<string, BaseRunner<TStateConfig, TContextAncestor>>}
+	 * @returns {Record<string, import('../runner/types.js').Action<TStateConfig, TContextAncestor>>}
 	 */
 	get __actions() {
 		return {
@@ -95,7 +79,7 @@ export class BaseState {
 		this.__parent?.__callSubscribers();
 	}
 	/**
-	 * @returns {Record<string, BaseRunner<TStateConfig, TContextAncestor>>}
+	 * @returns {Record<string, import('../runner/types.js').Condition<TStateConfig, TContextAncestor>>}
 	 */
 	get __conditions() {
 		return {
@@ -119,7 +103,7 @@ export class BaseState {
 	}
 	/**
 	 * @param {string} name
-	 * @returns {BaseRunner<TStateConfig, TContextAncestor> | undefined}
+	 * @returns {import('../runner/types.js').Action<TStateConfig, TContextAncestor> | undefined}
 	 */
 	__getAction(name) {
 		if (name in this.#actions) {
@@ -129,7 +113,7 @@ export class BaseState {
 	}
 	/**
 	 * @param {string} name
-	 * @returns {BaseRunner<TStateConfig, TContextAncestor> | undefined}
+	 * @returns {import('../runner/types.js').Condition<TStateConfig, TContextAncestor> | undefined}
 	 */
 	__getCondition(name) {
 		if (name in this.#conditions) {
@@ -179,18 +163,16 @@ export class BaseState {
 		}
 		if (config?.actions) {
 			for (const [name, action] of Object.entries(config.actions)) {
-				this.#actions[name] = new BaseRunner(action, this);
+				this.#actions[name] = action;
 			}
 		}
 		if (config?.conditions) {
 			for (const [name, condition] of Object.entries(config.conditions)) {
-				this.#conditions[name] = new BaseRunner(condition, this);
+				this.#conditions[name] = condition;
 			}
 		}
 	}
 	__resolveConfig() {
-		this.__allActions = this.__actions;
-		this.__allConditions = this.__conditions;
 		this.#context.__ownerState = this;
 
 		for (const [index, handlerConfig] of this.#alwaysConfig.entries()) {
@@ -247,9 +229,6 @@ export class BaseState {
 		this.__callSubscribers();
 		this.#event = null;
 	}
-	get action() {
-		return this.__action;
-	}
 	get actions() {
 		return this.__actions;
 	}
@@ -270,9 +249,6 @@ export class BaseState {
 			}
 		}
 		return false;
-	}
-	get condition() {
-		return this.__condition;
 	}
 	get conditions() {
 		return this.__conditions;

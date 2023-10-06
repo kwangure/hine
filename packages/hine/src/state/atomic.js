@@ -22,7 +22,7 @@ export function atomic(config) {
 export class AtomicState extends BaseState {
 	#type = /** @type {const} */ ('atomic');
 	/**
-	 * @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').AtomicResolveConfig<TStateConfig, TContextAncestor>>} [config]
+	 * @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').AtomicResolveConfig<this>>} [config]
 	 */
 	resolve(config) {
 		this.__resolve(config);

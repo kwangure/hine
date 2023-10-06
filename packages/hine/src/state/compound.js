@@ -84,7 +84,7 @@ export class CompoundState extends ParentState {
 			state.__resolveConfig();
 		}
 	}
-	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').ParentResolveConfig<TStateConfig, TContextAncestor>>} [config] */
+	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').ParentResolveConfig<TContextAncestor, this>>} [config] */
 	__resolve(config) {
 		super.__resolve(config);
 		if (!config?.children) return;

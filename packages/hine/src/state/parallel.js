@@ -6,7 +6,7 @@ import { ParentState } from './parent.js';
  */
 export function parallel(config) {
 	return /** @type {ParallelState<TConfig, {}>} */ (
-		new ParallelState(config ?? {})
+		new ParallelState(config ?? /** @type {TConfig} */ ({}))
 	);
 }
 

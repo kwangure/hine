@@ -1,9 +1,3 @@
-export type ContextType<T, TFallback> = T extends { types: infer U }
-	? U extends { context: infer V }
-		? V
-		: TFallback
-	: TFallback;
-
 export type Merge<T, U> = Omit<T, keyof U> & U;
 
 export type KeyOfMerged<K extends string, T, U> = K extends keyof Merge<T, U>

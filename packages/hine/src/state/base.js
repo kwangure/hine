@@ -10,7 +10,7 @@ import { TransitionHandler } from '../handler/transition.js';
 export class BaseState {
 	/**
 	 * Actions from the user config
-	 * @type {Record<string, import('../runner/types.js').Action<TStateConfig, TContextAncestor>>}
+	 * @type {Record<string, import('../runner/types.js').Action<any>>}
 	 */
 	#actions = {};
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
@@ -18,7 +18,7 @@ export class BaseState {
 	#alwaysConfig;
 	/**
 	 * Conditions from the user config
-	 * @type {Record<string, import('../runner/types.js').Condition<TStateConfig, TContextAncestor>>}
+	 * @type {Record<string, import('../runner/types.js').Condition<any>>}
 	 */
 	#conditions = {};
 	#context;
@@ -31,6 +31,15 @@ export class BaseState {
 	#exit = [];
 	#exitConfig;
 	#onConfig;
+
+	__$config = /** @type {TStateConfig} */ ({});
+	__$context = /**
+	 * @type {TStateConfig['types'] extends { context: Record<String, any> }
+	 *     ? TStateConfig['types']['context']
+	 *     : Record<String, any>
+	 * }
+	 */ ({});
+
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	__handlerQueue = [];
 	__initialized = false;
@@ -47,7 +56,7 @@ export class BaseState {
 	 */
 	constructor(stateConfig) {
 		this.#context =
-			/** @type {Context<import('../context/types.js').ContextType<TStateConfig, Record<string, any>>, TContextAncestor>} */ (
+			/** @type {Context<typeof this['__$context'], TContextAncestor>} */ (
 				new Context(this)
 			);
 		this.__name = stateConfig.name || '';
@@ -64,7 +73,7 @@ export class BaseState {
 		this.#onConfig = stateConfig.on || {};
 	}
 	/**
-	 * @returns {Record<string, import('../runner/types.js').Action<TStateConfig, TContextAncestor>>}
+	 * @returns {Record<string, import('../runner/types.js').Action<any>>}
 	 */
 	get __actions() {
 		return {
@@ -79,7 +88,7 @@ export class BaseState {
 		this.__parent?.__callSubscribers();
 	}
 	/**
-	 * @returns {Record<string, import('../runner/types.js').Condition<TStateConfig, TContextAncestor>>}
+	 * @returns {Record<string, import('../runner/types.js').Condition<any>>}
 	 */
 	get __conditions() {
 		return {

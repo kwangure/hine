@@ -35,7 +35,15 @@ export class ParentState extends BaseState {
 	/**
 	 * @template {Record<string, import("./types.js").StateNode>} TChildren
 	 * @param {TChildren} children
-	 * @param {NonNullable<import('./types.js').RequireContext<import('./types.js').ReplaceChildren<TStateConfig, TChildren>, import('./types.js').ParentResolveConfig<import('./types.js').ReplaceChildren<TStateConfig, TChildren>, TContextAncestor>>['children']>} resolveConfig
+	 * @param {NonNullable<
+	 *   import('./types.js').RequireContext<
+	 *     import('./types.js').ReplaceChildren<TStateConfig, TChildren>,
+	 *     import('./types.js').ParentResolveConfig<
+	 *       TContextAncestor,
+	 *       ParentState<import('./types.js').ReplaceChildren<TStateConfig, TChildren>, TContextAncestor>
+	 *     >
+	 *    >['children']
+	 * >} resolveConfig
 	 */
 	append(children, resolveConfig) {
 		this.__append(children);
@@ -59,15 +67,15 @@ export class ParentState extends BaseState {
 	 * This is a noop for `ParallelState`s and implemented for `CompoundState`s
 	 *
 	 * @param {string} _to
-	 * @param {import('../runner/types.js').Action<any, any>[]} _actions
+	 * @param {import('../runner/types.js').Action<any>[]} _actions
 	 */
 	__transition(_to, _actions) {}
-	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').ParentResolveConfig<TStateConfig, TContextAncestor>>} [config] */
+	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').ParentResolveConfig<TContextAncestor, this>>} [config] */
 	resolve(config) {
 		this.__resolve(config);
 		this.__start();
 	}
-	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').ParentResolveConfig<TStateConfig, TContextAncestor>>} [config] */
+	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').ParentResolveConfig<TContextAncestor, this>>} [config] */
 	__resolve(config) {
 		super.__resolve(config);
 		if (!config?.children) return;

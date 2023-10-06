@@ -1,5 +1,8 @@
 import { atomic, compound, parallel } from '../../helpers.js';
 import { expect, expectTypeOf, test } from 'vitest';
+import { AtomicState } from '../../state/atomic.js';
+import { CompoundState } from '../../state/compound.js';
+import { ParallelState } from '../../state/parallel.js';
 
 test('atomic state respects context types in actions and conditions', () => {
 	const stateMachine = atomic({
@@ -16,7 +19,11 @@ test('atomic state respects context types in actions and conditions', () => {
 			willChangeType: 'foo',
 		},
 		actions: {
-			action0({ context }) {
+			action0(state) {
+				expectTypeOf(state).toMatchTypeOf(
+					/** @type {AtomicState<any, any>} */ (new AtomicState({})),
+				);
+				const { context } = state;
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
@@ -34,7 +41,11 @@ test('atomic state respects context types in actions and conditions', () => {
 			},
 		},
 		conditions: {
-			condition0({ context }) {
+			condition0(state) {
+				expectTypeOf(state).toMatchTypeOf(
+					/** @type {AtomicState<any, any>} */ (new AtomicState({})),
+				);
+				const { context } = state;
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
@@ -78,7 +89,11 @@ test('compound state respects context types in actions and conditions', () => {
 			willChangeType: 'foo',
 		},
 		actions: {
-			action0({ context }) {
+			action0(state) {
+				expectTypeOf(state).toMatchTypeOf(
+					/** @type {CompoundState<any, any>} */ (new CompoundState({})),
+				);
+				const { context } = state;
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
@@ -92,7 +107,11 @@ test('compound state respects context types in actions and conditions', () => {
 			},
 		},
 		conditions: {
-			condition0({ context }) {
+			condition0(state) {
+				expectTypeOf(state).toMatchTypeOf(
+					/** @type {CompoundState<any, any>} */ (new CompoundState({})),
+				);
+				const { context } = state;
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
@@ -114,7 +133,8 @@ test('compound state respects context types in actions and conditions', () => {
 					willChangeType: false,
 				},
 				actions: {
-					action1({ context }) {
+					action1(state) {
+						const { context } = state;
 						const key11 = context.get('key11');
 						expectTypeOf(key11).toBeNumber();
 						expect(key11).toBe(1);
@@ -172,7 +192,11 @@ test('compound state respects context types in actions and conditions', () => {
 					key02: '02',
 				},
 				actions: {
-					action1({ context }) {
+					action1(state) {
+						expectTypeOf(state).toMatchTypeOf(
+							/** @type {CompoundState<any, any>} */ (new CompoundState({})),
+						);
+						const { context } = state;
 						const key02 = context.get('key02');
 						expectTypeOf(key02).toBeString();
 						expect(key02).toBe('02');
@@ -190,7 +214,11 @@ test('compound state respects context types in actions and conditions', () => {
 					},
 				},
 				conditions: {
-					condition1({ context }) {
+					condition1(state) {
+						expectTypeOf(state).toMatchTypeOf(
+							/** @type {CompoundState<any, any>} */ (new CompoundState({})),
+						);
+						const { context } = state;
 						const key02 = context.get('key02');
 						expectTypeOf(key02).toBeString();
 						expect(key02).toBe('02');
@@ -222,12 +250,21 @@ test('parallel state respects context types in actions and conditions', () => {
 		},
 		entry: { if: 'condition0', run: ['action0'] },
 		children: {
-			child1: atomic({
+			child1: parallel({
 				types: {
 					context:
 						/** @type {{ key11: number; willChangeType: boolean; }} */ ({}),
 				},
 				entry: { if: 'condition1', run: ['action1'] },
+				children: {
+					child11: atomic({
+						types: {
+							context:
+								/** @type {{ key11: number; willChangeType: boolean; }} */ ({}),
+						},
+						entry: { if: 'condition1', run: ['action1'] },
+					}),
+				},
 			}),
 		},
 	});
@@ -238,7 +275,11 @@ test('parallel state respects context types in actions and conditions', () => {
 			willChangeType: 'foo',
 		},
 		actions: {
-			action0({ context }) {
+			action0(state) {
+				expectTypeOf(state).toMatchTypeOf(
+					/** @type {ParallelState<any, any>} */ (new ParallelState({})),
+				);
+				const { context } = state;
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
@@ -252,7 +293,11 @@ test('parallel state respects context types in actions and conditions', () => {
 			},
 		},
 		conditions: {
-			condition0({ context }) {
+			condition0(state) {
+				expectTypeOf(state).toMatchTypeOf(
+					/** @type {ParallelState<any, any>} */ (new ParallelState({})),
+				);
+				const { context } = state;
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
@@ -274,7 +319,11 @@ test('parallel state respects context types in actions and conditions', () => {
 					willChangeType: false,
 				},
 				actions: {
-					action1({ context }) {
+					action1(state) {
+						expectTypeOf(state).toMatchTypeOf(
+							/** @type {ParallelState<any, any>} */ (new ParallelState({})),
+						);
+						const { context } = state;
 						const key11 = context.get('key11');
 						expectTypeOf(key11).toBeNumber();
 						expect(key11).toBe(1);
@@ -292,7 +341,11 @@ test('parallel state respects context types in actions and conditions', () => {
 					},
 				},
 				conditions: {
-					condition1({ context }) {
+					condition1(state) {
+						expectTypeOf(state).toMatchTypeOf(
+							/** @type {ParallelState<any, any>} */ (new ParallelState({})),
+						);
+						const { context } = state;
 						const key1 = context.get('key11');
 						expectTypeOf(key1).toBeNumber();
 						expect(key1).toBe(1);
@@ -332,7 +385,11 @@ test('parallel state respects context types in actions and conditions', () => {
 					key02: '02',
 				},
 				actions: {
-					action1({ context }) {
+					action1(state) {
+						expectTypeOf(state).toMatchTypeOf(
+							/** @type {CompoundState<any, any>} */ (new CompoundState({})),
+						);
+						const { context } = state;
 						const key02 = context.get('key02');
 						expectTypeOf(key02).toBeString();
 						expect(key02).toBe('02');

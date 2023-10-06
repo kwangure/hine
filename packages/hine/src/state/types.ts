@@ -7,13 +7,13 @@ import type {
 import type { AtomicState } from './atomic.js';
 import type { CompoundState } from './compound.js';
 import { BaseState } from './base.js';
-import { ContextType } from '../context/types.js';
 import { ParallelState } from './parallel.js';
+import { Merge } from '../context/types.js';
 
 export type StateNode =
-	| AtomicState<AtomicStateConfig, any>
-	| CompoundState<CompoundStateConfig, any>
-	| ParallelState<ParallelStateConfig, any>;
+	| AtomicState<any, any>
+	| CompoundState<any, any>
+	| ParallelState<any, any>;
 
 export interface BaseStateTypes {
 	context?: Record<string, any>;
@@ -40,41 +40,12 @@ export interface BaseStateConfig {
 
 export interface AtomicStateConfig extends BaseStateConfig {}
 
-export interface AtomicStateConfigTransitionless extends AtomicStateConfig {
-	always?: string | EffectHandlerConfig | (string | EffectHandlerConfig)[];
-	on?: Record<
-		string,
-		string | EffectHandlerConfig | (string | EffectHandlerConfig)[]
-	>;
-}
-
 export interface CompoundStateConfig extends BaseStateConfig {
 	children: Record<string, StateNode>;
 }
 
-export interface CompoundStateConfigTransitionless extends CompoundStateConfig {
-	always?: string | EffectHandlerConfig | (string | EffectHandlerConfig)[];
-	on?: Record<
-		string,
-		string | EffectHandlerConfig | (string | EffectHandlerConfig)[]
-	>;
-}
-
 export interface ParallelStateConfig extends BaseStateConfig {
-	children: Record<
-		string,
-		| AtomicState<AtomicStateConfigTransitionless, any>
-		| CompoundState<CompoundStateConfigTransitionless, any>
-		| ParallelState<ParallelStateConfigTransitionless, any>
-	>;
-}
-
-export interface ParallelStateConfigTransitionless extends ParallelStateConfig {
-	always?: string | EffectHandlerConfig | (string | EffectHandlerConfig)[];
-	on?: Record<
-		string,
-		string | EffectHandlerConfig | (string | EffectHandlerConfig)[]
-	>;
+	children: Record<string, StateNode>;
 }
 
 export interface StateConfig extends BaseStateConfig {
@@ -82,55 +53,71 @@ export interface StateConfig extends BaseStateConfig {
 }
 
 export interface BaseResolveConfig {
-	actions?: Record<string, Action<any, any>>;
-	conditions?: Record<string, Condition<any, any>>;
+	actions?: Record<string, Action<any>>;
+	conditions?: Record<string, Condition<any>>;
 	context?: Record<string, unknown>;
 }
 
-export interface AtomicResolveConfig<
-	TStateConfig extends StateConfig,
-	TContextAncestor extends Record<string, any>,
-> extends BaseResolveConfig {
-	actions?: Record<string, Action<TStateConfig, TContextAncestor>>;
-	conditions?: Record<string, Condition<TStateConfig, TContextAncestor>>;
-	context?: ContextType<TStateConfig, Record<string, any>>;
+export interface AtomicResolveConfig<TState extends BaseState<any, any>>
+	extends BaseResolveConfig {
+	actions?: Record<string, Action<TState>>;
+	conditions?: Record<string, Condition<TState>>;
+	context?: TState['__$context'];
 }
 
 export interface ParentResolveConfig<
-	TStateConfig extends StateConfig,
 	TContextAncestor extends Record<string, any>,
+	TState extends BaseState<any, any>,
 > extends BaseResolveConfig {
-	actions?: Record<string, Action<TStateConfig, TContextAncestor>>;
-	conditions?: Record<string, Condition<TStateConfig, TContextAncestor>>;
-	context?: ContextType<TStateConfig, Record<string, any>>;
+	actions?: Record<string, Action<TState>>;
+	conditions?: Record<string, Condition<TState>>;
+	context?: TState['__$context'];
 	children?: Partial<{
-		[child in keyof TStateConfig['children']]: TStateConfig['children'][child] extends CompoundState<
-			infer TCompoundStateConfig,
-			Record<string, any>
+		[child in keyof TState['__$config']['children']]: TState['__$config']['children'][child] extends ParallelState<
+			any,
+			any
 		>
 			? RequireContext<
-					TCompoundStateConfig,
+					TState['__$config']['children'][child]['__$config'],
 					ParentResolveConfig<
-						TCompoundStateConfig,
-						ContextType<TStateConfig, {}>
+						TState['__$context'],
+						ParallelState<
+							TState['__$config']['children'][child]['__$config'],
+							Merge<TContextAncestor, TState['__$context']>
+						>
 					>
 			  >
-			: TStateConfig['children'][child] extends AtomicState<
-					infer TAtomicStateConfig,
-					Record<string, any>
-			  >
+			: TState['__$config']['children'][child] extends CompoundState<any, any>
 			? RequireContext<
-					TAtomicStateConfig,
-					AtomicResolveConfig<TAtomicStateConfig, ContextType<TStateConfig, {}>>
+					TState['__$config']['children'][child]['__$config'],
+					ParentResolveConfig<
+						TState['__$context'],
+						CompoundState<
+							TState['__$config']['children'][child]['__$config'],
+							Merge<TContextAncestor, TState['__$context']>
+						>
+					>
 			  >
-			: never;
+			: TState['__$config']['children'][child] extends AtomicState<any, any>
+			? RequireContext<
+					TState['__$config']['children'][child]['__$config'],
+					AtomicResolveConfig<
+						AtomicState<
+							TState['__$config']['children'][child]['__$config'],
+							Merge<TContextAncestor, TState['__$context']>
+						>
+					>
+			  >
+			: AtomicResolveConfig<
+					BaseState<
+						TState['__$config']['children'][child]['__$config'],
+						Merge<TContextAncestor, TState['__$context']>
+					>
+			  >;
 	}>;
 }
 
-export type ReplaceChildren<T extends { children: any }, U> = Omit<
-	T,
-	'children'
-> & { children: U };
+export type ReplaceChildren<T, U> = Omit<T, 'children'> & { children: U };
 
 export type Simplify<T> = { [key in keyof T]: T[key] } & {};
 

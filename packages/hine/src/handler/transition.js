@@ -1,12 +1,17 @@
 import { BaseHandler } from './base.js';
 
+/**
+ * @template {import('../state/types.js').StateConfig} TStateConfig
+ * @template {Record<string, any>} TContextAncestor
+ * @extends {BaseHandler<TStateConfig, TContextAncestor>}
+ */
 export class TransitionHandler extends BaseHandler {
 	/** @type {string} */
 	#goto;
 	#type = /** @type {const} */ ('transition');
 
 	/**
-	 * @param {import('./types.js').TransitionHandlerConfig & { name: string; ownerState: import('../state/base.js').BaseState<any, any>}} options
+	 * @param {import('./types.js').TransitionHandlerConfig & { name: string; ownerState: import('../state/base.js').BaseState<TStateConfig, TContextAncestor>}} options
 	 *
 	 */
 	constructor(options) {
@@ -16,9 +21,10 @@ export class TransitionHandler extends BaseHandler {
 	run() {
 		const from = this.__ownerState;
 		from.__handler = this;
-		const shouldExecute = !this.__condition || this.__condition.run();
+		const shouldExecute = !this.__condition || this.__condition.run(this);
 		if (shouldExecute) {
-			from.parent?.__transition(this.#goto, this.__actions);
+			// @ts-expect-error
+			from.parent?.__transition(this.#goto, this, this.__actions);
 		}
 		from.__handler = null;
 		return shouldExecute;

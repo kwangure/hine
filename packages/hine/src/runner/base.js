@@ -23,16 +23,10 @@ export class BaseRunner {
 		this.#run = run;
 		this.__ownerState = ownerState;
 	}
-	get context() {
-		return this.__ownerState.context;
-	}
-	get event() {
-		return this.__ownerState.event;
-	}
-	get ownerState() {
-		return this.__ownerState;
-	}
-	run() {
-		return this.#run.call(undefined, this);
+	/**
+	 * @param {import('../handler/base.js').BaseHandler<TStateConfig, TContextAncestor>} handler
+	 */
+	run(handler) {
+		return this.#run.call(undefined, handler);
 	}
 }

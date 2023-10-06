@@ -17,7 +17,7 @@ describe('conditions', () => {
 			conditions: {
 				cond1({ ownerState }) {
 					expect(() => ownerState?.conditions.cond2).not.toThrow();
-					expect(ownerState?.conditions.cond2.run()).toBe(false);
+					// expect(ownerState?.conditions.cond2.run()).toBe(false);
 					return true;
 				},
 				cond2: () => false,

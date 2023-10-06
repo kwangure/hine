@@ -3,7 +3,7 @@
  * @template {Record<string, any>} TContextAncestor
  */
 export class Context {
-	/** @type {Map<keyof TContextOwnerState, TContextOwnerState[keyof TContextOwnerState]>} */
+	/** @type {Map<string, any>} */
 	#data = new Map();
 	__ownerState;
 	/**
@@ -28,9 +28,9 @@ export class Context {
 	 * @returns {import('./types.js').ValueOfMerged<K, TContextAncestor, TContextOwnerState>}
 	 */
 	get(key) {
-		if (this.#data.has(/** @type {keyof TContextOwnerState} */ (key))) {
+		if (this.#data.has(/** @type {string} */ (key))) {
 			return /** @type {import('./types.js').ValueOfMerged<K, TContextAncestor, TContextOwnerState>} */ (
-				this.#data.get(/** @type {keyof (TContextOwnerState)} */ (key))
+				this.#data.get(/** @type {string} */ (key))
 			);
 		}
 		return /** @type {import('./types.js').ValueOfMerged<K, TContextAncestor, TContextOwnerState>} */ (
@@ -38,7 +38,7 @@ export class Context {
 		);
 	}
 	/**
-	 * @template K
+	 * @template {string} K
 	 * @param {K extends keyof TContextOwnerState ? K : never} key
 	 * @returns {boolean}
 	 */

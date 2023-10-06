@@ -1,3 +1,7 @@
+/**
+ * @template {import('../state/types.js').StateConfig} TStateConfig
+ * @template {Record<string, any>} TContextAncestor
+ */
 export class BaseHandler {
 	/** @type {string | null} */
 	__ifConfig;
@@ -5,7 +9,7 @@ export class BaseHandler {
 	/** @type {string[]} */
 	__runConfig;
 	/**
-	 * @param {import('./types').BaseHandlerConfig & { name: string; ownerState: import('../state/base.js').BaseState<any, any>}} options
+	 * @param {import('./types').BaseHandlerConfig & { name: string; ownerState: import('../state/base.js').BaseState<TStateConfig, TContextAncestor>}} options
 	 */
 	constructor(options) {
 		this.__ifConfig = options.if || null;
@@ -66,8 +70,17 @@ export class BaseHandler {
 
 		return condition;
 	}
+	get context() {
+		return this.__ownerState.context;
+	}
+	get event() {
+		return this.__ownerState.event;
+	}
 	get name() {
 		return this.__name;
+	}
+	get ownerState() {
+		return this.__ownerState;
 	}
 	/** @type {string[]} */
 	get path() {

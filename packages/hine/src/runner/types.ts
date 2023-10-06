@@ -1,17 +1,17 @@
-import type { BaseRunner } from './base.js';
+import type { BaseHandler } from '../handler/base.js';
 import type { StateConfig } from '../state/types.js';
 
 export type ActionRunnerConfig<
 	TStateConfig extends StateConfig,
 	TContextAncestor extends Record<string, any>,
-> = (this: undefined, arg: BaseRunner<TStateConfig, TContextAncestor>) => any;
+> = (this: undefined, arg: BaseHandler<TStateConfig, TContextAncestor>) => any;
 
 export type ConditionRunnerConfig<
 	TStateConfig extends StateConfig,
 	TContextAncestor extends Record<string, any>,
 > = (
 	this: undefined,
-	arg: BaseRunner<TStateConfig, TContextAncestor>,
+	arg: BaseHandler<TStateConfig, TContextAncestor>,
 ) => boolean;
 
 interface BaseRunnerJSON {

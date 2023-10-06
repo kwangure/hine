@@ -4,7 +4,7 @@ export class StateEvent {
 	/** @type {unknown} */
 	#value;
 	/**
-	 * @param {import("./types").EventOptions} options
+	 * @param {{ name: string; value?: string; }} options
 	 */
 	constructor({ name, value }) {
 		this.#name = name;

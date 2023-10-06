@@ -1,7 +1,6 @@
 import type { Action, Condition } from '../runner/types.js';
 import type {
 	EffectHandlerConfig,
-	HandlerJSON,
 	TransitionHandlerConfig,
 } from '../handler/types.js';
 import type { AtomicState } from './atomic.js';
@@ -131,34 +130,6 @@ export type RequireContext<
 		: Partial<Pick<TResolveConfig, 'context'>> & Omit<TResolveConfig, 'context'>
 >;
 
-export interface BaseStateJSON {
-	always: HandlerJSON[] | undefined;
-	entry: HandlerJSON[] | undefined;
-	exit: HandlerJSON[] | undefined;
-	name: string;
-	on: Record<string, HandlerJSON[]> | undefined;
-	path: string[];
-}
-
-export interface AtomicStateJSON extends BaseStateJSON {
-	type: 'atomic';
-}
-
-export interface CompoundStateJSON extends BaseStateJSON {
-	type: 'compound';
-	children: Record<string, StateNodeJSON>;
-}
-
-export interface ParallelStateJSON extends BaseStateJSON {
-	type: 'parallel';
-	children: Record<string, StateNodeJSON>;
-}
-
-export type StateNodeJSON =
-	| AtomicStateJSON
-	| CompoundStateJSON
-	| ParallelStateJSON;
-
 export type CollectStateConfigs<TStateConfig> = TStateConfig extends StateConfig
 	?
 			| keyof TStateConfig['on']
@@ -171,6 +142,3 @@ export type CollectStateConfigs<TStateConfig> = TStateConfig extends StateConfig
 						: never;
 			  }[keyof TStateConfig['children']]
 	: never;
-
-export type StateChildren<TStateConfig extends StateConfig> =
-	CollectStateConfigs<TStateConfig>;

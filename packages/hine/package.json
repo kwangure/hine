@@ -27,7 +27,7 @@
 	],
 	"exports": {
 		".": {
-			"types": "./types/index.d.ts",
+			"types": "./types/exports.d.ts",
 			"default": "./src/index.js"
 		}
 	},

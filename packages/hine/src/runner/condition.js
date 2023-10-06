@@ -11,13 +11,12 @@ export class ConditionRunner extends BaseRunner {
 	#type = /** @type {const} */ ('condition');
 
 	/**
-	 * @param {import('./types.js').ConditionRunnerConfig<TStateConfig, TContextAncestor> & {
-	 *     ownerState: import('../state/base.js').BaseState<TStateConfig, TContextAncestor>
-	 * }} options
+	 * @param {import('./types.js').ConditionRunnerConfig<TStateConfig, TContextAncestor>} condition
+	 * @param {import('../state/base.js').BaseState<TStateConfig, TContextAncestor>} ownerState
 	 */
-	constructor(options) {
-		super(options.ownerState);
-		this.#run = options.run;
+	constructor(condition, ownerState) {
+		super(ownerState);
+		this.#run = condition;
 	}
 	run() {
 		this.__ownerState.__condition = this;

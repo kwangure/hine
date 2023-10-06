@@ -366,10 +366,8 @@ describe('actions', () => {
 		});
 		state.resolve({
 			actions: {
-				action: {
-					run(action) {
-						expect(state.action).toBe(action);
-					},
+				action(action) {
+					expect(state.action).toBe(action);
 				},
 			},
 		});

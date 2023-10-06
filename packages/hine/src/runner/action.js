@@ -10,13 +10,12 @@ export class ActionRunner extends BaseRunner {
 	#run;
 	#type = /** @type {const} */ ('action');
 	/**
-	 * @param {import('./types.js').ActionRunnerConfig<TStateConfig, TContextAncestor> & {
-	 *     ownerState: import('../state/base.js').BaseState<TStateConfig, TContextAncestor>
-	 * }} options
+	 * @param {import('./types.js').ActionRunnerConfig<TStateConfig, TContextAncestor>} action
+	 * @param {import('../state/base.js').BaseState<TStateConfig, TContextAncestor>} ownerState
 	 */
-	constructor(options) {
-		super(options.ownerState);
-		this.#run = options.run;
+	constructor(action, ownerState) {
+		super(ownerState);
+		this.#run = action;
 	}
 	run() {
 		this.__ownerState.__action = this;

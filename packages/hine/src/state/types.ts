@@ -1,6 +1,5 @@
 import type {
 	ActionRunnerConfig,
-	BaseRunnerConfig,
 	ConditionRunnerConfig,
 } from '../runner/types.js';
 import type {
@@ -86,16 +85,8 @@ export interface StateConfig extends BaseStateConfig {
 }
 
 export interface BaseResolveConfig {
-	actions?: Record<
-		string,
-		ActionRunnerConfig<any, any> | ActionRunnerConfig<any, any>['run']
-	>;
-	actionConfig?: BaseRunnerConfig;
-	conditions?: Record<
-		string,
-		ConditionRunnerConfig<any, any> | ConditionRunnerConfig<any, any>['run']
-	>;
-	conditionConfig?: BaseRunnerConfig;
+	actions?: Record<string, ActionRunnerConfig<any, any>>;
+	conditions?: Record<string, ConditionRunnerConfig<any, any>>;
 	context?: Record<string, unknown>;
 }
 
@@ -103,15 +94,10 @@ export interface AtomicResolveConfig<
 	TStateConfig extends StateConfig,
 	TContextAncestor extends Record<string, any>,
 > extends BaseResolveConfig {
-	actions?: Record<
-		string,
-		| ActionRunnerConfig<TStateConfig, TContextAncestor>
-		| ActionRunnerConfig<TStateConfig, TContextAncestor>['run']
-	>;
+	actions?: Record<string, ActionRunnerConfig<TStateConfig, TContextAncestor>>;
 	conditions?: Record<
 		string,
-		| ConditionRunnerConfig<TStateConfig, TContextAncestor>
-		| ConditionRunnerConfig<TStateConfig, TContextAncestor>['run']
+		ConditionRunnerConfig<TStateConfig, TContextAncestor>
 	>;
 	context?: ContextType<TStateConfig, Record<string, any>>;
 }
@@ -120,15 +106,10 @@ export interface ParentResolveConfig<
 	TStateConfig extends StateConfig,
 	TContextAncestor extends Record<string, any>,
 > extends BaseResolveConfig {
-	actions?: Record<
-		string,
-		| ActionRunnerConfig<TStateConfig, TContextAncestor>
-		| ActionRunnerConfig<TStateConfig, TContextAncestor>['run']
-	>;
+	actions?: Record<string, ActionRunnerConfig<TStateConfig, TContextAncestor>>;
 	conditions?: Record<
 		string,
-		| ConditionRunnerConfig<TStateConfig, TContextAncestor>
-		| ConditionRunnerConfig<TStateConfig, TContextAncestor>['run']
+		ConditionRunnerConfig<TStateConfig, TContextAncestor>
 	>;
 	context?: ContextType<TStateConfig, Record<string, any>>;
 	children?: Partial<{
@@ -151,7 +132,7 @@ export interface ParentResolveConfig<
 					TAtomicStateConfig,
 					AtomicResolveConfig<TAtomicStateConfig, ContextType<TStateConfig, {}>>
 			  >
-			: TStateConfig['children'][child];
+			: never;
 	}>;
 }
 

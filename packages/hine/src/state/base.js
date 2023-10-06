@@ -11,11 +11,6 @@ import { TransitionHandler } from '../handler/transition.js';
  */
 export class BaseState {
 	/**
-	 * Action configuration from the user that is propagated to children
-	 * @type {import('../runner/types.js').BaseRunnerConfig}
-	 */
-	#actionConfig = {};
-	/**
 	 * Actions from the user config
 	 * @type {Record<string, import('../runner/action.js').ActionRunner<TStateConfig, TContextAncestor>>}
 	 */
@@ -23,11 +18,6 @@ export class BaseState {
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#always = [];
 	#alwaysConfig;
-	/**
-	 * Condition configuration from the user that is propagated to children
-	 * @type {import('../runner/types.js').BaseRunnerConfig}
-	 */
-	#conditionConfig = {};
 	/**
 	 * Conditions from the user config
 	 * @type {Record<string, import('../runner/condition.js').ConditionRunner<TStateConfig, TContextAncestor>>}
@@ -174,30 +164,14 @@ export class BaseState {
 				);
 			}
 		}
-		if (config?.actionConfig) {
-			if ('name' in config.actionConfig) {
-				this.#actionConfig['name'] = config.actionConfig['name'];
-			}
-		}
 		if (config?.actions) {
 			for (const [name, action] of Object.entries(config.actions)) {
-				this.#actions[name] =
-					typeof action === 'function'
-						? new ActionRunner({ run: action, ownerState: this })
-						: new ActionRunner({ ...action, ownerState: this });
-			}
-		}
-		if (config?.conditionConfig) {
-			if ('name' in config.conditionConfig) {
-				this.#conditionConfig['name'] = config.conditionConfig['name'];
+				this.#actions[name] = new ActionRunner(action, this);
 			}
 		}
 		if (config?.conditions) {
 			for (const [name, condition] of Object.entries(config.conditions)) {
-				this.#conditions[name] =
-					typeof condition === 'function'
-						? new ConditionRunner({ run: condition, ownerState: this })
-						: new ConditionRunner({ ...condition, ownerState: this });
+				this.#conditions[name] = new ConditionRunner(condition, this);
 			}
 		}
 	}

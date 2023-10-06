@@ -16,7 +16,7 @@ export class TransitionHandler extends BaseHandler {
 	run() {
 		const from = this.__ownerState;
 		from.__handler = this;
-		const shouldExecute = !this.condition || this.condition.run();
+		const shouldExecute = !this.__condition || this.__condition.run();
 		if (shouldExecute) {
 			from.parent?.__transition(this.#goto, this.__actions);
 		}

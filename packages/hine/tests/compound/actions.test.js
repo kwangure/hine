@@ -849,11 +849,19 @@ describe('actions', () => {
 	});
 	it('throws on missing exit actions', () => {
 		const state = new CompoundState({
-			exit: {
-				run: ['missing'],
-			},
 			children: {
-				s1: new AtomicState({}),
+				s1: new CompoundState({
+					always: {
+						goto: 's2',
+					},
+					exit: {
+						run: ['missing'],
+					},
+					children: {
+						s1: new AtomicState({}),
+					},
+				}),
+				s2: new AtomicState({}),
 			},
 		});
 		expect(() => state.resolve()).toThrow("'missing'");

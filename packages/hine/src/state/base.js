@@ -123,6 +123,26 @@ export class BaseState {
 	__executeHandlersRootFirst() {
 		this.__executeHandlers();
 	}
+	/**
+	 * @param {string} name
+	 * @returns {BaseRunner<TStateConfig, TContextAncestor> | undefined}
+	 */
+	__getAction(name) {
+		if (name in this.#actions) {
+			return this.#actions[name];
+		}
+		return this.__parent?.__getAction(name);
+	}
+	/**
+	 * @param {string} name
+	 * @returns {BaseRunner<TStateConfig, TContextAncestor> | undefined}
+	 */
+	__getCondition(name) {
+		if (name in this.#conditions) {
+			return this.#conditions[name];
+		}
+		return this.__parent?.__getCondition(name);
+	}
 	__initialize() {
 		this.__initialized = true;
 	}

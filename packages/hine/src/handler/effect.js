@@ -4,7 +4,7 @@ export class EffectHandler extends BaseHandler {
 	#type = /** @type {const} */ ('effect');
 	run() {
 		this.__ownerState.__handler = this;
-		const shouldExecute = !this.condition || this.condition.run();
+		const shouldExecute = !this.__condition || this.__condition.run();
 		if (shouldExecute) {
 			for (const action of this.__actions) {
 				action.run();

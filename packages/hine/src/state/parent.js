@@ -59,7 +59,7 @@ export class ParentState extends BaseState {
 	 * This is a noop for `ParallelState`s and implemented for `CompoundState`s
 	 *
 	 * @param {string} _to
-	 * @param {import("../runner/action.js").ActionRunner<any, any>[]} _actions
+	 * @param {import("../runner/base.js").BaseRunner<any, any>[]} _actions
 	 */
 	__transition(_to, _actions) {}
 	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').ParentResolveConfig<TStateConfig, TContextAncestor>>} [config] */

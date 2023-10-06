@@ -1,18 +1,17 @@
-import type { ActionRunner } from './action.js';
-import type { ConditionRunner } from './condition.js';
+import type { BaseRunner } from './base.js';
 import type { StateConfig } from '../state/types.js';
 
 export type ActionRunnerConfig<
 	TStateConfig extends StateConfig,
 	TContextAncestor extends Record<string, any>,
-> = (this: undefined, arg: ActionRunner<TStateConfig, TContextAncestor>) => any;
+> = (this: undefined, arg: BaseRunner<TStateConfig, TContextAncestor>) => any;
 
 export type ConditionRunnerConfig<
 	TStateConfig extends StateConfig,
 	TContextAncestor extends Record<string, any>,
 > = (
 	this: undefined,
-	arg: ConditionRunner<TStateConfig, TContextAncestor>,
+	arg: BaseRunner<TStateConfig, TContextAncestor>,
 ) => boolean;
 
 interface BaseRunnerJSON {

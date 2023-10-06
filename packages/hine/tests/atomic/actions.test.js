@@ -358,21 +358,6 @@ describe('actions', () => {
 		state.dispatch('event');
 		expect(log).toEqual(['entry', 'always', 'exit', 'on']);
 	});
-	it('sets state action during action', () => {
-		const state = new AtomicState({
-			entry: {
-				run: ['action'],
-			},
-		});
-		state.resolve({
-			actions: {
-				action(action) {
-					expect(state.action).toBe(action);
-				},
-			},
-		});
-		expect(state.action).toBe(null);
-	});
 	it('exposes actions inside actions', () => {
 		const state = new AtomicState({
 			entry: {

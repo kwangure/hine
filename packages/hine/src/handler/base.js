@@ -1,7 +1,7 @@
 export class BaseHandler {
-	/** @type {import('../runner/action').ActionRunner<any, any>[]} */
+	/** @type {import('../runner/base').BaseRunner<any, any>[]} */
 	__actions = [];
-	/** @type {import('../runner/condition').ConditionRunner<any, any> | null} */
+	/** @type {import('../runner/base').BaseRunner<any, any> | null} */
 	__condition = null;
 	/** @type {string | null} */
 	__ifConfig;

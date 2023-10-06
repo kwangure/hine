@@ -106,7 +106,7 @@ export class CompoundState extends ParentState {
 	}
 	/**
 	 * @param {string} target
-	 * @param {import("../runner/action.js").ActionRunner<any, any>[]} actions
+	 * @param {import("../runner/base.js").BaseRunner<any, any>[]} actions
 	 */
 	__transition(target, actions) {
 		const from = this.__state;

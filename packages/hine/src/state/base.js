@@ -47,12 +47,6 @@ export class BaseState {
 	__action = null;
 	/** @type {BaseRunner<TStateConfig, TContextAncestor> | null} */
 	__condition = null;
-	/**
-	 * The active handler that is currently executing
-	 *
-	 * @type {(import('../handler/effect.js').EffectHandler<TStateConfig, TContextAncestor> | import('../handler/transition.js').TransitionHandler<TStateConfig, TContextAncestor>) | null}
-	 */
-	__handler = null;
 	/** @type {(import('../handler/effect.js').EffectHandler<TStateConfig, TContextAncestor> | import('../handler/transition.js').TransitionHandler<TStateConfig, TContextAncestor>)[]} */
 	__handlerQueue = [];
 	__initialized = false;
@@ -320,9 +314,6 @@ export class BaseState {
 		}
 		return event;
 	}
-	get handler() {
-		return this.__handler;
-	}
 	/** @param {string} name */
 	isActiveEvent(name) {
 		if (!this.__initialized) {
@@ -338,9 +329,7 @@ export class BaseState {
 	 */
 	matches(path) {
 		if (!this.__initialized) return false;
-		return Boolean(
-			path === this.__name || path === this.__handler?.path.join('.'),
-		);
+		return path === this.__name;
 	}
 	get name() {
 		return this.__name;

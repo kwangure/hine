@@ -5,16 +5,14 @@
 export class BaseHandler {
 	/** @type {string | null} */
 	__ifConfig;
-	__name = '';
 	/** @type {string[]} */
 	__runConfig;
 	/**
-	 * @param {import('./types').BaseHandlerConfig & { name: string; ownerState: import('../state/base.js').BaseState<TStateConfig, TContextAncestor>}} options
+	 * @param {import('./types').BaseHandlerConfig & { ownerState: import('../state/base.js').BaseState<TStateConfig, TContextAncestor>}} options
 	 */
 	constructor(options) {
 		this.__ifConfig = options.if || null;
 		this.__runConfig = options.run || [];
-		this.__name = options.name;
 		this.__ownerState = options.ownerState;
 	}
 	get __actions() {
@@ -68,23 +66,5 @@ export class BaseHandler {
 		}
 
 		return condition;
-	}
-	get context() {
-		return this.__ownerState.context;
-	}
-	get event() {
-		return this.__ownerState.event;
-	}
-	get name() {
-		return this.__name;
-	}
-	get ownerState() {
-		return this.__ownerState;
-	}
-	/** @type {string[]} */
-	get path() {
-		return this.__ownerState
-			? [...this.__ownerState.path, `[${this.__name}]`]
-			: [`[${this.__name}]`];
 	}
 }

@@ -103,14 +103,14 @@ export interface ParentResolveConfig<
 					AtomicResolveConfig<
 						AtomicState<
 							TState['__$config']['children'][child]['__$config'],
-							Merge<TContextAncestor, TState['__$context']>
+							Simplify<Merge<TContextAncestor, TState['__$context']>>
 						>
 					>
 			  >
 			: AtomicResolveConfig<
 					BaseState<
 						TState['__$config']['children'][child]['__$config'],
-						Merge<TContextAncestor, TState['__$context']>
+						Simplify<Merge<TContextAncestor, TState['__$context']>>
 					>
 			  >;
 	}>;

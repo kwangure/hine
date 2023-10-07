@@ -4,7 +4,7 @@ export class BaseHandler {
 	/** @type {string[]} */
 	__runConfig;
 	/**
-	 * @param {import('./types').BaseHandlerConfig & { ownerState: import('../state/base.js').BaseState<any, any>}} options
+	 * @param {import('./types.js').BaseHandlerConfig & { ownerState: import('../state/base.js').BaseState<any, any>}} options
 	 */
 	constructor(options) {
 		this.__ifConfig = options.if || null;

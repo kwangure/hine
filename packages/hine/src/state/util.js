@@ -1,5 +1,5 @@
-import { EffectHandler } from '../handler/effect';
-import { TransitionHandler } from '../handler/transition';
+import { EffectHandler } from '../handler/effect.js';
+import { TransitionHandler } from '../handler/transition.js';
 
 /**
  * Converts a string, or an array of strings and/or handler configs

@@ -15,26 +15,24 @@ export class Context {
 	/**
 	 * @internal
 	 *
-	 * @template {string} K
-	 * @param {import('./types.js').KeyOfMerged<K, TContextAncestor, TContextOwnerState>} key
+	 * @template {import('./types.js').ContextKey<TContextAncestor, TContextOwnerState>} K
+	 * @param {K} key
 	 * @param {any} value
 	 */
 	__set(key, value) {
 		this.#data.set(/** @type {string} */ (key), value);
 	}
 	/**
-	 * @template {string} K
-	 * @param {import('./types.js').KeyOfMerged<K, TContextAncestor, TContextOwnerState>} key
-	 * @returns {import('./types.js').ValueOfMerged<K, TContextAncestor, TContextOwnerState>}
+	 * @template {import('./types.js').ContextKey<TContextAncestor, TContextOwnerState>} K
+	 * @param {K} key
+	 * @returns {import('./types.js').ContextValue<K, TContextAncestor, TContextOwnerState>}
 	 */
 	get(key) {
-		if (this.#data.has(/** @type {string} */ (key))) {
-			return /** @type {import('./types.js').ValueOfMerged<K, TContextAncestor, TContextOwnerState>} */ (
-				this.#data.get(/** @type {string} */ (key))
-			);
+		if (this.#data.has(key)) {
+			return this.#data.get(key);
 		}
-		return /** @type {import('./types.js').ValueOfMerged<K, TContextAncestor, TContextOwnerState>} */ (
-			this.__ownerState?.parent?.context.get(/** @type {any} */ (key))
+		return /** @type {import('./types.js').ContextValue<K, TContextAncestor, TContextOwnerState>} */ (
+			this.__ownerState?.parent?.context.get(key)
 		);
 	}
 	/**
@@ -46,14 +44,14 @@ export class Context {
 		return this.#data.has(key);
 	}
 	/**
-	 * @template {string} K
-	 * @param {import('./types.js').KeyOfMerged<K, TContextAncestor, TContextOwnerState>} key
-	 * @param {K extends keyof (TContextAncestor & TContextOwnerState) ? (TContextAncestor & TContextOwnerState)[K]: never} value
+	 * @template {import('./types.js').ContextKey<TContextAncestor, TContextOwnerState>} K
+	 * @param {K} key
+	 * @param {import('./types.js').ContextValue<K, TContextAncestor, TContextOwnerState>} value
 	 * @return {boolean}
 	 */
 	update(key, value) {
-		if (this.#data.has(/** @type {string} */ (key))) {
-			this.#data.set(/** @type {string} */ (key), value);
+		if (this.#data.has(key)) {
+			this.#data.set(key, value);
 			return true;
 		}
 		return Boolean(

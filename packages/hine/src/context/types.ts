@@ -1,11 +1,21 @@
+export type ContextKey<TAncestor, TOwn> = KeyOfUnionString<
+	Merge<TAncestor, TOwn>
+>;
+
+export type ContextValue<K extends string, T, U> = K extends keyof Merge<T, U>
+	? Merge<T, U>[K]
+	: unknown;
+
 export type Merge<T, U> = Omit<T, keyof U> & U;
 
-export type KeyOfMerged<K extends string, T, U> = K extends keyof Merge<T, U>
-	? K
-	: keyof Merge<T, U>;
+declare const emptyObjectSymbol: unique symbol;
 
-export type ValueOfMerged<K extends string, T, U> = K extends keyof Merge<T, U>
-	? Merge<T, U>[K]
-	: never;
+export type EmptyObject = { [emptyObjectSymbol]?: never };
 
-export type IsAny<T> = 0 extends 1 & T ? true : false;
+export type KeyOfUnionString<TContext extends Record<string, any>> =
+	TContext extends EmptyObject
+		? string
+		: keyof TContext extends string
+		? // https://github.com/Microsoft/TypeScript/issues/29729#issuecomment-567871939
+		  keyof TContext | (string & {})
+		: never;

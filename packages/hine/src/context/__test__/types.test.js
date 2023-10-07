@@ -24,20 +24,27 @@ test('atomic state respects context types in actions and conditions', () => {
 					/** @type {AtomicState<any, any>} */ (new AtomicState({})),
 				);
 				const { context } = state;
+
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
-				context.update('key01', 'foo');
+				const updateKey01 = context.update('key01', '01');
+				expect(updateKey01).toBe(true);
+
+				// @ts-expect-error
+				() => context.update('key01', 1);
 
 				const willChangeType = context.get('willChangeType');
 				expectTypeOf(willChangeType).toBeString();
 				expect(willChangeType).toBe('foo');
-				context.update('willChangeType', 'bar');
+				const updatedWillChangeType = context.update('willChangeType', 'foo');
+				expect(updatedWillChangeType).toBe(true);
 
-				// @ts-expect-error
-				context.get('non-existent');
-				// @ts-expect-error
-				() => context.update('non-existent', 10);
+				const value = context.get('non-existent');
+				expectTypeOf(value).toBeUnknown();
+
+				const updateNonExistent = context.update('non-existent', 10);
+				expect(updateNonExistent).toBe(false);
 			},
 		},
 		conditions: {
@@ -46,18 +53,27 @@ test('atomic state respects context types in actions and conditions', () => {
 					/** @type {AtomicState<any, any>} */ (new AtomicState({})),
 				);
 				const { context } = state;
+
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
+				const updateKey01 = context.update('key01', '01');
+				expect(updateKey01).toBe(true);
+
+				// @ts-expect-error
+				() => context.update('key01', 1);
 
 				const willChangeType = context.get('willChangeType');
 				expectTypeOf(willChangeType).toBeString();
 				expect(willChangeType).toBe('foo');
+				const updatedWillChangeType = context.update('willChangeType', 'foo');
+				expect(updatedWillChangeType).toBe(true);
 
-				// @ts-expect-error
-				context.get('non-existent');
-				// @ts-expect-error
-				() => context.update('non-existent', 10);
+				const value = context.get('non-existent');
+				expectTypeOf(value).toBeUnknown();
+
+				const updateNonExistent = context.update('non-existent', 10);
+				expect(updateNonExistent).toBe(false);
 
 				return true;
 			},
@@ -94,16 +110,27 @@ test('compound state respects context types in actions and conditions', () => {
 					/** @type {CompoundState<any, any>} */ (new CompoundState({})),
 				);
 				const { context } = state;
+
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
+				const updateKey01 = context.update('key01', '01');
+				expect(updateKey01).toBe(true);
+
+				// @ts-expect-error
+				() => context.update('key01', 1);
 
 				const willChangeType = context.get('willChangeType');
 				expectTypeOf(willChangeType).toBeString();
 				expect(willChangeType).toBe('foo');
+				const updatedWillChangeType = context.update('willChangeType', 'foo');
+				expect(updatedWillChangeType).toBe(true);
 
-				// @ts-expect-error
-				context.get('non-existent');
+				const value = context.get('non-existent');
+				expectTypeOf(value).toBeUnknown();
+
+				const updateNonExistent = context.update('non-existent', 10);
+				expect(updateNonExistent).toBe(false);
 			},
 		},
 		conditions: {
@@ -112,16 +139,27 @@ test('compound state respects context types in actions and conditions', () => {
 					/** @type {CompoundState<any, any>} */ (new CompoundState({})),
 				);
 				const { context } = state;
+
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
+				const updateKey01 = context.update('key01', '01');
+				expect(updateKey01).toBe(true);
+
+				// @ts-expect-error
+				() => context.update('key01', 1);
 
 				const willChangeType = context.get('willChangeType');
 				expectTypeOf(willChangeType).toBeString();
 				expect(willChangeType).toBe('foo');
+				const updatedWillChangeType = context.update('willChangeType', 'foo');
+				expect(updatedWillChangeType).toBe(true);
 
-				// @ts-expect-error
-				context.get('non-existent');
+				const value = context.get('non-existent');
+				expectTypeOf(value).toBeUnknown();
+
+				const updateNonExistent = context.update('non-existent', 10);
+				expect(updateNonExistent).toBe(false);
 
 				return true;
 			},
@@ -135,37 +173,77 @@ test('compound state respects context types in actions and conditions', () => {
 				actions: {
 					action1(state) {
 						const { context } = state;
+
 						const key11 = context.get('key11');
 						expectTypeOf(key11).toBeNumber();
 						expect(key11).toBe(1);
+						const updateKey11 = context.update('key11', 1);
+						expect(updateKey11).toBe(true);
+
+						// @ts-expect-error
+						() => context.update('key11', '1');
 
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
+						const updateKey01 = context.update('key01', '01');
+						expect(updateKey01).toBe(true);
+
+						// @ts-expect-error
+						() => context.update('key01', 1);
 
 						const willChangeType = context.get('willChangeType');
 						expectTypeOf(willChangeType).toBeBoolean();
 						expect(willChangeType).toBe(false);
+						const updatedWillChangeType = context.update(
+							'willChangeType',
+							false,
+						);
+						expect(updatedWillChangeType).toBe(true);
 
-						// @ts-expect-error
-						context.get('non-existent');
+						const value = context.get('non-existent');
+						expectTypeOf(value).toBeUnknown();
+
+						const updateNonExistent = context.update('non-existent', 10);
+						expect(updateNonExistent).toBe(false);
 					},
 				},
 				conditions: {
-					condition1({ context }) {
-						const key1 = context.get('key11');
-						expectTypeOf(key1).toBeNumber();
-						expect(key1).toBe(1);
+					condition1(state) {
+						const { context } = state;
+
+						const key11 = context.get('key11');
+						expectTypeOf(key11).toBeNumber();
+						expect(key11).toBe(1);
+						const updateKey11 = context.update('key11', 1);
+						expect(updateKey11).toBe(true);
+
+						// @ts-expect-error
+						() => context.update('key11', '1');
 
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
+						const updateKey01 = context.update('key01', '01');
+						expect(updateKey01).toBe(true);
+
+						// @ts-expect-error
+						() => context.update('key01', 1);
 
 						const willChangeType = context.get('willChangeType');
 						expectTypeOf(willChangeType).toBeBoolean();
 						expect(willChangeType).toBe(false);
+						const updatedWillChangeType = context.update(
+							'willChangeType',
+							false,
+						);
+						expect(updatedWillChangeType).toBe(true);
 
-						// @ts-expect-error
+						const value = context.get('non-existent');
+						expectTypeOf(value).toBeUnknown();
+
+						const updateNonExistent = context.update('non-existent', 10);
+						expect(updateNonExistent).toBe(false);
 						context.get('non-existent');
 
 						return true;
@@ -200,16 +278,30 @@ test('compound state respects context types in actions and conditions', () => {
 						const key02 = context.get('key02');
 						expectTypeOf(key02).toBeString();
 						expect(key02).toBe('02');
+						const updateKey02 = context.update('key02', 'foo');
+						expect(updateKey02).toBe(true);
+
+						// @ts-expect-error
+						context.update('key02', 1);
 
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
+						const updateKey01 = context.update('key01', '01');
+						expect(updateKey01).toBe(true);
+
+						// @ts-expect-error
+						() => context.update('key01', 1);
 
 						const willChangeType = context.get('willChangeType');
 						expectTypeOf(willChangeType).toBeString();
 						expect(willChangeType).toBe('foo');
 
-						// @ts-expect-error
+						const value = context.get('non-existent');
+						expectTypeOf(value).toBeUnknown();
+
+						const updateNonExistent = context.update('non-existent', 10);
+						expect(updateNonExistent).toBe(false);
 						context.get('non-existent');
 					},
 				},
@@ -222,16 +314,30 @@ test('compound state respects context types in actions and conditions', () => {
 						const key02 = context.get('key02');
 						expectTypeOf(key02).toBeString();
 						expect(key02).toBe('02');
+						const updateKey02 = context.update('key02', 'foo');
+						expect(updateKey02).toBe(true);
+
+						// @ts-expect-error
+						context.update('key02', 1);
 
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
+						const updateKey01 = context.update('key01', '01');
+						expect(updateKey01).toBe(true);
+
+						// @ts-expect-error
+						() => context.update('key01', 1);
 
 						const willChangeType = context.get('willChangeType');
 						expectTypeOf(willChangeType).toBeString();
-						expect(willChangeType).toBe(false);
+						expect(willChangeType).toBe('foo');
 
-						// @ts-expect-error
+						const value = context.get('non-existent');
+						expectTypeOf(value).toBeUnknown();
+
+						const updateNonExistent = context.update('non-existent', 10);
+						expect(updateNonExistent).toBe(false);
 						context.get('non-existent');
 
 						return true;
@@ -280,16 +386,27 @@ test('parallel state respects context types in actions and conditions', () => {
 					/** @type {ParallelState<any, any>} */ (new ParallelState({})),
 				);
 				const { context } = state;
+
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
+				const updateKey01 = context.update('key01', '01');
+				expect(updateKey01).toBe(true);
+
+				// @ts-expect-error
+				() => context.update('key01', 1);
 
 				const willChangeType = context.get('willChangeType');
 				expectTypeOf(willChangeType).toBeString();
 				expect(willChangeType).toBe('foo');
+				const updatedWillChangeType = context.update('willChangeType', 'foo');
+				expect(updatedWillChangeType).toBe(true);
 
-				// @ts-expect-error
-				context.get('non-existent');
+				const value = context.get('non-existent');
+				expectTypeOf(value).toBeUnknown();
+
+				const updateNonExistent = context.update('non-existent', 10);
+				expect(updateNonExistent).toBe(false);
 			},
 		},
 		conditions: {
@@ -298,16 +415,27 @@ test('parallel state respects context types in actions and conditions', () => {
 					/** @type {ParallelState<any, any>} */ (new ParallelState({})),
 				);
 				const { context } = state;
+
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
+				const updateKey01 = context.update('key01', '01');
+				expect(updateKey01).toBe(true);
+
+				// @ts-expect-error
+				() => context.update('key01', 1);
 
 				const willChangeType = context.get('willChangeType');
 				expectTypeOf(willChangeType).toBeString();
 				expect(willChangeType).toBe('foo');
+				const updatedWillChangeType = context.update('willChangeType', 'foo');
+				expect(updatedWillChangeType).toBe(true);
 
-				// @ts-expect-error
-				context.get('non-existent');
+				const value = context.get('non-existent');
+				expectTypeOf(value).toBeUnknown();
+
+				const updateNonExistent = context.update('non-existent', 10);
+				expect(updateNonExistent).toBe(false);
 
 				return true;
 			},
@@ -324,20 +452,39 @@ test('parallel state respects context types in actions and conditions', () => {
 							/** @type {ParallelState<any, any>} */ (new ParallelState({})),
 						);
 						const { context } = state;
+
 						const key11 = context.get('key11');
 						expectTypeOf(key11).toBeNumber();
 						expect(key11).toBe(1);
+						const updateKey11 = context.update('key11', 1);
+						expect(updateKey11).toBe(true);
+
+						// @ts-expect-error
+						() => context.update('key11', '1');
 
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
+						const updateKey01 = context.update('key01', '01');
+						expect(updateKey01).toBe(true);
+
+						// @ts-expect-error
+						() => context.update('key01', 1);
 
 						const willChangeType = context.get('willChangeType');
 						expectTypeOf(willChangeType).toBeBoolean();
 						expect(willChangeType).toBe(false);
+						const updatedWillChangeType = context.update(
+							'willChangeType',
+							false,
+						);
+						expect(updatedWillChangeType).toBe(true);
 
-						// @ts-expect-error
-						context.get('non-existent');
+						const value = context.get('non-existent');
+						expectTypeOf(value).toBeUnknown();
+
+						const updateNonExistent = context.update('non-existent', 10);
+						expect(updateNonExistent).toBe(false);
 					},
 				},
 				conditions: {
@@ -346,20 +493,39 @@ test('parallel state respects context types in actions and conditions', () => {
 							/** @type {ParallelState<any, any>} */ (new ParallelState({})),
 						);
 						const { context } = state;
-						const key1 = context.get('key11');
-						expectTypeOf(key1).toBeNumber();
-						expect(key1).toBe(1);
+
+						const key11 = context.get('key11');
+						expectTypeOf(key11).toBeNumber();
+						expect(key11).toBe(1);
+						const updateKey11 = context.update('key11', 1);
+						expect(updateKey11).toBe(true);
+
+						// @ts-expect-error
+						() => context.update('key11', '1');
 
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
+						const updateKey01 = context.update('key01', '01');
+						expect(updateKey01).toBe(true);
+
+						// @ts-expect-error
+						() => context.update('key01', 1);
 
 						const willChangeType = context.get('willChangeType');
 						expectTypeOf(willChangeType).toBeBoolean();
 						expect(willChangeType).toBe(false);
+						const updatedWillChangeType = context.update(
+							'willChangeType',
+							false,
+						);
+						expect(updatedWillChangeType).toBe(true);
 
-						// @ts-expect-error
-						context.get('non-existent');
+						const value = context.get('non-existent');
+						expectTypeOf(value).toBeUnknown();
+
+						const updateNonExistent = context.update('non-existent', 10);
+						expect(updateNonExistent).toBe(false);
 
 						return true;
 					},
@@ -390,37 +556,71 @@ test('parallel state respects context types in actions and conditions', () => {
 							/** @type {CompoundState<any, any>} */ (new CompoundState({})),
 						);
 						const { context } = state;
+
 						const key02 = context.get('key02');
 						expectTypeOf(key02).toBeString();
 						expect(key02).toBe('02');
+						const updateKey02 = context.update('key02', 'foo');
+						expect(updateKey02).toBe(true);
+
+						// @ts-expect-error
+						context.update('key02', 1);
 
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
+						const updateKey01 = context.update('key01', '01');
+						expect(updateKey01).toBe(true);
+
+						// @ts-expect-error
+						() => context.update('key01', 1);
 
 						const willChangeType = context.get('willChangeType');
 						expectTypeOf(willChangeType).toBeString();
 						expect(willChangeType).toBe('foo');
 
-						// @ts-expect-error
+						const value = context.get('non-existent');
+						expectTypeOf(value).toBeUnknown();
+
+						const updateNonExistent = context.update('non-existent', 10);
+						expect(updateNonExistent).toBe(false);
 						context.get('non-existent');
 					},
 				},
 				conditions: {
-					condition1({ context }) {
+					condition1(state) {
+						expectTypeOf(state).toMatchTypeOf(
+							/** @type {CompoundState<any, any>} */ (new CompoundState({})),
+						);
+						const { context } = state;
+
 						const key02 = context.get('key02');
 						expectTypeOf(key02).toBeString();
 						expect(key02).toBe('02');
+						const updateKey02 = context.update('key02', 'foo');
+						expect(updateKey02).toBe(true);
+
+						// @ts-expect-error
+						context.update('key02', 1);
 
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
+						const updateKey01 = context.update('key01', '01');
+						expect(updateKey01).toBe(true);
+
+						// @ts-expect-error
+						() => context.update('key01', 1);
 
 						const willChangeType = context.get('willChangeType');
 						expectTypeOf(willChangeType).toBeString();
-						expect(willChangeType).toBe(false);
+						expect(willChangeType).toBe('foo');
 
-						// @ts-expect-error
+						const value = context.get('non-existent');
+						expectTypeOf(value).toBeUnknown();
+
+						const updateNonExistent = context.update('non-existent', 10);
+						expect(updateNonExistent).toBe(false);
 						context.get('non-existent');
 
 						return true;
@@ -625,7 +825,7 @@ test('parallel allows missing context types', () => {
 				},
 				conditions: {
 					condition1({ context }) {
-						context.get('non-existent');
+						context.get('');
 						context.update('non-existent', '');
 						// @ts-expect-error
 						context.get(1);

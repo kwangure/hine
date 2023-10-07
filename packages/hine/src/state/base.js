@@ -36,7 +36,7 @@ export class BaseState {
 	__$context = /**
 	 * @type {TStateConfig['types'] extends { context: Record<String, any> }
 	 *     ? TStateConfig['types']['context']
-	 *     : Record<String, any>
+	 *     : {}
 	 * }
 	 */ ({});
 

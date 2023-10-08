@@ -1,7 +1,8 @@
 import { BaseState } from './base.js';
 
 /**
- * @template {import('./types.js').AtomicStateConfig} TConfig
+ * @template {string} TName
+ * @template {import('./types.js').AtomicStateConfig<TName>} TConfig
  * @param {TConfig} [config]
  */
 export function atomic(config) {

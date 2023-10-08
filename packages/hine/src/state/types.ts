@@ -18,7 +18,7 @@ export interface BaseStateTypes {
 	context?: Record<string, any>;
 }
 
-export interface BaseStateConfig {
+export interface BaseStateConfig<TName extends string = string> {
 	always?:
 		| string
 		| EffectHandlerConfig
@@ -26,7 +26,7 @@ export interface BaseStateConfig {
 		| (string | EffectHandlerConfig | TransitionHandlerConfig)[];
 	entry?: string | EffectHandlerConfig | (string | EffectHandlerConfig)[];
 	exit?: string | EffectHandlerConfig | (string | EffectHandlerConfig)[];
-	name?: string;
+	name?: TName;
 	on?: Record<
 		string,
 		| string
@@ -37,13 +37,13 @@ export interface BaseStateConfig {
 	types?: BaseStateTypes;
 }
 
-export interface AtomicStateConfig extends BaseStateConfig {}
+export interface AtomicStateConfig<TName extends string> extends BaseStateConfig<TName> {}
 
-export interface CompoundStateConfig extends BaseStateConfig {
+export interface CompoundStateConfig<TName extends string> extends BaseStateConfig<TName> {
 	children: Record<string, StateNode>;
 }
 
-export interface ParallelStateConfig extends BaseStateConfig {
+export interface ParallelStateConfig<TName extends string> extends BaseStateConfig<TName> {
 	children: Record<string, StateNode>;
 }
 
@@ -121,7 +121,7 @@ export type ReplaceChildren<T, U> = Omit<T, 'children'> & { children: U };
 export type Simplify<T> = { [key in keyof T]: T[key] } & {};
 
 export type RequireContext<
-	TStateConfig extends BaseStateConfig,
+	TStateConfig extends BaseStateConfig<string>,
 	TResolveConfig extends BaseResolveConfig,
 > = Simplify<
 	TStateConfig['types'] extends { context: Record<string, any> }

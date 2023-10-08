@@ -1,7 +1,8 @@
 import { ParentState } from './parent.js';
 
 /**
- * @template {import('./types.js').CompoundStateConfig} TConfig
+ * @template {string} TName
+ * @template {import('./types.js').CompoundStateConfig<TName>} TConfig
  * @param {TConfig} config
  */
 export function compound(config) {

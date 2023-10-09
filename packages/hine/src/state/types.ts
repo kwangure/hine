@@ -134,10 +134,11 @@ export type RequireContext<
 >;
 
 export type StatePaths<T extends BaseState<any, any>> = Simplify<
-	{ [K in ForceToLiteralString<T['name']>]: T } & Flatten<
-		T['__$config']['children'],
-		ForceToLiteralString<T['name']>
-	>
+	{
+		[K in ForceToLiteralString<T['name']>]: T;
+	} & (T['__$config']['children'] extends Record<string, StateNode>
+		? Flatten<T['__$config']['children'], ForceToLiteralString<T['name']>>
+		: {})
 >;
 
 type FlattenChildren<

@@ -1,12 +1,22 @@
 import type { BaseState } from '../state/base.js';
-import type { StateConfig } from '../state/types.js';
+import { StatePaths } from '../state/types.js';
 
-export type Action<TState extends BaseState<any, any>> = (
+export type Action<
+	TState extends BaseState<any, any>,
+	TPath extends string = TState['name'],
+> = (
 	this: void,
-	arg: TState,
+	arg: TPath extends keyof StatePaths<TState> & string
+		? StatePaths<TState>[TPath]
+		: never,
 ) => any;
 
-export type Condition<TState extends BaseState<any, any>> = (
+export type Condition<
+	TState extends BaseState<any, any>,
+	TPath extends string = TState['name'],
+> = (
 	this: void,
-	arg: TState,
+	arg: TPath extends keyof StatePaths<TState> & string
+		? StatePaths<TState>[TPath]
+		: never,
 ) => boolean;

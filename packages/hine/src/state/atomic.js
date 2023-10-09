@@ -6,7 +6,7 @@ import { BaseState } from './base.js';
  * @param {TConfig} [config]
  */
 export function atomic(config) {
-	return /** @type {AtomicState<TConfig, {}>} */ (
+	return /** @type {AtomicState<import('../type-utils/is-any.js').IsAny<TConfig> extends true ? {} : TConfig, {}>} */ (
 		new AtomicState(config ?? /** @type {TConfig} */ ({}))
 	);
 }

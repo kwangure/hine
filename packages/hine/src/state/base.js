@@ -34,7 +34,9 @@ export class BaseState {
 
 	__$config = /** @type {TStateConfig} */ ({});
 	__$context = /**
-	 * @type {TStateConfig['types'] extends { context: Record<String, any> }
+	 * @type {import('../type-utils/is-any.js').IsAny<TStateConfig> extends true
+	 * ? Record<String, any>
+	 * : TStateConfig['types'] extends { context: Record<string, any> }
 	 *     ? TStateConfig['types']['context']
 	 *     : {}
 	 * }
@@ -43,7 +45,7 @@ export class BaseState {
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	__handlerQueue = [];
 	__initialized = false;
-	__name = '';
+
 	/** @type {import('./parent.js').ParentState<any, any> | null} */
 	__parent = null;
 	/** @type {Record<string, (import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]>} */
@@ -59,7 +61,10 @@ export class BaseState {
 			/** @type {Context<typeof this['__$context'], TContextAncestor>} */ (
 				new Context(this)
 			);
-		this.__name = stateConfig.name || '';
+		this.__name =
+			/** @type {TStateConfig['name'] extends string ? TStateConfig['name']: ''} */ (
+				stateConfig.name || ''
+			);
 
 		this.#alwaysConfig = stateConfig.always
 			? normalizeHandlerConfig(stateConfig.always)

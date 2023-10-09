@@ -6,8 +6,10 @@ import type {
 import type { AtomicState } from './atomic.js';
 import type { CompoundState } from './compound.js';
 import { BaseState } from './base.js';
-import { ParallelState } from './parallel.js';
 import { Merge } from '../context/types.js';
+import { ParallelState } from './parallel.js';
+import type { Simplify } from '../type-utils/simplify.js';
+import type { UnionToIntersection } from '../type-utils/union-to-intersection.js';
 
 export type StateNode =
 	| AtomicState<any, any>
@@ -37,13 +39,16 @@ export interface BaseStateConfig<TName extends string = string> {
 	types?: BaseStateTypes;
 }
 
-export interface AtomicStateConfig<TName extends string> extends BaseStateConfig<TName> {}
+export interface AtomicStateConfig<TName extends string>
+	extends BaseStateConfig<TName> {}
 
-export interface CompoundStateConfig<TName extends string> extends BaseStateConfig<TName> {
+export interface CompoundStateConfig<TName extends string>
+	extends BaseStateConfig<TName> {
 	children: Record<string, StateNode>;
 }
 
-export interface ParallelStateConfig<TName extends string> extends BaseStateConfig<TName> {
+export interface ParallelStateConfig<TName extends string>
+	extends BaseStateConfig<TName> {
 	children: Record<string, StateNode>;
 }
 
@@ -118,8 +123,6 @@ export interface ParentResolveConfig<
 
 export type ReplaceChildren<T, U> = Omit<T, 'children'> & { children: U };
 
-export type Simplify<T> = { [key in keyof T]: T[key] } & {};
-
 export type RequireContext<
 	TStateConfig extends BaseStateConfig<string>,
 	TResolveConfig extends BaseResolveConfig,
@@ -128,6 +131,32 @@ export type RequireContext<
 		? Required<Pick<TResolveConfig, 'context'>> &
 				Omit<TResolveConfig, 'context'>
 		: Partial<Pick<TResolveConfig, 'context'>> & Omit<TResolveConfig, 'context'>
+>;
+
+export type StatePaths<T extends BaseState<any, any>> = Simplify<
+	{ [K in ForceToLiteralString<T['name']>]: T } & Flatten<
+		T['__$config']['children'],
+		ForceToLiteralString<T['name']>
+	>
+>;
+
+type FlattenChildren<
+	T extends Record<string, StateNode>,
+	P extends string,
+> = UnionToIntersection<
+	{
+		[K in keyof T & string]: T[K]['__$config'] extends { children: infer C }
+			? C extends Record<string, any>
+				? Flatten<C, `${P}.${K}`>
+				: {}
+			: {};
+	}[keyof T & string]
+>;
+
+type Flatten<T extends Record<string, StateNode>, P extends string> = Simplify<
+	{
+		[K in keyof T & string as `${P}.${K}`]: T[K];
+	} & FlattenChildren<T, P>
 >;
 
 export type CollectStateConfigs<TStateConfig> = TStateConfig extends StateConfig

@@ -14,7 +14,7 @@
  * => 'yes'
  *
  */
-type ForceToLiteralString<T> = T extends string
+export type ForceToLiteralString<T> = T extends string
 	? string extends T
 		? ''
 		: T

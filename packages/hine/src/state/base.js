@@ -34,13 +34,12 @@ export class BaseState {
 
 	__$config = /** @type {TStateConfig} */ ({});
 	__$context = /**
-	 * @type {import('../type-utils/is-any.js').IsAny<TStateConfig> extends true
-	 * ? Record<String, any>
-	 * : TStateConfig['types'] extends { context: Record<string, any> }
+	 * @type {TStateConfig['types'] extends { context: Record<string, any> }
 	 *     ? TStateConfig['types']['context']
 	 *     : {}
 	 * }
 	 */ ({});
+	__$ancestorContext = /** @type {TContextAncestor}*/ ({});
 
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	__handlerQueue = [];

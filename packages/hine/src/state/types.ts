@@ -4,10 +4,12 @@ import type {
 	TransitionHandlerConfig,
 } from '../handler/types.js';
 import type { AtomicState } from './atomic.js';
+import type { BaseState } from './base.js';
 import type { CompoundState } from './compound.js';
-import { BaseState } from './base.js';
+import type { ForceToLiteralString } from '../type-utils/force-to-literal.js';
 import { Merge } from '../context/types.js';
 import { ParallelState } from './parallel.js';
+import type { EmptyObject } from '../type-utils/empty-object.js';
 import type { Simplify } from '../type-utils/simplify.js';
 import type { UnionToIntersection } from '../type-utils/union-to-intersection.js';
 
@@ -77,7 +79,8 @@ export interface ParentResolveConfig<
 	conditions?: Record<string, Condition<TState>>;
 	context?: TState['__$context'];
 	children?: Partial<{
-		[child in keyof TState['__$config']['children']]: TState['__$config']['children'][child] extends ParallelState<
+		[child in keyof TState['__$config']['children'] &
+			string]: TState['__$config']['children'][child] extends ParallelState<
 			any,
 			any
 		>
@@ -86,7 +89,16 @@ export interface ParentResolveConfig<
 					ParentResolveConfig<
 						TState['__$context'],
 						ParallelState<
-							TState['__$config']['children'][child]['__$config'],
+							Merge<
+								// Make these optional so that if an action or condition is not defined
+								// directly as an object property (e.g. in a different file), you do not
+								// have to specify them action/condition config argument...
+								SetOptional<
+									TState['__$config']['children'][child]['__$config'],
+									'always' | 'entry' | 'exit' | 'on'
+								>,
+								{ name?: child }
+							>,
 							Merge<TContextAncestor, TState['__$context']>
 						>
 					>
@@ -97,7 +109,16 @@ export interface ParentResolveConfig<
 					ParentResolveConfig<
 						TState['__$context'],
 						CompoundState<
-							TState['__$config']['children'][child]['__$config'],
+							Merge<
+								// Make these optional so that if an action or condition is not defined
+								// directly as an object property (e.g. in a different file), you do not
+								// have to specify them action/condition config argument...
+								SetOptional<
+									TState['__$config']['children'][child]['__$config'],
+									'always' | 'entry' | 'exit' | 'on'
+								>,
+								{ name?: child }
+							>,
 							Merge<TContextAncestor, TState['__$context']>
 						>
 					>
@@ -107,15 +128,33 @@ export interface ParentResolveConfig<
 					TState['__$config']['children'][child]['__$config'],
 					AtomicResolveConfig<
 						AtomicState<
-							TState['__$config']['children'][child]['__$config'],
-							Simplify<Merge<TContextAncestor, TState['__$context']>>
+							Merge<
+								// Make these optional so that if an action or condition is not defined
+								// directly as an object property (e.g. in a different file), you do not
+								// have to specify them action/condition config argument...
+								SetOptional<
+									TState['__$config']['children'][child]['__$config'],
+									'always' | 'entry' | 'exit' | 'on'
+								>,
+								{ name?: child }
+							>,
+							Merge<TContextAncestor, TState['__$context']>
 						>
 					>
 			  >
 			: AtomicResolveConfig<
 					BaseState<
-						TState['__$config']['children'][child]['__$config'],
-						Simplify<Merge<TContextAncestor, TState['__$context']>>
+						Merge<
+							SetOptional<
+								// Make these optional so that if an action or condition is not defined
+								// directly as an object property (e.g. in a different file), you do not
+								// have to specify them action/condition config argument...
+								TState['__$config']['children'][child]['__$config'],
+								'always' | 'entry' | 'exit' | 'on'
+							>,
+							{ name?: child }
+						>,
+						Merge<TContextAncestor, TState['__$context']>
 					>
 			  >;
 	}>;
@@ -123,6 +162,8 @@ export interface ParentResolveConfig<
 
 export type ReplaceChildren<T, U> = Omit<T, 'children'> & { children: U };
 
+// If `context` is defined on the `types` state config, we want to require
+// context data in the resolve config
 export type RequireContext<
 	TStateConfig extends BaseStateConfig<string>,
 	TResolveConfig extends BaseResolveConfig,
@@ -133,36 +174,79 @@ export type RequireContext<
 		: Partial<Pick<TResolveConfig, 'context'>> & Omit<TResolveConfig, 'context'>
 >;
 
+export type SetOptional<T, K extends keyof any> = Simplify<
+	{
+		[P in Exclude<keyof T, K>]: T[P];
+	} & {
+		[P in K as P extends keyof T ? P : never]?: P extends keyof T
+			? T[P]
+			: never;
+	}
+>;
+
 export type StatePaths<T extends BaseState<any, any>> = Simplify<
 	{
 		[K in ForceToLiteralString<T['name']>]: T;
 	} & (T['__$config']['children'] extends Record<string, StateNode>
-		? Flatten<T['__$config']['children'], ForceToLiteralString<T['name']>>
+		? Flatten<
+				T['__$config']['children'],
+				ForceToLiteralString<T['name']>,
+				T['__$context']
+		  >
 		: {})
 >;
 
 type FlattenChildren<
 	T extends Record<string, StateNode>,
 	P extends string,
-> = UnionToIntersection<
-	{
-		[K in keyof T & string]: T[K]['__$config'] extends { children: infer C }
-			? C extends Record<string, any>
-				? Flatten<C, `${P}.${K}`>
-				: {}
-			: {};
-	}[keyof T & string]
->;
+	TContextAncestor extends Record<string, any>,
+> =
+	// Exclude empty object since `keyof {}` is `never`
+	T extends EmptyObject
+		? {}
+		: UnionToIntersection<
+				{
+					[K in keyof T & string]: T[K]['__$config'] extends {
+						children: infer C;
+					}
+						? C extends Record<string, any>
+							? Flatten<C, `${P}.${K}`, TContextAncestor>
+							: {}
+						: {};
+				}[keyof T & string]
+		  >;
 
-type Flatten<T extends Record<string, StateNode>, P extends string> = Simplify<
+type Flatten<
+	T extends Record<string, StateNode>,
+	P extends string,
+	TContextAncestor extends Record<string, any>,
+> = Simplify<
 	{
-		[K in keyof T & string as `${P}.${K}`]: T[K];
-	} & FlattenChildren<T, P>
+		[K in keyof T & string as `${P}.${K}`]: T[K] extends ParallelState<any, any>
+			? ParallelState<
+					Merge<T[K]['__$config'], { name: K }>,
+					Merge<TContextAncestor, T[K]['__$context']>
+			  >
+			: T[K] extends CompoundState<any, any>
+			? CompoundState<
+					Merge<T[K]['__$config'], { name: K }>,
+					Merge<TContextAncestor, T[K]['__$context']>
+			  >
+			: T[K] extends AtomicState<any, any>
+			? AtomicState<
+					Merge<T[K]['__$config'], { name: K }>,
+					Merge<TContextAncestor, T[K]['__$context']>
+			  >
+			: BaseState<
+					Merge<T[K]['__$config'], { name: K }>,
+					Merge<TContextAncestor, T[K]['__$context']>
+			  >;
+	} & FlattenChildren<T, P, TContextAncestor>
 >;
 
 export type CollectStateConfigs<TStateConfig> = TStateConfig extends StateConfig
 	?
-			| keyof TStateConfig['on']
+			| keyof NonNullable<TStateConfig['on']>
 			| {
 					[child in keyof TStateConfig['children']]: TStateConfig['children'][child] extends BaseState<
 						infer TChildStateConfig,

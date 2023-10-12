@@ -1,21 +1,27 @@
-export type ContextKey<TAncestor, TOwn> = KeyOfUnionString<
-	Merge<TAncestor, TOwn>
->;
+import { Simplify } from '../type-utils/simplify';
 
-export type ContextValue<K extends string, T, U> = K extends keyof Merge<T, U>
+// Since keyof `{}` returns `never`, fallback to string instead
+// Otherwise only allow keys of the context records
+export type ContextKey<TAncestor, TOwn> = Merge<
+	TAncestor,
+	TOwn
+> extends EmptyObject
+	? string
+	: keyof Merge<TAncestor, TOwn> extends string
+	? keyof Merge<TAncestor, TOwn>
+	: never;
+
+export type ContextValue<K extends string, T, U> = Merge<
+	T,
+	U
+> extends EmptyObject
+	? unknown
+	: K extends keyof Merge<T, U>
 	? Merge<T, U>[K]
-	: unknown;
+	: never;
 
-export type Merge<T, U> = Omit<T, keyof U> & U;
+export type Merge<T, U> = Simplify<Omit<T, keyof U> & U>;
 
 declare const emptyObjectSymbol: unique symbol;
 
 export type EmptyObject = { [emptyObjectSymbol]?: never };
-
-export type KeyOfUnionString<TContext extends Record<string, any>> =
-	TContext extends EmptyObject
-		? string
-		: keyof TContext extends string
-		? // https://github.com/Microsoft/TypeScript/issues/29729#issuecomment-567871939
-		  keyof TContext | (string & {})
-		: never;

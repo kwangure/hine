@@ -8,7 +8,7 @@ export type Action<
 	this: void,
 	arg: TPath extends keyof StatePaths<TState> & string
 		? StatePaths<TState>[TPath]
-		: never,
+		: TState,
 ) => any;
 
 export type Condition<
@@ -18,5 +18,5 @@ export type Condition<
 	this: void,
 	arg: TPath extends keyof StatePaths<TState> & string
 		? StatePaths<TState>[TPath]
-		: never,
+		: TState,
 ) => boolean;

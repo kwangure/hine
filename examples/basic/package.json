@@ -1,6 +1,6 @@
 {
 	"name": "@hine-examples/basic",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"private": true,
 	"scripts": {
 		"check": "wireit",
@@ -47,7 +47,7 @@
 		}
 	},
 	"dependencies": {
-		"hine": "^0.0.19"
+		"hine": "^0.0.20"
 	},
 	"devDependencies": {
 		"eslint": "^8.47.0",

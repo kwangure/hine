@@ -33,7 +33,7 @@ importers:
   examples/basic:
     dependencies:
       hine:
-        specifier: ^0.0.19
+        specifier: ^0.0.20
         version: link:../../packages/hine
     devDependencies:
       eslint:

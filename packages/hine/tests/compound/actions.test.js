@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { EffectHandler } from '../../src/handler/effect.js';
-import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('actions', () => {
 	it('runs initial entry then transient actions', () => {
@@ -10,40 +8,28 @@ describe('actions', () => {
 		const log = [];
 		const state = new CompoundState({
 			name: 's0',
-			always: [
-				new EffectHandler({
-					run: ['always0'],
-				}),
-			],
-			entry: [
-				new EffectHandler({
-					run: ['entry0'],
-				}),
-			],
+			always: {
+				run: ['always0'],
+			},
+			entry: {
+				run: ['entry0'],
+			},
 			children: {
 				s1: new CompoundState({
-					always: [
-						new EffectHandler({
-							run: ['always1'],
-						}),
-					],
-					entry: [
-						new EffectHandler({
-							run: ['entry1'],
-						}),
-					],
+					always: {
+						run: ['always1'],
+					},
+					entry: {
+						run: ['entry1'],
+					},
 					children: {
 						s2: new AtomicState({
-							always: [
-								new EffectHandler({
-									run: ['always2'],
-								}),
-							],
-							entry: [
-								new EffectHandler({
-									run: ['entry2'],
-								}),
-							],
+							always: {
+								run: ['always2'],
+							},
+							entry: {
+								run: ['entry2'],
+							},
 						}),
 					},
 				}),
@@ -100,48 +86,34 @@ describe('actions', () => {
 			children: {
 				a: new AtomicState({
 					on: {
-						event: [
-							new TransitionHandler({
-								goto: 'b',
-							}),
-						],
+						event: {
+							goto: 'b',
+						},
 					},
 				}),
 				b: new CompoundState({
-					always: [
-						new EffectHandler({
-							run: ['always0'],
-						}),
-					],
-					entry: [
-						new EffectHandler({
-							run: ['entry0'],
-						}),
-					],
+					always: {
+						run: ['always0'],
+					},
+					entry: {
+						run: ['entry0'],
+					},
 					children: {
 						s1: new CompoundState({
-							always: [
-								new EffectHandler({
-									run: ['always1'],
-								}),
-							],
-							entry: [
-								new EffectHandler({
-									run: ['entry1'],
-								}),
-							],
+							always: {
+								run: ['always1'],
+							},
+							entry: {
+								run: ['entry1'],
+							},
 							children: {
 								s2: new AtomicState({
-									always: [
-										new EffectHandler({
-											run: ['always2'],
-										}),
-									],
-									entry: [
-										new EffectHandler({
-											run: ['entry2'],
-										}),
-									],
+									always: {
+										run: ['always2'],
+									},
+									entry: {
+										run: ['entry2'],
+									},
 								}),
 							},
 						}),
@@ -203,39 +175,29 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			exit: [
-				new EffectHandler({
-					run: ['exit0'],
-				}),
-			],
+			exit: {
+				run: ['exit0'],
+			},
 			children: {
 				s1: new CompoundState({
-					exit: [
-						new EffectHandler({
-							run: ['exit1'],
-						}),
-					],
+					exit: {
+						run: ['exit1'],
+					},
 					on: {
-						event: [
-							new TransitionHandler({
-								goto: 's2',
-							}),
-						],
+						event: {
+							goto: 's2',
+						},
 					},
 					children: {
 						s11: new CompoundState({
-							exit: [
-								new EffectHandler({
-									run: ['exit11'],
-								}),
-							],
+							exit: {
+								run: ['exit11'],
+							},
 							children: {
 								s111: new AtomicState({
-									exit: [
-										new EffectHandler({
-											run: ['exit111'],
-										}),
-									],
+									exit: {
+										run: ['exit111'],
+									},
 								}),
 							},
 						}),
@@ -289,38 +251,30 @@ describe('actions', () => {
 		const log = [];
 		const state = new CompoundState({
 			on: {
-				event: [
-					new EffectHandler({
-						run: ['on0'],
-					}),
-				],
+				event: {
+					run: ['on0'],
+				},
 			},
 			children: {
 				s1: new CompoundState({
 					on: {
-						event: [
-							new EffectHandler({
-								run: ['on1'],
-							}),
-						],
+						event: {
+							run: ['on1'],
+						},
 					},
 					children: {
 						s11: new CompoundState({
 							on: {
-								event: [
-									new EffectHandler({
-										run: ['on11'],
-									}),
-								],
+								event: {
+									run: ['on11'],
+								},
 							},
 							children: {
 								s111: new AtomicState({
 									on: {
-										event: [
-											new EffectHandler({
-												run: ['on111'],
-											}),
-										],
+										event: {
+											run: ['on111'],
+										},
 									},
 								}),
 							},
@@ -374,59 +328,43 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			always: [
-				new EffectHandler({
-					run: ['always0'],
-				}),
-			],
+			always: {
+				run: ['always0'],
+			},
 			on: {
-				event: [
-					new EffectHandler({
-						run: ['on0'],
-					}),
-				],
+				event: {
+					run: ['on0'],
+				},
 			},
 			children: {
 				s1: new CompoundState({
-					always: [
-						new EffectHandler({
-							run: ['always1'],
-						}),
-					],
+					always: {
+						run: ['always1'],
+					},
 					on: {
-						event: [
-							new EffectHandler({
-								run: ['on1'],
-							}),
-						],
+						event: {
+							run: ['on1'],
+						},
 					},
 					children: {
 						s11: new CompoundState({
-							always: [
-								new EffectHandler({
-									run: ['always11'],
-								}),
-							],
+							always: {
+								run: ['always11'],
+							},
 							on: {
-								event: [
-									new EffectHandler({
-										run: ['on11'],
-									}),
-								],
+								event: {
+									run: ['on11'],
+								},
 							},
 							children: {
 								s111: new AtomicState({
-									always: [
-										new EffectHandler({
-											run: ['always111'],
-										}),
-									],
+									always: {
+										run: ['always111'],
+									},
 									on: {
-										event: [
-											new EffectHandler({
-												run: ['on111'],
-											}),
-										],
+										event: {
+											run: ['on111'],
+										},
 									},
 								}),
 							},
@@ -502,43 +440,31 @@ describe('actions', () => {
 		/** @type {string[]} */
 		const log = [];
 		const state = new CompoundState({
-			always: [
-				new EffectHandler({
-					run: ['always0'],
-				}),
-			],
-			entry: [
-				new EffectHandler({
-					run: ['entry0'],
-				}),
-			],
-			exit: [
-				new EffectHandler({
-					run: ['exit0'],
-				}),
-			],
+			always: {
+				run: ['always0'],
+			},
+			entry: {
+				run: ['entry0'],
+			},
+			exit: {
+				run: ['exit0'],
+			},
 			children: {
 				s1: new CompoundState({
-					exit: [
-						new EffectHandler({
-							run: ['exit1'],
-						}),
-					],
+					exit: {
+						run: ['exit1'],
+					},
 					on: {
-						event: [
-							new TransitionHandler({
-								goto: 's2',
-								run: ['on1'],
-							}),
-						],
+						event: {
+							goto: 's2',
+							run: ['on1'],
+						},
 					},
 					children: {
 						s11: new CompoundState({
-							exit: [
-								new EffectHandler({
-									run: ['exit11'],
-								}),
-							],
+							exit: {
+								run: ['exit11'],
+							},
 							children: {
 								s111: new AtomicState({}),
 							},
@@ -546,28 +472,20 @@ describe('actions', () => {
 					},
 				}),
 				s2: new CompoundState({
-					always: [
-						new EffectHandler({
-							run: ['always2'],
-						}),
-					],
-					entry: [
-						new EffectHandler({
-							run: ['entry2'],
-						}),
-					],
+					always: {
+						run: ['always2'],
+					},
+					entry: {
+						run: ['entry2'],
+					},
 					children: {
 						s21: new CompoundState({
-							always: [
-								new EffectHandler({
-									run: ['always21'],
-								}),
-							],
-							entry: [
-								new EffectHandler({
-									run: ['entry21'],
-								}),
-							],
+							always: {
+								run: ['always21'],
+							},
+							entry: {
+								run: ['entry21'],
+							},
 							children: {
 								s211: new AtomicState({}),
 							},
@@ -667,11 +585,9 @@ describe('actions', () => {
 		const state = new CompoundState({
 			children: {
 				current: new CompoundState({
-					always: [
-						new EffectHandler({
-							run: ['always'],
-						}),
-					],
+					always: {
+						run: ['always'],
+					},
 					children: {
 						s: new AtomicState({}),
 					},
@@ -703,28 +619,20 @@ describe('actions', () => {
 			name: 's0',
 			children: {
 				s1: new CompoundState({
-					always: [
-						new EffectHandler({
-							run: ['always'],
-						}),
-					],
-					entry: [
-						new EffectHandler({
-							run: ['entry'],
-						}),
-					],
-					exit: [
-						new EffectHandler({
-							run: ['exit'],
-						}),
-					],
+					always: {
+						run: ['always'],
+					},
+					entry: {
+						run: ['entry'],
+					},
+					exit: {
+						run: ['exit'],
+					},
 					on: {
-						event: [
-							new TransitionHandler({
-								goto: 's2',
-								run: ['on'],
-							}),
-						],
+						event: {
+							goto: 's2',
+							run: ['on'],
+						},
 					},
 					children: {
 						s11: new AtomicState({}),
@@ -765,28 +673,20 @@ describe('actions', () => {
 			name: 's0',
 			children: {
 				s1: new CompoundState({
-					always: [
-						new EffectHandler({
-							run: ['always'],
-						}),
-					],
-					entry: [
-						new EffectHandler({
-							run: ['entry'],
-						}),
-					],
-					exit: [
-						new EffectHandler({
-							run: ['exit'],
-						}),
-					],
+					always: {
+						run: ['always'],
+					},
+					entry: {
+						run: ['entry'],
+					},
+					exit: {
+						run: ['exit'],
+					},
 					on: {
-						event: [
-							new TransitionHandler({
-								goto: 's2',
-								run: ['on'],
-							}),
-						],
+						event: {
+							goto: 's2',
+							run: ['on'],
+						},
 					},
 					children: {
 						s11: new AtomicState({}),
@@ -846,30 +746,24 @@ describe('actions', () => {
 		const state = new CompoundState({
 			children: {
 				s1: new CompoundState({
-					entry: [
-						new EffectHandler({
-							run: ['entry1'],
-						}),
-					],
+					entry: {
+						run: ['entry1'],
+					},
 					on: {
-						event: [
-							new TransitionHandler({
-								goto: 's2',
-								run: ['transition1'],
-							}),
-						],
+						event: {
+							goto: 's2',
+							run: ['transition1'],
+						},
 					},
 					children: {
 						s11: new AtomicState({}),
 					},
 				}),
 				s2: new CompoundState({
-					always: [
-						new TransitionHandler({
-							goto: 's1',
-							run: ['always2'],
-						}),
-					],
+					always: {
+						goto: 's1',
+						run: ['always2'],
+					},
 					children: {
 						s21: new AtomicState({}),
 					},
@@ -903,271 +797,21 @@ describe('actions', () => {
 		expect(state.matches('.s1')).toBe(true);
 		expect(log).toEqual(['entry1', 'transition1', 'always2', 'entry1']);
 	});
-	it('calls subscribers before action', () => {
-		/** @type {string[]} */
-		const log = [];
-		const state = new CompoundState({
-			on: {
-				event: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		state.resolve({
-			actions: {
-				action: {
-					notifyBefore: true,
-					run() {
-						log.push('action');
-					},
-				},
-			},
-		});
-		state.subscribe(() => log.push('sub'));
-		log.length = 0;
-		state.dispatch('event');
-		expect(log).toEqual([
-			'sub', // notifyBefore
-			'action',
-			'sub',
-		]);
-	});
-	it('calls subscribers after action', () => {
-		/** @type {string[]} */
-		const log = [];
-		const state = new CompoundState({
-			on: {
-				event: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		state.resolve({
-			actions: {
-				action: {
-					notifyAfter: true,
-					run() {
-						log.push('action');
-					},
-				},
-			},
-		});
-		state.subscribe(() => log.push('sub'));
-		log.length = 0;
-		state.dispatch('event');
-		expect(log).toEqual([
-			'action',
-			'sub', // notifyAfter
-			'sub',
-		]);
-	});
-	it('passes action config from parent', () => {
-		/** @type {string[]} */
-		const log = [];
-		const state = new CompoundState({
-			on: {
-				event: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		state.resolve({
-			actionConfig: {
-				notifyBefore: true,
-			},
-			actions: {
-				action() {
-					log.push('action');
-				},
-			},
-		});
-		state.subscribe(() => log.push('sub'));
-		log.length = 0;
-		state.dispatch('event');
-		expect(log).toEqual([
-			'sub', // notifyBefore
-			'action',
-			'sub',
-		]);
-	});
-	it('does not override child with parent config', () => {
-		/** @type {string[]} */
-		const log = [];
-		const state = new CompoundState({
-			on: {
-				event: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		state.resolve({
-			actionConfig: {
-				notifyBefore: true,
-			},
-			actions: {
-				action: {
-					notifyBefore: false,
-					run() {
-						log.push('action');
-					},
-				},
-			},
-		});
-		state.subscribe(() => log.push('sub'));
-		log.length = 0;
-		state.dispatch('event');
-		expect(log).toEqual(['action', 'sub']);
-	});
-	it('passes condition config from grandparent state', () => {
-		/** @type {string[]} */
-		const log = [];
-		const state = new CompoundState({
-			children: {
-				s1: new CompoundState({
-					on: {
-						event: [
-							new EffectHandler({
-								run: ['action'],
-							}),
-						],
-					},
-					children: {
-						s11: new AtomicState({}),
-					},
-				}),
-			},
-		});
-		state.resolve({
-			actionConfig: {
-				notifyBefore: true,
-			},
-			children: {
-				s1: {
-					actions: {
-						action() {
-							log.push('action');
-							return true;
-						},
-					},
-				},
-			},
-		});
-		state.subscribe(() => log.push('sub'));
-		log.length = 0;
-		state.dispatch('event');
-		expect(log).toEqual([
-			'sub', // notifyBefore
-			'action',
-			'sub',
-		]);
-	});
-	it('resolves action using most specific configured name', () => {
-		const state = new CompoundState({
-			on: {
-				event: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-
-		expect(() =>
-			state.resolve({
-				actions: {
-					action: {
-						name: 'other-action',
-						run() {},
-					},
-				},
-			}),
-		).toThrow(/unknown action/);
-		const state2 = new CompoundState({
-			on: {
-				event: [
-					new EffectHandler({
-						run: ['other-action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-
-		expect(() =>
-			state2.resolve({
-				actions: {
-					action: {
-						name: 'other-action',
-						run() {},
-					},
-				},
-			}),
-		).not.toThrow();
-	});
-	it('sets state action during action', () => {
-		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		state.resolve({
-			actions: {
-				action: {
-					notifyBefore: false,
-					run(action) {
-						expect(state.action).toBe(action);
-					},
-				},
-			},
-		});
-		expect(state.action).toBe(null);
-	});
 	it('exposes actions inside actions', () => {
 		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					run: ['action1'],
-				}),
-			],
+			entry: {
+				run: ['action1'],
+			},
 			children: {
 				s1: new AtomicState({}),
 			},
 		});
 		state.resolve({
 			actions: {
-				action1({ ownerState }) {
-					expect(() => ownerState?.actions.action2).not.toThrow();
-					expect(ownerState?.actions.action2.run()).toBe('test');
+				action1(state) {
+					const { actions } = state;
+					expect(() => actions.action2).not.toThrow();
+					expect(actions.action2(state)).toBe('test');
 					return true;
 				},
 				action2: () => 'test',
@@ -1177,7 +821,7 @@ describe('actions', () => {
 	it('calls actions with value', () => {
 		const state = new CompoundState({
 			on: {
-				event: [new EffectHandler({ run: ['action'] })],
+				event: { run: ['action'] },
 			},
 			children: {
 				s1: new AtomicState({}),
@@ -1195,11 +839,9 @@ describe('actions', () => {
 	});
 	it('throws on missing entry actions', () => {
 		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					run: ['missing'],
-				}),
-			],
+			entry: {
+				run: ['missing'],
+			},
 			children: {
 				s1: new AtomicState({}),
 			},
@@ -1208,24 +850,28 @@ describe('actions', () => {
 	});
 	it('throws on missing exit actions', () => {
 		const state = new CompoundState({
-			exit: [
-				new EffectHandler({
-					run: ['missing'],
-				}),
-			],
 			children: {
-				s1: new AtomicState({}),
+				s1: new CompoundState({
+					always: {
+						goto: 's2',
+					},
+					exit: {
+						run: ['missing'],
+					},
+					children: {
+						s1: new AtomicState({}),
+					},
+				}),
+				s2: new AtomicState({}),
 			},
 		});
 		expect(() => state.resolve()).toThrow("'missing'");
 	});
 	it('throws on missing always actions', () => {
 		const state = new CompoundState({
-			always: [
-				new EffectHandler({
-					run: ['missing'],
-				}),
-			],
+			always: {
+				run: ['missing'],
+			},
 			children: {
 				s1: new AtomicState({}),
 			},

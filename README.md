@@ -15,20 +15,22 @@ npm install hine
 ### Getting started
 
 ```javascript
-import { handler, state } from 'hine';
+import { atomic, compound } from 'hine';
 
-const toggle = state({
-	// The first state is the default initial state
+// Compound states have `children`
+const toggle = compound({
+	// The first state (i.e. inactive) is the default initial state
 	children: {
-		inactive: state({
+		// Atomic states do not have `children`. They're leaves in the tree.
+		inactive: atomic({
 			on: {
 				// Transitions change the current state after an event
-				toggle: [handler({ goto: 'active' })],
+				toggle: { goto: 'active' },
 			},
 		}),
-		active: state({
+		active: atomic({
 			on: {
-				toggle: [handler({ goto: 'inactive' })],
+				toggle: { goto: 'inactive' },
 			},
 		}),
 	},

@@ -1,18 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { EffectHandler } from '../../src/handler/effect.js';
-import { TransitionHandler } from '../../src/handler/transition.js';
 
 describe('conditions', () => {
 	it('exposes conditions inside conditions', () => {
 		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					if: 'cond1',
-					run: ['do'],
-				}),
-			],
+			entry: {
+				if: 'cond1',
+				run: ['do'],
+			},
 			children: {
 				s1: new AtomicState({}),
 			},
@@ -22,284 +18,24 @@ describe('conditions', () => {
 				do() {},
 			},
 			conditions: {
-				cond1({ ownerState }) {
-					expect(() => ownerState?.conditions.cond2).not.toThrow();
-					expect(ownerState?.conditions.cond2.run()).toBe(false);
+				cond1(state) {
+					const { conditions } = state;
+					expect(() => conditions.cond2).not.toThrow();
+					expect(conditions.cond2(state)).toBe(false);
 					return true;
 				},
 				cond2: () => false,
 			},
 		});
 	});
-	it('calls subscribers before condition', () => {
-		/** @type {string[]} */
-		const log = [];
-		const state = new CompoundState({
-			on: {
-				event: [
-					new EffectHandler({
-						if: 'condition',
-						run: ['action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		state.resolve({
-			actions: {
-				action() {},
-			},
-			conditions: {
-				condition: {
-					notifyBefore: true,
-					run() {
-						log.push('condition');
-						return true;
-					},
-				},
-			},
-		});
-		state.subscribe(() => log.push('sub'));
-		log.length = 0;
-		state.dispatch('event');
-		expect(log).toEqual([
-			'sub', // notifyBefore
-			'condition',
-			'sub',
-		]);
-	});
-	it('calls subscribers after condition', () => {
-		/** @type {string[]} */
-		const log = [];
-		const state = new CompoundState({
-			on: {
-				event: [
-					new EffectHandler({
-						if: 'condition',
-						run: ['action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		state.resolve({
-			actions: {
-				action() {},
-			},
-			conditions: {
-				condition: {
-					notifyAfter: true,
-					run() {
-						log.push('condition');
-						return true;
-					},
-				},
-			},
-		});
-		state.subscribe(() => log.push('sub'));
-		log.length = 0;
-		state.dispatch('event');
-		expect(log).toEqual([
-			'condition',
-			'sub', // notifyAfter
-			'sub',
-		]);
-	});
-	it('passes condition config from parent state', () => {
-		/** @type {string[]} */
-		const log = [];
-		const state = new CompoundState({
-			on: {
-				event: [
-					new EffectHandler({
-						if: 'condition',
-						run: ['action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		state.resolve({
-			actions: {
-				action() {},
-			},
-			conditions: {
-				condition() {
-					log.push('condition');
-					return true;
-				},
-			},
-			conditionConfig: {
-				notifyBefore: true,
-			},
-		});
-		state.subscribe(() => log.push('sub'));
-		log.length = 0;
-		state.dispatch('event');
-		expect(log).toEqual([
-			'sub', // notifyBefore
-			'condition',
-			'sub',
-		]);
-	});
-	it('passes condition config from grandparent state', () => {
-		/** @type {string[]} */
-		const log = [];
-		const state = new CompoundState({
-			children: {
-				s1: new CompoundState({
-					on: {
-						event: [
-							new EffectHandler({
-								if: 'condition',
-								run: ['action'],
-							}),
-						],
-					},
-					children: {
-						s11: new AtomicState({}),
-					},
-				}),
-			},
-		});
-		state.resolve({
-			conditionConfig: {
-				notifyBefore: true,
-			},
-			children: {
-				s1: {
-					actions: {
-						action() {},
-					},
-					conditions: {
-						condition() {
-							log.push('condition');
-							return true;
-						},
-					},
-				},
-			},
-		});
-		state.subscribe(() => log.push('sub'));
-		log.length = 0;
-		state.dispatch('event');
-		expect(log).toEqual([
-			'sub', // notifyBefore
-			'condition',
-			'sub',
-		]);
-	});
-	it('does not override child with parent config', () => {
-		/** @type {string[]} */
-		const log = [];
-		const state = new CompoundState({
-			on: {
-				event: [
-					new EffectHandler({
-						if: 'condition',
-						run: ['action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		state.resolve({
-			actions: {
-				action() {},
-			},
-			conditions: {
-				condition() {
-					log.push('condition');
-					return true;
-				},
-			},
-			conditionConfig: {
-				notifyBefore: true,
-			},
-		});
-		state.subscribe(() => log.push('sub'));
-		log.length = 0;
-		state.dispatch('event');
-		expect(log).toEqual(['sub', 'condition', 'sub']);
-	});
-	it('resolves condition using most specific configured name', () => {
-		const state1 = new CompoundState({
-			on: {
-				event: [
-					new EffectHandler({
-						if: 'condition',
-						run: ['action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-
-		expect(() =>
-			state1.resolve({
-				actions: {
-					action() {},
-				},
-				conditions: {
-					condition: {
-						name: 'other-condition',
-						run() {
-							return true;
-						},
-					},
-				},
-			}),
-		).toThrow(/unknown condition/);
-		const state2 = new CompoundState({
-			on: {
-				event: [
-					new EffectHandler({
-						if: 'other-condition',
-						run: ['action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-
-		expect(() =>
-			state2.resolve({
-				actions: {
-					action() {},
-				},
-				conditions: {
-					condition: {
-						name: 'other-condition',
-						run() {
-							return true;
-						},
-					},
-				},
-			}),
-		).not.toThrow();
-	});
 	it('ignores falsy handlers on entry', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					run: ['action'],
-					if: 'isFalsy',
-				}),
-			],
+			entry: {
+				run: ['action'],
+				if: 'isFalsy',
+			},
 			children: {
 				s1: new AtomicState({}),
 			},
@@ -322,12 +58,10 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			entry: [
-				new EffectHandler({
-					run: ['action'],
-					if: 'run',
-				}),
-			],
+			entry: {
+				run: ['action'],
+				if: 'run',
+			},
 			children: {
 				s1: new AtomicState({}),
 			},
@@ -352,17 +86,13 @@ describe('conditions', () => {
 		const state = new CompoundState({
 			children: {
 				s1: new CompoundState({
-					always: [
-						new TransitionHandler({
-							goto: 's2',
-						}),
-					],
-					exit: [
-						new EffectHandler({
-							run: ['action'],
-							if: 'isFalsy',
-						}),
-					],
+					always: {
+						goto: 's2',
+					},
+					exit: {
+						run: ['action'],
+						if: 'isFalsy',
+					},
 					children: {
 						s11: new AtomicState({}),
 					},
@@ -394,17 +124,13 @@ describe('conditions', () => {
 		const state = new CompoundState({
 			children: {
 				s1: new CompoundState({
-					always: [
-						new TransitionHandler({
-							goto: 's2',
-						}),
-					],
-					exit: [
-						new EffectHandler({
-							run: ['action'],
-							if: 'isTruthy',
-						}),
-					],
+					always: {
+						goto: 's2',
+					},
+					exit: {
+						run: ['action'],
+						if: 'isTruthy',
+					},
 					children: {
 						s11: new AtomicState({}),
 					},
@@ -439,12 +165,10 @@ describe('conditions', () => {
 		const actions = [];
 		const state = new CompoundState({
 			on: {
-				myEvent: [
-					new EffectHandler({
-						run: ['action'],
-						if: 'isFalsy',
-					}),
-				],
+				myEvent: {
+					run: ['action'],
+					if: 'isFalsy',
+				},
 			},
 			children: {
 				s11: new AtomicState({}),
@@ -470,12 +194,10 @@ describe('conditions', () => {
 		const actions = [];
 		const state = new CompoundState({
 			on: {
-				myEvent: [
-					new EffectHandler({
-						run: ['action'],
-						if: 'isTruthy',
-					}),
-				],
+				myEvent: {
+					run: ['action'],
+					if: 'isTruthy',
+				},
 			},
 			children: {
 				s11: new AtomicState({}),
@@ -500,12 +222,10 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			always: [
-				new EffectHandler({
-					run: ['action'],
-					if: 'isFalsy',
-				}),
-			],
+			always: {
+				run: ['action'],
+				if: 'isFalsy',
+			},
 			children: {
 				s11: new AtomicState({}),
 			},
@@ -528,12 +248,10 @@ describe('conditions', () => {
 		/** @type {string[]} */
 		const actions = [];
 		const state = new CompoundState({
-			always: [
-				new EffectHandler({
-					run: ['action'],
-					if: 'isTruthy',
-				}),
-			],
+			always: {
+				run: ['action'],
+				if: 'isTruthy',
+			},
 			children: {
 				s11: new AtomicState({}),
 			},

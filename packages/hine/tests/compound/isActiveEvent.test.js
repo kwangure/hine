@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('isActiveEvent', () => {
 	it('returns boolean for active events', () => {
@@ -9,20 +8,16 @@ describe('isActiveEvent', () => {
 			children: {
 				s1: new AtomicState({
 					on: {
-						EVENT1: [
-							new EffectHandler({
-								run: ['action'],
-							}),
-						],
+						EVENT1: {
+							run: ['action'],
+						},
 					},
 				}),
 				s2: new AtomicState({
 					on: {
-						EVENT2: [
-							new EffectHandler({
-								run: ['action'],
-							}),
-						],
+						EVENT2: {
+							run: ['action'],
+						},
 					},
 				}),
 			},
@@ -35,23 +30,6 @@ describe('isActiveEvent', () => {
 		expect(state.isActiveEvent('EVENT1')).toEqual(true);
 		expect(state.isActiveEvent('EVENT2')).toEqual(false);
 		expect(state.isActiveEvent('RANDOM-EVENT')).toEqual(false);
-	});
-	it('throws when not initialized', () => {
-		const state = new CompoundState({
-			on: {
-				EVENT: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
-			},
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		expect(() => state.isActiveEvent('EVENT')).toThrow(
-			"Attempted to call 'state.isActiveEvent()' before calling 'state.resolve()'",
-		);
 	});
 	it('returns false when handler list is empty', () => {
 		const state = new CompoundState({

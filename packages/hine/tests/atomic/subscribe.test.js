@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
-import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('subscribe', () => {
 	it('calls subscribers on start', () => {
@@ -15,11 +14,9 @@ describe('subscribe', () => {
 	it('calls subscribers on disptach', () => {
 		const state = new AtomicState({
 			on: {
-				event: [
-					new EffectHandler({
-						run: ['noop'],
-					}),
-				],
+				event: {
+					run: ['noop'],
+				},
 			},
 		});
 		state.resolve({

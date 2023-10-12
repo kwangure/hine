@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('matches', () => {
 	it('does not match when not started', () => {
@@ -58,112 +57,5 @@ describe('matches', () => {
 		state.resolve();
 		expect(state.matches('.s1')).toBe(true);
 		expect(state.matches('.s1.s11')).toBe(true);
-	});
-	it('matches actions', () => {
-		const state = new CompoundState({
-			name: 'state',
-			always: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		let count = 1;
-		state.subscribe(() => {
-			// The value of Action is set only when the subscriber is called
-			// during the `notifyBefore` phase/hook. i.e Call 2 to this function.
-			if (count == 2) {
-				expect(state.matches('state.(action)')).toBe(true);
-			}
-			count += 1;
-		});
-		state.resolve({
-			actions: {
-				action: {
-					notifyBefore: true,
-					run() {},
-				},
-			},
-		});
-	});
-	it('matches conditions', () => {
-		const state = new CompoundState({
-			name: 'state',
-			always: [
-				new EffectHandler({
-					if: 'condition',
-					run: ['action'],
-				}),
-			],
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		let count = 1;
-		state.subscribe(() => {
-			// The value of Condition is set only when the subscriber is called
-			// during the `notifyBefore` phase/hook. i.e Call 2 to this function.
-			if (count === 2) {
-				expect(state.matches('state.?condition')).toBe(true);
-			}
-			count += 1;
-		});
-		state.resolve({
-			actions: {
-				action() {},
-			},
-			conditions: {
-				condition: {
-					notifyBefore: true,
-					run: () => true,
-				},
-			},
-		});
-	});
-	it('matches handler', () => {
-		const state = new CompoundState({
-			name: 'state',
-			always: [
-				new EffectHandler({
-					if: 'condition',
-					run: ['action'],
-				}),
-			],
-			children: {
-				s1: new AtomicState({}),
-			},
-		});
-		let count = 1;
-		state.subscribe(() => {
-			// The value of Handler is set only when the subscriber is called
-			// during the `notifyBefore` phase/hooks. i.e Call 2 & 3 to this function.
-			if (count === 2) {
-				expect(state.matches('state.?condition')).toBe(true);
-				// Handler at index 0
-				expect(state.matches('state.[0]')).toBe(true);
-			} else if (count === 3) {
-				expect(state.matches('state.(action)')).toBe(true);
-				// Handler at index 0
-				expect(state.matches('state.[0]')).toBe(true);
-			}
-			count += 1;
-		});
-		state.resolve({
-			actions: {
-				action: {
-					notifyBefore: true,
-					run() {},
-				},
-			},
-			conditions: {
-				condition: {
-					notifyBefore: true,
-					run: () => true,
-				},
-			},
-		});
 	});
 });

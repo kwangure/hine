@@ -1,24 +1,16 @@
-import { handler, state } from 'hine';
+import { atomic, compound } from 'hine';
 
-const checkboxState = state({
+const checkboxState = compound({
 	name: 'checkbox',
 	children: {
-		unchecked: state({
+		unchecked: atomic({
 			on: {
-				toggle: [
-					handler({
-						goto: 'checked',
-					}),
-				],
+				toggle: { goto: 'checked' },
 			},
 		}),
-		checked: state({
+		checked: atomic({
 			on: {
-				toggle: [
-					handler({
-						goto: 'unchecked',
-					}),
-				],
+				toggle: { goto: 'unchecked' },
 			},
 		}),
 	},

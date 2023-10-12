@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
-import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('matches', () => {
 	it('does not match when not started', () => {
@@ -20,92 +19,5 @@ describe('matches', () => {
 		const state = new AtomicState({});
 		state.resolve();
 		expect(state.matches('')).toBe(true);
-	});
-	it('matches actions', () => {
-		const state = new AtomicState({
-			name: 'state',
-			always: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
-		});
-		let count = 1;
-		state.subscribe(() => {
-			// The value of Action is set only when the subscriber is called
-			// during the `notifyBefore` phase/hook. i.e Call 2 to this function.
-			if (count == 2) {
-				expect(state.matches('state.(action)')).toBe(true);
-			}
-			count += 1;
-		});
-		state.resolve({
-			actions: {
-				action: {
-					notifyBefore: true,
-					run() {},
-				},
-			},
-		});
-	});
-	it('matches conditions', () => {
-		const state = new AtomicState({
-			name: 'state',
-			always: [
-				new EffectHandler({
-					if: 'condition',
-					run: ['action'],
-				}),
-			],
-		});
-		let count = 1;
-		state.subscribe(() => {
-			// The value of Condition is set only when the subscriber is called
-			// during the `notifyBefore` phase/hook. i.e Call 2 to this function.
-			if (count === 2) {
-				expect(state.matches('state.?condition')).toBe(true);
-			}
-			count += 1;
-		});
-		state.resolve({
-			actions: {
-				action() {},
-			},
-			conditions: {
-				condition: {
-					notifyBefore: true,
-					run: () => true,
-				},
-			},
-		});
-	});
-	it('matches handler', () => {
-		const state = new AtomicState({
-			name: 'state',
-			always: [
-				new EffectHandler({
-					run: ['action'],
-				}),
-			],
-		});
-		let count = 1;
-		state.subscribe(() => {
-			// The value of Handler is set only when the subscriber is called
-			// during the `notifyBefore` phase/hook. i.e Call 2 to this function.
-			if (count === 2) {
-				expect(state.matches('state.(action)')).toBe(true);
-				// Handler 0
-				expect(state.matches('state.[0]')).toBe(true);
-			}
-			count += 1;
-		});
-		state.resolve({
-			actions: {
-				action: {
-					notifyBefore: true,
-					run() {},
-				},
-			},
-		});
 	});
 });

@@ -1,6 +1,6 @@
-import { state } from 'hine';
+import { compound } from 'hine';
 
-const checkboxState = state({
+const checkboxState = compound({
 	name: 'checkbox',
 	children: {
 		// child states will go here

@@ -1,41 +1,31 @@
-import { BaseState } from './base.js';
+import { ParentState } from './parent.js';
 
 /**
- * @typedef {import('../state/types.js').StateNode} StateNode
+ * @template {string} TName
+ * @template {import('./types.js').CompoundStateConfig<TName>} TConfig
+ * @param {TConfig} config
  */
+export function compound(config) {
+	return /** @type {CompoundState<TConfig, {}>} */ (new CompoundState(config));
+}
 
 /**
  * @template {import('./types.js').StateConfig} TStateConfig
- * @template {Record<string, import('../context/types.js').ContextTransformer>} TContextAncestor
- * @extends {BaseState<TStateConfig, TContextAncestor>}
+ * @template {Record<string, any>} TContextAncestor
+ * @extends {ParentState<TStateConfig, TContextAncestor>}
  */
-export class CompoundState extends BaseState {
-	/** @type {StateNode | null} */
+export class CompoundState extends ParentState {
+	/** @type {import('./types.js').StateNode | null} */
 	#initial = null;
 	#type = /** @type {const} */ ('compound');
-	/** @type {Map<string, StateNode>} */
-	__children = new Map();
-	/** @type {StateNode | null} */
+
+	/** @type {import('./types.js').StateNode | null} */
 	__state = null;
 	/**
 	 * @param {TStateConfig} stateConfig
 	 */
 	constructor(stateConfig) {
 		super(stateConfig);
-
-		const missingError = Error('Compound states require at least one child');
-		if (!stateConfig.children) throw missingError;
-
-		const children = Object.entries(stateConfig.children);
-		if (!children.length) throw missingError;
-
-		for (const [name, state] of children) {
-			if (!state.name) {
-				state.__name = name;
-			}
-			this.__children.set(state.name, state);
-			state.__parent = this;
-		}
 	}
 	__executeHandlersLeafFirst() {
 		this.__state?.__executeHandlersLeafFirst();
@@ -54,8 +44,7 @@ export class CompoundState extends BaseState {
 	}
 	/** @param {Set<string>} stateTreeEvents */
 	__nextEvents(stateTreeEvents) {
-		// No state, implies the machine is not intialized, return zero events
-		if (!this.__state) return;
+		if (!this.__initialized) return;
 
 		for (const [name, handlers] of Object.entries(this.__onHandler)) {
 			if (handlers.length) {
@@ -63,7 +52,7 @@ export class CompoundState extends BaseState {
 			}
 		}
 
-		this.__state.__nextEvents(stateTreeEvents);
+		this.__state?.__nextEvents(stateTreeEvents);
 	}
 	__queueAlwaysHandlers() {
 		this.__state?.__queueAlwaysHandlers();
@@ -96,50 +85,7 @@ export class CompoundState extends BaseState {
 			state.__resolveConfig();
 		}
 	}
-	/**
-	 * @param {string} path
-	 * @returns {boolean}
-	 */
-	canTransitionTo(path) {
-		return (
-			super.canTransitionTo(path) ||
-			(path.startsWith(`${this.name}.`) &&
-				Boolean(
-					this.__state?.canTransitionTo(path.slice(this.name.length + 1)),
-				))
-		);
-	}
-	/** @param {string} name */
-	isActiveEvent(name) {
-		// No active child state implies state is not initialized
-		if (!this.__state) {
-			throw Error(
-				"Attempted to call 'state.isActiveEvent()' before calling 'state.resolve()'",
-			);
-		}
-		if (name in this.__onHandler && this.__onHandler[name].length) return true;
-		if (this.__state.isActiveEvent(name)) return true;
-		return false;
-	}
-	/**
-	 * @param {string} path
-	 * @return {boolean}
-	 */
-	matches(path) {
-		if (!this.__state) return false;
-
-		return (
-			super.matches(path) ||
-			(path.startsWith(`${this.name}.`) &&
-				this.__state.matches(path.slice(this.name.length + 1)))
-		);
-	}
-	/** @param {import('./types.js').CompoundResolveConfig<TStateConfig, TContextAncestor>} [config] */
-	resolve(config) {
-		this.__resolve(config);
-		this.__start();
-	}
-	/** @param {import('./types.js').CompoundResolveConfig<TStateConfig, TContextAncestor>} [config] */
+	/** @param {import('./types.js').RequireContext<TStateConfig, import('./types.js').ParentResolveConfig<TContextAncestor, this>>} [config] */
 	__resolve(config) {
 		super.__resolve(config);
 		if (!config?.children) return;
@@ -159,33 +105,98 @@ export class CompoundState extends BaseState {
 			state.__resolve(resolveConfig);
 		}
 	}
+	/**
+	 * @param {string} target
+	 * @param {(() => any)[]} actions
+	 */
+	__transition(target, actions) {
+		const from = this.__state;
+		const to = this.__children.get(target);
+		// These should never happen. They're mostly to help TypeScript out
+		if (!from) throw Error('Missing handler ownerState');
+		if (!to) {
+			let message = '';
+			if (this.path.some((segment) => Boolean(segment))) {
+				const path = this.path.join('.');
+				message += `State '${path}' references unknown transition target '${to}'.`;
+			} else {
+				message += `State references unknown transition target '${to}'.`;
+			}
+			const siblings = Array.from(this.__children.keys());
+			if (siblings.length) {
+				message += ` Expected one of: ${siblings.join(', ')}.`;
+			}
+			throw Error(message);
+		}
+
+		from.__handlerQueue.length = 0;
+		// exit actions for the current state
+		from.__queueExitHandlers();
+		from.__executeHandlersLeafFirst();
+
+		// transition actions for the handler
+		for (const action of actions) {
+			action();
+		}
+		// This should never happen. They're mostly to help TypeScript out
+		if (!from.parent) throw Error('Missing state parent');
+		// change the active nested state for parent state
+		this.__state = to;
+		// set initial state from transitionTo to leaves
+		to.__initialize();
+
+		to.__queueEntryHandlers();
+		to.__executeHandlersRootFirst();
+		to.__queueAlwaysHandlers();
+		to.__executeHandlersRootFirst();
+	}
+	/**
+	 * @param {string} path
+	 * @returns {boolean}
+	 */
+	canTransitionTo(path) {
+		return (
+			super.canTransitionTo(path) ||
+			(path.startsWith(`${this.name}.`) &&
+				Boolean(
+					this.__state?.canTransitionTo(path.slice(this.name.length + 1)),
+				))
+		);
+	}
+	/** @param {string} name */
+	isActiveEvent(name) {
+		if (name in this.__onHandler && this.__onHandler[name].length) return true;
+		if (this.__state?.isActiveEvent(name)) return true;
+		return false;
+	}
+	/**
+	 * @param {string} path
+	 * @return {boolean}
+	 */
+	matches(path) {
+		if (!this.__initialized) return false;
+		if (super.matches(path)) return true;
+
+		return (
+			path.startsWith(`${this.name}.`) &&
+			Boolean(this.__state?.matches(path.slice(this.name.length + 1)))
+		);
+	}
+
 	/** @param {(arg: this) => any} fn */
 	subscribe(fn) {
 		fn(this);
 		this.__subscribers.add(
-			/** @type {(arg: BaseState<TStateConfig, TContextAncestor>) => any} */ (
+			/** @type {(arg: import('./base.js').BaseState<TStateConfig, TContextAncestor>) => any} */ (
 				fn
 			),
 		);
 		return () => {
 			this.__subscribers.delete(
-				/** @type {(arg: BaseState<TStateConfig, TContextAncestor>) => any} */ (
+				/** @type {(arg: import('./base.js').BaseState<TStateConfig, TContextAncestor>) => any} */ (
 					fn
 				),
 			);
-		};
-	}
-	toJSON() {
-		/** @type {Record<string, import('./types.js').StateNodeJSON>} */
-		const children = {};
-		for (const [name, state] of this.__children) {
-			children[name] = state.toJSON();
-		}
-
-		return {
-			type: this.#type,
-			...super.__toJSON(),
-			children,
 		};
 	}
 	get type() {

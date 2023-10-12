@@ -1,26 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import { AtomicState } from '../../src/state/atomic.js';
 import { CompoundState } from '../../src/state/compound.js';
-import { EffectHandler } from '../../src/handler/effect.js';
 
 describe('activeEvents', () => {
 	it('returns handlable events', () => {
 		const state = new CompoundState({
 			on: {
-				EVENT1: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
+				EVENT1: {
+					run: ['action'],
+				},
 			},
 			children: {
 				s1: new CompoundState({
 					on: {
-						EVENT2: [
-							new EffectHandler({
-								run: ['action'],
-							}),
-						],
+						EVENT2: {
+							run: ['action'],
+						},
 					},
 					children: {
 						s11: new AtomicState({}),
@@ -38,20 +33,16 @@ describe('activeEvents', () => {
 	it('returns unique handlable events', () => {
 		const state = new CompoundState({
 			on: {
-				EVENT: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
+				EVENT: {
+					run: ['action'],
+				},
 			},
 			children: {
 				s1: new AtomicState({
 					on: {
-						EVENT: [
-							new EffectHandler({
-								run: ['action'],
-							}),
-						],
+						EVENT: {
+							run: ['action'],
+						},
 					},
 				}),
 			},
@@ -66,11 +57,9 @@ describe('activeEvents', () => {
 	it('returns no events when not initialized', () => {
 		const state = new CompoundState({
 			on: {
-				EVENT: [
-					new EffectHandler({
-						run: ['action'],
-					}),
-				],
+				EVENT: {
+					run: ['action'],
+				},
 			},
 			children: {
 				s1: new AtomicState({}),

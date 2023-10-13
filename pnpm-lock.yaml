@@ -262,8 +262,8 @@ importers:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
       content-thing:
-        specifier: ^0.0.7
-        version: 0.0.7(@sveltejs/kit@1.22.4)
+        specifier: ^0.0.8
+        version: 0.0.8(@sveltejs/kit@1.22.4)
       eslint:
         specifier: ^8.47.0
         version: 8.47.0
@@ -1860,8 +1860,8 @@ packages:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
     dev: true
 
-  /content-thing@0.0.7(@sveltejs/kit@1.22.4):
-    resolution: {integrity: sha512-ckEMl2JS9gwcYrUbWSyPzqutn49hYFXTpsqzXP7yRMJ2/DNtvmtoOZi2zOy8rGsA39vEhum6pbDyj8H+uBjtNA==}
+  /content-thing@0.0.8(@sveltejs/kit@1.22.4):
+    resolution: {integrity: sha512-bBGqQsa+j4XVFOQ93xeFU0/J0wzS6yQ0ZD3vvBjVUKi5xIAFpjd91h12Q/bPE4xakRxtvAD8jNltdtsPDN/1EA==}
     peerDependencies:
       '@sveltejs/kit': ^1.22.0
     dependencies:

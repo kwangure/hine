@@ -262,8 +262,8 @@ importers:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
       content-thing:
-        specifier: ^0.0.6
-        version: 0.0.6(@sveltejs/kit@1.22.4)
+        specifier: ^0.0.8
+        version: 0.0.8(@sveltejs/kit@1.22.4)
       eslint:
         specifier: ^8.47.0
         version: 8.47.0
@@ -1860,8 +1860,8 @@ packages:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
     dev: true
 
-  /content-thing@0.0.6(@sveltejs/kit@1.22.4):
-    resolution: {integrity: sha512-s27welGsvOm7tXWz20jwEsN4WXlPBHyzWsdXi9b+Z6KzSvdvzCbl+4e9QUphaVyXFT0TeCKPyKwKy5ld2MzbzA==}
+  /content-thing@0.0.8(@sveltejs/kit@1.22.4):
+    resolution: {integrity: sha512-bBGqQsa+j4XVFOQ93xeFU0/J0wzS6yQ0ZD3vvBjVUKi5xIAFpjd91h12Q/bPE4xakRxtvAD8jNltdtsPDN/1EA==}
     peerDependencies:
       '@sveltejs/kit': ^1.22.0
     dependencies:
@@ -1877,7 +1877,7 @@ packages:
       chokidar: 3.5.3
       drizzle-orm: 0.28.6(better-sqlite3@8.6.0)
       drizzle-zod: 0.5.1(drizzle-orm@0.28.6)(zod@3.22.2)
-      hine: 0.0.19
+      hine: 0.0.20
       js-yaml: 4.1.0
       remark-frontmatter: 5.0.0
       remark-parse: 11.0.0
@@ -2830,8 +2830,8 @@ packages:
       function-bind: 1.1.1
     dev: true
 
-  /hine@0.0.19:
-    resolution: {integrity: sha512-2BtolyIc1D9p4mTrxAV2geRlY3Z5uYPqre8L2I3HpEZcIlrUwLf6WOmvAzctGKA/QkuK2/Rnz8NAOlQUfCWUXA==}
+  /hine@0.0.20:
+    resolution: {integrity: sha512-cZRjRm60PdpTgnhMPFQuWcFW+Usb/YMdxFTNRfsiV2kCqx3lZpVsa+OMKuMwXhfqeQ9wrd4lXeg1k1GS2M3gzg==}
     dev: true
 
   /hosted-git-info@2.8.9:

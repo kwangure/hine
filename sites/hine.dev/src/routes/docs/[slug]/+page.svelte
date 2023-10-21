@@ -33,6 +33,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>{title} - Hine</title>
+</svelte:head>
+
 <Shell.Root>
 	<Shell.Navbar>
 		<a href="/" class="text-xl uppercase lg:px-6">

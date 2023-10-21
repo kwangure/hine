@@ -32,7 +32,6 @@
 	"wireit": {
 		"build": {
 			"dependencies": [
-				"./packages/svelte-ui:build",
 				"./sites/hine.dev:build",
 				"build:readme"
 			]
@@ -52,7 +51,6 @@
 			"dependencies": [
 				"./examples/basic:check",
 				"./packages/hine:check",
-				"./packages/svelte-ui:check",
 				"./sites/hine.dev:check"
 			]
 		},
@@ -67,7 +65,6 @@
 				"./packages/eslint-config:format",
 				"./packages/hine:format",
 				"./packages/prettier-config:format",
-				"./packages/svelte-ui:format",
 				"./sites/hine.dev:format"
 			]
 		},
@@ -76,7 +73,6 @@
 				"./examples/basic:lint",
 				"./packages/eslint-config:lint",
 				"./packages/hine:lint",
-				"./packages/svelte-ui:lint",
 				"./sites/hine.dev:lint"
 			]
 		},
@@ -84,7 +80,6 @@
 			"dependencies": [
 				"./packages/eslint-config:package",
 				"./packages/hine:package",
-				"./packages/svelte-ui:package",
 				"./packages/prettier-config:package"
 			]
 		},
@@ -95,7 +90,6 @@
 				"./packages/eslint-config:pre-commit",
 				"./packages/hine:pre-commit",
 				"./packages/prettier-config:pre-commit",
-				"./packages/svelte-ui:pre-commit",
 				"./sites/hine.dev:pre-commit"
 			]
 		},

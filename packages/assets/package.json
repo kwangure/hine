@@ -1,0 +1,35 @@
+{
+	"name": "@hine/assets",
+	"private": true,
+	"version": "0.0.0",
+	"description": "Static assets for Hine",
+	"files": [
+		"*.svg",
+		"*.js",
+		"types"
+	],
+	"wireit": {
+		"lint": {
+			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
+			"files": [
+				"**/*.{js,svelte}",
+				".eslintignore",
+				"eslint.config.js"
+			],
+			"output": []
+		}
+	},
+	"exports": {
+		".": {
+			"types": "./index.d.ts",
+			"default": "./index.js"
+		},
+		"./logo-dark.svg": "./logo-dark.svg",
+		"./logo.svg": "./logo.svg"
+	},
+	"devDependencies": {
+		"publint": "^0.2.2"
+	},
+	"license": "MIT",
+	"type": "module"
+}

@@ -25,12 +25,12 @@ import { atomic, compound } from 'hine';
 
 // Compound states have `children`
 const toggle = compound({
-	// The first state (i.e. inactive) is the default initial state
+	// The first state (in this case 'inactive') is the default initial state
 	children: {
 		// Atomic states do not have `children`. They're leaves in the tree.
 		inactive: atomic({
 			on: {
-				// Transitions change the current state after an event
+				// `goto` will change the current state after a 'toggle' event
 				toggle: { goto: 'active' },
 			},
 		}),

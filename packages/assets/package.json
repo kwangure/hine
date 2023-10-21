@@ -19,6 +19,14 @@
 			"output": []
 		}
 	},
+	"exports": {
+		".": {
+			"types": "./index.d.ts",
+			"default": "./index.js"
+		},
+		"./logo-dark.svg": "./logo-dark.svg",
+		"./logo.svg": "./logo.svg"
+	},
 	"devDependencies": {
 		"publint": "^0.2.2"
 	},

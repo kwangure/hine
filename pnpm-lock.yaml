@@ -239,6 +239,9 @@ importers:
 
   sites/hine.dev:
     dependencies:
+      '@hine/assets':
+        specifier: workspace:^
+        version: link:../../packages/assets
       '@mdi/js':
         specifier: ^7.2.96
         version: 7.2.96

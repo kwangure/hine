@@ -79,6 +79,7 @@
 		}
 	},
 	"dependencies": {
+		"@hine/assets": "workspace:^",
 		"@mdi/js": "^7.2.96",
 		"hine": "workspace:*",
 		"simple-icons": "^9.9.0",

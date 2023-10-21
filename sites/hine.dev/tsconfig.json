@@ -5,6 +5,7 @@
 		"checkJs": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
+		"module": "nodenext",
 		"moduleResolution": "NodeNext",
 		"noEmit": true,
 		"resolveJsonModule": true,

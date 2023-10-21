@@ -1,9 +1,9 @@
 <script>
-	import { Icon, Markdown, Shell, Sidebar } from 'svelte-ui/components';
+	import { Icon, Markdown, Shell, Sidebar } from '@svelte-thing/components';
 	import { mdiWeatherNight, mdiWhiteBalanceSunny } from '@mdi/js';
 	import { page } from '$app/stores';
 	import { siGithub, siNpm } from 'simple-icons';
-	import { createDarkModeButton } from 'svelte-ui/creators';
+	import { createDarkModeButton } from '@svelte-thing/components/creators';
 	import { wordmark } from '@hine/assets';
 
 	export let data;

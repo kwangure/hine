@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-	content: [
-		'./src/**/*.{html,js,svelte,ts}',
-		'../../packages/svelte-ui/src/lib/**/*.{html,js,svelte,ts}',
-	],
+	content: ['./src/**/*.{html,svelte}', './node_modules/**/*.{html,svelte}'],
 	darkMode: 'class',
 	theme: {
 		extend: {

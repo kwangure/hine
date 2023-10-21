@@ -2,8 +2,6 @@
     This README is generated from ./README_TEMPLATE.md. Do not edit it directly.
 -->
 
-# Hine
-
 <div align="center">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./packages/assets/wordmark-dark.svg" alt="Hine" width="300" height="150"></source>

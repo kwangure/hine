@@ -1,5 +1,3 @@
-# Hine
-
 <div align="center">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./packages/assets/wordmark-dark.svg" alt="Hine" width="300" height="150"></source>

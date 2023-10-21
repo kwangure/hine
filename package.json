@@ -76,7 +76,6 @@
 				"./examples/basic:lint",
 				"./packages/eslint-config:lint",
 				"./packages/hine:lint",
-				"./packages/prettier-config:lint",
 				"./packages/svelte-ui:lint",
 				"./sites/hine.dev:lint"
 			]

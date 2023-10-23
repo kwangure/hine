@@ -68,7 +68,7 @@
 	</Sidebar.Root>
 	<Shell.Main>
 		<div class="mb-40 lg:px-6">
-			<h1 class="mb-2 mt-4 flex scroll-mt-[var(--svui-navbar-height)] text-3xl font-semibold tracking-tight text-neutral-900 dark:text-slate-200 sm:text-4xl">
+			<h1 class="mb-2 mt-4 flex scroll-mt-[calc(var(--st-navbar-height)+var(--st-navbar-y-gap))] text-3xl font-semibold tracking-tight text-neutral-900 dark:text-slate-200 sm:text-4xl">
 				{title}
 			</h1>
 			<Markdown.Children node={data.content} />

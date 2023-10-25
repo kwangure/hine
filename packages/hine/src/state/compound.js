@@ -15,17 +15,26 @@ export function compound(config) {
  * @extends {ParentState<TStateConfig, TContextAncestor>}
  */
 export class CompoundState extends ParentState {
-	/** @type {import('./types.js').StateNode | null} */
-	#initial = null;
 	#type = /** @type {const} */ ('compound');
 
-	/** @type {import('./types.js').StateNode | null} */
-	__state = null;
 	/**
 	 * @param {TStateConfig} stateConfig
 	 */
 	constructor(stateConfig) {
 		super(stateConfig);
+	}
+	/**
+	 * @param {Record<string, import("./types.js").StateNode>} [children]
+	 */
+	__append(children) {
+		super.__append(children);
+		if (this.__state) return;
+		if (!this.__children.size) return;
+		const iterator = this.__children.values();
+		const first = iterator.next();
+		this.__initial = first.value;
+		this.__state = first.value;
+		this.__state.__queueEntryHandlers();
 	}
 	__executeHandlersLeafFirst() {
 		this.__state?.__executeHandlersLeafFirst();
@@ -36,10 +45,7 @@ export class CompoundState extends ParentState {
 		this.__state?.__executeHandlersRootFirst();
 	}
 	__initialize() {
-		this.__state = this.#initial;
-		for (const state of this.__children.values()) {
-			state.__initialize();
-		}
+		this.__state = this.__initial;
 		super.__initialize();
 	}
 	/** @param {Set<string>} stateTreeEvents */
@@ -75,11 +81,6 @@ export class CompoundState extends ParentState {
 	}
 	__resolveConfig() {
 		super.__resolveConfig();
-		const iterator = this.__children.values();
-		const first = iterator.next();
-		// We know `first` is not empty but TypeScript doesn't. Help it.
-		if (first.done) throw Error('Impossible!');
-		this.#initial = first.value;
 
 		for (const state of this.__children.values()) {
 			state.__resolveConfig();

@@ -89,7 +89,6 @@ export class BaseState {
 		for (const subscriber of this.__subscribers) {
 			subscriber(this);
 		}
-		this.__parent?.__callSubscribers();
 	}
 	/**
 	 * @returns {Record<string, import('../runner/types.js').Condition<any>>}

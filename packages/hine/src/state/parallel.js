@@ -36,6 +36,12 @@ export class ParallelState extends ParentState {
 			child.__queueEntryHandlers();
 		}
 	}
+	__callSubscribers() {
+		for (const child of this.__children.values()) {
+			child.__callSubscribers();
+		}
+		super.__callSubscribers();
+	}
 	__executeHandlersLeafFirst() {
 		for (const child of this.__children.values()) {
 			child.__executeHandlersLeafFirst();

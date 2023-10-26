@@ -36,6 +36,10 @@ export class CompoundState extends ParentState {
 		this.__state = first.value;
 		this.__state.__queueEntryHandlers();
 	}
+	__callSubscribers() {
+		this.__state?.__callSubscribers();
+		super.__callSubscribers();
+	}
 	__executeHandlersLeafFirst() {
 		this.__state?.__executeHandlersLeafFirst();
 		super.__executeHandlersLeafFirst();

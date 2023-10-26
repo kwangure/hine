@@ -20,3 +20,36 @@ describe('append', () => {
 		expect(entry).toBe('ranEntry');
 	});
 });
+
+describe('subscribe', () => {
+	it('calls nested subscribers', () => {
+		/** @type {string[]} */
+		const foo = [];
+		const state = compound({
+			children: {
+				child: atomic({ entry: 'entry', on: { event: [] } }),
+			},
+		});
+		state.resolve({
+			children: {
+				child: {
+					actions: {
+						entry(state) {
+							let firstCall = true;
+							// Subscribe during the course of an event in action. After the event all
+							// subscribers are called, among which should be this one
+							state.subscribe(() => {
+								if (firstCall) {
+									firstCall = false;
+									return;
+								}
+								foo.push('subscribe');
+							});
+						},
+					},
+				},
+			},
+		});
+		expect(foo).toEqual(['subscribe']);
+	});
+});

@@ -7,6 +7,7 @@ import { ParentState } from './parent.js';
  */
 export function parallel(config) {
 	return /** @type {ParallelState<TConfig, {}>} */ (
+		// @ts-ignore
 		new ParallelState(config ?? /** @type {TConfig} */ ({}))
 	);
 }
@@ -18,11 +19,28 @@ export function parallel(config) {
  */
 export class ParallelState extends ParentState {
 	#type = /** @type {const} */ ('parallel');
+
 	/**
 	 * @param {TStateConfig} stateConfig
 	 */
 	constructor(stateConfig) {
 		super(stateConfig);
+	}
+	/**
+	 * @param {Record<string, import("./types.js").StateNode>} [children]
+	 */
+	__append(children) {
+		super.__append(children);
+		if (!children) return;
+		for (const child of Object.values(children)) {
+			child.__queueEntryHandlers();
+		}
+	}
+	__callSubscribers() {
+		for (const child of this.__children.values()) {
+			child.__callSubscribers();
+		}
+		super.__callSubscribers();
 	}
 	__executeHandlersLeafFirst() {
 		for (const child of this.__children.values()) {
@@ -35,12 +53,6 @@ export class ParallelState extends ParentState {
 		for (const child of this.__children.values()) {
 			child?.__executeHandlersRootFirst();
 		}
-	}
-	__initialize() {
-		for (const state of this.__children.values()) {
-			state.__initialize();
-		}
-		super.__initialize();
 	}
 	/** @param {Set<string>} stateTreeEvents */
 	__nextEvents(stateTreeEvents) {

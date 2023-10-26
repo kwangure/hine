@@ -25,8 +25,6 @@ export class BaseState {
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#entry = [];
 	#entryConfig;
-	/** @type {StateEvent | null} */
-	#event = null;
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#exit = [];
 	#exitConfig;
@@ -41,6 +39,8 @@ export class BaseState {
 	 */ ({});
 	__$ancestorContext = /** @type {TContextAncestor}*/ ({});
 
+	/** @type {StateEvent | null} */
+	__event = null;
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	__handlerQueue = [];
 	__initialized = false;
@@ -89,7 +89,6 @@ export class BaseState {
 		for (const subscriber of this.__subscribers) {
 			subscriber(this);
 		}
-		this.__parent?.__callSubscribers();
 	}
 	/**
 	 * @returns {Record<string, import('../runner/types.js').Condition<any>>}
@@ -234,13 +233,13 @@ export class BaseState {
 		this.__initialize();
 
 		const event = new StateEvent({ name: '_start' });
-		this.#event = event;
+		this.__event = event;
 		this.__queueEntryHandlers();
 		this.__executeHandlersRootFirst();
 		this.__queueAlwaysHandlers();
 		this.__executeHandlersRootFirst();
 		this.__callSubscribers();
-		this.#event = null;
+		this.__event = null;
 	}
 	get actions() {
 		return this.__actions;
@@ -287,17 +286,17 @@ export class BaseState {
 			name: /** @type {string} */ (eventName),
 			value,
 		});
-		this.#event = event;
+		this.__event = event;
 		this.__queueOnHandlers(/** @type {string} */ (eventName));
 		this.__queueAlwaysHandlers();
 		this.__executeHandlersLeafFirst();
 
 		this.__callSubscribers();
-		this.#event = null;
+		this.__event = null;
 	}
 	/** @returns {StateEvent} */
 	get event() {
-		const event = this.#event ?? this.__parent?.event;
+		const event = this.__event ?? this.__parent?.event;
 		if (!event) {
 			throw Error(`Attempted to access event outside event lifecycle.`);
 		}

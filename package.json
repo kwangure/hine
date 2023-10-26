@@ -23,10 +23,10 @@
 	"devDependencies": {
 		"@changesets/cli": "^2.26.1",
 		"husky": "^8.0.3",
-		"remark-parse": "^10.0.2",
-		"remark-stringify": "^10.0.3",
-		"unified": "^10.1.2",
-		"unist-util-visit": "^4.0.0",
+		"remark-parse": "^11.0.0",
+		"remark-stringify": "^11.0.0",
+		"unified": "^11.0.2",
+		"unist-util-visit": "^5.0.0",
 		"wireit": "^0.13.0"
 	},
 	"wireit": {

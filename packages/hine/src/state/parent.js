@@ -1,4 +1,14 @@
+import { StateEvent } from '../event.js';
 import { BaseState } from './base.js';
+
+/**
+ * @template {string} TName
+ * @template {import('./types.js').CompoundStateConfig<TName>} TConfig
+ * @param {TConfig} config
+ */
+export function parent(config) {
+	return /** @type {ParentState<TConfig, {}>} */ (new ParentState(config));
+}
 
 /**
  * @template {import('./types.js').StateConfig} TStateConfig
@@ -31,6 +41,15 @@ export class ParentState extends BaseState {
 			this.__children.set(state.name, state);
 			state.__parent = this;
 		}
+		for (const state of Object.values(children)) {
+			state.__initialize();
+		}
+	}
+	__initialize() {
+		for (const state of this.__children.values()) {
+			state.__initialize();
+		}
+		super.__initialize();
 	}
 	/**
 	 * @template {Record<string, import("./types.js").StateNode>} TChildren
@@ -46,7 +65,6 @@ export class ParentState extends BaseState {
 	 * >} resolveConfig
 	 */
 	append(children, resolveConfig) {
-		this.__append(children);
 		for (const [name, config] of Object.entries(resolveConfig)) {
 			const state = children[name];
 			if (!state) {
@@ -61,7 +79,17 @@ export class ParentState extends BaseState {
 				);
 			}
 			state.__resolve(config);
+			state.__resolveConfig();
 		}
+		this.__append(children);
+		const event = new StateEvent({ name: '_append' });
+		this.__event = event;
+		// super.__append() (e.g. in CompoundState) may have added entry handlers
+		this.__executeHandlersRootFirst();
+		this.__queueAlwaysHandlers();
+		this.__executeHandlersRootFirst();
+		this.__callSubscribers();
+		this.__event = null;
 	}
 	/**
 	 * This is a noop for `ParallelState`s and implemented for `CompoundState`s

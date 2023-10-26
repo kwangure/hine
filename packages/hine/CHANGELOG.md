@@ -1,5 +1,11 @@
 # hine
 
+## 0.0.21
+
+### Patch Changes
+
+- c8a2b04: Run entry actions and subscriptions on append.
+
 ## 0.0.20
 
 ### Patch Changes

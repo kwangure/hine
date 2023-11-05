@@ -53,7 +53,7 @@
 	<Sidebar.Root>
 		{#each data.groups as group}
 			<Sidebar.Section title={group.title}>
-				{#each group.docs as entry}
+				{#each group.entries as entry}
 					<Sidebar.Item>
 						<Sidebar.Link href="/docs/{entry._id}">
 							{entry.title}

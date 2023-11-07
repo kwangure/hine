@@ -20,7 +20,7 @@ export async function load({ params }) {
 						_content: true,
 						_headingTree: true,
 					},
-					orderBy: (docs, { asc }) => [asc(docs.order)],
+					orderBy: (docs, { asc }) => [asc(docs.position)],
 				},
 			},
 		}),

@@ -9,7 +9,7 @@
 			"group": {
 				"type": "text"
 			},
-			"order": {
+			"position": {
 				"type": "integer",
 				"unique": true
 			}

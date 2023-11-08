@@ -3,8 +3,8 @@ import { error } from '@sveltejs/kit';
 
 export async function load({ params }) {
 	const { slug } = params;
-	const data = await collections.query.docs.findFirst({
-		where: (docs, { eq }) => eq(docs._id, slug),
+	const data = await collections.query.examples.findFirst({
+		where: (examples, { eq }) => eq(examples._id, slug),
 	});
 	if (!data) {
 		throw error(404, 'Page not found.');

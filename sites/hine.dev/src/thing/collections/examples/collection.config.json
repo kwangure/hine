@@ -1,9 +1,12 @@
 {
 	"$schema": "../../../../node_modules/content-thing/config/schema.json",
-	"type": "yaml",
+	"type": "markdown",
 	"schema": {
 		"data": {
 			"title": {
+				"type": "text"
+			},
+			"group": {
 				"type": "text"
 			},
 			"position": {
@@ -13,13 +16,11 @@
 		}
 	},
 	"relations": {
-		"docs": {
-			"type": "many",
-			"collection": "docs"
-		},
-		"examples": {
-			"type": "many",
-			"collection": "examples"
+		"group": {
+			"type": "one",
+			"collection": "groups",
+			"reference": "_id",
+			"field": "group"
 		}
 	}
 }

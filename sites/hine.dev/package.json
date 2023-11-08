@@ -79,7 +79,7 @@
 	"dependencies": {
 		"@hine/assets": "workspace:^",
 		"@mdi/js": "^7.2.96",
-		"@svelte-thing/components": "^0.0.2",
+		"@svelte-thing/components": "^0.0.3",
 		"hine": "workspace:*",
 		"simple-icons": "^9.9.0"
 	},

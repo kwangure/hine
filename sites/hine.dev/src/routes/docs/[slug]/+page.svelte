@@ -47,7 +47,7 @@
 		<div class="ml-auto flex gap-1 lg:pr-6">
 			<Icon.Link href="https://github.com/kwangure/hine" label="GitHub" path={siGithub.path}/>
 			<Icon.Link href="https://www.npmjs.com/package/hine" label="NPM" path={siNpm.path}/>
-			<Icon.Button use={button} label={darkModeLabel} path={darkModeIcon}/>
+			<Icon.Button action={button} label={darkModeLabel} path={darkModeIcon}/>
 		</div>
 	</Shell.Navbar>
 	<Sidebar.Root>

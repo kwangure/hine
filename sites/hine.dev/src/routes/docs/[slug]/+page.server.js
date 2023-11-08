@@ -23,6 +23,7 @@ export async function load({ params }) {
 					orderBy: (docs, { asc }) => [asc(docs.position)],
 				},
 			},
+			orderBy: (groups, { asc }) => [asc(groups.position)],
 		}),
 		['docs'],
 	);

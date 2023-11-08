@@ -52,18 +52,20 @@
 	</Shell.Navbar>
 	<Sidebar.Root>
 		{#each data.groups as group}
-			<Sidebar.Section title={group.title}>
-				{#each group.entries as entry}
-					<Sidebar.Item>
-						<Sidebar.Link href="/docs/{entry._id}">
-							{entry.title}
-						</Sidebar.Link>
-						{#if $page.url.pathname === `/docs/${entry._id}`}
-							<Sidebar.Outline toc={entry._headingTree} />
-						{/if}
-					</Sidebar.Item>
-				{/each}
-			</Sidebar.Section>
+			{#if group.entries.length}
+				<Sidebar.Section title={group.title}>
+					{#each group.entries as entry}
+						<Sidebar.Item>
+							<Sidebar.Link href="/docs/{entry._id}">
+								{entry.title}
+							</Sidebar.Link>
+							{#if $page.url.pathname === `/docs/${entry._id}`}
+								<Sidebar.Outline toc={entry._headingTree} />
+							{/if}
+						</Sidebar.Item>
+					{/each}
+				</Sidebar.Section>
+			{/if}
 		{/each}
 	</Sidebar.Root>
 	<Shell.Main>

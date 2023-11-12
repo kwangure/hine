@@ -1,5 +1,5 @@
 <script>
-	import { Markdown, Shell, Sidebar } from '@svelte-thing/components';
+	import { Markdown, Outline, Shell, Sidebar } from '@svelte-thing/components';
 	import { page } from '$app/stores';
 
 	export let data;
@@ -7,8 +7,8 @@
 	/** @type {string} */
 	let title;
 	$: {
-		if (data.content.data) {
-			title = /** @type {{ frontmatter: { title: string }}} */(data.content.data).frontmatter.title
+		if (data.entry._content.data) {
+			title = /** @type {{ frontmatter: { title: string }}} */(data.entry._content.data).frontmatter.title
 		}
 	}
 </script>
@@ -23,12 +23,9 @@
 			<Sidebar.Section title={group.title}>
 				{#each group.examples as entry}
 					<Sidebar.Item>
-						<Sidebar.Link href="/examples/{entry._id}">
+						<Sidebar.Link href="/examples/{entry._id}" ariaCurrent={$page.url.pathname === `/examples/${entry._id}`}>
 							{entry.title}
 						</Sidebar.Link>
-						{#if $page.url.pathname === `/examples/${entry._id}`}
-							<Sidebar.Outline toc={entry._headingTree} />
-						{/if}
 					</Sidebar.Item>
 				{/each}
 			</Sidebar.Section>
@@ -40,6 +37,7 @@
 		<h1 class="mb-2 mt-4 flex scroll-mt-[calc(var(--st-navbar-height)+var(--st-navbar-y-gap))] text-3xl font-semibold tracking-tight text-neutral-900 dark:text-slate-200 sm:text-4xl">
 			{title}
 		</h1>
-		<Markdown.Children node={data.content} />
+		<Markdown.Children node={data.entry._content} />
 	</div>
+	<Outline.Root toc={data.entry._headingTree} />
 </Shell.Main>

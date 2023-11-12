@@ -8,6 +8,7 @@
 		"dev": "vite dev",
 		"format": "wireit",
 		"lint": "wireit",
+		"preview": "wireit",
 		"test": "wireit"
 	},
 	"wireit": {
@@ -65,6 +66,14 @@
 				"lint"
 			]
 		},
+		"preview": {
+			"command": "vite preview",
+			"dependencies": [
+				"build"
+			],
+			"files": [],
+			"output": []
+		},
 		"test": {
 			"command": "vitest run",
 			"files": [
@@ -79,7 +88,8 @@
 	"dependencies": {
 		"@hine/assets": "workspace:^",
 		"@mdi/js": "^7.2.96",
-		"@svelte-thing/components": "^0.0.3",
+		"@melt-ui/svelte": "^0.61.1",
+		"@svelte-thing/components": "^0.0.4",
 		"hine": "workspace:*",
 		"simple-icons": "^9.9.0"
 	},

@@ -18,13 +18,13 @@ export function load({ params }) {
 			},
 			orderBy: (groups, { asc }) => [asc(groups.position)],
 		}),
-		content: collections.query.examples
+		entry: collections.query.examples
 			.findFirst({
 				where: (examples, { eq }) => eq(examples._id, slug),
 			})
 			.then((data) => {
 				if (!data) throw error(404, 'Page not found.');
-				return data._content;
+				return data;
 			}),
 	};
 }

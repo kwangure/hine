@@ -5,6 +5,10 @@
 		"data": {
 			"title": {
 				"type": "text"
+			},
+			"position": {
+				"type": "integer",
+				"unique": true
 			}
 		}
 	},
@@ -12,6 +16,10 @@
 		"docs": {
 			"type": "many",
 			"collection": "docs"
+		},
+		"examples": {
+			"type": "many",
+			"collection": "examples"
 		}
 	}
 }

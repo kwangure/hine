@@ -1,7 +1,7 @@
 ---
 title: Quickstart
 group: getting-started
-order: 2
+position: 2
 ---
 
 ## Installation

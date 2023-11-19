@@ -1,0 +1,108 @@
+{
+	"name": "@hine/docgen",
+	"version": "0.0.0",
+	"description": "A tool for generating Hine documentation",
+	"scripts": {
+		"format": "wireit",
+		"lint": "wireit",
+		"package": "wireit",
+		"pre-commit": "wireit",
+		"publint": "wireit",
+		"release": "wireit",
+		"test": "wireit"
+	},
+	"bin": {
+		"docgen": "./src/index.js"
+	},
+	"exports": {
+		".": {
+			"types": "./types/index.d.ts",
+			"default": "./src/index.js"
+		}
+	},
+	"wireit": {
+		"format": {
+			"command": "prettier . --write --cache",
+			"files": [
+				"**/*.{css,html,js,json,md,ts,svelte}",
+				"!types/**",
+				".prettierignore"
+			],
+			"output": []
+		},
+		"lint": {
+			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
+			"files": [
+				"**/*.{js,svelte}",
+				".eslintignore",
+				"eslint.config.js"
+			],
+			"output": []
+		},
+		"package": {
+			"command": "tsc",
+			"files": [
+				"src/**/*.{js,ts}",
+				"tsconfig.build.json",
+				"tsconfig.json"
+			],
+			"output": [
+				"types"
+			]
+		},
+		"publint": {
+			"command": "publint",
+			"dependencies": [
+				"package"
+			],
+			"files": [
+				"src/**",
+				"types/**",
+				"package.json"
+			],
+			"output": []
+		},
+		"pre-commit": {
+			"dependencies": [
+				"format",
+				"lint",
+				"package",
+				"publint",
+				"test"
+			]
+		},
+		"release": {
+			"dependencies": [
+				"package",
+				"publint",
+				"test"
+			]
+		},
+		"test": {
+			"command": "node --test --test-reporter spec",
+			"files": [
+				"src/**/*.js",
+				"tests/**/*.js"
+			],
+			"output": []
+		}
+	},
+	"dependencies": {
+		"@microsoft/tsdoc": "^0.14.2",
+		"@typescript-eslint/typescript-estree": "^6.11.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.9.1",
+		"eslint": "^8.47.0",
+		"eslint-config": "workspace:*",
+		"prettier": "^3.0.2",
+		"prettier-config": "workspace:*",
+		"publint": "^0.2.2",
+		"typescript": "^5.1.6",
+		"vite": "^4.4.8",
+		"vitest": "^0.33.0"
+	},
+	"prettier": "prettier-config",
+	"license": "MIT",
+	"type": "module"
+}

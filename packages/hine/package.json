@@ -107,6 +107,9 @@
 			"output": []
 		}
 	},
+	"dependencies": {
+		"@hine/docgen": "workspace:^"
+	},
 	"devDependencies": {
 		"eslint": "^8.47.0",
 		"eslint-config": "workspace:*",

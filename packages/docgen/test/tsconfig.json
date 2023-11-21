@@ -5,7 +5,6 @@
 			"path": "../src"
 		}
 	],
-	"include": ["**/*", "../tsestree.d.ts"],
 	"exclude": [],
 	"compilerOptions": {
 		"emitDeclarationOnly": true,

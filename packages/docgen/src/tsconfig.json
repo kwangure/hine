@@ -1,6 +1,5 @@
 {
 	"extends": "../../../config/tsconfig.base.json",
-	"include": ["**/*", "../tsestree.d.ts"],
 	"exclude": [],
 	"compilerOptions": {
 		"emitDeclarationOnly": true,

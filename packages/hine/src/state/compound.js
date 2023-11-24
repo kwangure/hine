@@ -1,17 +1,27 @@
 import { ParentState } from './parent.js';
 
 /**
- * @template {string} TName
- * @template {import('./types.js').CompoundStateConfig<TName>} TConfig
- * @param {TConfig} config
+ * `compound` creates an `CompoundState` instance.
+ *
+ * @template {string} TName - A string type representing the name of the state.
+ * @template {import('./types.js').CompoundStateConfig<TName>} TConfig - The configuration type for the compound state, defining its structure and behavior.
+ * @param {TConfig} config - Configuration object for the compound state.
  */
 export function compound(config) {
 	return /** @type {CompoundState<TConfig, {}>} */ (new CompoundState(config));
 }
 
 /**
- * @template {import('./types.js').StateConfig} TStateConfig
- * @template {Record<string, any>} TContextAncestor
+ * `CompoundState` is a specialized type of state in a state machine tree.
+ * It can contain nested states, including both atomic states and other compound
+ * states, allowing for the representation of complex state hierarchies and
+ * behaviors within the state machine.
+ *
+ * The class extends `ParentState`, inheriting its properties and methods, and
+ * emphasizes the ability to contain and manage a hierarchy of nested states. `CompoundState` is particularly useful for modeling scenarios where states have multiple levels of nested substates.
+ *
+ * @template {import('./types.js').StateConfig} TStateConfig Configuration defining the structure and behavior of compound states.
+ * @template {Record<string, any>} TContextAncestor A `Record` type representing the context data of ancestor nodes of the compound state.
  * @extends {ParentState<TStateConfig, TContextAncestor>}
  */
 export class CompoundState extends ParentState {

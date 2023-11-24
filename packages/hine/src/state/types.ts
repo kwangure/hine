@@ -13,6 +13,16 @@ import type { EmptyObject } from '../type-utils/empty-object.js';
 import type { Simplify } from '../type-utils/simplify.js';
 import type { UnionToIntersection } from '../type-utils/union-to-intersection.js';
 
+/**
+ * `StateNode` is a utility union type that can be either an `AtomicState`, `CompoundState`, or `ParallelState`.
+ *
+ * - `AtomicState`: Represents the most basic, indivisible state, which does not contain any child states.
+ *   Used for simple, standalone states in the state machine.
+ * - `CompoundState`: Represents a complex state that can contain nested states, including atomic and other compound states.
+ *   Useful for representing states with multiple levels of nested substates.
+ * - `ParallelState`: Represents a state where all child states are active simultaneously,
+ *   allowing for concurrent state behaviors. Different from compound states, where only one child state is active at a time.
+ */
 export type StateNode =
 	| AtomicState<any, any>
 	| CompoundState<any, any>
@@ -184,6 +194,12 @@ export type SetOptional<T, K extends keyof any> = Simplify<
 	}
 >;
 
+/**
+ * `StatePaths` returns a mapping of dot-notation state paths to their corresponding state objects
+ * in a state machine tree.
+ *
+ * @template T - The type of the base state, extending from `BaseState`.
+ */
 export type StatePaths<T extends BaseState<any, any>> = Simplify<
 	{
 		[K in ForceToLiteralString<T['name']>]: T;

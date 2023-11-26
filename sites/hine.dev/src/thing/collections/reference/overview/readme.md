@@ -1,6 +1,5 @@
 ---
 title: Overview
-group: states
 position: 1
 ---
 

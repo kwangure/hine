@@ -60,6 +60,24 @@
 			"output": []
 		},
 		"package": {
+			"dependencies": [
+				"package:docs",
+				"package:lib"
+			]
+		},
+		"package:docs": {
+			"command": "docgen",
+			"dependencies": [
+				"package:lib"
+			],
+			"files": [
+				"types"
+			],
+			"output": [
+				"docs"
+			]
+		},
+		"package:lib": {
 			"command": "tsc --project tsconfig.build.json",
 			"files": [
 				"src/**/*.{js,ts}",

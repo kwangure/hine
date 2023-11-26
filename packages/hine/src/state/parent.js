@@ -16,7 +16,7 @@ export function parent(config) {
  * The class serves as the foundational building block for more complex types that
  * involve heirarchichal state reilationsip and provides a mechanism to group and
  * manage substates in a hierarchical state structure.
- * 
+ *
  * The class extends `BaseState`, inheriting its properties and methods,
  * to implement states that can hold and manage child states.
  *

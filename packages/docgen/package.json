@@ -16,8 +16,7 @@
 	},
 	"exports": {
 		".": {
-			"types": "./types/index.d.ts",
-			"default": "./src/index.js"
+			"types": "./types/types.d.ts"
 		}
 	},
 	"wireit": {
@@ -40,10 +39,9 @@
 			"output": []
 		},
 		"package": {
-			"command": "tsc",
+			"command": "tsc -b",
 			"files": [
 				"src/**/*.{js,ts}",
-				"tsconfig.build.json",
 				"tsconfig.json"
 			],
 			"output": [

@@ -1,116 +1,152 @@
 import * as tsmorph from 'ts-morph';
-import fs from 'node:fs';
+import { getNodeDocs, initializeTsProject, TSNodeError } from './tsmorph.js';
+import { mkdirp, rimraf } from './filesystem.js';
+import { getPackageJsonDeclarationFiles } from './collect.js';
 import path from 'node:path';
 
-// Main execution
-const entryFiles = getPackageJsonDeclarationFiles();
-const project = initializeTsProject(entryFiles);
-generateDocumentation(project, entryFiles);
+main();
 
-/**
- * Initializes the TypeScript project and adds source files defined in package.json exports.
- * @param {string[]} entryFiles
- * @returns {tsmorph.Project} The TypeScript project.
- */
-function initializeTsProject(entryFiles) {
-	const project = new tsmorph.Project();
-	project.addSourceFilesAtPaths(entryFiles);
-	project.resolveSourceFileDependencies();
-	return project;
-}
-
-/**
- * Reads the package.json file and gathers TypeScript declaration files from exports.
- * @returns {string[]} An array of TypeScript declaration file paths.
- */
-function getPackageJsonDeclarationFiles() {
-	const cwd = process.cwd();
-	const packageJsonPath = path.join(cwd, 'package.json');
-	/** @type {string[]} */
-	const tsFiles = [];
-	try {
-		const fileContent = fs.readFileSync(packageJsonPath, 'utf8');
-		const packageJson = JSON.parse(fileContent);
-
-		if (packageJson.exports) {
-			gatherDeclarationFiles(packageJson.exports, tsFiles);
-		}
-	} catch (error) {
-		console.error('Error reading package.json:', error);
-	}
-	return tsFiles;
-}
-
-/**
- * Gathers TypeScript `.d.ts` files from the exports object of package.json file.
- * @param {Object} exportsObj - The exports object from package.json.
- * @param {string[]} tsFiles - Array to store `.d.ts` file paths.
- */
-function gatherDeclarationFiles(exportsObj, tsFiles) {
-	for (const value of Object.values(exportsObj)) {
-		if (typeof value === 'object' && value !== null) {
-			gatherDeclarationFiles(value, tsFiles);
-		} else if (typeof value === 'string' && value.endsWith('.d.ts')) {
-			tsFiles.push(path.join(process.cwd(), value));
-		}
-	}
+function main() {
+	const packageExports = getPackageJsonDeclarationFiles();
+	writeDocumentation(packageExports);
 }
 
 /**
  * Generates documentation for the entry TypeScript files in the Project.
- * @param {tsmorph.Project} project - The TypeScript project.
- * @param {string[]} entryFiles - Array of entry file paths.
+ * @param {string[]} packageEntryFiles - Array of entry file paths.
  */
-function generateDocumentation(project, entryFiles) {
-	const exportsDir = path.join(process.cwd(), 'docs');
-	if (!fs.existsSync(exportsDir)) {
-		fs.mkdirSync(exportsDir, { recursive: true });
+async function writeDocumentation(packageEntryFiles) {
+	const packageProject = initializeTsProject(packageEntryFiles);
+	const docsProject = initializeTsProject([], {
+		compilerOptions: {
+			outDir: 'docs',
+			declaration: true,
+			sourceMap: true,
+			target: tsmorph.ScriptTarget.ES2022,
+		},
+	});
+
+	const docsProjectDir = path.join(process.cwd(), 'node_modules/.ts-docs');
+	rimraf(docsProjectDir);
+	mkdirp(docsProjectDir);
+
+	const seenSourceFiles = new Set();
+	for (const packageEntryFilePath of packageEntryFiles) {
+		const packageSourceFile =
+			packageProject.getSourceFile(packageEntryFilePath);
+		if (!packageSourceFile) {
+			throw Error(
+				`File '${packageEntryFilePath}' from package.json not found.`,
+			);
+		}
+		const exportedDeclarations = packageSourceFile.getExportedDeclarations();
+		for (const declarations of exportedDeclarations.values()) {
+			for (const declaration of declarations) {
+				writeNodeDocumentation(docsProject, declaration, docsProjectDir);
+			}
+		}
+
+		copyExports(packageSourceFile);
 	}
+	await docsProject.save();
+	await docsProject.emit();
 
-	for (const filePath of entryFiles) {
-		const sourceFile = project.getSourceFile(filePath);
-		if (!sourceFile) {
-			console.error(`Source file not found: ${filePath}`);
-			continue;
+	/**
+	 * @param {tsmorph.SourceFile} packageSourceFile
+	 */
+	function copyExports(packageSourceFile) {
+		const packageSourceFilepath = packageSourceFile.getFilePath();
+		if (seenSourceFiles.has(packageSourceFilepath)) {
+			return;
+		} else {
+			seenSourceFiles.add(packageSourceFilepath);
 		}
-		const exportedDeclarations = sourceFile.getExportedDeclarations();
-		const outputFilePath = path.join(
-			exportsDir,
-			path.basename(filePath) + '.json',
+		const sourceBasePath = packageSourceFilepath
+			.slice(process.cwd().length + 1)
+			.replace('.d.ts', '.ts');
+		const docsFilePath = path.join(docsProjectDir, sourceBasePath);
+		let docsSourceFile = docsProject.getSourceFile(docsFilePath);
+		if (!docsSourceFile) {
+			docsSourceFile = docsProject.createSourceFile(docsFilePath, '');
+		}
+		const exportDeclarations = packageSourceFile.getExportDeclarations();
+		docsSourceFile.addExportDeclarations(
+			exportDeclarations.map((d) => d.getStructure()),
 		);
 
-		/** @type {Record<string, any>} */
-		const exportedDeclarationsObject = {};
-		for (const [key, declarations] of exportedDeclarations) {
-			exportedDeclarationsObject[key] = declarations.map((declaration) => {
-				/** @type {tsmorph.JSDoc[]} */
-				const foundComments = [];
-
-				walkAstAndFindComments(declaration, foundComments);
-
-				const docs = foundComments.map((comment) => comment.getStructure());
-
-				return docs;
-			});
+		for (const declaration of exportDeclarations) {
+			const specifierSourceFile = declaration.getModuleSpecifierSourceFile();
+			if (specifierSourceFile) copyExports(specifierSourceFile);
 		}
-
-		fs.writeFileSync(
-			outputFilePath,
-			JSON.stringify(exportedDeclarationsObject, null, 4),
-		);
-		console.log(`Documentation written to ${outputFilePath}`);
 	}
 }
 
 /**
+ * @param {tsmorph.Project} docsProject
  * @param {tsmorph.Node} node
- * @param {tsmorph.JSDoc[]} foundComments
+ * @param {string} docsProjectDir
  */
-function walkAstAndFindComments(node, foundComments) {
-	if (tsmorph.Node.isJSDocable(node)) {
-		const JsDocs = node.getJsDocs();
-		foundComments.push(...JsDocs)
+function writeNodeDocumentation(docsProject, node, docsProjectDir) {
+	const sourceFile = node.getSourceFile();
+	const sourceFilePath = sourceFile.getFilePath();
+	const sourceBasePath = sourceFilePath
+		.slice(process.cwd().length + 1)
+		.replace('.d.ts', '.ts');
+	const docsFilePath = path.join(docsProjectDir, sourceBasePath);
+	let docsSourceFile = docsProject.getSourceFile(docsFilePath);
+	if (!docsSourceFile) {
+		docsSourceFile = docsProject.createSourceFile(docsFilePath, '');
 	}
-
-	node.forEachChild((child) => walkAstAndFindComments(child, foundComments));
+	if (tsmorph.Node.hasName(node)) {
+		const nodeDocs = getNodeDocs(node);
+		if (typeof nodeDocs.description == 'string') {
+			nodeDocs.description = nodeDocs.description.trim();
+		}
+		let type;
+		switch (node.getKindName()) {
+			case 'ClassDeclaration':
+				type = 'ClassDoc';
+				break;
+			case 'FunctionDeclaration':
+				type = 'FunctionDoc';
+				break;
+			case 'TypeAliasDeclaration':
+				type = 'TypeDoc';
+				break;
+			default:
+				throw new TSNodeError({
+					node,
+					message: 'Doc type for node not implemented.',
+				});
+		}
+		docsSourceFile.addImportDeclaration({
+			isTypeOnly: true,
+			moduleSpecifier: '@hine/docgen',
+			namedImports: [{ name: type }],
+		});
+		docsSourceFile.addVariableStatement({
+			declarationKind: tsmorph.VariableDeclarationKind.Const,
+			isExported: true,
+			declarations: [
+				{
+					name: node.getName() ?? '',
+					type,
+					initializer: [
+						'{',
+						`	type: '${node.getKindName()}',`,
+						`	docs: {`,
+						`		description: ${JSON.stringify(nodeDocs.description)},`,
+						`	},`,
+						'}',
+					].join('\n'),
+				},
+			],
+		});
+	} else {
+		throw new TSNodeError({
+			message:
+				'Generating docs for a node without a name is not supported. File an issue.',
+			node: node,
+		});
+	}
 }

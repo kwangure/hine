@@ -78,6 +78,7 @@
 		},
 		"package": {
 			"dependencies": [
+				"./packages/docgen:package",
 				"./packages/eslint-config:package",
 				"./packages/hine:package",
 				"./packages/prettier-config:package"

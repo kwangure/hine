@@ -32,7 +32,7 @@ export function gatherDeclarationFiles(exportsObj, tsFiles) {
 	for (const value of Object.values(exportsObj)) {
 		if (typeof value === 'object' && value !== null) {
 			gatherDeclarationFiles(value, tsFiles);
-		} else if (typeof value === 'string' && value.endsWith('.d.ts')) {
+		} else if (typeof value === 'string' && !value.startsWith('./docs') && value.endsWith('.d.ts')) {
 			tsFiles.push(path.join(process.cwd(), value));
 		}
 	}

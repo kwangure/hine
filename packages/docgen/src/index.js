@@ -1,6 +1,6 @@
 import * as tsmorph from 'ts-morph';
 import { getNodeDocs, initializeTsProject, TSNodeError } from './tsmorph.js';
-import { mkdirp, rimraf } from './filesystem.js';
+import { getCommonAncestor, mkdirp, rimraf } from './filesystem.js';
 import { getPackageJsonDeclarationFiles } from './collect.js';
 import path from 'node:path';
 
@@ -29,6 +29,14 @@ async function writeDocumentation(packageEntryFiles) {
 	const docsProjectDir = path.join(process.cwd(), 'node_modules/.ts-docs');
 	rimraf(docsProjectDir);
 	mkdirp(docsProjectDir);
+
+	const sourceFiles = packageProject.getSourceFiles().map((f) => f.getFilePath());
+	const commonAncestor = getCommonAncestor(sourceFiles);
+	const typesBase = commonAncestor.slice(process.cwd().length + 1);
+	docsProject.createSourceFile(
+		path.join(docsProjectDir, typesBase, 'docgen_types.ts'),
+		"export * from '@hine/docgen';",
+	);
 
 	const seenSourceFiles = new Set();
 	for (const packageEntryFilePath of packageEntryFiles) {
@@ -71,7 +79,11 @@ async function writeDocumentation(packageEntryFiles) {
 		}
 		const exportDeclarations = packageSourceFile.getExportDeclarations();
 		docsSourceFile.addExportDeclarations(
-			exportDeclarations.map((d) => d.getStructure()),
+			exportDeclarations.map((d) => {
+				const structure = d.getStructure();
+				structure.isTypeOnly = false;
+				return structure;
+			}),
 		);
 
 		for (const declaration of exportDeclarations) {

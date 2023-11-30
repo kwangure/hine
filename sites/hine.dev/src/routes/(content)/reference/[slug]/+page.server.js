@@ -12,7 +12,7 @@ export function load({ params }) {
 						title: true,
 						_id: true,
 					},
-					orderBy: (reference, { asc }) => [asc(reference.position)],
+					orderBy: (reference, { asc }) => [asc(reference.title)],
 				},
 			},
 			orderBy: (groups, { asc }) => [asc(groups.position)],

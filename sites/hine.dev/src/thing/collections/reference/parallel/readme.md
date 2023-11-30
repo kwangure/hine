@@ -1,5 +1,4 @@
 ---
-title: Parallel State
-group: states
-position: 3
+title: parallel
+group: helpers
 ---

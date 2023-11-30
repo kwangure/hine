@@ -1,0 +1,4 @@
+---
+title: CompoundState
+group: states
+---

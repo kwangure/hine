@@ -1,7 +1,6 @@
 ---
-title: Compound State
-group: states
-position: 2
+title: compound
+group: helpers
 ---
 
 Compound states are ...

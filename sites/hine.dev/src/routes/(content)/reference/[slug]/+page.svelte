@@ -18,11 +18,6 @@
 </svelte:head>
 
 <Sidebar.Root>
-	<Sidebar.Item>
-		<Sidebar.Link href="/reference/overview" ariaCurrent={$page.url.pathname === `/reference/overview`}>
-			Overview
-		</Sidebar.Link>
-	</Sidebar.Item>
 	{#each data.groups as group}
 		{#if group.reference.length}
 			<Sidebar.Section title={group.title}>

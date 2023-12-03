@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
 
 export function load() {
-	throw redirect(307, './reference/overview');
+	throw redirect(307, './reference/atomicstate');
 }

@@ -3,4 +3,6 @@ title: compound
 group: helpers
 ---
 
-Compound states are ...
+## Overview
+
+`compound()`{lang=js} creates a [`CompoundState`](/reference/compoundstate) instance.

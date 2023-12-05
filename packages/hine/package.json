@@ -30,14 +30,6 @@
 		".": {
 			"types": "./types/exports.d.ts",
 			"default": "./src/index.js"
-		},
-		"./docs": {
-			"types": "./docs/exports.d.ts",
-			"default": "./docs/exports.js"
-		},
-		"./docs/types": {
-			"types": "./docs/docgen_types.d.ts",
-			"default": "./docs/docgen_types.js"
 		}
 	},
 	"wireit": {
@@ -69,25 +61,6 @@
 			"output": []
 		},
 		"package": {
-			"dependencies": [
-				"package:docs",
-				"package:lib"
-			]
-		},
-		"package:docs": {
-			"command": "docgen",
-			"dependencies": [
-				"package:lib",
-				"../docgen:package"
-			],
-			"files": [
-				"types"
-			],
-			"output": [
-				"docs"
-			]
-		},
-		"package:lib": {
 			"command": "tsc --project tsconfig.build.json",
 			"files": [
 				"src/**/*.{js,ts}",
@@ -134,9 +107,6 @@
 			],
 			"output": []
 		}
-	},
-	"dependencies": {
-		"@hine/docgen": "workspace:^"
 	},
 	"devDependencies": {
 		"eslint": "^8.47.0",

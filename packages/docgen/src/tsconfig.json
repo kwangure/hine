@@ -1,8 +1,0 @@
-{
-	"extends": "../../../config/tsconfig.base.json",
-	"exclude": [],
-	"compilerOptions": {
-		"emitDeclarationOnly": true,
-		"outDir": "../types"
-	}
-}

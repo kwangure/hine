@@ -1,5 +1,5 @@
 import type { BaseState } from '../state/base.js';
-import { StatePaths } from '../state/types.js';
+import type { StatePaths } from '../state/types.js';
 
 /**
  * `Action` is a function that can be executed as a side effect of a state transition or on entry/exit of a state.

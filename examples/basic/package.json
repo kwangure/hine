@@ -3,46 +3,26 @@
 	"version": "0.0.5",
 	"private": true,
 	"scripts": {
-		"check": "wireit",
-		"format": "wireit",
-		"lint": "wireit",
+		"build": "wireit",
 		"pre-commit": "wireit"
 	},
 	"wireit": {
-		"check": {
-			"command": "tsc",
+		"build": {
+			"command": "tsc -b",
 			"dependencies": [
-				"../../packages/hine:package"
+				"../../packages/hine:build"
 			],
 			"files": [
-				"**/*.{js,ts}",
+				"src/**/*.{js,ts}",
 				"tsconfig.json"
 			],
-			"output": []
-		},
-		"format": {
-			"command": "prettier . --write --cache",
-			"files": [
-				"**/*.{css,html,js,json,md,ts,svelte}",
-				"!types/**",
-				".prettierignore"
-			],
-			"output": []
-		},
-		"lint": {
-			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
-			"files": [
-				"**/*.{js,svelte}",
-				".eslintignore",
-				"eslint.config.js"
-			],
-			"output": []
+			"output": [
+				"types"
+			]
 		},
 		"pre-commit": {
 			"dependencies": [
-				"check",
-				"format",
-				"lint"
+				"build"
 			]
 		}
 	},
@@ -50,13 +30,8 @@
 		"hine": "^0.0.21"
 	},
 	"devDependencies": {
-		"eslint": "^8.47.0",
-		"eslint-config": "workspace:*",
-		"prettier": "^3.0.2",
-		"prettier-config": "workspace:*",
 		"typescript": "^5.1.6"
 	},
-	"prettier": "prettier-config",
 	"license": "MIT",
 	"type": "module"
 }

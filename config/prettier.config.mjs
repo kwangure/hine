@@ -1,8 +1,8 @@
-import sharedConfig from 'prettier-config';
-
 /** @type {import("prettier").Config} */
 const config = {
-	...sharedConfig,
+	useTabs: true,
+	singleQuote: true,
+	trailingComma: 'all',
 	plugins: ['prettier-plugin-svelte', 'prettier-plugin-tailwindcss'],
 	overrides: [
 		{

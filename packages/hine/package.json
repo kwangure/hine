@@ -3,10 +3,7 @@
 	"version": "0.0.21",
 	"description": "A state machine library",
 	"scripts": {
-		"check": "wireit",
-		"format": "wireit",
-		"lint": "wireit",
-		"package": "wireit",
+		"build": "wireit",
 		"pre-commit": "wireit",
 		"publint": "wireit",
 		"release": "wireit",
@@ -33,38 +30,10 @@
 		}
 	},
 	"wireit": {
-		"check": {
-			"command": "tsc",
+		"build": {
+			"command": "tsc -b",
 			"files": [
 				"src/**/*.{js,ts}",
-				"tests/**/*.{js,ts}",
-				"tsconfig.json"
-			],
-			"output": []
-		},
-		"format": {
-			"command": "prettier . --write --cache",
-			"files": [
-				"**/*.{css,html,js,json,md,ts,svelte}",
-				"!types/**",
-				".prettierignore"
-			],
-			"output": []
-		},
-		"lint": {
-			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
-			"files": [
-				"**/*.{js,svelte}",
-				".eslintignore",
-				"eslint.config.js"
-			],
-			"output": []
-		},
-		"package": {
-			"command": "tsc --project tsconfig.build.json",
-			"files": [
-				"src/**/*.{js,ts}",
-				"tsconfig.build.json",
 				"tsconfig.json"
 			],
 			"output": [
@@ -74,7 +43,7 @@
 		"publint": {
 			"command": "publint",
 			"dependencies": [
-				"package"
+				"build"
 			],
 			"files": [
 				"src/**",
@@ -85,16 +54,14 @@
 		},
 		"pre-commit": {
 			"dependencies": [
-				"check",
-				"format",
-				"lint",
+				"build",
 				"publint",
 				"test"
 			]
 		},
 		"release": {
 			"dependencies": [
-				"package",
+				"build",
 				"publint",
 				"test"
 			]
@@ -109,16 +76,11 @@
 		}
 	},
 	"devDependencies": {
-		"eslint": "^8.47.0",
-		"eslint-config": "workspace:*",
-		"prettier": "^3.0.2",
-		"prettier-config": "workspace:*",
 		"publint": "^0.2.2",
 		"typescript": "^5.1.6",
 		"vite": "^4.4.8",
 		"vitest": "^0.33.0"
 	},
-	"prettier": "prettier-config",
 	"license": "MIT",
 	"type": "module"
 }

@@ -7,7 +7,7 @@ import type { AtomicState } from './atomic.js';
 import type { BaseState } from './base.js';
 import type { CompoundState } from './compound.js';
 import type { ForceToLiteralString } from '../type-utils/force-to-literal.js';
-import { Merge } from '../context/types.js';
+import type { Merge } from '../context/types.js';
 import { ParallelState } from './parallel.js';
 import type { EmptyObject } from '../type-utils/empty-object.js';
 import type { Simplify } from '../type-utils/simplify.js';

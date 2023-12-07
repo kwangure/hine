@@ -12,6 +12,12 @@ const config = extendSvelteConfig({
 					'../scripts/**/*.js',
 					'../scripts/**/*.ts',
 				);
+				config.extends = '../../../config/tsconfig.base.json';
+				config.compilerOptions.moduleResolution = 'bundler';
+				config.compilerOptions.noEmit = true;
+				delete config.compilerOptions.ignoreDeprecations;
+				delete config.compilerOptions.importsNotUsedAsValues;
+				delete config.compilerOptions.preserveValueImports;
 			},
 		},
 	},

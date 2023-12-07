@@ -8,8 +8,10 @@ node_modules
 *.tsbuildinfo
 
 packages/*/*.tgz
+packages/*/dist/**
 packages/*/types/**
 
 sites/*/.svelte-kit
+sites/*/build
 sites/*/vite.config.js.timestamp-*
 sites/*/vite.config.ts.timestamp-*

@@ -16,12 +16,12 @@ echo_command() {
 }
 
 format_staged_files() {
-    FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "\.(css|html|mjs|js|json|md|ts|svelte)$" | sed 's| |\\ |g')
+    FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "\.(css|html|mjs|js|json|md|ts|svelte|yaml)$" | sed 's| |\\ |g')
     if [ -z "$FILES" ]; then
         echo "\033[0;33m\nNo files to format.\033[0m"
         return
     fi
-    echo_command pnpm prettier $FILES --cache --write --config ./config/prettier.config.mjs
+    echo_command pnpm prettier $FILES --cache --write --config ./config/prettier.config.mjs --ignore-path ./config/.prettierignore
     echo_command git add $FILES
 }
 

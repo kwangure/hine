@@ -7,8 +7,7 @@
 				"type": "text"
 			},
 			"position": {
-				"type": "integer",
-				"unique": true
+				"type": "integer"
 			}
 		}
 	},
@@ -20,6 +19,10 @@
 		"examples": {
 			"type": "many",
 			"collection": "examples"
+		},
+		"reference": {
+			"type": "many",
+			"collection": "reference"
 		}
 	}
 }

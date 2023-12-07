@@ -5,14 +5,11 @@ node_modules
 .env.*
 !.env.example
 .eslintcache
-dist
-**/*.tgz
-types
 *.tsbuildinfo
 
-# Sites
-.svelte-kit
-build
-package
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
+packages/*/*.tgz
+packages/*/types/**
+
+sites/*/.svelte-kit
+sites/*/vite.config.js.timestamp-*
+sites/*/vite.config.ts.timestamp-*

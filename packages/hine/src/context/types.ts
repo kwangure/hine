@@ -1,4 +1,4 @@
-import { Simplify } from '../type-utils/simplify';
+import type { Simplify } from '../type-utils/simplify';
 
 // Since keyof `{}` returns `never`, fallback to string instead
 // Otherwise only allow keys of the context records

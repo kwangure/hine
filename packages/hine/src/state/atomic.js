@@ -1,9 +1,11 @@
 import { BaseState } from './base.js';
 
 /**
- * @template {string} TName
- * @template {import('./types.js').AtomicStateConfig<TName>} TConfig
- * @param {TConfig} [config]
+ * `atomic` creates an `AtomicState` instance.
+ *
+ * @template {string} TName - A string type representing the name of the state.
+ * @template {import('./types.js').AtomicStateConfig<TName>} TConfig - The configuration type for the atomic state, defining its structure and behavior.
+ * @param {TConfig} [config] - Optional configuration object for the atomic state.
  */
 export function atomic(config) {
 	return /** @type {AtomicState<import('../type-utils/is-any.js').IsAny<TConfig> extends true ? {} : TConfig, {}>} */ (
@@ -12,8 +14,14 @@ export function atomic(config) {
 }
 
 /**
- * @template {import('./types.js').StateConfig} TStateConfig
- * @template {Record<string, any>} TContextAncestor
+ * `AtomicState` is the most basic state type in a state machine tree.
+ * The class is used to represent simple, standalone states in the system that do
+ * not contain any child states.
+ * The class extends `BaseState`, inheriting its properties and methods,
+ * to implement states that cannot be decomposed further into substates.
+ *
+ * @template {import('./types.js').StateConfig} TStateConfig Configuration defining the structure and behavior of atomic states.
+ * @template {Record<string, any>} TContextAncestor A `Record` type representing the context data of ancestor nodes of the atomic state.
  * @extends {BaseState<TStateConfig, TContextAncestor>}
  */
 export class AtomicState extends BaseState {

@@ -31,6 +31,7 @@
 	</a>
 	<div class="ml-auto gap-1 hidden lg:flex">
 		<Navbar.Link href="/docs">Docs</Navbar.Link>
+		<Navbar.Link href="/reference">Reference</Navbar.Link>
 		<Navbar.Link href="/examples">Examples</Navbar.Link>
 		<Icon.Link href="https://github.com/kwangure/hine" label="GitHub" path={siGithub.path}/>
 		<Icon.Link href="https://www.npmjs.com/package/hine" label="NPM" path={siNpm.path}/>
@@ -43,6 +44,10 @@
 				<Navbar.Link action={item.action} props={item.props} href="/docs">
 					<Icon.Simple path={mdiBookOutline}/>
 					Docs
+				</Navbar.Link>
+				<Navbar.Link action={item.action} props={item.props} href="/reference">
+					<Icon.Simple path={mdiBookOutline}/>
+					Reference
 				</Navbar.Link>
 				<Navbar.Link action={item.action} props={item.props} href="/examples">
 					<Icon.Simple path={mdiBookOpenPageVariantOutline}/>

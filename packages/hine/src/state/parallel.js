@@ -1,9 +1,11 @@
 import { ParentState } from './parent.js';
 
 /**
- * @template {string} TName
- * @template {import('./types.js').ParallelStateConfig<TName>} TConfig
- * @param {TConfig} [config]
+ * `parallel` creates an `ParallelState` instance.
+ *
+ * @template {string} TName - A string type representing the name of the state.
+ * @template {import('./types.js').ParallelStateConfig<TName>} TConfig - The configuration type for the parallel state, defining its structure and behavior.
+ * @param {TConfig} [config] - Optional configuration object for the parallel state.
  */
 export function parallel(config) {
 	return /** @type {ParallelState<TConfig, {}>} */ (
@@ -13,8 +15,19 @@ export function parallel(config) {
 }
 
 /**
- * @template {import('./types.js').StateConfig} TStateConfig
- * @template {Record<string, any>} TContextAncestor
+ * `ParallelState` is a type of state in a state machine tree that enables
+ * simultaneous operations of its child states.
+ * Unlike compound states, where only one child state is active at a time, in
+ * a parallel state, all child states are active simultaneously, allowing for
+ * modeling of concurrent state behaviors.
+ *
+ * The class extends `ParentState`, inheriting its properties and methods.
+ * It specifically facilitates the representation and management of states that
+ * should operate in parallel, providing a powerful tool for scenarios where
+ * multiple state processes need to run concurrently.
+ *
+ * @template {import('./types.js').StateConfig} TStateConfig Configuration defining the structure and behavior of parallel states.
+ * @template {Record<string, any>} TContextAncestor A `Record` type representing the context data of ancestor nodes of the parallel state.
  * @extends {ParentState<TStateConfig, TContextAncestor>}
  */
 export class ParallelState extends ParentState {

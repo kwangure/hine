@@ -4,8 +4,12 @@ import { StateEvent } from '../event.js';
 import { TransitionHandler } from '../handler/transition.js';
 
 /**
- * @template {import('./types.js').StateConfig} TStateConfig
- * @template {Record<string, any>} TContextAncestor
+ * `BaseState` is the base class for all state objects in a state machine tree.
+ * The class serves as the foundational building block for more specific state types
+ * and provides common functionality and structure that all state objects share.
+ *
+ * @template {import('./types.js').StateConfig} TStateConfig Configuration defining the structure and behavior of states.
+ * @template {Record<string, any>} TContextAncestor A `Record` type representing the context data of ancestor nodes of the state.
  */
 export class BaseState {
 	/**

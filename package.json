@@ -15,14 +15,12 @@
 		"lint": "wireit",
 		"package": "wireit",
 		"pre-commit": "wireit",
-		"prepare": "husky install",
 		"release": "wireit",
 		"test": "wireit",
 		"version": "wireit"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.26.1",
-		"husky": "^8.0.3",
 		"remark-parse": "^11.0.0",
 		"remark-stringify": "^11.0.0",
 		"unified": "^11.0.2",
@@ -32,8 +30,19 @@
 	"wireit": {
 		"build": {
 			"dependencies": [
-				"./sites/hine.dev:build",
-				"build:readme"
+				"build:packages",
+				"build:readme",
+				"build:sites"
+			]
+		},
+		"build:packages": {
+			"dependencies": [
+				"./packages/hine:build"
+			]
+		},
+		"build:sites": {
+			"dependencies": [
+				"./sites/hine.dev:build"
 			]
 		},
 		"build:readme": {
@@ -49,8 +58,7 @@
 		},
 		"check": {
 			"dependencies": [
-				"./examples/basic:check",
-				"./packages/hine:check",
+				"./examples/basic:build",
 				"./sites/hine.dev:check"
 			]
 		},
@@ -60,36 +68,31 @@
 			]
 		},
 		"format": {
-			"dependencies": [
-				"./examples/basic:format",
-				"./packages/eslint-config:format",
-				"./packages/hine:format",
-				"./packages/prettier-config:format",
-				"./sites/hine.dev:format"
-			]
+			"command": "prettier . --write --cache --config ./config/prettier.config.mjs --ignore-path ./config/.prettierignore",
+			"files": [
+				"**/*.{css,html,js,json,md,ts,svelte}",
+				"!packages/*/dist/**",
+				"!packages/*/types/**",
+				"./config/prettier.config.mjs",
+				"./config/.prettierignore"
+			],
+			"output": []
 		},
 		"lint": {
-			"dependencies": [
-				"./examples/basic:lint",
-				"./packages/eslint-config:lint",
-				"./packages/hine:lint",
-				"./sites/hine.dev:lint"
-			]
-		},
-		"package": {
-			"dependencies": [
-				"./packages/eslint-config:package",
-				"./packages/hine:package",
-				"./packages/prettier-config:package"
-			]
+			"command": "eslint \"**/*.{js,svelte}\" --color --cache --fix",
+			"files": [
+				"**/*.{js,svelte}",
+				"!packages/*/dist/**",
+				"!packages/*/types/**",
+				"./config/eslint.config.js"
+			],
+			"output": []
 		},
 		"pre-commit": {
 			"dependencies": [
 				"build:readme",
 				"./examples/basic:pre-commit",
-				"./packages/eslint-config:pre-commit",
 				"./packages/hine:pre-commit",
-				"./packages/prettier-config:pre-commit",
 				"./sites/hine.dev:pre-commit"
 			]
 		},

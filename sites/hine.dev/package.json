@@ -89,7 +89,7 @@
 		"@hine/assets": "workspace:^",
 		"@mdi/js": "^7.2.96",
 		"@melt-ui/svelte": "^0.61.1",
-		"@svelte-thing/components": "^0.0.5",
+		"@svelte-thing/components": "^0.0.6",
 		"hine": "workspace:*",
 		"simple-icons": "^9.9.0"
 	},

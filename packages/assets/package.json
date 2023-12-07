@@ -16,9 +16,6 @@
 		"./logo-dark.svg": "./logo-dark.svg",
 		"./logo.svg": "./logo.svg"
 	},
-	"devDependencies": {
-		"publint": "^0.2.2"
-	},
 	"license": "MIT",
 	"type": "module"
 }

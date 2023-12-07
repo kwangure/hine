@@ -30,8 +30,19 @@
 	"wireit": {
 		"build": {
 			"dependencies": [
-				"./sites/hine.dev:build",
-				"build:readme"
+				"build:packages",
+				"build:readme",
+				"build:sites"
+			]
+		},
+		"build:packages": {
+			"dependencies": [
+				"./packages/hine:build"
+			]
+		},
+		"build:sites": {
+			"dependencies": [
+				"./sites/hine.dev:build"
 			]
 		},
 		"build:readme": {
@@ -76,11 +87,6 @@
 				"./config/eslint.config.js"
 			],
 			"output": []
-		},
-		"package": {
-			"dependencies": [
-				"./packages/hine:build"
-			]
 		},
 		"pre-commit": {
 			"dependencies": [

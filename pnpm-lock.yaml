@@ -58,11 +58,7 @@ importers:
         specifier: ^5.1.6
         version: 5.1.6
 
-  packages/assets:
-    devDependencies:
-      publint:
-        specifier: ^0.2.2
-        version: 0.2.2
+  packages/assets: {}
 
   packages/hine:
     devDependencies:

@@ -420,13 +420,7 @@ test('parallel state respects context types in actions and conditions', () => {
 				},
 				entry: { if: 'condition1', run: ['action1'] },
 				children: {
-					child11: atomic({
-						types: {
-							context:
-								/** @type {{ key11: number; willChangeType: boolean; }} */ ({}),
-						},
-						entry: { if: 'condition1', run: ['action1'] },
-					}),
+					child11: atomic(),
 				},
 			}),
 		},

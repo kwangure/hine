@@ -14,7 +14,10 @@ export class BaseHandler {
 	get __actions() {
 		const actions = [];
 		for (const name of this.__runConfig) {
-			const action = this.__ownerState.__getAction(name);
+			const action = this.__ownerState.__actions[name]?.bind(
+				undefined,
+				this.__ownerState,
+			);
 			if (!action) {
 				let message = '';
 
@@ -27,7 +30,7 @@ export class BaseHandler {
 					message += `State references unknown action '${name}'.`;
 				}
 
-				const actions = Object.keys(this.__ownerState.__actions);
+				const actions = Object.keys(this.__ownerState.actions);
 				if (actions.length) {
 					message += ` Expected one of: ${actions.join(', ')}`;
 				}
@@ -40,7 +43,10 @@ export class BaseHandler {
 	}
 	get __condition() {
 		if (!this.__ifConfig) return null;
-		const condition = this.__ownerState.__getCondition(this.__ifConfig);
+		const condition = this.__ownerState.__conditions[this.__ifConfig]?.bind(
+			undefined,
+			this.__ownerState,
+		);
 		if (!condition) {
 			let message = '';
 
@@ -53,7 +59,7 @@ export class BaseHandler {
 				message += `State references unknown condition '${this.__ifConfig}'. `;
 			}
 
-			const conditions = Object.keys(this.__ownerState.__conditions);
+			const conditions = Object.keys(this.__ownerState.conditions);
 			if (conditions.length) {
 				message += ` Expected one of: ${conditions.join(', ')}`;
 			}

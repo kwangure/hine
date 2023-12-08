@@ -13,7 +13,6 @@
 		"dev": "wireit",
 		"format": "wireit",
 		"lint": "wireit",
-		"package": "wireit",
 		"pre-commit": "wireit",
 		"release": "wireit",
 		"test": "wireit",

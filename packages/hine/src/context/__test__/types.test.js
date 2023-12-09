@@ -108,8 +108,6 @@ test('compound state respects context types in actions and conditions', () => {
 				const key01 = context.get('key01');
 				expectTypeOf(key01).toBeString();
 				expect(key01).toBe('01');
-				const updateKey01 = context.update('key01', '01');
-				expect(updateKey01).toBe(true);
 
 				// @ts-expect-error
 				() => context.update('key01', 1);
@@ -174,8 +172,6 @@ test('compound state respects context types in actions and conditions', () => {
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
-						const updateKey01 = context.update('key01', '01');
-						expect(updateKey01).toBe(true);
 
 						// @ts-expect-error
 						() => context.update('key01', 1);
@@ -209,8 +205,6 @@ test('compound state respects context types in actions and conditions', () => {
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
-						const updateKey01 = context.update('key01', '01');
-						expect(updateKey01).toBe(true);
 
 						// @ts-expect-error
 						() => context.update('key01', 1);
@@ -268,8 +262,6 @@ test('compound state respects context types in actions and conditions', () => {
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
-						const updateKey01 = context.update('key01', '01');
-						expect(updateKey01).toBe(true);
 
 						// @ts-expect-error
 						() => context.update('key01', 1);
@@ -300,8 +292,6 @@ test('compound state respects context types in actions and conditions', () => {
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
-						const updateKey01 = context.update('key01', '01');
-						expect(updateKey01).toBe(true);
 
 						// @ts-expect-error
 						() => context.update('key01', 1);
@@ -352,8 +342,6 @@ test('compound state respects context types in actions and conditions', () => {
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
-						const updateKey01 = context.update('key01', '01');
-						expect(updateKey01).toBe(true);
 
 						// @ts-expect-error
 						() => context.update('key01', 1);
@@ -384,8 +372,6 @@ test('compound state respects context types in actions and conditions', () => {
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
-						const updateKey01 = context.update('key01', '01');
-						expect(updateKey01).toBe(true);
 
 						// @ts-expect-error
 						() => context.update('key01', 1);
@@ -510,8 +496,6 @@ test('parallel state respects context types in actions and conditions', () => {
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
-						const updateKey01 = context.update('key01', '01');
-						expect(updateKey01).toBe(true);
 
 						// @ts-expect-error
 						() => context.update('key01', 1);
@@ -548,8 +532,6 @@ test('parallel state respects context types in actions and conditions', () => {
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
-						const updateKey01 = context.update('key01', '01');
-						expect(updateKey01).toBe(true);
 
 						// @ts-expect-error
 						() => context.update('key01', 1);
@@ -608,8 +590,6 @@ test('parallel state respects context types in actions and conditions', () => {
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
-						const updateKey01 = context.update('key01', '01');
-						expect(updateKey01).toBe(true);
 
 						// @ts-expect-error
 						() => context.update('key01', 1);
@@ -641,8 +621,6 @@ test('parallel state respects context types in actions and conditions', () => {
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
-						const updateKey01 = context.update('key01', '01');
-						expect(updateKey01).toBe(true);
 
 						// @ts-expect-error
 						() => context.update('key01', 1);
@@ -693,8 +671,6 @@ test('parallel state respects context types in actions and conditions', () => {
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
-						const updateKey01 = context.update('key01', '01');
-						expect(updateKey01).toBe(true);
 
 						// @ts-expect-error
 						() => context.update('key01', 1);
@@ -725,8 +701,6 @@ test('parallel state respects context types in actions and conditions', () => {
 						const key01 = context.get('key01');
 						expectTypeOf(key01).toBeString();
 						expect(key01).toBe('01');
-						const updateKey01 = context.update('key01', '01');
-						expect(updateKey01).toBe(true);
 
 						// @ts-expect-error
 						() => context.update('key01', 1);

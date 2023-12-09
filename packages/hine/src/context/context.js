@@ -44,9 +44,9 @@ export class Context {
 		return this.#data.has(key);
 	}
 	/**
-	 * @template {import('./types.js').ContextKey<TContextAncestor, TContextOwnerState>} K
+	 * @template {import('./types.js').ContextKey<{}, TContextOwnerState>} K
 	 * @param {K} key
-	 * @param {import('./types.js').ContextValue<K, TContextAncestor, TContextOwnerState>} value
+	 * @param {import('./types.js').ContextValue<K, {}, TContextOwnerState>} value
 	 * @return {boolean}
 	 */
 	update(key, value) {
@@ -54,11 +54,6 @@ export class Context {
 			this.#data.set(key, value);
 			return true;
 		}
-		return Boolean(
-			this.__ownerState?.parent?.context.update(
-				/** @type {string} */ (key),
-				value,
-			),
-		);
+		return false;
 	}
 }

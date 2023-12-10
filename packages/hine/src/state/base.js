@@ -12,19 +12,9 @@ import { TransitionHandler } from '../handler/transition.js';
  * @template {Record<string, any>} TContextAncestor A `Record` type representing the context data of ancestor nodes of the state.
  */
 export class BaseState {
-	/**
-	 * Actions from the user config
-	 * @type {Record<string, import('../runner/types.js').Action<any>>}
-	 */
-	#actions = {};
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#always = [];
 	#alwaysConfig;
-	/**
-	 * Conditions from the user config
-	 * @type {Record<string, import('../runner/types.js').Condition<any>>}
-	 */
-	#conditions = {};
 	#context;
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
 	#entry = [];
@@ -43,6 +33,16 @@ export class BaseState {
 	 */ ({});
 	__$ancestorContext = /** @type {TContextAncestor}*/ ({});
 
+	/**
+	 * Actions from the user config
+	 * @type {Record<string, import('../runner/types.js').Action<any>>}
+	 */
+	__actions = {};
+	/**
+	 * Conditions from the user config
+	 * @type {Record<string, import('../runner/types.js').Condition<any>>}
+	 */
+	__conditions = {};
 	/** @type {StateEvent | null} */
 	__event = null;
 	/** @type {(import('../handler/effect.js').EffectHandler | import('../handler/transition.js').TransitionHandler)[]} */
@@ -80,28 +80,10 @@ export class BaseState {
 			: [];
 		this.#onConfig = stateConfig.on || {};
 	}
-	/**
-	 * @returns {Record<string, import('../runner/types.js').Action<any>>}
-	 */
-	get __actions() {
-		return {
-			...this.__parent?.__actions,
-			...this.#actions,
-		};
-	}
 	__callSubscribers() {
 		for (const subscriber of this.__subscribers) {
 			subscriber(this);
 		}
-	}
-	/**
-	 * @returns {Record<string, import('../runner/types.js').Condition<any>>}
-	 */
-	get __conditions() {
-		return {
-			...this.__parent?.__conditions,
-			...this.#conditions,
-		};
 	}
 	__executeHandlers() {
 		for (const handler of this.__handlerQueue) {
@@ -116,26 +98,6 @@ export class BaseState {
 	}
 	__executeHandlersRootFirst() {
 		this.__executeHandlers();
-	}
-	/**
-	 * @param {string} name
-	 * @returns {(() => any) | undefined}
-	 */
-	__getAction(name) {
-		if (name in this.#actions) {
-			return this.#actions[name].bind(undefined, this);
-		}
-		return this.__parent?.__getAction(name);
-	}
-	/**
-	 * @param {string} name
-	 * @returns {(() => boolean) | undefined}
-	 */
-	__getCondition(name) {
-		if (name in this.#conditions) {
-			return this.#conditions[name].bind(undefined, this);
-		}
-		return this.__parent?.__getCondition(name);
 	}
 	__initialize() {
 		this.__initialized = true;
@@ -177,16 +139,8 @@ export class BaseState {
 				);
 			}
 		}
-		if (config?.actions) {
-			for (const [name, action] of Object.entries(config.actions)) {
-				this.#actions[name] = action;
-			}
-		}
-		if (config?.conditions) {
-			for (const [name, condition] of Object.entries(config.conditions)) {
-				this.#conditions[name] = condition;
-			}
-		}
+		Object.assign(this.__actions, config?.actions);
+		Object.assign(this.__conditions, config?.conditions);
 	}
 	__resolveConfig() {
 		this.#context.__ownerState = this;
@@ -246,7 +200,7 @@ export class BaseState {
 		this.__event = null;
 	}
 	get actions() {
-		return this.__actions;
+		return { ...this.__actions };
 	}
 	get activeEvents() {
 		const activeEventsNames = new Set();
@@ -267,7 +221,7 @@ export class BaseState {
 		return false;
 	}
 	get conditions() {
-		return this.__conditions;
+		return { ...this.__conditions };
 	}
 	get context() {
 		if (!this.__initialized) {

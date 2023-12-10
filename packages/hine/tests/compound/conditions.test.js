@@ -105,14 +105,18 @@ describe('conditions', () => {
 			},
 		});
 		state.resolve({
-			actions: {
-				action() {
-					actions.push('action');
-				},
-			},
-			conditions: {
-				isFalsy() {
-					return false;
+			children: {
+				s1: {
+					actions: {
+						action() {
+							actions.push('action');
+						},
+					},
+					conditions: {
+						isFalsy() {
+							return false;
+						},
+					},
 				},
 			},
 		});

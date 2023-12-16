@@ -1,6 +1,6 @@
 import adapter from '@sveltejs/adapter-auto';
 import { extendSvelteConfig } from 'content-thing';
-import { vitePreprocess } from '@sveltejs/kit/vite';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 const config = extendSvelteConfig({
 	kit: {
@@ -13,11 +13,6 @@ const config = extendSvelteConfig({
 					'../scripts/**/*.ts',
 				);
 				config.extends = '../../../config/tsconfig.base.json';
-				config.compilerOptions.moduleResolution = 'bundler';
-				config.compilerOptions.noEmit = true;
-				delete config.compilerOptions.ignoreDeprecations;
-				delete config.compilerOptions.importsNotUsedAsValues;
-				delete config.compilerOptions.preserveValueImports;
 			},
 		},
 	},

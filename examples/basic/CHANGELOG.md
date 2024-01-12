@@ -1,5 +1,12 @@
 # @hine-examples/basic
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies
+  - hine@0.0.22
+
 ## 0.0.5
 
 ### Patch Changes

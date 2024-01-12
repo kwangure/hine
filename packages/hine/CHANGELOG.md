@@ -1,5 +1,11 @@
 # hine
 
+## 0.0.22
+
+### Patch Changes
+
+- Remove ancestor action/condition/context references
+
 ## 0.0.21
 
 ### Patch Changes

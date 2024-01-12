@@ -1,6 +1,6 @@
 {
 	"name": "@hine-examples/basic",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"private": true,
 	"scripts": {
 		"build": "wireit",
@@ -27,7 +27,7 @@
 		}
 	},
 	"dependencies": {
-		"hine": "^0.0.21"
+		"hine": "^0.0.22"
 	},
 	"devDependencies": {
 		"typescript": "^5.1.6"

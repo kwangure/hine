@@ -64,7 +64,7 @@
 		"@hine/assets": "workspace:^",
 		"@mdi/js": "^7.2.96",
 		"@melt-ui/svelte": "^0.61.1",
-		"@svelte-thing/components": "^0.0.8",
+		"@svelte-thing/components": "^0.0.9",
 		"hine": "workspace:*",
 		"simple-icons": "^9.9.0"
 	},
@@ -75,7 +75,7 @@
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/node": "^20.10.4",
 		"autoprefixer": "^10.4.14",
-		"content-thing": "^0.0.11",
+		"content-thing": "^0.0.12",
 		"postcss": "^8.4.27",
 		"svelte": "^4.0.5",
 		"svelte-check": "^3.4.3",

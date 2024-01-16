@@ -86,6 +86,13 @@
 		"vitest": "^1.0.4",
 		"wireit": "^0.14.1"
 	},
+	"#comment": [
+		"Rollup optional dependency fixes Vercel missng module error.",
+		"It might need manual synncing with Vite's version of Rollup"
+	],
+	"optionalDependencies": {
+		"@rollup/rollup-linux-x64-gnu": "4.9.5"
+	},
 	"license": "MIT",
 	"type": "module"
 }

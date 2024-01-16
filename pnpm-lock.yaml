@@ -98,6 +98,10 @@ importers:
       simple-icons:
         specifier: ^9.9.0
         version: 9.21.0
+    optionalDependencies:
+      '@rollup/rollup-linux-x64-gnu':
+        specifier: 4.9.5
+        version: 4.9.5
     devDependencies:
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0

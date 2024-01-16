@@ -87,11 +87,13 @@
 		"wireit": "^0.14.1"
 	},
 	"#comment": [
-		"Rollup optional dependency fixes Vercel missng module error.",
-		"It might need manual synncing with Vite's version of Rollup"
+		"Rollup override fixes Vercel missng module error.",
+		"See https://github.com/rollup/rollup/issues/5194"
 	],
-	"optionalDependencies": {
-		"@rollup/rollup-linux-x64-gnu": "4.9.5"
+	"pnpm": {
+		"overrides": {
+			"rollup": "npm:@rollup/wasm-node"
+		}
 	},
 	"license": "MIT",
 	"type": "module"

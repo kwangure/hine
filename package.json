@@ -119,5 +119,14 @@
 				"./packages/**/CHANGELOG.md"
 			]
 		}
+	},
+	"#comment": [
+		"Rollup override fixes Vercel missng module error.",
+		"See https://github.com/rollup/rollup/issues/5194"
+	],
+	"pnpm": {
+		"overrides": {
+			"rollup": "npm:@rollup/wasm-node"
+		}
 	}
 }

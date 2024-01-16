@@ -86,15 +86,6 @@
 		"vitest": "^1.0.4",
 		"wireit": "^0.14.1"
 	},
-	"#comment": [
-		"Rollup override fixes Vercel missng module error.",
-		"See https://github.com/rollup/rollup/issues/5194"
-	],
-	"pnpm": {
-		"overrides": {
-			"rollup": "npm:@rollup/wasm-node"
-		}
-	},
 	"license": "MIT",
 	"type": "module"
 }

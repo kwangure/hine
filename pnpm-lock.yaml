@@ -150,7 +150,7 @@ importers:
         specifier: ^5.1.6
         version: 5.3.3
       vite:
-        specifier: ^5.0.9
+        specifier: ^5.0.11
         version: 5.0.11(@types/node@20.11.3)
       vitest:
         specifier: ^1.0.4

@@ -129,8 +129,8 @@ importers:
         specifier: ^10.4.14
         version: 10.4.16(postcss@8.4.33)
       content-thing:
-        specifier: 0.0.13-alpha.1
-        version: 0.0.13-alpha.1(@sveltejs/kit@2.3.3)
+        specifier: 0.0.13-alpha.2
+        version: 0.0.13-alpha.2(@sveltejs/kit@2.3.3)
       postcss:
         specifier: ^8.4.27
         version: 8.4.33
@@ -1033,6 +1033,14 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
+  /@signalapp/better-sqlite3@8.6.0:
+    resolution: {integrity: sha512-dSLWG4m6XtPq/jbUjckLaiR/nFFkY95pWZI8VSm0dEVJC8S2YTXHm6VZ7vZiErt4h6EjBaa827WyK1oheElE2A==}
+    requiresBuild: true
+    dependencies:
+      bindings: 1.5.0
+      tar: 6.2.0
+    dev: true
+
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
     dev: true
@@ -1504,8 +1512,8 @@ packages:
       is-windows: 1.0.2
     dev: true
 
-  /better-sqlite3@9.3.0:
-    resolution: {integrity: sha512-ww73jVpQhRRdS9uMr761ixlkl4bWoXi8hMQlBGhoN6vPNlUHpIsNmw4pKN6kjknlt/wopdvXHvLk1W75BI+n0Q==}
+  /better-sqlite3@8.7.0:
+    resolution: {integrity: sha512-99jZU4le+f3G6aIl6PmmV0cxUIWqKieHxsiF7G34CVFiE+/UabpYqkU0NJIkY/96mQKikHeBjtR27vFfs5JpEw==}
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
@@ -1761,8 +1769,8 @@ packages:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
     dev: true
 
-  /content-thing@0.0.13-alpha.1(@sveltejs/kit@2.3.3):
-    resolution: {integrity: sha512-yFBjV+8ehobgygMSXjyvkcbkPyWDGNm68GzvDZfA7h2NkrKxJQLTefStI8UezFbB5HDmiHEuYt8Htz3IK9p3dQ==}
+  /content-thing@0.0.13-alpha.2(@sveltejs/kit@2.3.3):
+    resolution: {integrity: sha512-ok7zZEfLPzxS0luCbFHdwX4jW6VHpJJTp/x3R8W8Y/UoBy0yzAN2zqqTiWcQzMrCl1XCO7dt0gm0N0sYGkZQzg==}
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
     dependencies:
@@ -1772,15 +1780,15 @@ packages:
       '@content-thing/remark-toc': 0.0.1
       '@content-thing/remark-variables': 0.0.2
       '@content-thing/remark-yaml-parse': 0.0.1
+      '@signalapp/better-sqlite3': 8.6.0
       '@sveltejs/kit': 2.3.3(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11)
       '@types/mdast': 4.0.3
-      better-sqlite3: 9.3.0
+      better-sqlite3: 8.7.0
       chokidar: 3.5.3
-      drizzle-orm: 0.28.6(better-sqlite3@9.3.0)
+      drizzle-orm: 0.28.6(better-sqlite3@8.7.0)
       drizzle-zod: 0.5.1(drizzle-orm@0.28.6)(zod@3.22.4)
       hine: 0.0.22
       js-yaml: 4.1.0
-      lil-match: 1.2.1
       remark-frontmatter: 5.0.0
       remark-parse: 11.0.0
       remark-stringify: 11.0.0
@@ -2009,7 +2017,7 @@ packages:
       esutils: 2.0.3
     dev: false
 
-  /drizzle-orm@0.28.6(better-sqlite3@9.3.0):
+  /drizzle-orm@0.28.6(better-sqlite3@8.7.0):
     resolution: {integrity: sha512-yBe+F9htrlYER7uXgDJUQsTHFoIrI5yMm5A0bg0GiZ/kY5jNXTWoEy4KQtg35cE27sw1VbgzoMWHAgCckUUUww==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -2071,7 +2079,7 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      better-sqlite3: 9.3.0
+      better-sqlite3: 8.7.0
     dev: true
 
   /drizzle-zod@0.5.1(drizzle-orm@0.28.6)(zod@3.22.4):
@@ -2080,7 +2088,7 @@ packages:
       drizzle-orm: '>=0.23.13'
       zod: '*'
     dependencies:
-      drizzle-orm: 0.28.6(better-sqlite3@9.3.0)
+      drizzle-orm: 0.28.6(better-sqlite3@8.7.0)
       zod: 3.22.4
     dev: true
 
@@ -3152,10 +3160,6 @@ packages:
       prelude-ls: 1.2.1
       type-check: 0.4.0
     dev: false
-
-  /lil-match@1.2.1:
-    resolution: {integrity: sha512-fudLGqwTfXD3c8WqCR78jsVc6L69BF3oYDBsMQWadgMAL8BmX+wSo4ZNTFRQTQs82/0XkoCKlJMnZPW0kyg1DQ==}
-    dev: true
 
   /lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}

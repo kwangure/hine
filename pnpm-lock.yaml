@@ -129,8 +129,8 @@ importers:
         specifier: ^10.4.14
         version: 10.4.16(postcss@8.4.33)
       content-thing:
-        specifier: ^0.0.12
-        version: 0.0.12(@sveltejs/kit@2.3.3)
+        specifier: ^0.0.11
+        version: 0.0.11(@sveltejs/kit@2.3.3)
       postcss:
         specifier: ^8.4.27
         version: 8.4.33
@@ -1033,14 +1033,6 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /@signalapp/better-sqlite3@8.6.0:
-    resolution: {integrity: sha512-dSLWG4m6XtPq/jbUjckLaiR/nFFkY95pWZI8VSm0dEVJC8S2YTXHm6VZ7vZiErt4h6EjBaa827WyK1oheElE2A==}
-    requiresBuild: true
-    dependencies:
-      bindings: 1.5.0
-      tar: 6.2.0
-    dev: true
-
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
     dev: true
@@ -1769,8 +1761,8 @@ packages:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
     dev: true
 
-  /content-thing@0.0.12(@sveltejs/kit@2.3.3):
-    resolution: {integrity: sha512-pF2Ph3sw8jjZYD8SLEW2c++iOWrzXbQ1/rbGp0mmApH9gh3ew9g2EmfPnp/UrZ6zgsC6fuG80OLAXnVrsMMEMw==}
+  /content-thing@0.0.11(@sveltejs/kit@2.3.3):
+    resolution: {integrity: sha512-fns1DKFR9AdtUsRtE+kwqY90dMuzEcGhC6RzD//L04keSgCPGpmXG+QE5gzWkFviKo5iFt5DjFU2iwKeykoVoA==}
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
     dependencies:
@@ -1780,16 +1772,14 @@ packages:
       '@content-thing/remark-toc': 0.0.1
       '@content-thing/remark-variables': 0.0.2
       '@content-thing/remark-yaml-parse': 0.0.1
-      '@signalapp/better-sqlite3': 8.6.0
       '@sveltejs/kit': 2.3.3(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11)
       '@types/mdast': 4.0.3
       better-sqlite3: 8.7.0
       chokidar: 3.5.3
       drizzle-orm: 0.28.6(better-sqlite3@8.7.0)
       drizzle-zod: 0.5.1(drizzle-orm@0.28.6)(zod@3.22.4)
-      hine: 0.0.22
+      hine: 0.0.21
       js-yaml: 4.1.0
-      lil-match: 1.2.1
       remark-frontmatter: 5.0.0
       remark-parse: 11.0.0
       remark-stringify: 11.0.0
@@ -2818,8 +2808,8 @@ packages:
       function-bind: 1.1.2
     dev: true
 
-  /hine@0.0.22:
-    resolution: {integrity: sha512-t7Ojozuxh8nr+jJU0sF2Vvi5Tuw9ZkNMmhTKBoWC1KpsNTZ+J184pGYYV5mhh+wFjMZ2uHCjpNknzL19GGJcbA==}
+  /hine@0.0.21:
+    resolution: {integrity: sha512-usIA2QddPjaSOPv6EF1G89EIhJJnZ5nUR3PDzUf+UEP7BW20tmmKIfTs8lvNiEeYSbtYa45uPimxetClJmM+kA==}
     dev: true
 
   /hosted-git-info@2.8.9:
@@ -3161,10 +3151,6 @@ packages:
       prelude-ls: 1.2.1
       type-check: 0.4.0
     dev: false
-
-  /lil-match@1.2.1:
-    resolution: {integrity: sha512-fudLGqwTfXD3c8WqCR78jsVc6L69BF3oYDBsMQWadgMAL8BmX+wSo4ZNTFRQTQs82/0XkoCKlJMnZPW0kyg1DQ==}
-    dev: true
 
   /lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}

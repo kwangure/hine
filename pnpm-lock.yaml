@@ -129,8 +129,8 @@ importers:
         specifier: ^10.4.14
         version: 10.4.16(postcss@8.4.33)
       content-thing:
-        specifier: 0.0.13-alpha.5
-        version: 0.0.13-alpha.5(@sveltejs/kit@2.3.3)
+        specifier: 0.0.13-alpha.6
+        version: 0.0.13-alpha.6(@sveltejs/kit@2.3.3)
       postcss:
         specifier: ^8.4.27
         version: 8.4.33
@@ -1738,8 +1738,8 @@ packages:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
     dev: true
 
-  /content-thing@0.0.13-alpha.5(@sveltejs/kit@2.3.3):
-    resolution: {integrity: sha512-XVhdJ5d9BrveoC4zV5d2lJvQFRhnutC/O9gUg/Zor3SzM1oUlicujUGwFguO8b5c+i3yJLZCtZcoxGLo800PTA==}
+  /content-thing@0.0.13-alpha.6(@sveltejs/kit@2.3.3):
+    resolution: {integrity: sha512-v7n8UHch3xjk27+hXpbmoi0729jmFRgSzHAU9H8hUXxMqrVf6QwLBEPuR9zYzCrOvOlxEELJ5G5BfJgtKAe4ug==}
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
     dependencies:

@@ -129,8 +129,8 @@ importers:
         specifier: ^10.4.14
         version: 10.4.16(postcss@8.4.33)
       content-thing:
-        specifier: 0.0.13-alpha.7
-        version: 0.0.13-alpha.7(@sveltejs/kit@2.3.3)
+        specifier: 0.0.13-alpha.8
+        version: 0.0.13-alpha.8(@sveltejs/kit@2.3.3)
       postcss:
         specifier: ^8.4.27
         version: 8.4.33
@@ -473,38 +473,38 @@ packages:
       w3c-keyname: 2.2.8
     dev: false
 
-  /@content-thing/internal-utils@0.0.1-alpha.0:
-    resolution: {integrity: sha512-NsgFM7O/pMYW/rl4Rh96B4Pltb6QRlHa88YUjn/FnYwiN22vGKdKohF8We0OggPgNcmzQoB0VaZL75DeWgWkkg==}
+  /@content-thing/internal-utils@0.0.0:
+    resolution: {integrity: sha512-0VjGDaLJs5qhggqMVMcxtgdQJRVL/JulGWuyh4pknroP1u5uMdjqxRTQzCaX/lQ1PptFd3Ya11usEzuno+4K2w==}
     dev: true
 
-  /@content-thing/remark-attributes@0.0.3-alpha.0:
-    resolution: {integrity: sha512-x+A8KxTnGQUW4kpdGxal2coCNrlmi4/xtOelqZkMOXSF8lTaxocaMTyQh8GmPO3FYoATJjOTHDGv14UYToxNVQ==}
+  /@content-thing/remark-attributes@0.0.2:
+    resolution: {integrity: sha512-wuWPPgBmCMD9Znq+rFj1zvXBXGsjpAPDOpCib+ZAGQm6FYjYDbdaMVaJPa0/EMuKk2MjndRPWJWvdXhgeQXTsA==}
     dependencies:
       md-attr-parser: 1.3.0
       unist-util-visit: 5.0.0
     dev: true
 
-  /@content-thing/remark-rich-attributes@0.0.3-alpha.0:
-    resolution: {integrity: sha512-EpEJtg3GiQdxDUrI+1l9pg/quxZJmvF1YWr4pHz9SS1o2Tw2c/+lG+pFt+oEMsuyXfhG5OvWgf+VMvlo0NYXpw==}
+  /@content-thing/remark-rich-attributes@0.0.2:
+    resolution: {integrity: sha512-tZBsAPb7+yJVYzOK1ohMTtL/IVMA3t6uZFkVrmhGw1ckrL+JAkfR+LJ0Akd6CWSJD3qhE2jeAynGOvhMF+z5Rw==}
     dependencies:
       unist-util-visit: 5.0.0
     dev: true
 
-  /@content-thing/remark-toc@0.0.2-alpha.0:
-    resolution: {integrity: sha512-R1AOhNWMlMMixq24WnUDwupvOET+JQPndd4xgeiqIfgcW9fq84Qz3r7uBOkpvxmqt0H7RKFcQjj8rbtmE003XQ==}
+  /@content-thing/remark-toc@0.0.1:
+    resolution: {integrity: sha512-7si+7yIvGQ0kncf4jo6MU1w6rXh6F1kwMCJZfe+hKcGScVkFdh3LwcF3Bi5GCzaXvasdyZ/Q0AiQnVihuMNxQA==}
     dependencies:
       unist-util-visit: 5.0.0
     dev: true
 
-  /@content-thing/remark-variables@0.0.3-alpha.0:
-    resolution: {integrity: sha512-1xSdvmEjC9yunnAmjITDCw7Xh8814RLppiisNwNp7KXVAoWy9DxDGXCbVL8iQR1HK1uGjxmYtrdVGcTirUpyMA==}
+  /@content-thing/remark-variables@0.0.2:
+    resolution: {integrity: sha512-nah6L0jUmuIJK50eu5sk/QXJxE6Zyk3F4x8CbF03cvMAyN7OTVV5e2N76nlOfKnV2lHIWpORKTQtd7x7ZWZOww==}
     dependencies:
       dlv: 1.1.3
       unist-util-visit: 5.0.0
     dev: true
 
-  /@content-thing/remark-yaml-parse@0.0.2-alpha.0:
-    resolution: {integrity: sha512-1z2O/XD7DS2TY9KZmn2cpYwGa4Mxx3Q4MOOx1sa4Eo8OF+YZ0aZvg61XGQ8dZeuBXdp+1t1hkcbR+usgqiwsjg==}
+  /@content-thing/remark-yaml-parse@0.0.1:
+    resolution: {integrity: sha512-LL4FvmDqMRTN3ATZIuoNc3828QpNIGBjr8uaEU++J1lHWc5d6j9+4WrhLykzSQUcFEe1qYocAUds6fpxOs2zoQ==}
     dependencies:
       js-yaml: 4.1.0
       unist-util-visit: 5.0.0
@@ -1738,25 +1738,26 @@ packages:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
     dev: true
 
-  /content-thing@0.0.13-alpha.7(@sveltejs/kit@2.3.3):
-    resolution: {integrity: sha512-74F3onfcS6xqTmIPRwJQEi/zjC76iVCx/W4EHWgcVbMgafrmnFY4gBT1yEOvY1DW9iFqLIKEBn8IqGKeyUa68Q==}
+  /content-thing@0.0.13-alpha.8(@sveltejs/kit@2.3.3):
+    resolution: {integrity: sha512-HOC23Xv2zc5kfqcHM0iOkrVvi1LxQQ5uLdBbazRTYuBnAtPGlL6kvsaQOU5szeDy02DzpxZd8SPwOX6j8eHh6w==}
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
     dependencies:
-      '@content-thing/internal-utils': 0.0.1-alpha.0
-      '@content-thing/remark-attributes': 0.0.3-alpha.0
-      '@content-thing/remark-rich-attributes': 0.0.3-alpha.0
-      '@content-thing/remark-toc': 0.0.2-alpha.0
-      '@content-thing/remark-variables': 0.0.3-alpha.0
-      '@content-thing/remark-yaml-parse': 0.0.2-alpha.0
+      '@content-thing/internal-utils': 0.0.0
+      '@content-thing/remark-attributes': 0.0.2
+      '@content-thing/remark-rich-attributes': 0.0.2
+      '@content-thing/remark-toc': 0.0.1
+      '@content-thing/remark-variables': 0.0.2
+      '@content-thing/remark-yaml-parse': 0.0.1
       '@signalapp/better-sqlite3': 8.6.0
       '@sveltejs/kit': 2.3.3(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11)
       '@types/mdast': 4.0.3
       chokidar: 3.5.3
       drizzle-orm: 0.28.6
       drizzle-zod: 0.5.1(drizzle-orm@0.28.6)(zod@3.22.4)
-      hine: 0.0.21
+      hine: 0.0.22
       js-yaml: 4.1.0
+      lil-match: 1.2.1
       remark-frontmatter: 5.0.0
       remark-parse: 11.0.0
       remark-stringify: 11.0.0
@@ -2753,8 +2754,8 @@ packages:
       function-bind: 1.1.2
     dev: true
 
-  /hine@0.0.21:
-    resolution: {integrity: sha512-usIA2QddPjaSOPv6EF1G89EIhJJnZ5nUR3PDzUf+UEP7BW20tmmKIfTs8lvNiEeYSbtYa45uPimxetClJmM+kA==}
+  /hine@0.0.22:
+    resolution: {integrity: sha512-t7Ojozuxh8nr+jJU0sF2Vvi5Tuw9ZkNMmhTKBoWC1KpsNTZ+J184pGYYV5mhh+wFjMZ2uHCjpNknzL19GGJcbA==}
     dev: true
 
   /hosted-git-info@2.8.9:
@@ -3088,6 +3089,10 @@ packages:
       prelude-ls: 1.2.1
       type-check: 0.4.0
     dev: false
+
+  /lil-match@1.2.1:
+    resolution: {integrity: sha512-fudLGqwTfXD3c8WqCR78jsVc6L69BF3oYDBsMQWadgMAL8BmX+wSo4ZNTFRQTQs82/0XkoCKlJMnZPW0kyg1DQ==}
+    dev: true
 
   /lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}

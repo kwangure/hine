@@ -6,7 +6,7 @@ position: 1
 
 ## Parent State
 
-We'll start by importing and creating a compound state.
+We'll start by creating a compound state.
 
 ```javascript {file=./01-checkbox-state.js copy}
 

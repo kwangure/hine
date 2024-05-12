@@ -1,0 +1,51 @@
+{
+	"name": "config",
+	"private": true,
+	"scripts": {
+		"build": "wireit"
+	},
+	"dependencies": {
+		"@types/eslint__js": "^8.42.3",
+		"@types/mdast": "^4.0.3",
+		"@types/node": "^20.10.5",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-svelte": "^2.35.1",
+		"globals": "^13.23.0",
+		"hine": "workspace:*",
+		"mdast-util-to-markdown": "^2.1.0",
+		"prettier-plugin-svelte": "^3.1.2",
+		"remark-parse": "^11.0.0",
+		"svelte": "^4.2.8",
+		"typescript": "^5.4.5",
+		"typescript-eslint": "^7.2.0",
+		"unified": "^11.0.4",
+		"unist-util-visit": "^5.0.0"
+	},
+	"wireit": {
+		"build": {
+			"command": "node ./README/build.js",
+			"files": [
+				"README/**"
+			],
+			"output": []
+		},
+		"check": {
+			"command": "tsc",
+			"files": [
+				"**.{js,ts}"
+			],
+			"output": []
+		},
+		"pre-commit": {
+			"dependencies": [
+				"build",
+				"check"
+			]
+		}
+	},
+	"type": "module",
+	"devDependencies": {
+		"@types/eslint": "^8.56.10",
+		"@types/eslint-config-prettier": "^6.11.3"
+	}
+}

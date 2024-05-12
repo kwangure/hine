@@ -1,0 +1,23 @@
+{
+	"$schema": "../../../node_modules/content-thing/config/schema.json",
+	"type": "markdown",
+	"data": {
+		"fields": {
+			"title": {
+				"type": "text"
+			},
+			"group": {
+				"type": "text",
+				"nullable": true
+			}
+		},
+		"relations": {
+			"group": {
+				"type": "one",
+				"collection": "groups",
+				"reference": "_id",
+				"field": "group"
+			}
+		}
+	}
+}

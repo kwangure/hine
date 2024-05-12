@@ -1,0 +1,20 @@
+{
+	"$schema": "../../../node_modules/content-thing/config/schema.json",
+	"type": "yaml",
+	"data": {
+		"fields": {
+			"title": {
+				"type": "text"
+			},
+			"position": {
+				"type": "integer"
+			}
+		},
+		"relations": {
+			"reference": {
+				"type": "many",
+				"collection": "reference"
+			}
+		}
+	}
+}

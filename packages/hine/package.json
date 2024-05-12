@@ -1,0 +1,81 @@
+{
+	"name": "hine",
+	"version": "0.0.24",
+	"description": "A state machine library",
+	"scripts": {
+		"build": "wireit",
+		"dev": "wireit",
+		"pre-commit": "wireit",
+		"publint": "wireit",
+		"test": "wireit"
+	},
+	"wireit": {
+		"build": {
+			"command": "tsc --build",
+			"files": [
+				"src/**/*.{js,ts}",
+				"tsconfig.json",
+				"../../config/tsconfig.base.json"
+			],
+			"output": [
+				"types"
+			]
+		},
+		"dev": {
+			"command": "tsc --build --watch",
+			"service": true,
+			"files": []
+		},
+		"publint": {
+			"command": "publint",
+			"dependencies": [
+				"build"
+			],
+			"files": [
+				"src/**",
+				"types/**",
+				"package.json"
+			],
+			"output": []
+		},
+		"pre-commit": {
+			"dependencies": [
+				"build",
+				"publint",
+				"test"
+			]
+		},
+		"test": {
+			"command": "vitest run",
+			"files": [
+				"src/**/*.{js,ts}",
+				"tests/**/*.{js,ts}"
+			],
+			"output": []
+		}
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist",
+		"!**/*.test.*",
+		"!**/*.spec.*"
+	],
+	"keywords": [
+		"state",
+		"machine",
+		"state-management"
+	],
+	"devDependencies": {
+		"@types/node": "^20.10.5",
+		"publint": "^0.2.6",
+		"typescript": "^5.4.5",
+		"vitest": "^1.6.0"
+	},
+	"license": "MIT",
+	"type": "module"
+}

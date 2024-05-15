@@ -57,7 +57,7 @@ export class ParallelState implements StateNode {
 		this.#listeners = new Map(listeners);
 		this.#name = name;
 	}
-	get activeStates() {
+	get activeChildren() {
 		return Array.from(this.#children);
 	}
 	get children() {

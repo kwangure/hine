@@ -245,9 +245,9 @@ describe('emitEvent', () => {
 		});
 		const state = resolveState(stateConfig);
 
-		expect(state.activeStates[0][0]).toBe('s1');
+		expect(state.activeChildren[0][0]).toBe('s1');
 		emitEvent(state, 'event');
-		expect(state.activeStates[0][0]).toBe('s2');
+		expect(state.activeChildren[0][0]).toBe('s2');
 	});
 
 	it('throws error on transition to non-existent state', () => {

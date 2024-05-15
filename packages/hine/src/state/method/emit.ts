@@ -41,7 +41,7 @@ function __emitEvent(
 	path: string[],
 	parent?: StateNode,
 ) {
-	machine.activeStates.forEach(([name, state]) => {
+	machine.activeChildren.forEach(([name, state]) => {
 		path.push(name);
 		__emitEvent(state, event, path, machine);
 		path.pop();
@@ -93,7 +93,7 @@ function __runHooksRootFirst(
 			}
 		}
 	}
-	machine.activeStates.forEach(([name, state]) => {
+	machine.activeChildren.forEach(([name, state]) => {
 		path.push(name);
 		__runHooksRootFirst(state, event, path);
 		path.pop();
@@ -109,7 +109,7 @@ function __runHooksLeafFirst(
 	event: StateEvent,
 	path: string[],
 ) {
-	machine.activeStates.forEach(([name, state]) => {
+	machine.activeChildren.forEach(([name, state]) => {
 		path.push(name);
 		__runHooksLeafFirst(state, event, path);
 		path.pop();

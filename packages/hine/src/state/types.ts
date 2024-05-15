@@ -1,7 +1,7 @@
 import type { StateEvent } from './event/event.js';
 
 export interface StateNode {
-	activeStates: [string, StateNode][];
+	activeChildren: [string, StateNode][];
 	children: Map<string, StateNode>;
 	hooks: Map<string, EventListener[]>;
 	listeners: Map<string, EventListener[]>;

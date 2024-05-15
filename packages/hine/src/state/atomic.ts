@@ -35,7 +35,7 @@ export class AtomicState implements StateNode {
 		this.#listeners = new Map(listeners);
 		this.#name = name;
 	}
-	get activeStates() {
+	get activeChildren() {
 		return [];
 	}
 	get children() {

@@ -61,7 +61,7 @@ export class CompoundState implements StateNode {
 		this.#listeners = new Map(listeners);
 		this.#name = name;
 	}
-	get activeStates() {
+	get activeChildren() {
 		const state = this.#children.get(this.#current);
 		if (!state) {
 			let message = `'${this.#current}' is not a child of '${this.#name}' state.`;

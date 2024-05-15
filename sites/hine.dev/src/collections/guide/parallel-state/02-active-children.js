@@ -15,7 +15,7 @@ const playerConfig = parallel('player', {
 
 const playerState = resolveState(playerConfig);
 
-const activeChildCount = playerState.activeStates.length;
+const activeChildCount = playerState.activeChildren.length;
 const childCount = playerState.children.size;
 // Always `true` for parallel states
 console.log(activeChildCount === childCount);

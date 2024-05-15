@@ -79,8 +79,10 @@
 		}
 	},
 	"dependencies": {
+		"@melt-ui/svelte": "^0.79.1",
 		"@svelte-thing/components": "^0.0.20",
-		"hine": "workspace:*"
+		"hine": "workspace:*",
+		"simple-icons": "^11.14.0"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.2.0",

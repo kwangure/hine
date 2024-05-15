@@ -11,9 +11,9 @@
 			}
 		},
 		"relations": {
-			"reference": {
+			"guide": {
 				"type": "many",
-				"collection": "reference"
+				"collection": "guide"
 			}
 		}
 	}

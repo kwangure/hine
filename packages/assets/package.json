@@ -1,0 +1,21 @@
+{
+	"name": "@hine/assets",
+	"private": true,
+	"version": "0.0.0",
+	"description": "Static assets for Hine",
+	"files": [
+		"*.svg",
+		"*.js",
+		"types"
+	],
+	"exports": {
+		".": {
+			"types": "./index.d.ts",
+			"default": "./index.js"
+		},
+		"./logo-dark.svg": "./logo-dark.svg",
+		"./logo.svg": "./logo.svg"
+	},
+	"license": "MIT",
+	"type": "module"
+}

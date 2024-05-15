@@ -74,7 +74,7 @@ export class CompoundState implements StateNode {
 					  )}'.`;
 			throw Error(message);
 		}
-		return [[this.#current, state]] as [[string, StateNode]];
+		return [state] as [StateNode];
 	}
 	get children() {
 		return this.#children;

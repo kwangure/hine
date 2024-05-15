@@ -41,8 +41,8 @@ function __emitEvent(
 	path: string[],
 	parent?: StateNode,
 ) {
-	state.activeChildren.forEach(([name, child]) => {
-		path.push(name);
+	state.activeChildren.forEach((child) => {
+		path.push(child.name);
 		__emitEvent(child, event, path, state);
 		path.pop();
 	});
@@ -93,8 +93,8 @@ function __runHooksRootFirst(
 			}
 		}
 	}
-	state.activeChildren.forEach(([name, child]) => {
-		path.push(name);
+	state.activeChildren.forEach((child) => {
+		path.push(child.name);
 		__runHooksRootFirst(child, event, hook, path);
 		path.pop();
 	});
@@ -109,8 +109,8 @@ function __runHooksLeafFirst(
 	hook: 'afterEntry' | 'beforeExit',
 	path: string[],
 ) {
-	state.activeChildren.forEach(([name, child]) => {
-		path.push(name);
+	state.activeChildren.forEach((child) => {
+		path.push(child.name);
 		__runHooksLeafFirst(child, event, hook, path);
 		path.pop();
 	});

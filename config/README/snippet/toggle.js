@@ -16,6 +16,6 @@ const myToggle = resolveState(toggleConfig);
 // All compound states have exactly one active state
 myToggle.activeChildren.length === 1; // true
 
-myToggle.activeChildren[0][0] === 'inactive'; // true
+myToggle.activeChildren[0].name === 'inactive'; // true
 emitEvent(myToggle, 'toggle');
-myToggle.activeChildren[0][0] === 'active'; // true
+myToggle.activeChildren[0].name === 'active'; // true

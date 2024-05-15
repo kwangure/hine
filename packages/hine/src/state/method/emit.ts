@@ -66,26 +66,26 @@ function __emitEvent(
 					}' in a state without a parent`,
 				);
 			}
-			runExitHooks(machine);
+			runExitHooks(machine, event);
 			parent.__goto(listener.goto, path);
-			runEntryHooks(parent.children.get(listener.goto)!);
+			runEntryHooks(parent.children.get(listener.goto)!, event);
 			// transitions prevent later handlers from being executed
 			break;
 		}
 	}
 }
 
-export function runEntryHooks(machine: StateNode) {
-	const event = new StateEvent('afterEntry', machine, undefined);
-	__runHooksRootFirst(machine, event, [machine.name]);
+export function runEntryHooks(machine: StateNode, event: StateEvent) {
+	__runHooksRootFirst(machine, event, 'afterEntry', [machine.name]);
 }
 function __runHooksRootFirst(
 	machine: StateNode,
 	event: StateEvent,
+	hook: 'afterEntry' | 'beforeExit',
 	path: string[],
 ) {
 	setCurrentTarget(event, machine);
-	const hooks = machine.hooks.get(event.type);
+	const hooks = machine.hooks.get(hook);
 	if (hooks) {
 		for (const listener of hooks) {
 			if (!listener.if || listener.if(event)) {
@@ -95,28 +95,28 @@ function __runHooksRootFirst(
 	}
 	machine.activeChildren.forEach(([name, state]) => {
 		path.push(name);
-		__runHooksRootFirst(state, event, path);
+		__runHooksRootFirst(state, event, hook, path);
 		path.pop();
 	});
 }
 
-export function runExitHooks(machine: StateNode) {
-	const event = new StateEvent('beforeExit', machine, undefined);
-	__runHooksLeafFirst(machine, event, [machine.name]);
+export function runExitHooks(machine: StateNode, event: StateEvent) {
+	__runHooksLeafFirst(machine, event, 'beforeExit', [machine.name]);
 }
 function __runHooksLeafFirst(
 	machine: StateNode,
 	event: StateEvent,
+	hook: 'afterEntry' | 'beforeExit',
 	path: string[],
 ) {
 	machine.activeChildren.forEach(([name, state]) => {
 		path.push(name);
-		__runHooksLeafFirst(state, event, path);
+		__runHooksLeafFirst(state, event, hook, path);
 		path.pop();
 	});
 
 	setCurrentTarget(event, machine);
-	const hooks = machine.hooks.get(event.type);
+	const hooks = machine.hooks.get(hook);
 	if (hooks) {
 		for (const listener of hooks) {
 			if (!listener.if || listener.if(event)) {

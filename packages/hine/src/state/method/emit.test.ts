@@ -324,7 +324,7 @@ describe('emitEvent', () => {
 		expect(events).toStrictEqual(['s2', 's21']);
 	});
 
-	it.only('runs exit hooks before transition', () => {
+	it('runs exit hooks before transition', () => {
 		const events: string[] = [];
 		const stateConfig = compound('s', {
 			initial: 's1',

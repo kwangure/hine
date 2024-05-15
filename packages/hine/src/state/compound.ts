@@ -1,6 +1,6 @@
 import type {
 	CompoundStateConfig,
-	EventListener,
+	StateEventListener,
 	StateNode,
 	StateNodeConfig,
 } from './types.js';
@@ -34,8 +34,8 @@ export function compound(name: string, config: CompoundStateConfig) {
 		typeof CompoundState,
 		[
 			string,
-			[string, EventListener[]][],
-			[string, EventListener[]][],
+			[string, StateEventListener[]][],
+			[string, StateEventListener[]][],
 			[string, StateNodeConfig<StateNode>][],
 			string,
 		],
@@ -50,8 +50,8 @@ export class CompoundState implements StateNode {
 	#name;
 	constructor(
 		name: string,
-		listeners: [string, EventListener[]][],
-		hooks: [string, EventListener[]][],
+		listeners: [string, StateEventListener[]][],
+		hooks: [string, StateEventListener[]][],
 		children: [string, StateNode][],
 		current: string,
 	) {

@@ -1,6 +1,6 @@
 import type {
-	EventListener,
 	ParallelStateConfig,
+	StateEventListener,
 	StateNode,
 	StateNodeConfig,
 } from './types.js';
@@ -34,8 +34,8 @@ export function parallel(name: string, config?: ParallelStateConfig) {
 		typeof ParallelState,
 		[
 			string,
-			[string, EventListener[]][],
-			[string, EventListener[]][],
+			[string, StateEventListener[]][],
+			[string, StateEventListener[]][],
 			[string, StateNodeConfig<StateNode>][],
 		],
 	];
@@ -48,8 +48,8 @@ export class ParallelState implements StateNode {
 	#name;
 	constructor(
 		name: string,
-		listeners: [string, EventListener[]][],
-		hooks: [string, EventListener[]][],
+		listeners: [string, StateEventListener[]][],
+		hooks: [string, StateEventListener[]][],
 		children: [string, StateNode][],
 	) {
 		this.#children = new Map(children);

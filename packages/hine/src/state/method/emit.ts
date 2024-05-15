@@ -67,7 +67,7 @@ function __emitEvent(
 				);
 			}
 			runExitHooks(machine);
-			parent.transitionTo(listener.goto, path);
+			parent.__goto(listener.goto, path);
 			runEntryHooks(parent.children.get(listener.goto)!);
 			// transitions prevent later handlers from being executed
 			break;

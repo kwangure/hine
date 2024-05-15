@@ -88,7 +88,7 @@ export class CompoundState implements StateNode {
 	get name() {
 		return this.#name;
 	}
-	transitionTo(newState: string, path: string[]) {
+	__goto(newState: string, path: string[]) {
 		if (!this.#children.has(newState)) {
 			throw Error(
 				`TransitionError: State '${newState}' is not a child of '${path.join(

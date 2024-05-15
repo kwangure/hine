@@ -6,7 +6,7 @@ export interface StateNode {
 	hooks: Map<string, StateEventListener[]>;
 	listeners: Map<string, StateEventListener[]>;
 	name: string;
-	transitionTo(newState: string, path: string[]): void;
+	__goto(newState: string, path: string[]): void;
 }
 
 export type StateNodeConfig<T extends StateNode> = [

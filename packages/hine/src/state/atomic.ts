@@ -58,7 +58,7 @@ export class AtomicState implements StateNode {
 	get name() {
 		return this.#name;
 	}
-	transitionTo(newState: string, path: string[]) {
+	__goto(newState: string, path: string[]) {
 		throw Error(
 			`TransitionError: Attempted to transition to '${newState}' in '${path.join(
 				'.',

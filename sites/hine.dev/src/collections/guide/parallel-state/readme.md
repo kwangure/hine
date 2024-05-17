@@ -38,6 +38,6 @@ Parallel states accept hooks such as `afterEntry`{lang=js} and
 
 ```
 
-When `playerState`{lang=js} is resolved, it will _enter_ the `'health'`{lang=js}
-and `'position'`{lang=js} states simulatenously and initialize both
-`health`{lang=js} and `position`{lang=js} to `10`{lang=js}.
+When `playerState`{lang=js} is resolved, it will transition to the
+`'health'`{lang=js} and `'position'`{lang=js} states simulatenously and
+initialize both `health`{lang=js} and `position`{lang=js} to `10`{lang=js}.

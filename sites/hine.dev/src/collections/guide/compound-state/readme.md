@@ -47,6 +47,6 @@ Compound states accept hooks such as `afterEntry`{lang=js} and
 ```
 
 When `toggleState`{lang=js} receives a `'toggle'`{lang=js} event while inactive,
-it will transition to and _enter_ the active state and log
-`'active start'`{lang=js}. When `toggleState`{lang=js} then transiitons out of
-the active state, it will log `'active end'`{lang=js}
+it will transition to the active state and log `'active start'`{lang=js}. When
+`toggleState`{lang=js} then transitions out of the active state, it will log
+`'active end'`{lang=js}.

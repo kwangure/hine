@@ -6,7 +6,10 @@
 		"format": "wireit",
 		"lint": "wireit",
 		"pre-commit": "wireit",
-		"prepare": "command -v git >/dev/null 2>&1 && git config core.hooksPath git-hooks || true"
+		"prepare": "command -v git >/dev/null 2>&1 && git config core.hooksPath git-hooks || true",
+		"release": "wireit",
+		"test": "wireit",
+		"version": "wireit"
 	},
 	"wireit": {
 		"build": {
@@ -52,6 +55,27 @@
 				"./packages/hine:pre-commit",
 				"./sites/hine.dev:pre-commit"
 			]
+		},
+		"release": {
+			"command": "changeset publish",
+			"dependencies": [
+				"./packages/hine:release"
+			]
+		},
+		"test": {
+			"dependencies": [
+				"./packages/hine:test",
+				"./sites/hine.dev:test"
+			]
+		},
+		"version": {
+			"command": "changeset version",
+			"files": [
+				"./.changeset/*.md",
+				"./packages/**/package.json",
+				"./packages/**/CHANGELOG.md"
+			],
+			"output": []
 		}
 	},
 	"devDependencies": {

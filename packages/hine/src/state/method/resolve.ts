@@ -1,3 +1,4 @@
+import { StateEvent } from '../event/event.js';
 import type { StateNode, StateNodeConfig } from '../types.js';
 import { runEntryHooks } from './emit.js';
 
@@ -5,7 +6,8 @@ export function resolveState<T extends StateNode>(
 	config: StateNodeConfig<T>,
 ): T {
 	const state = __resolveState(config);
-	runEntryHooks(state);
+	const event = new StateEvent('afterEntry', state, undefined);
+	runEntryHooks(state, event);
 	return state;
 }
 

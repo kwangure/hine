@@ -245,9 +245,9 @@ describe('emitEvent', () => {
 		});
 		const state = resolveState(stateConfig);
 
-		expect(state.activeStates[0][0]).toBe('s1');
+		expect(state.activeChildren[0].name).toBe('s1');
 		emitEvent(state, 'event');
-		expect(state.activeStates[0][0]).toBe('s2');
+		expect(state.activeChildren[0].name).toBe('s2');
 	});
 
 	it('throws error on transition to non-existent state', () => {
@@ -324,7 +324,7 @@ describe('emitEvent', () => {
 		expect(events).toStrictEqual(['s2', 's21']);
 	});
 
-	it.only('runs exit hooks before transition', () => {
+	it('runs exit hooks before transition', () => {
 		const events: string[] = [];
 		const stateConfig = compound('s', {
 			initial: 's1',

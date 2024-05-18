@@ -1,4 +1,8 @@
-import type { AtomicStateConfig, EventListener, StateNode } from './types.js';
+import type {
+	AtomicStateConfig,
+	StateEventListener,
+	StateNode,
+} from './types.js';
 import { normalizeListeners } from './util.js';
 
 /**
@@ -17,7 +21,11 @@ export function atomic(name: string, config?: AtomicStateConfig) {
 	const listeners = normalizeListeners(config?.on);
 	return [AtomicState, [name, listeners, hooks]] satisfies [
 		typeof AtomicState,
-		[string, [string, EventListener[]][], [string, EventListener[]][]],
+		[
+			string,
+			[string, StateEventListener[]][],
+			[string, StateEventListener[]][],
+		],
 	];
 }
 
@@ -28,14 +36,14 @@ export class AtomicState implements StateNode {
 	#name;
 	constructor(
 		name: string,
-		listeners: [string, EventListener[]][],
-		hooks: [string, EventListener[]][],
+		listeners: [string, StateEventListener[]][],
+		hooks: [string, StateEventListener[]][],
 	) {
 		this.#hooks = new Map(hooks);
 		this.#listeners = new Map(listeners);
 		this.#name = name;
 	}
-	get activeStates() {
+	get activeChildren() {
 		return [];
 	}
 	get children() {
@@ -50,7 +58,7 @@ export class AtomicState implements StateNode {
 	get name() {
 		return this.#name;
 	}
-	transitionTo(newState: string, path: string[]) {
+	__goto(newState: string, path: string[]) {
 		throw Error(
 			`TransitionError: Attempted to transition to '${newState}' in '${path.join(
 				'.',

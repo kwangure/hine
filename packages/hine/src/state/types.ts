@@ -1,12 +1,12 @@
 import type { StateEvent } from './event/event.js';
 
 export interface StateNode {
-	activeStates: [string, StateNode][];
+	activeChildren: StateNode[];
 	children: Map<string, StateNode>;
-	hooks: Map<string, EventListener[]>;
-	listeners: Map<string, EventListener[]>;
+	hooks: Map<string, StateEventListener[]>;
+	listeners: Map<string, StateEventListener[]>;
 	name: string;
-	transitionTo(newState: string, path: string[]): void;
+	__goto(newState: string, path: string[]): void;
 }
 
 export type StateNodeConfig<T extends StateNode> = [
@@ -14,8 +14,8 @@ export type StateNodeConfig<T extends StateNode> = [
 	{ new (...args: any[]): T },
 	[
 		string,
-		[string, EventListener[]][],
-		[string, EventListener[]][],
+		[string, StateEventListener[]][],
+		[string, StateEventListener[]][],
 		[string, StateNodeConfig<StateNode>][]?,
 		string?,
 	],
@@ -34,7 +34,7 @@ export interface BaseEventListener {
 	run?: Run;
 }
 
-export interface EventListener extends BaseEventListener {
+export interface StateEventListener extends BaseEventListener {
 	goto?: string;
 }
 
@@ -45,7 +45,10 @@ export interface BaseStateConfig {
 	};
 	on?: Record<
 		string,
-		string | Run | EventListener | (string | Run | EventListener)[]
+		| string
+		| Run
+		| StateEventListener
+		| (string | Run | StateEventListener)[]
 	>;
 }
 export interface AtomicStateConfig extends BaseStateConfig {}

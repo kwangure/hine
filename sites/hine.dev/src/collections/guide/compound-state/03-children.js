@@ -14,7 +14,7 @@ const toggleConfig = compound('toggle', {
 
 const toggleState = resolveState(toggleConfig);
 
-const activeChildCount = toggleState.activeStates.length;
+const activeChildCount = toggleState.activeChildren.length;
 const childCount = toggleState.children.size;
 // Always `true` for compound states
 console.log(activeChildCount === 1);

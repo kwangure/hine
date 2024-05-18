@@ -1,7 +1,7 @@
-import type { BaseStateConfig, EventListener } from './types.js';
+import type { BaseStateConfig, StateEventListener } from './types.js';
 
 export function normalizeListeners(onConfig: BaseStateConfig['on']) {
-	const listeners: [string, EventListener[]][] = [];
+	const listeners: [string, StateEventListener[]][] = [];
 	if (onConfig) {
 		for (const [eventName, on] of Object.entries(onConfig)) {
 			let listener;

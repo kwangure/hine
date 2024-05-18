@@ -1,6 +1,6 @@
 import type {
-	EventListener,
 	ParallelStateConfig,
+	StateEventListener,
 	StateNode,
 	StateNodeConfig,
 } from './types.js';
@@ -34,8 +34,8 @@ export function parallel(name: string, config?: ParallelStateConfig) {
 		typeof ParallelState,
 		[
 			string,
-			[string, EventListener[]][],
-			[string, EventListener[]][],
+			[string, StateEventListener[]][],
+			[string, StateEventListener[]][],
 			[string, StateNodeConfig<StateNode>][],
 		],
 	];
@@ -48,8 +48,8 @@ export class ParallelState implements StateNode {
 	#name;
 	constructor(
 		name: string,
-		listeners: [string, EventListener[]][],
-		hooks: [string, EventListener[]][],
+		listeners: [string, StateEventListener[]][],
+		hooks: [string, StateEventListener[]][],
 		children: [string, StateNode][],
 	) {
 		this.#children = new Map(children);
@@ -57,8 +57,8 @@ export class ParallelState implements StateNode {
 		this.#listeners = new Map(listeners);
 		this.#name = name;
 	}
-	get activeStates() {
-		return Array.from(this.#children);
+	get activeChildren() {
+		return Array.from(this.#children.values());
 	}
 	get children() {
 		return this.#children;
@@ -72,7 +72,7 @@ export class ParallelState implements StateNode {
 	get name() {
 		return this.#name;
 	}
-	transitionTo(newState: string, path: string[]) {
+	__goto(newState: string, path: string[]) {
 		throw Error(
 			`TransitionError: Attempted to transition to '${newState}' in '${path.join(
 				'.',

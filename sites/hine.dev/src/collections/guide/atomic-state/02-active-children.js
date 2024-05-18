@@ -9,4 +9,4 @@ const counterConfig = atomic('counter', {
 const counterState = resolveState(counterConfig);
 
 // Always `true` for atomic states
-console.log(counterState.activeStates.length === 0);
+console.log(counterState.activeChildren.length === 0);

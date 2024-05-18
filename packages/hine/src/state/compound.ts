@@ -1,6 +1,6 @@
 import type {
 	CompoundStateConfig,
-	EventListener,
+	StateEventListener,
 	StateNode,
 	StateNodeConfig,
 } from './types.js';
@@ -34,8 +34,8 @@ export function compound(name: string, config: CompoundStateConfig) {
 		typeof CompoundState,
 		[
 			string,
-			[string, EventListener[]][],
-			[string, EventListener[]][],
+			[string, StateEventListener[]][],
+			[string, StateEventListener[]][],
 			[string, StateNodeConfig<StateNode>][],
 			string,
 		],
@@ -50,8 +50,8 @@ export class CompoundState implements StateNode {
 	#name;
 	constructor(
 		name: string,
-		listeners: [string, EventListener[]][],
-		hooks: [string, EventListener[]][],
+		listeners: [string, StateEventListener[]][],
+		hooks: [string, StateEventListener[]][],
 		children: [string, StateNode][],
 		current: string,
 	) {
@@ -61,7 +61,7 @@ export class CompoundState implements StateNode {
 		this.#listeners = new Map(listeners);
 		this.#name = name;
 	}
-	get activeStates() {
+	get activeChildren() {
 		const state = this.#children.get(this.#current);
 		if (!state) {
 			let message = `'${this.#current}' is not a child of '${this.#name}' state.`;
@@ -74,7 +74,7 @@ export class CompoundState implements StateNode {
 					  )}'.`;
 			throw Error(message);
 		}
-		return [[this.#current, state]] as [[string, StateNode]];
+		return [state] as [StateNode];
 	}
 	get children() {
 		return this.#children;
@@ -88,7 +88,7 @@ export class CompoundState implements StateNode {
 	get name() {
 		return this.#name;
 	}
-	transitionTo(newState: string, path: string[]) {
+	__goto(newState: string, path: string[]) {
 		if (!this.#children.has(newState)) {
 			throw Error(
 				`TransitionError: State '${newState}' is not a child of '${path.join(

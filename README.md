@@ -9,7 +9,7 @@ A JavaScript state machine library.
 ### Install
 
 ```bash
-npm install Hine
+npm install hine
 ```
 
 ### Getting started

@@ -52,7 +52,7 @@ function __emitEvent(
 	setCurrentTarget(event, state);
 
 	for (const listener of listeners) {
-		if (listener.if && !listener.if(event)) return;
+		if (listener.if && !listener.if(event)) continue;
 
 		listener.run?.(event);
 

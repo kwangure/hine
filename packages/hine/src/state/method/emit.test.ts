@@ -111,6 +111,37 @@ describe('emitEvent', () => {
 		expect(conditionMet).toBe(false);
 	});
 
+	it('runs multiple conditional handlers', () => {
+		const events: string[] = [];
+		const stateConfig = compound('s', {
+			initial: 's1',
+			children: [
+				atomic('s1', {
+					on: {
+						event: [
+							{
+								if: () => true,
+								run: () => events.push('s1a'),
+							},
+							{
+								if: () => false,
+								run: () => events.push('s1b'),
+							},
+							{
+								if: () => true,
+								run: () => events.push('s1c'),
+							},
+						],
+					},
+				}),
+			],
+		});
+		const state = resolveState(stateConfig);
+
+		emitEvent(state, 'event');
+		expect(events).toStrictEqual(['s1a', 's1c']);
+	});
+
 	it('handles emitting deeply nested state event', () => {
 		const events: string[] = [];
 		const stateConfig = compound('s', {

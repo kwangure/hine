@@ -79,6 +79,7 @@
 		}
 	},
 	"dependencies": {
+		"@mdi/js": "^7.4.47",
 		"@melt-ui/svelte": "^0.79.1",
 		"@svelte-thing/components": "^0.0.21",
 		"hine": "workspace:*",

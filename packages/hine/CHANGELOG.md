@@ -1,5 +1,11 @@
 # hine
 
+## 0.0.26
+
+### Patch Changes
+
+-   5ccaedf: Handle multiple conditional event listeners
+
 ## 0.0.25
 
 ### Patch Changes

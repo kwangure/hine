@@ -1,5 +1,12 @@
 # hine.dev
 
+## 0.0.2
+
+### Patch Changes
+
+-   Updated dependencies [5ccaedf]
+    -   hine@0.0.26
+
 ## 0.0.1
 
 ### Patch Changes

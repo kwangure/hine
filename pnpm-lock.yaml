@@ -105,8 +105,8 @@ importers:
         specifier: ^0.79.1
         version: 0.79.1(svelte@4.2.8)
       '@svelte-thing/components':
-        specifier: ^0.0.21
-        version: 0.0.21(@fig/lezer-bash@1.2.5)(@lezer/common@1.2.0)(@lezer/cpp@1.1.2)(@lezer/css@1.1.5)(@lezer/highlight@1.2.0)(@lezer/html@1.3.8)(@lezer/javascript@1.4.11)(@lezer/json@1.0.2)(@lezer/lr@1.3.14)(@lezer/python@1.1.10)(@lezer/rust@1.0.2)(@replit/codemirror-lang-svelte@6.0.0(@codemirror/autocomplete@6.11.1(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0))(@codemirror/lang-css@6.2.1(@codemirror/view@6.23.0))(@codemirror/lang-html@6.4.7)(@codemirror/lang-javascript@6.2.1)(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0)(@lezer/highlight@1.2.0)(@lezer/javascript@1.4.11)(@lezer/lr@1.3.14))(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)
+        specifier: ^0.0.22
+        version: 0.0.22(@fig/lezer-bash@1.2.5)(@lezer/common@1.2.0)(@lezer/cpp@1.1.2)(@lezer/css@1.1.5)(@lezer/highlight@1.2.0)(@lezer/html@1.3.8)(@lezer/javascript@1.4.11)(@lezer/json@1.0.2)(@lezer/lr@1.3.14)(@lezer/python@1.1.10)(@lezer/rust@1.0.2)(@replit/codemirror-lang-svelte@6.0.0(@codemirror/autocomplete@6.11.1(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0))(@codemirror/lang-css@6.2.1(@codemirror/view@6.23.0))(@codemirror/lang-html@6.4.7)(@codemirror/lang-javascript@6.2.1)(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0)(@lezer/highlight@1.2.0)(@lezer/javascript@1.4.11)(@lezer/lr@1.3.14))(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)
       hine:
         specifier: workspace:*
         version: link:../../packages/hine
@@ -124,8 +124,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5))
       content-thing:
-        specifier: ^0.0.22
-        version: 0.0.22(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))
+        specifier: ^0.0.23
+        version: 0.0.23(@svelte-thing/components@0.0.22(@fig/lezer-bash@1.2.5)(@lezer/common@1.2.0)(@lezer/cpp@1.1.2)(@lezer/css@1.1.5)(@lezer/highlight@1.2.0)(@lezer/html@1.3.8)(@lezer/javascript@1.4.11)(@lezer/json@1.0.2)(@lezer/lr@1.3.14)(@lezer/python@1.1.10)(@lezer/rust@1.0.2)(@replit/codemirror-lang-svelte@6.0.0(@codemirror/autocomplete@6.11.1(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0))(@codemirror/lang-css@6.2.1(@codemirror/view@6.23.0))(@codemirror/lang-html@6.4.7)(@codemirror/lang-javascript@6.2.1)(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0)(@lezer/highlight@1.2.0)(@lezer/javascript@1.4.11)(@lezer/lr@1.3.14))(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8))(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))
       svelte:
         specifier: ^4.2.7
         version: 4.2.8
@@ -648,8 +648,8 @@ packages:
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
 
-  '@svelte-thing/components@0.0.21':
-    resolution: {integrity: sha512-wh5e0qS6WgiDrkqOS822U/5cooF1kGcfh/Z4HbI19pflCquuxIb2/gmV5+zE9ByC/ngjtrVCAyySmIlQj1c7xg==}
+  '@svelte-thing/components@0.0.22':
+    resolution: {integrity: sha512-gLBhRyQ6wlwfvBL6tdpmjLYUtOiciRL0rfivOFfvTWfSnEbEIyTGIrNCyLZ48luwji+TSBPBUBERPaAKuNnPoQ==}
     peerDependencies:
       '@fig/lezer-bash': ^1.2.5
       '@lezer/common': ^1.1.0
@@ -1021,9 +1021,10 @@ packages:
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
-  content-thing@0.0.22:
-    resolution: {integrity: sha512-isOTaqD282Y9bm32Ua4CcA8yII4z5RbJwO2/xt1IlkKA7XjS3AmNi41q6sGpiF+50VCM2DBExqxUeVSt/NvoIA==}
+  content-thing@0.0.23:
+    resolution: {integrity: sha512-TzgT6CawvE8/RDqkulpewrOQ7t6z09Yh1bTNDwS5eicpl0XOH8TcDvD2iI+rfqanYy2+HzvxcXiOJDrnQ6Cf5g==}
     peerDependencies:
+      '@svelte-thing/components': ^0.0.22
       '@sveltejs/kit': ^2.0.0
 
   cookie@0.6.0:
@@ -1525,8 +1526,8 @@ packages:
     resolution: {integrity: sha512-vUptKVTpIJhcczKBbgnS+RtcuYMB8+oNzPK2/Hp3hanz8JmpATdmmgLgSaadVREkDm+e2giHwY3ZRkyjSIDDFA==}
     engines: {node: '>= 0.4'}
 
-  hine@0.0.25:
-    resolution: {integrity: sha512-Q+Ws/O0FWElUJ9aCPt/KEkEQPBMV1TBHgCJivjiU7y6GmZ/kkkFR1+AeBRU+Xs/MvApRAKvhPMlyWTdO/3TXVw==}
+  hine@0.0.26:
+    resolution: {integrity: sha512-1rOlT2AYri16d9SlOBhQ/hXDoPS1+id+EOuv672+6tOWvOrYRV54eUxFch1kXFZYPFlkg/ve6I0E276kQ+2aIQ==}
 
   hosted-git-info@2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
@@ -3440,7 +3441,7 @@ snapshots:
 
   '@sinclair/typebox@0.27.8': {}
 
-  '@svelte-thing/components@0.0.21(@fig/lezer-bash@1.2.5)(@lezer/common@1.2.0)(@lezer/cpp@1.1.2)(@lezer/css@1.1.5)(@lezer/highlight@1.2.0)(@lezer/html@1.3.8)(@lezer/javascript@1.4.11)(@lezer/json@1.0.2)(@lezer/lr@1.3.14)(@lezer/python@1.1.10)(@lezer/rust@1.0.2)(@replit/codemirror-lang-svelte@6.0.0(@codemirror/autocomplete@6.11.1(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0))(@codemirror/lang-css@6.2.1(@codemirror/view@6.23.0))(@codemirror/lang-html@6.4.7)(@codemirror/lang-javascript@6.2.1)(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0)(@lezer/highlight@1.2.0)(@lezer/javascript@1.4.11)(@lezer/lr@1.3.14))(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)':
+  '@svelte-thing/components@0.0.22(@fig/lezer-bash@1.2.5)(@lezer/common@1.2.0)(@lezer/cpp@1.1.2)(@lezer/css@1.1.5)(@lezer/highlight@1.2.0)(@lezer/html@1.3.8)(@lezer/javascript@1.4.11)(@lezer/json@1.0.2)(@lezer/lr@1.3.14)(@lezer/python@1.1.10)(@lezer/rust@1.0.2)(@replit/codemirror-lang-svelte@6.0.0(@codemirror/autocomplete@6.11.1(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0))(@codemirror/lang-css@6.2.1(@codemirror/view@6.23.0))(@codemirror/lang-html@6.4.7)(@codemirror/lang-javascript@6.2.1)(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0)(@lezer/highlight@1.2.0)(@lezer/javascript@1.4.11)(@lezer/lr@1.3.14))(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)':
     dependencies:
       '@fig/lezer-bash': 1.2.5
       '@lezer/common': 1.2.0
@@ -3883,19 +3884,20 @@ snapshots:
 
   concat-map@0.0.1: {}
 
-  content-thing@0.0.22(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5))):
-    dependencies:
+  ? content-thing@0.0.23(@svelte-thing/components@0.0.22(@fig/lezer-bash@1.2.5)(@lezer/common@1.2.0)(@lezer/cpp@1.1.2)(@lezer/css@1.1.5)(@lezer/highlight@1.2.0)(@lezer/html@1.3.8)(@lezer/javascript@1.4.11)(@lezer/json@1.0.2)(@lezer/lr@1.3.14)(@lezer/python@1.1.10)(@lezer/rust@1.0.2)(@replit/codemirror-lang-svelte@6.0.0(@codemirror/autocomplete@6.11.1(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0))(@codemirror/lang-css@6.2.1(@codemirror/view@6.23.0))(@codemirror/lang-html@6.4.7)(@codemirror/lang-javascript@6.2.1)(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0)(@lezer/highlight@1.2.0)(@lezer/javascript@1.4.11)(@lezer/lr@1.3.14))(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8))(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))
+  : dependencies:
       '@content-thing/internal-utils': 0.0.1
       '@content-thing/remark-attributes': 0.0.3
       '@content-thing/remark-variables': 0.0.3
       '@content-thing/remark-yaml-parse': 0.0.2
       '@signalapp/better-sqlite3': 8.7.1
+      '@svelte-thing/components': 0.0.22(@fig/lezer-bash@1.2.5)(@lezer/common@1.2.0)(@lezer/cpp@1.1.2)(@lezer/css@1.1.5)(@lezer/highlight@1.2.0)(@lezer/html@1.3.8)(@lezer/javascript@1.4.11)(@lezer/json@1.0.2)(@lezer/lr@1.3.14)(@lezer/python@1.1.10)(@lezer/rust@1.0.2)(@replit/codemirror-lang-svelte@6.0.0(@codemirror/autocomplete@6.11.1(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0))(@codemirror/lang-css@6.2.1(@codemirror/view@6.23.0))(@codemirror/lang-html@6.4.7)(@codemirror/lang-javascript@6.2.1)(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.0)(@lezer/common@1.2.0)(@lezer/highlight@1.2.0)(@lezer/javascript@1.4.11)(@lezer/lr@1.3.14))(@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)
       '@sveltejs/kit': 2.5.7(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5)))(svelte@4.2.8)(vite@5.2.11(@types/node@20.10.5))
       '@types/mdast': 4.0.3
       chokidar: 3.5.3
       drizzle-orm: 0.28.6
       drizzle-zod: 0.5.1(drizzle-orm@0.28.6)(zod@3.23.8)
-      hine: 0.0.25
+      hine: 0.0.26
       js-yaml: 4.1.0
       mdast-util-to-markdown: 2.1.0
       remark-frontmatter: 5.0.0
@@ -4504,7 +4506,7 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  hine@0.0.25: {}
+  hine@0.0.26: {}
 
   hosted-git-info@2.8.9: {}
 

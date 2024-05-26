@@ -10,7 +10,7 @@ Atomic states are used as leaves of a state tree. They do not have children.
 Use `atomic(...)`{lang=js} to set up state configuration and
 `resolveState(...)`{lang=js} to initialize it.
 
-```javascript {file=./01-usage.js copy}
+```javascript {file=./01-usage.js fileRange='1--2' copy}
 
 ```
 
@@ -27,7 +27,7 @@ They stand in contrast to [compound states](/guide/compound-state) which have
 exactly one active child, and [parallel states](/guide/parallel-state), where
 all children are simulataneously active.
 
-```javascript {file=./02-active-children.js#L11 copy}
+```javascript {file=./02-active-children.js fileRange='11--2' copy}
 
 ```
 
@@ -35,7 +35,7 @@ all children are simulataneously active.
 
 Atomic states have no children.
 
-```javascript {file=./03-children.js#L11 copy}
+```javascript {file=./03-children.js fileRange='11--2' copy}
 
 ```
 
@@ -44,7 +44,7 @@ Atomic states have no children.
 Atomic states accept hooks such as `afterEntry`{lang=js} and
 `beforeExit`{lang=js}. Hooks respond to life-cycle events of a state.
 
-```javascript {file=./04-hooks.js copy}
+```javascript {file=./04-hooks.js fileRange='1-2,4--2' copy}
 
 ```
 

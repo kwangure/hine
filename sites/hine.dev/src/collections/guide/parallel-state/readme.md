@@ -12,7 +12,7 @@ parallel states.
 Use `parallel(...)`{lang=js} to create state configuration and
 `resolveState(...)`{lang=js} to initialize it.
 
-```javascript {file=./01-usage.js copy}
+```javascript {file=./01-usage.js fileRange='1--2' copy}
 
 ```
 
@@ -25,7 +25,7 @@ In this example, `playerState`{lang=js} is set to increment both
 Active states are those that can receive and handle emitted events at a
 particular time. All children in a parallel state are active.
 
-```javascript {file=./02-active-children.js#L18 copy}
+```javascript {file=./02-active-children.js fileRange='18--2' copy}
 
 ```
 
@@ -34,7 +34,7 @@ particular time. All children in a parallel state are active.
 Parallel states accept hooks such as `afterEntry`{lang=js} and
 `beforeExit`{lang=js}. Hooks respond to life-cycle events of a state.
 
-```javascript {file=./04-hooks.js copy}
+```javascript {file=./04-hooks.js fileRange='1,2,4,6--2' copy}
 
 ```
 

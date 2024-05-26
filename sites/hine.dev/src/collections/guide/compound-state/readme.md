@@ -12,7 +12,7 @@ compound states.
 Use `compound(...)`{lang=js} to create state configuration and
 `resolveState(...)`{lang=js} to initialize it.
 
-```javascript {file=./01-usage.js copy}
+```javascript {file=./01-usage.js fileRange='1--2' copy}
 
 ```
 
@@ -24,7 +24,7 @@ contrast to [parallel states](/guide/parallel-state), where all children are
 simultaneously active, and [atomic states](/guide/atomic-state) which have no
 children.
 
-```javascript {file=./02-active-children.js#L17 copy}
+```javascript {file=./02-active-children.js fileRange='17--2' copy}
 
 ```
 
@@ -33,7 +33,7 @@ children.
 Compound states must have at least one child and specify the initial active
 child when the state is initialized.
 
-```javascript {file=./03-children.js#L17 copy}
+```javascript {file=./03-children.js fileRange='17--2' copy}
 
 ```
 
@@ -42,7 +42,7 @@ child when the state is initialized.
 Compound states accept hooks such as `afterEntry`{lang=js} and
 `beforeExit`{lang=js}. Hooks respond to life-cycle events of a state.
 
-```javascript {file=./04-hooks.js copy}
+```javascript {file=./04-hooks.js fileRange='1--2' copy}
 
 ```
 

@@ -15,7 +15,7 @@ npm install hine
 ### Getting started
 
 ```javascript
-import { atomic, compound, emitEvent, resolveState } from 'hine';
+import { atomic, compound, emitEvent, matches, resolveState } from 'hine';
 
 const toggleConfig = compound('toggle', {
 	initial: 'inactive',
@@ -30,10 +30,9 @@ const toggleConfig = compound('toggle', {
 });
 const myToggle = resolveState(toggleConfig);
 
-// All compound states have exactly one active state
-myToggle.activeChildren.length === 1; // true
+matches(myToggle, 'toggle.inactive'); // true
 
-myToggle.activeChildren[0].name === 'inactive'; // true
 emitEvent(myToggle, 'toggle');
-myToggle.activeChildren[0].name === 'active'; // true
+
+matches(myToggle, 'toggle.active'); // true
 ```

@@ -1,10 +1,6 @@
 <script>
-	import {
-		Markdown,
-		Outline,
-		Shell,
-		Sidebar,
-	} from '@svelte-thing/components';
+	import { Outline, Shell, Sidebar } from '@svelte-thing/components';
+	import * as Markdown from '@content-thing/svelte-components';
 	import { page } from '$app/stores';
 
 	export let data;

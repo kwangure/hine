@@ -4,7 +4,7 @@ import type {
 	StateNode,
 	StateNodeConfig,
 } from './types.js';
-import { normalizeListeners } from './util.js';
+import { createListenerMap } from './util.js';
 
 /**
  * Unlike compound states, where exactly one child is active, all parallel state
@@ -19,8 +19,8 @@ import { normalizeListeners } from './util.js';
  * @param config The configuration object for the parallel state.
  */
 export function parallel(name: string, config?: ParallelStateConfig) {
-	const hooks = normalizeListeners(config?.hooks);
-	const listeners = normalizeListeners(config?.on);
+	const hooks = createListenerMap(config?.hooks);
+	const listeners = createListenerMap(config?.on);
 	return [
 		ParallelState,
 		[
@@ -34,8 +34,8 @@ export function parallel(name: string, config?: ParallelStateConfig) {
 		typeof ParallelState,
 		[
 			string,
-			[string, StateEventListener[]][],
-			[string, StateEventListener[]][],
+			Map<string, StateEventListener[]>,
+			Map<string, StateEventListener[]>,
 			[string, StateNodeConfig<StateNode>][],
 		],
 	];
@@ -48,13 +48,13 @@ export class ParallelState implements StateNode {
 	#name;
 	constructor(
 		name: string,
-		listeners: [string, StateEventListener[]][],
-		hooks: [string, StateEventListener[]][],
+		listeners: Map<string, StateEventListener[]>,
+		hooks: Map<string, StateEventListener[]>,
 		children: [string, StateNode][],
 	) {
 		this.#children = new Map(children);
-		this.#hooks = new Map(hooks);
-		this.#listeners = new Map(listeners);
+		this.#hooks = hooks;
+		this.#listeners = listeners;
 		this.#name = name;
 	}
 	get activeChildren() {

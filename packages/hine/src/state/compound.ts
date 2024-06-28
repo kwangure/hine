@@ -4,7 +4,7 @@ import type {
 	StateNode,
 	StateNodeConfig,
 } from './types.js';
-import { normalizeListeners } from './util.js';
+import { createListenerMap } from './util.js';
 
 /**
  * Unlike parallel states, where all children are active, compound states can
@@ -19,8 +19,8 @@ import { normalizeListeners } from './util.js';
  * @param config The configuration object for the compound state.
  */
 export function compound(name: string, config: CompoundStateConfig) {
-	const hooks = normalizeListeners(config?.hooks);
-	const listeners = normalizeListeners(config?.on);
+	const hooks = createListenerMap(config?.hooks);
+	const listeners = createListenerMap(config?.on);
 	return [
 		CompoundState,
 		[
@@ -34,8 +34,8 @@ export function compound(name: string, config: CompoundStateConfig) {
 		typeof CompoundState,
 		[
 			string,
-			[string, StateEventListener[]][],
-			[string, StateEventListener[]][],
+			Map<string, StateEventListener[]>,
+			Map<string, StateEventListener[]>,
 			[string, StateNodeConfig<StateNode>][],
 			string,
 		],
@@ -50,15 +50,15 @@ export class CompoundState implements StateNode {
 	#name;
 	constructor(
 		name: string,
-		listeners: [string, StateEventListener[]][],
-		hooks: [string, StateEventListener[]][],
+		listeners: Map<string, StateEventListener[]>,
+		hooks: Map<string, StateEventListener[]>,
 		children: [string, StateNode][],
 		current: string,
 	) {
 		this.#current = current;
 		this.#children = new Map(children);
-		this.#hooks = new Map(hooks);
-		this.#listeners = new Map(listeners);
+		this.#hooks = hooks;
+		this.#listeners = listeners;
 		this.#name = name;
 	}
 	get activeChildren() {

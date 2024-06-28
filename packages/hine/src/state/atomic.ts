@@ -23,8 +23,8 @@ export function atomic(name: string, config?: AtomicStateConfig) {
 		typeof AtomicState,
 		[
 			string,
-			[string, StateEventListener[]][],
-			[string, StateEventListener[]][],
+			Map<string, StateEventListener[]>,
+			Map<string, StateEventListener[]>,
 		],
 	];
 }
@@ -36,11 +36,11 @@ export class AtomicState implements StateNode {
 	#name;
 	constructor(
 		name: string,
-		listeners: [string, StateEventListener[]][],
-		hooks: [string, StateEventListener[]][],
+		listeners: Map<string, StateEventListener[]>,
+		hooks: Map<string, StateEventListener[]>,
 	) {
-		this.#hooks = new Map(hooks);
-		this.#listeners = new Map(listeners);
+		this.#hooks = hooks;
+		this.#listeners = listeners;
 		this.#name = name;
 	}
 	get activeChildren() {

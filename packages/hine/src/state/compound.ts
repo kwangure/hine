@@ -34,8 +34,8 @@ export function compound(name: string, config: CompoundStateConfig) {
 		typeof CompoundState,
 		[
 			string,
-			[string, StateEventListener[]][],
-			[string, StateEventListener[]][],
+			Map<string, StateEventListener[]>,
+			Map<string, StateEventListener[]>,
 			[string, StateNodeConfig<StateNode>][],
 			string,
 		],
@@ -50,15 +50,15 @@ export class CompoundState implements StateNode {
 	#name;
 	constructor(
 		name: string,
-		listeners: [string, StateEventListener[]][],
-		hooks: [string, StateEventListener[]][],
+		listeners: Map<string, StateEventListener[]>,
+		hooks: Map<string, StateEventListener[]>,
 		children: [string, StateNode][],
 		current: string,
 	) {
 		this.#current = current;
 		this.#children = new Map(children);
-		this.#hooks = new Map(hooks);
-		this.#listeners = new Map(listeners);
+		this.#hooks = hooks;
+		this.#listeners = listeners;
 		this.#name = name;
 	}
 	get activeChildren() {

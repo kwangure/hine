@@ -14,8 +14,8 @@ export type StateNodeConfig<T extends StateNode> = [
 	{ new (...args: any[]): T },
 	[
 		string,
-		[string, StateEventListener[]][],
-		[string, StateEventListener[]][],
+		Map<string, StateEventListener[]>,
+		Map<string, StateEventListener[]>,
 		[string, StateNodeConfig<StateNode>][]?,
 		string?,
 	],

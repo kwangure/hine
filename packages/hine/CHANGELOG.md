@@ -1,5 +1,13 @@
 # hine
 
+## 0.0.27
+
+### Patch Changes
+
+-   175eee6: Add hasActiveListener method
+-   175eee6: Add matches method
+-   245b79f: Export normalizeListener and createListenerMap
+
 ## 0.0.26
 
 ### Patch Changes

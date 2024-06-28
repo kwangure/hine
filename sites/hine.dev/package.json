@@ -81,6 +81,7 @@
 	"dependencies": {
 		"@content-thing/svelte-components": "^0.0.1",
 		"@fontsource/geist-sans": "^5.0.3",
+		"@hine/assets": "workspace:*",
 		"@mdi/js": "^7.4.47",
 		"@melt-ui/svelte": "^0.79.1",
 		"@svelte-thing/components": "^0.0.26",

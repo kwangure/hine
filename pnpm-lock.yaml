@@ -104,6 +104,9 @@ importers:
       '@fontsource/geist-sans':
         specifier: ^5.0.3
         version: 5.0.3
+      '@hine/assets':
+        specifier: workspace:*
+        version: link:../../packages/assets
       '@mdi/js':
         specifier: ^7.4.47
         version: 7.4.47

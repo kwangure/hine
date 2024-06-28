@@ -4,7 +4,7 @@ import type {
 	StateNode,
 	StateNodeConfig,
 } from './types.js';
-import { normalizeListeners } from './util.js';
+import { createListenerMap } from './util.js';
 
 /**
  * Unlike parallel states, where all children are active, compound states can
@@ -19,8 +19,8 @@ import { normalizeListeners } from './util.js';
  * @param config The configuration object for the compound state.
  */
 export function compound(name: string, config: CompoundStateConfig) {
-	const hooks = normalizeListeners(config?.hooks);
-	const listeners = normalizeListeners(config?.on);
+	const hooks = createListenerMap(config?.hooks);
+	const listeners = createListenerMap(config?.on);
 	return [
 		CompoundState,
 		[

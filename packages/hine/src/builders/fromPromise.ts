@@ -1,12 +1,9 @@
-import {
-	StateEvent,
-	atomic,
-	compound,
-	emitEvent,
-	normalizeListener,
-	type CompoundStateConfig,
-	type StateNode,
-} from 'hine';
+import type { StateEvent } from '../event/event.js';
+import { emitEvent } from '../methods/emit.js';
+import { atomic } from '../states/atomic.js';
+import { compound, type CompoundStateConfig } from '../states/compound.js';
+import type { StateNode } from '../states/types.js';
+import { normalizeListener } from '../utils/normalizeListener.js';
 
 type OnHandler = NonNullable<CompoundStateConfig['on']>[string];
 

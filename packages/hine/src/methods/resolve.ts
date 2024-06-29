@@ -1,5 +1,5 @@
 import { StateEvent } from '../event/event.js';
-import type { StateNode, StateNodeConfig } from '../types.js';
+import type { StateNode, StateNodeConfig } from '../states/types.js';
 import { runEntryHooks } from './emit.js';
 
 export function resolveState<T extends StateNode>(

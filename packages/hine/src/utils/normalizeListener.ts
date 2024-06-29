@@ -1,4 +1,4 @@
-import type { Run, StateEventListener } from './types.js';
+import type { Run, StateEventListener } from '../states/types.js';
 
 export function normalizeListener(
 	on:

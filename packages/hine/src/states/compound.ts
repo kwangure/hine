@@ -1,10 +1,14 @@
 import type {
-	CompoundStateConfig,
+	ParentStateConfig,
 	StateEventListener,
 	StateNode,
 	StateNodeConfig,
 } from './types.js';
-import { createListenerMap } from './util.js';
+import { createListenerMap } from '../utils/normalizeListener.js';
+
+export interface CompoundStateConfig extends ParentStateConfig {
+	initial: string;
+}
 
 /**
  * Unlike parallel states, where all children are active, compound states can

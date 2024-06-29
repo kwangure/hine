@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { atomic } from '../atomic.js';
-import { compound } from '../compound.js';
-import { parallel } from '../parallel.js';
+import { atomic } from '../states/atomic.js';
+import { compound } from '../states/compound.js';
+import { parallel } from '../states/parallel.js';
 import { emitEvent } from './emit.js';
 import { resolveState } from './resolve.js';
-import type { StateNode } from '../types.js';
+import type { StateNode } from '../states/types.js';
 
 describe('emitEvent', () => {
 	it('emits event to atomic state', () => {

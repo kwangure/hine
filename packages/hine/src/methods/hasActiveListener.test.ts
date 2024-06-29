@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { atomic } from '../atomic.js';
-import { compound } from '../compound.js';
+import { atomic } from '../states/atomic.js';
+import { compound } from '../states/compound.js';
 import { resolveState } from './resolve.js';
-import { parallel } from '../parallel.js';
+import { parallel } from '../states/parallel.js';
 import { hasActiveListener } from './hasActiveListener.js';
 
 describe('hasActiveListener', () => {

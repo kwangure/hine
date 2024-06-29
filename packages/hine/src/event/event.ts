@@ -1,4 +1,4 @@
-import type { StateNode } from '../types';
+import type { StateNode } from '../states/types';
 
 const CURRENT_TARGET_SYMBOL = Symbol('currenttarget');
 

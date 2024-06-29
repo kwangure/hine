@@ -1,10 +1,12 @@
 import type {
-	ParallelStateConfig,
+	ParentStateConfig,
 	StateEventListener,
 	StateNode,
 	StateNodeConfig,
 } from './types.js';
-import { createListenerMap } from './util.js';
+import { createListenerMap } from '../utils/normalizeListener.js';
+
+export interface ParallelStateConfig extends ParentStateConfig {}
 
 /**
  * Unlike compound states, where exactly one child is active, all parallel state

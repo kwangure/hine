@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { normalizeListener } from './util.js';
-import type { StateEvent } from './event/event.js';
-import type { Run, StateEventListener } from './types.js';
+import { normalizeListener } from './normalizeListener.js';
+import type { StateEvent } from '../event/event.js';
+import type { Run, StateEventListener } from '../states/types.js';
 
 describe('normalizeListener', () => {
 	it('should normalize a function to a run', () => {

@@ -1,4 +1,4 @@
-import type { StateEvent } from './event/event.js';
+import type { StateEvent } from '../event/event.js';
 
 export interface StateNode {
 	activeChildren: StateNode[];
@@ -51,12 +51,7 @@ export interface BaseStateConfig {
 		| (string | Run | StateEventListener)[]
 	>;
 }
-export interface AtomicStateConfig extends BaseStateConfig {}
 
 export interface ParentStateConfig extends BaseStateConfig {
 	children: StateNodeConfig<StateNode>[];
 }
-export interface CompoundStateConfig extends ParentStateConfig {
-	initial: string;
-}
-export interface ParallelStateConfig extends ParentStateConfig {}

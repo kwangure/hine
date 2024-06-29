@@ -1,4 +1,4 @@
-import type { StateNode } from '../types.js';
+import type { StateNode } from '../states/types.js';
 
 export function hasActiveListener(state: StateNode, event: string) {
 	if (state.listeners.has(event)) return true;

@@ -1,5 +1,5 @@
 import { StateEvent, setCurrentTarget } from '../event/event.js';
-import type { StateNode } from '../types.js';
+import type { StateNode } from '../states/types.js';
 
 /**
  * `emitEvent` handles emitting events to a state machine.

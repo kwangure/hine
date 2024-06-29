@@ -1,9 +1,11 @@
 import type {
-	AtomicStateConfig,
+	BaseStateConfig,
 	StateEventListener,
 	StateNode,
 } from './types.js';
-import { createListenerMap } from './util.js';
+import { createListenerMap } from '../utils/normalizeListener.js';
+
+export interface AtomicStateConfig extends BaseStateConfig {}
 
 /**
  * Atomic states are the most basic state type. They do not contain any child

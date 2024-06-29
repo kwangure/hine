@@ -1,4 +1,4 @@
-import type { StateNode } from '../types.js';
+import type { StateNode } from '../states/types.js';
 
 export function matches(state: StateNode, path: string) {
 	if (state.name === path) return true;

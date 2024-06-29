@@ -1,5 +1,11 @@
 # hine
 
+## 0.0.28
+
+### Patch Changes
+
+-   Add `fromPromise` builder
+
 ## 0.0.27
 
 ### Patch Changes

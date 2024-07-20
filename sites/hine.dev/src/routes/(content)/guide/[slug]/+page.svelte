@@ -4,27 +4,17 @@
 	import { page } from '$app/stores';
 
 	export let data;
-
-	/** @type {string} */
-	let title;
-	$: {
-		if (data.entry._content.data) {
-			title = /** @type {{ frontmatter: { title: string }}} */ (
-				data.entry._content.data
-			).frontmatter.title;
-		}
-	}
 </script>
 
 <svelte:head>
-	<title>{title} - Hine</title>
+	<title>{data.entry.title} - Hine</title>
 </svelte:head>
 
 <Sidebar.Root>
 	{#each data.groups as group}
-		{#if group.guide.length}
+		{#if group.guides.length}
 			<Sidebar.Section title={group.title}>
-				{#each group.guide as entry}
+				{#each group.guides as entry}
 					<Sidebar.Item>
 						<Sidebar.Link
 							href="/guide/{entry._id}"
@@ -44,7 +34,7 @@
 		<h1
 			class="font-semibold tracking-tight text-neutral-900 dark:text-slate-200 sm:text-4xl"
 		>
-			{title}
+			{data.entry.title}
 		</h1>
 		<Markdown.Children node={data.entry._content} />
 	</div>

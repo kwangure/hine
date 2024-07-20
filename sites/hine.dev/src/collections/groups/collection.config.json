@@ -1,10 +1,9 @@
 {
-	"$schema": "../../../node_modules/content-thing/config/schema.json",
 	"type": "yaml",
 	"data": {
 		"fields": {
 			"title": {
-				"type": "text"
+				"type": "string"
 			},
 			"position": {
 				"type": "integer"

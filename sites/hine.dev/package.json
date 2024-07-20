@@ -79,6 +79,7 @@
 		}
 	},
 	"dependencies": {
+		"@content-thing/memdb": "^0.0.2",
 		"@content-thing/svelte-components": "^0.0.1",
 		"@fontsource/geist-sans": "^5.0.3",
 		"@hine/assets": "workspace:*",
@@ -92,12 +93,12 @@
 		"@sveltejs/adapter-auto": "^3.2.0",
 		"@sveltejs/kit": "^2.5.7",
 		"@sveltejs/vite-plugin-svelte": "^3.1.0",
-		"content-thing": "^0.0.24",
+		"content-thing": "^0.0.28",
 		"svelte": "^4.2.7",
 		"svelte-check": "^3.6.0",
 		"tslib": "^2.4.1",
 		"typescript": "^5.4.5",
-		"vite": "^5.2.11",
+		"vite": "^5.3.4",
 		"vitest": "^1.6.0"
 	},
 	"type": "module"

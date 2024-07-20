@@ -5,9 +5,9 @@ group: methods
 
 ## Overview
 
-`matches(...)` is used to check if a given state node matches a specified path.
-It's particularly useful for determining the current state of a state machine or
-checking if a specific sub-state is active.
+`matches(...)`{lang=js} is used to check if a given state node matches a
+specified path. It's particularly useful for determining the current state of a
+state machine or checking if a specific sub-state is active.
 
 ## Syntax
 

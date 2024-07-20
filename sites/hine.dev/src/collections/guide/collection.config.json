@@ -1,13 +1,12 @@
 {
-	"$schema": "../../../node_modules/content-thing/config/schema.json",
 	"type": "markdown",
 	"data": {
 		"fields": {
 			"title": {
-				"type": "text"
+				"type": "string"
 			},
 			"group": {
-				"type": "text",
+				"type": "string",
 				"nullable": true
 			}
 		},

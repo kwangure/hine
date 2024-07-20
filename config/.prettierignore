@@ -3,4 +3,5 @@ node_modules
 .wireit
 pnpm-lock.yaml
 **/packages/*/dist
+**/sites/*/.collections
 **/sites/*/.svelte-kit

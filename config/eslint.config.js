@@ -11,6 +11,7 @@ export default [
 	{
 		ignores: [
 			'**/.svelte-kit/',
+			'**/.collecitons/', // content-thing output
 			'**/.wireit/',
 			'**/dist/', // package output
 			'**/build/', // site output

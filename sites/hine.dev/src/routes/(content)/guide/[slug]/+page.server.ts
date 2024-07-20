@@ -15,7 +15,7 @@ export function load({ params }) {
 
 	const groups = execute(
 		query(groupsTable)
-			.select('title', '_id')
+			.select('title', '_id', 'position')
 			.with({
 				guides(group) {
 					return execute(
@@ -25,7 +25,7 @@ export function load({ params }) {
 					);
 				},
 			}),
-	);
+	).sort((a, b) => a.position - b.position);
 
 	return { entry, groups };
 }

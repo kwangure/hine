@@ -1,5 +1,5 @@
-import { groups as groupsTable } from 'thing:data/groups.js';
-import { guide as guideTable } from 'thing:data/guide.js';
+import { groupsTable } from '$collections/groups.js';
+import { guideTable } from '$collections/guide.js';
 import { execute, query } from '@content-thing/memdb';
 import { error } from '@sveltejs/kit';
 

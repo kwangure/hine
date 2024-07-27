@@ -6,17 +6,9 @@
 				"type": "string"
 			},
 			"group": {
-				"type": "string",
-				"nullable": true
+				"type": "string"
 			}
 		},
-		"relations": {
-			"group": {
-				"type": "one",
-				"collection": "groups",
-				"reference": "_id",
-				"field": "group"
-			}
-		}
+		"search": ["title", "_content"]
 	}
 }

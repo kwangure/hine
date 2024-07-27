@@ -1,7 +1,7 @@
 <script>
 	import logo from '@hine/assets/logo.svg';
 	import logodark from '@hine/assets/logo-dark.svg';
-	import Navbar from '$lib/navbar.svelte';
+	import Navbar from '$lib/navbar/navbar.svelte';
 	import { Shell } from '@svelte-thing/components';
 </script>
 

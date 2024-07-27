@@ -8,12 +8,6 @@
 			"position": {
 				"type": "integer"
 			}
-		},
-		"relations": {
-			"guide": {
-				"type": "many",
-				"collection": "guide"
-			}
 		}
 	}
 }

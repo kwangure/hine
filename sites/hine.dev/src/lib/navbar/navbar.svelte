@@ -9,7 +9,8 @@
 	import { siGithub, siNpm } from 'simple-icons';
 	import { createDarkModeButton } from '@svelte-thing/components/creators';
 	import Dropdown from '$lib/dropdown.svelte';
-	import { wordmark } from '@hine/assets';
+	import Search from './search/search.svelte';
+	import Wordmark from './wordmark.svelte';
 
 	const darkMode = createDarkModeButton();
 	const { button } = darkMode.elements;
@@ -29,12 +30,9 @@
 </script>
 
 <Navbar.Root>
-	<a href="/">
-		<svg viewBox={wordmark.viewBox} height="20px">
-			<path d={wordmark.path} fill="currentColor" />
-		</svg>
-	</a>
+	<Wordmark />
 	<div class="actions large">
+		<Search />
 		<Navbar.Link href="/guide">Guide</Navbar.Link>
 		<Icon.Link
 			href="https://github.com/kwangure/hine"
@@ -53,6 +51,7 @@
 		/>
 	</div>
 	<div class="actions small">
+		<Search />
 		<Dropdown placement="bottom-end" let:item let:menu>
 			<Icon.Button
 				slot="trigger"
@@ -87,7 +86,12 @@
 					<Icon.Simple path={siNpm.path} />
 					NPM
 				</Navbar.Link>
-				<button {...item.props} use:item.action use:button>
+				<button
+					class="darkmode"
+					{...item.props}
+					use:item.action
+					use:button
+				>
 					<Icon.Simple path={darkModeIcon} />
 					{darkModeLabel}
 				</button>
@@ -97,12 +101,6 @@
 </Navbar.Root>
 
 <style>
-	a {
-		font-size: var(--st-size-5);
-		line-height: var(--st-size-7);
-		text-transform: uppercase;
-		padding-inline: var(--st-breakpoint-lg) var(--st-size-6);
-	}
 	.actions {
 		margin-inline-start: auto;
 	}
@@ -139,7 +137,7 @@
 		);
 		z-index: 40;
 	}
-	button {
+	button.darkmode {
 		align-items: center;
 		border-radius: var(--st-size-1);
 		display: flex;
@@ -148,7 +146,7 @@
 		--_padding-inline-sm: var(--st-breakpoint-sm) var(--st-size-3);
 		padding-inline: var(--_padding-inline-sm, --st-size-2);
 	}
-	button:hover {
+	button.darkmode:hover {
 		--_background-color-dark: var(--st-color-preference-dark)
 			var(--st-color-neutral-700);
 		background-color: var(

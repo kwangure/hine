@@ -9,7 +9,7 @@
 	import { siGithub, siNpm } from 'simple-icons';
 	import { createDarkModeButton } from '@svelte-thing/components/creators';
 	import Dropdown from '$lib/dropdown.svelte';
-	import Search from './search/search.svelte';
+	import Search from './search/root.svelte';
 	import Wordmark from './wordmark.svelte';
 
 	const darkMode = createDarkModeButton();

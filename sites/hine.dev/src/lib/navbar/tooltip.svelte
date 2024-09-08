@@ -26,7 +26,7 @@
 		in:fade={{ duration: 150 }}
 		class="z-50 rounded-md bg-neutral-700 px-2 py-1 text-sm text-neutral-50 shadow-sm"
 	>
-		<div use:melt={$arrow} />
+		<div use:melt={$arrow}></div>
 		{text}
 	</div>
 {/if}

@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
+	import { goto } from '$app/navigation';
+	import { createSearch } from './search.svelte';
 	import { Icon } from '@svelte-thing/components';
 	import { mdiMagnify, mdiClose } from '@mdi/js';
-	import { createSearch } from './search';
 	import Dialog from '../../dialog.svelte';
 	import Tokens from './tokens.svelte';
+	import * as Combobox from '$lib/combobox';
 
-	const { inputs, outputs } = createSearch();
-	const { query } = inputs;
-	const { dialog, searchResults } = outputs;
+	const { dialog, filter } = createSearch();
 	const { trigger, close } = dialog.elements;
 </script>
 
@@ -17,40 +17,50 @@
 </button>
 
 <Dialog component={dialog}>
-	<div class="input">
-		<div class="search">
-			<Icon.Simple path={mdiMagnify} />
-		</div>
-		<input type="text" placeholder="Search..." bind:value={$query} />
-		<div class="close">
-			<Icon.Button action={close} label="Close" path={mdiClose} />
-		</div>
-	</div>
-	{#if $query.trim()}
-		<div class="results">
-			{#each $searchResults as result}
-				<a href="/guide/{result._id}" use:close>
-					<div class="title">
-						<Tokens tokens={result.title} />
-					</div>
-					<div class="content">
-						{#each result._content as sentence}
-							<Tokens tokens={sentence.words} />
-						{/each}
-					</div>
-				</a>
-			{:else}
-				<div class="no-results">
-					<Icon.Simple
-						path={mdiMagnify}
-						--st-icon-height="var(--st-size-8)"
-						--st-icon-width="var(--st-size-8)"
-					/>
-					No results found for "{$query.trim()}".
+	<Combobox.Root
+		{filter}
+		label="Search"
+		onchange={(value) => value && goto(`/guide/${value._id}`)}
+	>
+		{#snippet children({ elements, state })}
+			<div class="input" class:active={!state.activeItem}>
+				<div class="search">
+					<Icon.Simple path={mdiMagnify} />
 				</div>
-			{/each}
-		</div>
-	{/if}
+				<Combobox.Input placeholder="Search..." />
+				<div class="close">
+					<Icon.Button action={close} label="Close" path={mdiClose} />
+				</div>
+			</div>
+			{#if elements.input?.state.value}
+				<div class="results">
+					{#each state.filteredOptions as result}
+						<Combobox.Item value={result}>
+							<a href="/guide/{result._id}" use:close>
+								<div class="title">
+									<Tokens tokens={result.title} />
+								</div>
+								<div class="content">
+									{#each result._content as sentence}
+										<Tokens tokens={sentence.words} />
+									{/each}
+								</div>
+							</a>
+						</Combobox.Item>
+					{:else}
+						<div class="no-results">
+							<Icon.Simple
+								path={mdiMagnify}
+								--st-icon-height="var(--st-size-8)"
+								--st-icon-width="var(--st-size-8)"
+							/>
+							No results found for "{elements.input.state.value.trim()}".
+						</div>
+					{/each}
+				</div>
+			{/if}
+		{/snippet}
+	</Combobox.Root>
 </Dialog>
 
 <style>
@@ -81,18 +91,17 @@
 			var(--st-color-neutral-200)
 		);
 	}
-	span {
-		--_display-lg: var(--st-breakpoint-lg) inline;
-		display: var(--_display-lg, none);
-		--_opacity-lg: var(--st-breakpoint-lg) 0.75;
-		opacity: var(--_opacity-lg, 1);
-	}
 	.input {
 		align-items: center;
 		display: grid;
 		grid-template-columns: max-content 1fr max-content;
 		flex-shrink: 0;
 		height: var(--st-size-12);
+	}
+	.input:not(.active) {
+		--_background-color-dark: var(--st-color-preference-dark)
+			rgba(255, 255, 255, 0.05);
+		background-color: var(--_background-color-dark, rgba(0, 0, 0, 0.1));
 	}
 	.search,
 	.close {
@@ -101,18 +110,6 @@
 		display: flex;
 		width: var(--st-size-12);
 		height: 100%;
-	}
-	input {
-		border: none;
-		border: 0px;
-		inset: 0px;
-		height: 100%;
-		line-height: var(--st-size-12);
-		padding-inline: var(--st-size-1);
-		outline: none;
-	}
-	input:focus-visible {
-		outline: initial;
 	}
 	.results {
 		--_border-color-dark: var(--st-color-preference-dark)
@@ -128,29 +125,27 @@
 		border-radius: var(--st-size-2);
 		cursor: pointer;
 		padding: var(--st-size-2);
-	}
-	a:hover {
-		--_background-color-dark: var(--st-color-preference-dark)
-			var(--st-color-neutral-700);
-		background-color: var(
-			--_background-color-dark,
-			var(--st-color-neutral-200)
-		);
+		width: 100%;
 	}
 	.no-results {
 		align-items: center;
 		--_color-dark: var(--st-color-preference-dark)
 			var(--st-color-neutral-400);
-		color: var(--_color-dark, var(--st-neutral-500));
+		color: var(--_color-dark, var(--st-color-neutral-500));
 		display: flex;
 		flex-direction: column;
 	}
 	.content {
 		--_color-dark: var(--st-color-preference-dark)
 			var(--st-color-neutral-400);
-		color: var(--_color-dark, var(--st-neutral-500));
+		color: var(--_color-dark, var(--st-color-neutral-500));
 		overflow-x: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+	:global([data-active-item]) .content {
+		--_color-dark: var(--st-color-preference-dark)
+			var(--st-color-neutral-500);
+		color: var(--_color-dark, var(--st-color-neutral-500));
 	}
 </style>

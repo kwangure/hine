@@ -7,4 +7,7 @@ export default defineConfig({
 	ssr: {
 		external: ['content-thing'],
 	},
+	test: {
+		environment: 'jsdom',
+	},
 });

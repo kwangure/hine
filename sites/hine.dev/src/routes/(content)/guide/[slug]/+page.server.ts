@@ -2,6 +2,7 @@ import { groupsTable } from '$collections/groups.js';
 import { guideTable } from '$collections/guide.js';
 import { execute, query } from '@content-thing/memdb';
 import { error } from '@sveltejs/kit';
+import {} from 'content-thing';
 
 export function load({ params }) {
 	const { slug } = params;

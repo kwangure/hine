@@ -13,7 +13,7 @@
 
 {#if $open}
 	<div class="dialog" {...$portalled} use:portalled>
-		<div {...$overlay} use:overlay />
+		<div {...$overlay} use:overlay></div>
 		<div {...$content} use:content>
 			<slot />
 		</div>

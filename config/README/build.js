@@ -6,8 +6,7 @@ import remarkParse from 'remark-parse';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 
-const __filename = new URL(import.meta.url).pathname;
-const __dirname = path.dirname(__filename);
+const __dirname = path.resolve('./README');
 const TEMPLTATE_FILEPATH = path.resolve(__dirname, './TEMPLATE.md');
 const OUTPUT_FILEPATH = path.resolve(__dirname, '../../README.md');
 

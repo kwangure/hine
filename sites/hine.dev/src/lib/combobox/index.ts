@@ -5,5 +5,3 @@ export { default as Item } from './listboxitem.svelte';
 export { default as Label } from './label.svelte';
 export { default as Listbox } from './listbox.svelte';
 export { default as Root } from './root.svelte';
-
-export * from './create/index.js';

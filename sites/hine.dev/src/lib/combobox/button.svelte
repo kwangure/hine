@@ -1,24 +1,29 @@
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
-	import { getComboboxContext } from './context';
-	import { createComboboxButton } from './create';
+	import {
+		createComboboxButton,
+		getComboboxContext,
+	} from '@svelte-thing/builders';
 
-	type ButtonProps = Omit<HTMLButtonAttributes, keyof typeof properties>;
+	type ComboboxButtonProperties = ReturnType<
+		typeof createComboboxButton
+	>['properties'];
+	type ButtonProps = Omit<
+		HTMLButtonAttributes,
+		keyof ComboboxButtonProperties
+	>;
 
-	const { ...attributes }: ButtonProps = $props();
+	const { label, ...attributes }: { label: string } & ButtonProps = $props();
 	const combobox = getComboboxContext();
-	const { properties } = createComboboxButton({
+	const button = createComboboxButton({
 		combobox,
-		get listboxId() {
-			return combobox.elements.listbox?.properties.id;
-		},
 		get label() {
-			return combobox.state.config.label;
+			return label;
 		},
 	});
 </script>
 
-<button {...attributes} {...properties}>
+<button {...attributes} {...button.properties}>
 	<span aria-hidden="true" style="padding: 0 2px;">▼</span>
 </button>
 

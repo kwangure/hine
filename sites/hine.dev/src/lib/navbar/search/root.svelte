@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { createSearch } from './search.svelte';
 	import { Icon } from '@svelte-thing/components';
 	import { mdiMagnify, mdiClose } from '@mdi/js';
@@ -17,13 +16,9 @@
 </button>
 
 <Dialog component={dialog}>
-	<Combobox.Root
-		{filter}
-		label="Search"
-		onchange={(value) => value && goto(`/guide/${value._id}`)}
-	>
-		{#snippet children({ elements, state })}
-			<div class="input" class:active={!state.activeItem}>
+	<Combobox.Root {filter} label="Search">
+		{#snippet children({ activeItem, filteredOptions, inputValue })}
+			<div class="input" class:active={!activeItem}>
 				<div class="search">
 					<Icon.Simple path={mdiMagnify} />
 				</div>
@@ -32,9 +27,9 @@
 					<Icon.Button action={close} label="Close" path={mdiClose} />
 				</div>
 			</div>
-			{#if elements.input?.state.value}
+			{#if inputValue.trim()}
 				<div class="results">
-					{#each state.filteredOptions as result}
+					{#each filteredOptions as result}
 						<Combobox.Item value={result}>
 							<a href="/guide/{result._id}" use:close>
 								<div class="title">
@@ -54,7 +49,7 @@
 								--st-icon-height="var(--st-size-8)"
 								--st-icon-width="var(--st-size-8)"
 							/>
-							No results found for "{elements.input.state.value.trim()}".
+							No results found for "{inputValue.trim()}".
 						</div>
 					{/each}
 				</div>

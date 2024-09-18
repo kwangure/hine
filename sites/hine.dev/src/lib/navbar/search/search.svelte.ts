@@ -1,17 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import type {
-	Readable,
-	Subscriber,
-	Unsubscriber,
-	Writable,
-} from 'svelte/store';
-import {} from 'svelte';
-import type { ActiveType, AddTag, AnyMeltElement } from '@melt-ui/svelte';
 import { createDialog } from '@melt-ui/svelte';
 import { guideSearch } from '$collections/guide.search.js';
 import { highlightFirst, highlightSearchResult } from '@content-thing/memdb';
-import { type ComboboxFilterArg } from '$lib/combobox';
 import { mdastToString } from 'content-thing';
+import type { ComboboxFilterArg } from '@svelte-thing/builders';
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import * as Store from 'svelte/store';
+export * from '@melt-ui/svelte/internal/actions';
+export * from '@melt-ui/svelte/internal/helpers';
+export * from '@melt-ui/svelte/internal/types';
 
 export interface GuideSearchResult {
 	title: [string, boolean][];
@@ -25,8 +22,8 @@ export type MeltDialog = ReturnType<typeof createDialog>;
 
 export function createSearch() {
 	const dialog: MeltDialog = createDialog();
-	const filter = (c: ComboboxFilterArg<undefined>) => {
-		const inputValue = c.elements.input?.state.value ?? '';
+	const filter = (c: ComboboxFilterArg<GuideSearchResult>) => {
+		const inputValue = c.inputValue;
 		const results = guideSearch(inputValue);
 		const highlightedResults: GuideSearchResult[] = [];
 		for (const result of results) {

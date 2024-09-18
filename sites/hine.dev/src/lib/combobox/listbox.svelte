@@ -1,18 +1,18 @@
-<script lang="ts" generics="TOptions extends Iterable<any>">
+<script lang="ts" generics="TOption">
 	/* eslint-disable no-undef */
 	import type { Snippet } from 'svelte';
-	import { createComboboxListbox } from './create';
-	import { getComboboxContext } from './context';
+	import {
+		createComboboxListbox,
+		getComboboxContext,
+	} from '@svelte-thing/builders';
 
-	type ComboboxState = (typeof combobox)['state'];
-
-	const { children }: { children: Snippet<[ComboboxState]> } = $props();
-	const combobox = getComboboxContext<TOptions, unknown>();
+	const { children }: { children: Snippet<[typeof combobox]> } = $props();
+	const combobox = getComboboxContext<TOption>();
 	const { properties } = createComboboxListbox({ combobox });
 </script>
 
 <ul {...properties}>
-	{@render children(combobox.state)}
+	{@render children(combobox)}
 </ul>
 
 <style>

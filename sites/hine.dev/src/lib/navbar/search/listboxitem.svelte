@@ -2,8 +2,10 @@
 	import '@svelte-thing/components/css/breakpoint';
 	import '@svelte-thing/components/css/size';
 	import type { GuideSearchResult, MeltDialog } from './search.svelte';
-	import { createListboxItem } from '$lib/combobox';
-	import { getComboboxContext } from '$lib/combobox/context';
+	import {
+		createListboxItem,
+		getComboboxContext,
+	} from '@svelte-thing/builders';
 	import Tokens from './tokens.svelte';
 
 	const {
@@ -11,7 +13,7 @@
 		result,
 	}: { close: MeltDialog['elements']['close']; result: GuideSearchResult } =
 		$props();
-	const combobox = getComboboxContext<Iterable<GuideSearchResult>, unknown>();
+	const combobox = getComboboxContext<GuideSearchResult>();
 	const { properties } = createListboxItem({
 		combobox,
 		get value() {

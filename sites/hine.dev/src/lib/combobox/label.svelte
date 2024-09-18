@@ -1,22 +1,19 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { getComboboxContext } from './context';
-	import { createComboboxLabel } from './create';
+	import {
+		createComboboxLabel,
+		getComboboxContext,
+	} from '@svelte-thing/builders';
 
 	const { children }: { children?: Snippet } = $props();
 	const combobox = getComboboxContext();
-	const { properties } = createComboboxLabel({
-		combobox,
-		get inputId() {
-			return combobox.elements.input?.properties.id;
-		},
-	});
+	const { properties } = createComboboxLabel({ combobox });
 </script>
 
 <label {...properties}>
 	{#if children}
 		{@render children()}
 	{:else}
-		{combobox.state.config.label}
+		{combobox.label}
 	{/if}
 </label>

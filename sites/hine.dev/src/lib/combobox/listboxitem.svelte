@@ -1,13 +1,16 @@
-<script lang="ts" generics="T">
+<script lang="ts" generics="TOption">
 	import '@svelte-thing/components/css/breakpoint';
 	import '@svelte-thing/components/css/size';
 	/* eslint-disable no-undef */
 	import { type Snippet } from 'svelte';
-	import { createListboxItem } from './create';
-	import { getComboboxContext } from './context';
+	import {
+		createListboxItem,
+		getComboboxContext,
+	} from '@svelte-thing/builders';
 
-	const { children, value }: { children?: Snippet; value: T } = $props();
-	const combobox = getComboboxContext<Iterable<T>, unknown>();
+	const { children, value }: { children?: Snippet; value: TOption } =
+		$props();
+	const combobox = getComboboxContext<TOption>();
 	const { properties } = createListboxItem({
 		combobox,
 		get value() {

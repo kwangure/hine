@@ -1,21 +1,21 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
-	import { getComboboxContext } from './context';
-	import { createComboboxInput } from './create';
+	import {
+		createComboboxInput,
+		getComboboxContext,
+	} from '@svelte-thing/builders';
 
-	type InputProps = Omit<HTMLInputAttributes, keyof typeof properties>;
+	type ComboboxInputProperties = ReturnType<
+		typeof createComboboxInput
+	>['properties'];
+	type InputProps = Omit<HTMLInputAttributes, keyof ComboboxInputProperties>;
 
 	const { ...attributes }: InputProps = $props();
 	const combobox = getComboboxContext();
-	const { action, properties } = createComboboxInput({
-		combobox,
-		get listboxId() {
-			return combobox.elements.listbox?.properties.id;
-		},
-	});
+	const input = createComboboxInput({ combobox });
 </script>
 
-<input {...attributes} {...properties} use:action />
+<input {...attributes} {...input.properties} use:input.action />
 
 <style>
 	input {

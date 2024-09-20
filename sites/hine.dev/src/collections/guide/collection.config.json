@@ -9,6 +9,8 @@
 				"type": "string"
 			}
 		},
-		"search": ["title", "_content"]
+		"search": {
+			"fields": ["title", "_content"]
+		}
 	}
 }

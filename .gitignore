@@ -15,5 +15,6 @@ packages/*/dist
 packages/*/types
 
 sites/*/.collections
+sites/**/routes/(collections)/*/*/
 sites/*/.svelte-kit
 sites/*/build

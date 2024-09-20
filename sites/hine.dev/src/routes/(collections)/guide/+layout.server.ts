@@ -7,8 +7,8 @@ import { error } from '@sveltejs/kit';
 // Because of TypeScript `isolatedModules`
 export type * from 'content-thing';
 
-export function load({ route }) {
-	const parsed = parseRouteId(route.id);
+export function load({ url }) {
+	const parsed = parseRouteId(url);
 	if (!parsed) {
 		error(404, 'Page not found.');
 	}

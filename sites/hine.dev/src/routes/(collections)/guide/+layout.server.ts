@@ -5,7 +5,7 @@ import { execute, query } from '@content-thing/memdb';
 import { error } from '@sveltejs/kit';
 
 // Because of TypeScript `isolatedModules`
-export * from 'content-thing';
+export type * from 'content-thing';
 
 export function load({ route }) {
 	const parsed = parseRouteId(route.id);

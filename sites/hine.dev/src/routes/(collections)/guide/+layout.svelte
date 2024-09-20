@@ -3,9 +3,12 @@
 	import logodark from '@hine/assets/logo-dark.svg';
 	import Navbar from '$lib/navbar/navbar.svelte';
 	import { Outline, Shell, Sidebar } from '@svelte-thing/components';
-	import { page } from '$app/stores';
+	import { page as pageStore } from '$app/stores';
+	import { fromStore } from 'svelte/store';
 
 	const { children, data } = $props();
+
+	const page = fromStore(pageStore);
 </script>
 
 <svelte:head>
@@ -25,7 +28,7 @@
 						<Sidebar.Item>
 							<Sidebar.Link
 								href="/guide/{entry._id}"
-								ariaCurrent={$page.url.pathname ===
+								ariaCurrent={page.current.url.pathname ===
 									`/guide/${entry._id}`}
 							>
 								{entry.title}

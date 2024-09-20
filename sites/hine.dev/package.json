@@ -88,7 +88,7 @@
 		"@sveltejs/kit": "^2.5.28",
 		"@sveltejs/vite-plugin-svelte": "4.0.0-next.6",
 		"content-thing": "^0.0.33",
-		"svelte": "^5.0.0-next.214",
+		"svelte": "^5.0.0-next.256",
 		"svelte-check": "^3.8.0",
 		"tslib": "^2.4.1",
 		"typescript": "^5.4.5",

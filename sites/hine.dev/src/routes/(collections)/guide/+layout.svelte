@@ -4,11 +4,10 @@
 	import Navbar from '$lib/navbar/navbar.svelte';
 	import { Outline, Shell, Sidebar } from '@svelte-thing/components';
 	import { page as pageStore } from '$app/stores';
-	import { fromStore } from 'svelte/store';
 
 	const { children, data } = $props();
 
-	const page = fromStore(pageStore);
+	const page = $derived($pageStore);
 </script>
 
 <svelte:head>
@@ -28,7 +27,7 @@
 						<Sidebar.Item>
 							<Sidebar.Link
 								href="/guide/{entry._id}"
-								ariaCurrent={page.current.url.pathname ===
+								ariaCurrent={page.url.pathname ===
 									`/guide/${entry._id}`}
 							>
 								{entry.title}

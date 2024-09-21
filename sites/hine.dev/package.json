@@ -5,7 +5,7 @@
 	"scripts": {
 		"build": "wireit",
 		"check": "wireit",
-		"dev": "wireit",
+		"dev": "vite dev",
 		"preview": "wireit",
 		"test": "wireit"
 	},
@@ -37,17 +37,9 @@
 			],
 			"output": []
 		},
-		"dev": {
-			"command": "vite dev",
-			"files": [],
-			"dependencies": [
-				"../../packages/hine:dev"
-			]
-		},
 		"pre-commit": {
 			"dependencies": [
-				"check",
-				"test"
+				"check"
 			]
 		},
 		"preview": {
@@ -72,21 +64,20 @@
 				"sync"
 			],
 			"files": [
-				"src/**/*.{js,ts}",
-				"tests/**/*.{js,ts}"
+				"src/**/*.{js,svelte,ts}",
+				"tests/**/*.{js,svelte,ts}"
 			],
 			"output": []
 		}
 	},
 	"dependencies": {
 		"@content-thing/memdb": "^0.0.3",
-		"@content-thing/svelte-components": "^0.0.1",
 		"@fontsource/geist-sans": "^5.0.3",
 		"@hine/assets": "workspace:*",
 		"@mdi/js": "^7.4.47",
 		"@melt-ui/svelte": "^0.83.0",
 		"@svelte-thing/builders": "^0.0.1",
-		"@svelte-thing/components": "^0.0.27",
+		"@svelte-thing/components": "^0.0.29",
 		"hine": "workspace:*",
 		"jsdom": "^24.1.1",
 		"simple-icons": "^12.0.0",
@@ -94,10 +85,10 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.2.0",
-		"@sveltejs/kit": "^2.5.7",
+		"@sveltejs/kit": "^2.5.28",
 		"@sveltejs/vite-plugin-svelte": "4.0.0-next.6",
-		"content-thing": "^0.0.31",
-		"svelte": "^5.0.0-next.214",
+		"content-thing": "^0.0.34",
+		"svelte": "^5.0.0-next.256",
 		"svelte-check": "^3.8.0",
 		"tslib": "^2.4.1",
 		"typescript": "^5.4.5",

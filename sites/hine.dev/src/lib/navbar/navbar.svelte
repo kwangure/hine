@@ -1,15 +1,15 @@
 <script>
 	import { Icon, Navbar } from '@svelte-thing/components';
 	import {
-		mdiBookOutline,
-		mdiDotsVertical,
+		// mdiBookOutline,
+		// mdiDotsVertical,
 		mdiWeatherNight,
 		mdiWhiteBalanceSunny,
 	} from '@mdi/js';
 	import { siGithub, siNpm } from 'simple-icons';
 	import { createDarkModeButton } from '@svelte-thing/components/creators';
-	import Dropdown from '$lib/dropdown.svelte';
-	import Search from './search/root.svelte';
+	// import Dropdown from '$lib/dropdown.svelte';
+	// import Search from './search/root.svelte';
 	import Wordmark from './wordmark.svelte';
 
 	const darkMode = createDarkModeButton();
@@ -32,7 +32,6 @@
 <Navbar.Root>
 	<Wordmark />
 	<div class="actions large">
-		<Search />
 		<Navbar.Link href="/guide">Guide</Navbar.Link>
 		<Icon.Link
 			href="https://github.com/kwangure/hine"
@@ -50,29 +49,27 @@
 			path={darkModeIcon}
 		/>
 	</div>
-	<div class="actions small">
+	<!-- TODO: Runes implementation. Melt + Svelte 5 + TypeScript is miserable. -->
+	<!-- <div class="actions small">
 		<Search />
 		<Dropdown placement="bottom-end" let:item let:menu>
 			<Icon.Button
 				slot="trigger"
 				let:trigger
-				action={trigger.action}
-				props={trigger.props}
 				path={mdiDotsVertical}
 				label="Navigation"
+				{...trigger.props}
 			/>
 			<div class="menu" {...menu.props} use:menu.action>
 				<Navbar.Link
-					action={item.action}
-					props={item.props}
+					{...item.props}
 					href="/guide"
 				>
 					<Icon.Simple path={mdiBookOutline} />
 					Guide
 				</Navbar.Link>
 				<Navbar.Link
-					action={item.action}
-					props={item.props}
+					{...item.props}
 					href="https://github.com/kwangure/hine"
 				>
 					<Icon.Simple path={siGithub.path} />
@@ -97,7 +94,7 @@
 				</button>
 			</div>
 		</Dropdown>
-	</div>
+	</div> -->
 </Navbar.Root>
 
 <style>
@@ -109,7 +106,7 @@
 		display: var(--_display-lg, none);
 		gap: var(--st-size-1);
 	}
-	.actions.small {
+	/* .actions.small {
 		--_display-lg: var(--st-breakpoint-lg) none;
 		display: var(--_display-lg, flex);
 	}
@@ -153,5 +150,5 @@
 			--_background-color-dark,
 			var(--st-color-neutral-200)
 		);
-	}
+	} */
 </style>

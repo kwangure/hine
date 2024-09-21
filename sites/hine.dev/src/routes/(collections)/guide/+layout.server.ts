@@ -1,14 +1,22 @@
 import { groupsTable } from '$collections/groups.js';
 import { guideTable } from '$collections/guide.js';
+import { parseRouteId } from '$lib/server/parseRouteId.js';
 import { execute, query } from '@content-thing/memdb';
 import { error } from '@sveltejs/kit';
-import {} from 'content-thing';
 
-export function load({ params }) {
-	const { slug } = params;
+// Because of TypeScript `isolatedModules`
+export type * from 'content-thing';
 
+export function load({ route }) {
+	const parsed = parseRouteId(route.id);
+	if (!parsed) {
+		error(404, 'Page not found.');
+	}
+
+	const { slug } = parsed;
 	const [entry] = execute(
 		query(guideTable)
+			.select('title', '_headingTree')
 			.where((guide) => guide._id === slug)
 			.limit(1),
 	);

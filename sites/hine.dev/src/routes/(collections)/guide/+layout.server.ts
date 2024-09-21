@@ -7,10 +7,10 @@ import { error } from '@sveltejs/kit';
 // Because of TypeScript `isolatedModules`
 export type * from 'content-thing';
 
-export function load({ url }) {
-	const parsed = parseRouteId(url);
+export function load({ route }) {
+	const parsed = parseRouteId(route.id);
 	if (!parsed) {
-		error(404, 'Page not found. URL a:' + url.toString());
+		error(404, 'Page not found.');
 	}
 
 	const { slug } = parsed;
@@ -20,7 +20,7 @@ export function load({ url }) {
 			.where((guide) => guide._id === slug)
 			.limit(1),
 	);
-	if (!entry) error(404, 'Page not found. Slug:' + slug);
+	if (!entry) error(404, 'Page not found.');
 
 	const groups = execute(
 		query(groupsTable)

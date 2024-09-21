@@ -1,6 +1,6 @@
-export function parseRouteId(url: URL) {
-	const regex = /\/([^/]+)\/(.+)/;
-	const match = url.pathname.match(regex);
+export function parseRouteId(path: string) {
+	const regex = /\/\(collections\)\/([^/]+)\/(.+)/;
+	const match = path.match(regex);
 
 	if (!match || !match[1] || !match[2]) return null;
 

@@ -8,9 +8,6 @@
 			"group": {
 				"type": "string"
 			}
-		},
-		"search": {
-			"fields": ["title", "_content"]
 		}
 	}
 }

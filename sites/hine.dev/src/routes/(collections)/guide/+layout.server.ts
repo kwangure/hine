@@ -1,5 +1,5 @@
-import { groupsTable } from '$collections/groups.js';
-import { guideTable } from '$collections/guide.js';
+import { groupsTable } from '$lib/server/memdb/groups.js';
+import { guideTable } from '$lib/server/memdb/guide.js';
 import { parseRouteId } from '$lib/server/parseRouteId.js';
 import { execute, query } from '@content-thing/memdb';
 import { error } from '@sveltejs/kit';

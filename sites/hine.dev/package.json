@@ -85,6 +85,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.2.0",
+		"@sveltejs/adapter-vercel": "^5.4.4",
 		"@sveltejs/kit": "^2.5.28",
 		"@sveltejs/vite-plugin-svelte": "4.0.0-next.6",
 		"content-thing": "^0.0.39",
@@ -94,9 +95,6 @@
 		"typescript": "^5.4.5",
 		"vite": "^5.3.4",
 		"vitest": "^1.6.0"
-	},
-	"optionalDependencies": {
-		"@rollup/rollup-linux-x64-gnu": "4.22.5"
 	},
 	"type": "module"
 }

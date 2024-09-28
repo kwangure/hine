@@ -85,5 +85,10 @@
 		"prettier": "^3.1.0",
 		"wireit": "^0.14.1"
 	},
+	"pnpm": {
+		"overrides": {
+			"rollup": "npm:@rollup/wasm-node"
+		}
+	},
 	"type": "module"
 }

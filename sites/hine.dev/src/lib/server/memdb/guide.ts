@@ -1,11 +1,5 @@
 import type { Frontmatter } from '$collections/guide/index.js';
-import {
-	createSearchIndex,
-	createTable,
-	json,
-	search,
-	string,
-} from '@content-thing/memdb';
+import { createSearchIndex, createTable, search } from '@content-thing/memdb';
 import { mdastToString } from 'content-thing';
 
 const modules = import.meta.glob<Frontmatter>('$routes/**/guide/**/data.js', {
@@ -13,18 +7,7 @@ const modules = import.meta.glob<Frontmatter>('$routes/**/guide/**/data.js', {
 	eager: true,
 });
 const data = Object.values(modules);
-export const guideTable = createTable(
-	{
-		title: string('title'),
-		group: string('group'),
-		_id: string('_id'),
-		_headingTree: json<'_headingTree', Frontmatter['_headingTree']>(
-			'_headingTree',
-		),
-		_content: json<'_content', Frontmatter['_content']>('_content'),
-	},
-	data,
-);
+export const guideTable = createTable<Frontmatter>(data);
 const { averageDocumentLength, documentLengths, invertedIndex } =
 	createSearchIndex(guideTable, {
 		title: (x) => x,

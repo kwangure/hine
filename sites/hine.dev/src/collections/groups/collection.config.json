@@ -1,13 +1,11 @@
 {
 	"type": "yaml",
-	"data": {
-		"fields": {
-			"title": {
-				"type": "string"
-			},
-			"position": {
-				"type": "number"
-			}
+	"fields": {
+		"title": {
+			"type": "string"
+		},
+		"position": {
+			"type": "number"
 		}
 	}
 }

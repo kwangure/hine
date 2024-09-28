@@ -1,13 +1,11 @@
 {
 	"type": "markdown",
-	"data": {
-		"fields": {
-			"title": {
-				"type": "string"
-			},
-			"group": {
-				"type": "string"
-			}
+	"fields": {
+		"title": {
+			"type": "string"
+		},
+		"group": {
+			"type": "string"
 		}
 	}
 }
